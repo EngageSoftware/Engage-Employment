@@ -1,0 +1,457 @@
+﻿--Dropping foreign keys from {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]'
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_Job]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_Job]
+GO
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_UserResume]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_UserResume]
+GO
+--Dropping foreign keys from {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_JobPosition]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_JobPosition]
+GO
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_lkpLocation]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_lkpLocation]
+GO
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_lkpJobCategory]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_lkpJobCategory]
+GO
+--Dropping foreign keys from {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]'
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_JobPosition]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_JobPosition]
+GO
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_lkpState]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_lkpState]
+GO
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_lkpLocation]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_lkpLocation]
+GO
+--Dropping foreign keys from {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation]'
+if exists (select * from dbo.sysobjects where id = object_id(N'[{objectQualifier}FK_EngageEmployment_lkpLocation_EngageEmployment_lkpState]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] DROP CONSTRAINT [{objectQualifier}FK_EngageEmployment_lkpLocation_EngageEmployment_lkpState]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}PK_EngageEmployment_Job]') and OBJECTPROPERTY(id, N'IsPrimaryKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] DROP CONSTRAINT [{objectQualifier}PK_EngageEmployment_Job]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}IX_EngageEmployment_Job_PositionId_LocationId]') and OBJECTPROPERTY(id, N'IsConstraint') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] DROP CONSTRAINT [{objectQualifier}IX_EngageEmployment_Job_PositionId_LocationId]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description]') and OBJECTPROPERTY(id, N'IsConstraint') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] DROP CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}PK_EngageEmployment_lkpPosition]') and OBJECTPROPERTY(id, N'IsPrimaryKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] DROP CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpPosition]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle]') and OBJECTPROPERTY(id, N'IsConstraint') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] DROP CONSTRAINT [{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId]') and OBJECTPROPERTY(id, N'IsConstraint') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] DROP CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_lkpState]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}IX_EngageEmployment_lkpState_Name]') and OBJECTPROPERTY(id, N'IsConstraint') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] DROP CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpState_Name]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}PK_EngageEmployment_UserJob]') and OBJECTPROPERTY(id, N'IsPrimaryKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] DROP CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserJob]
+GO
+--Dropping constraints from {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]'
+if exists (select * from sysobjects where id = OBJECT_ID(N'[{objectQualifier}PK_EngageEmployment_UserSearch]') and OBJECTPROPERTY(id, N'IsPrimaryKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] DROP CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserSearch]
+GO
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]'
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]
+(
+[DocumentTypeId] [int] NOT NULL IDENTITY(1, 1),
+[Description] [nvarchar] (255) NULL
+) ON [PRIMARY]
+GO
+--Creating primary key [{objectQualifier}PK_EngageEmployment_DocumentType] on {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_DocumentType] PRIMARY KEY CLUSTERED  ([DocumentTypeId]) ON [PRIMARY]
+GO
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_Document]'
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_Document]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table {databaseOwner}[{objectQualifier}EngageEmployment_Document]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Document]
+(
+[ResumeId] [int] NOT NULL IDENTITY(1, 1),
+[UserId] [int] NULL,
+[FileName] [nvarchar] (255) NOT NULL,
+[ContentType] [nvarchar] (255) NOT NULL,
+[ContentLength] [int] NOT NULL,
+[ResumeData] [image] NOT NULL,
+[RevisionDate] [datetime] NOT NULL,
+[DocumentTypeId] [int] NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+--Creating primary key [PK_{objectQualifier}EngageEmployment_Document] on {databaseOwner}[{objectQualifier}EngageEmployment_Document]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Document] ADD CONSTRAINT [PK_{objectQualifier}EngageEmployment_Document] PRIMARY KEY CLUSTERED  ([ResumeId]) ON [PRIMARY]
+GO
+--Fill {databaseOwner}[{objectQualifier}EngageEmployment_Document] with data from {databaseOwner}[{objectQualifier}EngageEmployment_UserResume]
+DECLARE @resumeDocumentTypeId int
+
+IF NOT EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_DocumentType)
+BEGIN
+	INSERT INTO {databaseOwner}{objectQualifier}EngageEmployment_DocumentType (Description) VALUES (N'Resume')
+	SELECT @resumeDocumentTypeId = SCOPE_IDENTITY()
+	INSERT INTO {databaseOwner}{objectQualifier}EngageEmployment_DocumentType (Description) VALUES (N'Cover Letter')
+END
+
+IF NOT EXISTS (SELECT * FROM {databaseOwner}[{objectQualifier}EngageEmployment_Document]) AND EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserResume]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	SET IDENTITY_INSERT {databaseOwner}[{objectQualifier}EngageEmployment_Document] ON
+	INSERT INTO {databaseOwner}[{objectQualifier}EngageEmployment_Document]([ResumeId], [UserId], [FileName], [ContentType], [ContentLength], [ResumeData], [RevisionDate], [DocumentTypeId]) SELECT [ResumeId], [UserId], [FileName], [ContentType], [ContentLength], [ResumeData], [RevisionDate], @resumeDocumentTypeId FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserResume]
+	SET IDENTITY_INSERT {databaseOwner}[{objectQualifier}EngageEmployment_Document] OFF
+END
+GO
+
+--Drop {databaseOwner}[{objectQualifier}EngageEmployment_UserResume] after transfering data to new {databaseOwner}[{objectQualifier}EngageEmployment_Document] table
+IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserResume]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserResume]
+GO
+--Altering {databaseOwner}[{objectQualifier}EngageEmployment_lkpState]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ALTER COLUMN [Name] [nvarchar] (255) NOT NULL
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ALTER COLUMN [Abbreviation] [nvarchar] (10) NULL
+GO
+--Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]'
+CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch]
+(
+[UserSearchId] [int] NOT NULL IDENTITY(1, 1),
+[UserId] [int] NOT NULL,
+[JobGroupId] [int] NULL,
+[Description] [nvarchar] (255) NOT NULL,
+[JobPositionId] [int] NULL,
+[StateId] [int] NULL,
+[Keywords] [ntext] NULL,
+[CreationDate] [datetime] NOT NULL,
+[LocationId] [int] NULL,
+[SearchSql] [ntext] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch] ON
+INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch]([UserSearchId], [UserId], [Description], [JobPositionId], [StateId], [Keywords], [CreationDate], [LocationId], [SearchSql]) SELECT [UserSearchId], [UserId], [Description], [JobPositionId], [StateId], [Keywords], [CreationDate], [LocationId], [SearchSql] FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]
+SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch] OFF
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]
+EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch]', N'{objectQualifier}EngageEmployment_UserJobSearch'
+GO
+--Creating primary key [{objectQualifier}PK_EngageEmployment_UserSearch] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserSearch] PRIMARY KEY CLUSTERED  ([UserSearchId]) ON [PRIMARY]
+GO
+--Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
+CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition]
+(
+[JobPositionId] [int] NOT NULL IDENTITY(1, 1),
+[JobTitle] [nvarchar] (255) NOT NULL,
+[Description] [ntext] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition] ON
+INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition]([JobPositionId], [JobTitle], [Description]) SELECT [JobPositionId], [JobTitle], [Description] FROM {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]
+SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition] OFF
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]
+EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition]', N'{objectQualifier}EngageEmployment_lkpJobPosition'
+GO
+--Creating primary key [{objectQualifier}PK_EngageEmployment_lkpPosition] on {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpPosition] PRIMARY KEY CLUSTERED  ([JobPositionId]) ON [PRIMARY]
+GO
+--Altering {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ALTER COLUMN [Description] [nvarchar] (255) NOT NULL
+GO
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]'
+IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]
+(
+[ApplicationPropertyId] [int] NOT NULL IDENTITY(1, 1),
+[Deleted] [bit] NOT NULL,
+[DataType] [int] NOT NULL,
+[DefaultValue] [ntext] NULL,
+[PropertyName] [nvarchar] (50) NOT NULL,
+[Required] [bit] NOT NULL,
+[ViewOrder] [int] NOT NULL,
+[Visible] [bit] NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+--Creating primary key [{objectQualifier}PK_EngageEmployment_ApplicationProperty] on {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_ApplicationProperty] PRIMARY KEY CLUSTERED  ([ApplicationPropertyId]) ON [PRIMARY]
+GO
+--Creating index [{objectQualifier}IX_EngageEmployment_ApplicationProperty_PropertyName] on {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]'
+CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_ApplicationProperty_PropertyName] ON {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty] ([PropertyName]) ON [PRIMARY]
+GO
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]'
+IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
+(
+[ApplicationId] [int] NOT NULL,
+[ResumeId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+--Creating primary key [PK_{objectQualifier}EngageEmployment_ApplicationDocument] on {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] ADD CONSTRAINT [PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY CLUSTERED  ([ApplicationId], [ResumeId]) ON [PRIMARY]
+GO
+
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition]'
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition]
+@DataType int,
+@DefaultValue ntext,
+@PropertyName nvarchar(50),
+@Required bit,
+@ViewOrder int,
+@Visible bit
+AS
+DECLARE @ApplicationPropertyId int
+
+SELECT @ApplicationPropertyId = ApplicationPropertyId
+FROM   {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty
+WHERE  PropertyName = @PropertyName
+
+IF @vieworder=-1
+BEGIN
+SELECT         @vieworder = MAX(ViewOrder) + 1
+FROM           {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty
+END
+
+IF @ApplicationPropertyId is null
+BEGIN
+INSERT {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty	(
+Deleted,
+DataType,
+DefaultValue,
+PropertyName,
+Required,
+ViewOrder,
+Visible
+)
+VALUES	(
+0,
+@DataType,
+@DefaultValue,
+@PropertyName,
+@Required,
+@ViewOrder,
+@Visible
+)
+
+SELECT @ApplicationPropertyId = SCOPE_IDENTITY()
+END
+ELSE
+BEGIN
+UPDATE {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty
+SET DataType = @DataType,
+DefaultValue = @DefaultValue,
+Required = @Required,
+ViewOrder = @ViewOrder,
+Deleted = 0,
+Visible = @Visible
+WHERE ApplicationPropertyId = @ApplicationPropertyId
+END
+
+SELECT @ApplicationPropertyId
+GO
+
+--Add 'Lead' Application Property
+IF NOT EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty WHERE PropertyName = 'Lead')
+BEGIN
+DECLARE @ListDataType as int
+SELECT @ListDataType = (SELECT EntryID FROM {databaseOwner}{objectQualifier}Lists WHERE ListName = 'DataType' AND Value = 'List')
+
+DECLARE @RC int
+EXECUTE @RC = {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition] @ListDataType, '', 'Lead', 0, 1, 1
+END
+GO
+
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]'
+IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]
+(
+[JobGroupId] [int] NOT NULL,
+[JobId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]'
+IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]
+(
+[JobGroupId] [int] NOT NULL IDENTITY(1, 1),
+[Name] [nvarchar] (255) NOT NULL
+) ON [PRIMARY]
+GO
+--Creating primary key [{objectQualifier}PK_EngageEmployment_JobGroup] on {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_JobGroup] PRIMARY KEY CLUSTERED  ([JobGroupId]) ON [PRIMARY]
+GO
+--Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]'
+CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]
+(
+[ApplicationId] [int] NOT NULL IDENTITY(1, 1),
+[UserId] [int] NULL,
+[JobId] [int] NOT NULL,
+[AppliedDate] [datetime] NOT NULL,
+[SalaryRequirement] [nvarchar] (255) NULL,
+[Message] [nvarchar] (255) NULL,
+[ResumeId] int NOT NULL
+) ON [PRIMARY]
+INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]([UserId], [JobId], [AppliedDate], [SalaryRequirement], [Message], [ResumeId]) SELECT [UserId], [JobId], [AppliedDate], [SalaryRequirement], [Message], [ResumeId] FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]
+EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]', N'{objectQualifier}EngageEmployment_UserJob'
+GO
+--Creating primary key [{objectQualifier}PK_EngageEmployment_UserJob] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserJob] PRIMARY KEY CLUSTERED  ([ApplicationId]) ON [PRIMARY]
+GO
+--Move UserResume information to the ApplicationDocument junction table
+IF EXISTS (SELECT * FROM dbo.syscolumns WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserJob]') AND name = 'ResumeId')
+BEGIN
+	EXEC ('INSERT INTO {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] (ApplicationId, ResumeId)
+	SELECT uj.ApplicationId, uj.ResumeId
+	FROM {objectQualifier}EngageEmployment_UserJob uj')
+END
+GO
+
+--Drop ResumeId column from UserJob after it has been transferred to ApplicationDocument junction table
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] DROP COLUMN [ResumeId]
+GO
+
+--Altering {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] ALTER COLUMN [Description] [nvarchar] (255) NOT NULL
+GO
+--Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
+CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job]
+(
+[JobId] [int] NOT NULL IDENTITY(1, 1),
+[JobPositionId] [int] NOT NULL,
+[LocationId] [int] NOT NULL,
+[JobCategoryId] [int] NOT NULL,
+[PostedDate] [datetime] NOT NULL,
+[IsHot] [bit] NOT NULL,
+[IsFilled] [bit] NOT NULL,
+[RequiredQualifications] [ntext] NULL,
+[DesiredQualifications] [ntext] NULL,
+[RevisingUser] [int] NOT NULL,
+[RevisionDate] [datetime] NOT NULL,
+[SortOrder] [int] NOT NULL CONSTRAINT [{objectQualifier}DF_EngageEmployment_Job_SortOrder] DEFAULT ((5))
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job] ON
+INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job]([JobId], [JobPositionId], [LocationId], [JobCategoryId], [PostedDate], [IsHot], [IsFilled], [RequiredQualifications], [DesiredQualifications], [RevisingUser], [RevisionDate]) SELECT [JobId], [JobPositionId], [LocationId], [JobCategoryId], [PostedDate], [IsHot], [IsFilled], [RequiredQualifications], [DesiredQualifications], [RevisingUser], [RevisionDate] FROM {databaseOwner}[{objectQualifier}EngageEmployment_Job]
+SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job] OFF
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job]
+EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job]', N'{objectQualifier}EngageEmployment_Job'
+GO
+ --Creating primary key [{objectQualifier}PK_EngageEmployment_Job] on {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_Job] PRIMARY KEY CLUSTERED  ([JobId]) ON [PRIMARY]
+GO
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
+IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]
+(
+[UserJobPropertyId] [int] NOT NULL IDENTITY(1, 1),
+[ApplicationId] [int] NOT NULL,
+[ApplicationPropertyId] [int] NOT NULL,
+[PropertyValue] [nvarchar] (3750) NULL,
+[PropertyText] [ntext] NULL,
+[Visibility] [int] NOT NULL CONSTRAINT [{objectQualifier}DF_EngageEmployment_UserJobProperty_Visibility] DEFAULT ((0)),
+[LastUpdatedDate] [datetime] NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+--Creating primary key [{objectQualifier}PK_EngageEmployment_UserJobProperty] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserJobProperty] PRIMARY KEY NONCLUSTERED  ([UserJobPropertyId]) ON [PRIMARY]
+GO
+--Creating index [{objectQualifier}IX_EngageEmployment_UserJobProperty] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
+CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_UserJobProperty] ON {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] ([ApplicationId]) ON [PRIMARY]
+GO
+--Creating {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]'
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]
+AS
+select
+j.JobId, p.JobTitle, l.[Description] as Location, s.[Name] as State,
+j.RequiredQualifications, j.DesiredQualifications, jc.[Description] as JobCategory,
+j.IsHot, j.PostedDate, p.[Description], j.IsFilled, j.SortOrder
+from
+{objectQualifier}EngageEmployment_job j
+join {objectQualifier}EngageEmployment_lkpJobPosition p on (j.JobPositionId = p.JobPositionId)
+join {objectQualifier}EngageEmployment_lkpLocation l on (j.LocationId = l.LocationId)
+join {objectQualifier}EngageEmployment_lkpState s on (l.StateId = s.StateId)
+join {objectQualifier}EngageEmployment_lkpJobCategory jc on (j.JobCategoryId = jc.JobCategoryId)
+GO
+--Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_Job_PositionId_LocationId] UNIQUE NONCLUSTERED  ([JobPositionId], [LocationId]) ON [PRIMARY]
+GO
+--Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description] UNIQUE NONCLUSTERED  ([Description]) ON [PRIMARY]
+GO
+--Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle] UNIQUE NONCLUSTERED  ([JobTitle]) ON [PRIMARY]
+GO
+--Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId] UNIQUE NONCLUSTERED  ([Description], [StateId]) ON [PRIMARY]
+GO
+--Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpState]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpState_Name] UNIQUE NONCLUSTERED  ([Name]) ON [PRIMARY]
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] WITH NOCHECK ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserJobProperty_EngageEmployment_ApplicationProperty] FOREIGN KEY ([ApplicationPropertyId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty] ([ApplicationPropertyId]) ON DELETE CASCADE
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_ApplicationDocument_EngageEmployment_UserJob] FOREIGN KEY ([ApplicationId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] ([ApplicationId]),
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_ApplicationDocument_EngageEmployment_Document] FOREIGN KEY ([ResumeId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_Document] ([ResumeId])
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_Document]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Document] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_Document_EngageEmployment_DocumentType] FOREIGN KEY ([DocumentTypeId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType] ([DocumentTypeId])
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_JobJobGroup_EngageEmployment_Job] FOREIGN KEY ([JobId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_Job] ([JobId]),
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_JobJobGroup_EngageEmployment_JobGroup] FOREIGN KEY ([JobGroupId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup] ([JobGroupId])
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_Job] FOREIGN KEY ([JobId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_Job] ([JobId])
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_JobPosition] FOREIGN KEY ([JobPositionId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ([JobPositionId]),
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_lkpLocation] FOREIGN KEY ([LocationId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ([LocationId]),
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_Job_EngageEmployment_lkpJobCategory] FOREIGN KEY ([JobCategoryId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] ([JobCategoryId])
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserJobSearch_EngageEmployment_JobGroup] FOREIGN KEY ([JobGroupId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup] ([JobGroupId]),
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_JobPosition] FOREIGN KEY ([JobPositionId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ([JobPositionId]),
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_lkpState] FOREIGN KEY ([StateId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ([StateId]),
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserSearch_EngageEmployment_lkpLocation] FOREIGN KEY ([LocationId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ([LocationId])
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserJobProperty_EngageEmployment_UserJob] FOREIGN KEY ([ApplicationId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] ([ApplicationId]) ON DELETE CASCADE
+GO
+--Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation]'
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ADD
+CONSTRAINT [{objectQualifier}FK_EngageEmployment_lkpLocation_EngageEmployment_lkpState] FOREIGN KEY ([StateId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ([StateId])
+GO
+DELETE {databaseOwner}[{objectQualifier}ModuleControls] WHERE ControlKey='settings' AND ControlSrc='DesktopModules/EngageEmployment/JobDetailOptions.ascx'
+GO
+

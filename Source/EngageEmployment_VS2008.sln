@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngageEmployment", "EngageEmployment.csproj", "{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://tfs2008.etg-inc.net:8080/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = EngageEmployment.csproj
+		SccLocalPath1 = .
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Default|Any CPU = Default|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}.Default|Any CPU.ActiveCfg = Release|Any CPU
+		{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}.Default|Any CPU.Build.0 = Release|Any CPU
+		{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TextTemplating) = postSolution
+		TextTemplating = 1
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,534 @@
+﻿/** A repeat of the 1.4.0 script, with a fix for '{databaseOwner}sysobjects' which doesn't work when databaseOwner isn't dbo **/
+/** Also includes fix to spGetAdminData **/
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwLocations]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwLocations]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwLocations]
+AS 
+	SELECT DISTINCT l.LocationId, l.Description as LocationName, s.StateId, s.Name as StateName, s.Abbreviation as StateAbbreviation, jjg.JobGroupId, l.PortalId
+	FROM [{objectQualifier}EngageEmployment_lkpLocation] l
+	 JOIN [{objectQualifier}EngageEmployment_lkpState] s ON (l.StateId = s.StateId)
+	 LEFT JOIN [{objectQualifier}EngageEmployment_Job] j ON (j.LocationId = l.LocationId)
+	 LEFT JOIN [{objectQualifier}EngageEmployment_JobJobGroup] jjg ON (j.JobId = jjg.JobId)
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwCategories]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwCategories]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwCategories]
+AS 
+	SELECT DISTINCT c.JobCategoryId AS CategoryId, c.Description AS CategoryName, c.PortalId, jjg.JobGroupId
+	FROM [{objectQualifier}EngageEmployment_lkpJobCategory] c
+	 LEFT JOIN [{objectQualifier}EngageEmployment_Job] j ON (j.JobCategoryId = c.JobCategoryId)
+	 LEFT JOIN [{objectQualifier}EngageEmployment_JobJobGroup] jjg ON (j.JobId = jjg.JobId)
+GO
+
+
+IF NOT EXISTS (SELECT * FROM syscolumns where name = 'NotificationEmailAddress' and id = OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_Job'))
+ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_Job    ADD
+    NotificationEmailAddress nvarchar(320) NULL
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]
+AS
+select
+j.JobId, p.JobTitle, p.JobPositionId AS PositionId, l.[Description] as LocationName, l.LocationId, s.[Name] as StateName, s.Abbreviation as StateAbbreviation, s.StateId,
+j.RequiredQualifications, j.DesiredQualifications, jc.[Description] as CategoryName, jc.JobCategoryId AS CategoryId,
+j.IsHot, j.PostedDate, p.[Description] as JobDescription, j.IsFilled, j.SortOrder, j.RevisingUser, j.PortalId, j.NotificationEmailAddress
+from
+{objectQualifier}EngageEmployment_job j
+join {objectQualifier}EngageEmployment_lkpJobPosition p on (j.JobPositionId = p.JobPositionId)
+join {objectQualifier}EngageEmployment_lkpLocation l on (j.LocationId = l.LocationId)
+join {objectQualifier}EngageEmployment_lkpState s on (l.StateId = s.StateId)
+join {objectQualifier}EngageEmployment_lkpJobCategory jc on (j.JobCategoryId = jc.JobCategoryId)
+GO
+
+IF NOT EXISTS (SELECT * FROM syscolumns where name = 'CategoryId' and id = OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_UserJobSearch'))
+ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_UserJobSearch    ADD
+    CategoryId int NULL
+GO
+
+IF NOT EXISTS (SELECT * FROM syscolumns where name = 'StatusId' and id = OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_UserJob'))
+ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_UserJob    ADD
+    StatusId int NULL,
+    RevisingUserId int NULL
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwApplications]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwApplications]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwApplications]
+AS
+select uj.ApplicationId, uj.UserId, uj.JobId, uj.AppliedDate, uj.SalaryRequirement, uj.Message,
+ j.PortalId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateId, 
+ j.RequiredQualifications, j.DesiredQualifications, j.CategoryId, j.CategoryName, j.IsHot, j.PostedDate, 
+ j.JobDescription, j.IsFilled, j.SortOrder, uj.StatusId, uj.RevisingUserId, u.DisplayName
+from {objectQualifier}EngageEmployment_UserJob uj
+join {objectQualifier}EngageEmployment_vwJobs j ON (uj.JobId = j.JobId)
+left join {objectQualifier}Users u ON (u.UserId = uj.UserId)
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwPositions]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwPositions]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwPositions]  
+AS   
+ SELECT pd.JobPositionId AS PositionId, pj.JobTitle, pj.Description AS JobDescription, pj.PortalId, pd.JobGroupId
+ FROM (
+	 SELECT DISTINCT p.JobPositionId, jjg.JobGroupId  
+	 FROM [{objectQualifier}EngageEmployment_lkpJobPosition] p  
+	  LEFT JOIN [{objectQualifier}EngageEmployment_Job] j ON (j.JobPositionId = p.JobPositionId)  
+	  LEFT JOIN [{objectQualifier}EngageEmployment_JobJobGroup] jjg ON (j.JobId = jjg.JobId)
+ ) pd
+ JOIN [{objectQualifier}EngageEmployment_lkpJobPosition] pj ON (pd.JobPositionId = pj.JobPositionId)
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
+@JobGroupId int,
+@PortalId int
+AS
+	SELECT DISTINCT j.JobId
+	 INTO #jobs
+	 FROM {objectQualifier}EngageEmployment_vwJobs j
+	 LEFT JOIN {objectQualifier}EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId)
+	 WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
+	  AND PortalId = @PortalId
+	 
+	SELECT	JobId, PostedDate, SortOrder, LocationId, LocationName, 
+			StateId, StateName, StateAbbreviation, CategoryId, 
+			CategoryName, PositionId, JobTitle, JobDescription,
+			(SELECT count(*) FROM {objectQualifier}EngageEmployment_UserJob uj WHERE uj.JobId = j.JobId) AS ApplicationCount
+	 FROM {objectQualifier}EngageEmployment_vwJobs j
+	 WHERE JobId IN (SELECT JobId FROM #jobs)
+	 ORDER BY SortOrder, PostedDateGO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetUnusedAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetUnusedAdminData]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetUnusedAdminData]
+@JobGroupId int,
+@PortalId int
+AS
+	SELECT StateId, Name AS StateName, Abbreviation AS StateAbbreviation
+	 FROM {objectQualifier}EngageEmployment_lkpState s
+	 WHERE PortalId = @PortalId
+	  AND NOT EXISTS (SELECT NULL FROM {objectQualifier}EngageEmployment_lkpLocation l WHERE l.StateId = s.StateId)
+	 ORDER BY Name
+
+	SELECT LocationId, LocationName, StateId, StateName, StateAbbreviation
+	 FROM {objectQualifier}EngageEmployment_vwLocations l
+	 WHERE PortalId = @PortalId
+	  AND (NOT EXISTS (SELECT NULL FROM {objectQualifier}EngageEmployment_vwJobs j WHERE j.LocationId = l.LocationId)
+	   OR NOT EXISTS (SELECT NULL FROM {objectQualifier}EngageEmployment_vwLocations WHERE LocationId = l.LocationId AND (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)))
+	 ORDER BY LocationName
+
+	SELECT CategoryId, CategoryName
+	 FROM {objectQualifier}EngageEmployment_vwCategories c
+	 WHERE PortalId = @PortalId
+	  AND (NOT EXISTS (SELECT NULL FROM {objectQualifier}EngageEmployment_vwJobs j WHERE j.CategoryId = c.CategoryId)
+	   OR NOT EXISTS (SELECT NULL FROM {objectQualifier}EngageEmployment_vwCategories WHERE CategoryId = c.CategoryId AND (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)))
+	 ORDER BY CategoryName
+
+	SELECT PositionId, JobTitle
+	 FROM {objectQualifier}EngageEmployment_vwPositions p
+	 WHERE PortalId = @PortalId
+	  AND (NOT EXISTS (SELECT NULL FROM {objectQualifier}EngageEmployment_vwJobs j WHERE j.PositionId = p.PositionId)
+	   OR NOT EXISTS (SELECT NULL FROM {objectQualifier}EngageEmployment_vwPositions WHERE PositionId = p.PositionId AND (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)))
+	 ORDER BY JobTitle
+GO
+
+IF EXISTS (SELECT NULL FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwSavedSearches]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwSavedSearches]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwSavedSearches]
+AS
+select 
+ us.UserSearchId, us.UserId, us.[Description] AS SearchName, us.Keywords, us.CreationDate, us.JobGroupId,
+ jp.JobPositionId AS PositionId, jp.JobTitle, 
+ l.LocationId, l.[Description] as LocationName, s.StateId, s.[Name] as StateName, s.Abbreviation as StateAbbreviation,
+ us.CategoryId, c.Description as CategoryName, us.PortalId
+ from 
+ {databaseOwner}{objectQualifier}EngageEmployment_UserJobSearch us
+ left join {databaseOwner}{objectQualifier}EngageEmployment_lkpJobPosition jp on (us.JobPositionId = jp.JobPositionId) 
+ left join {databaseOwner}{objectQualifier}EngageEmployment_lkpLocation l on (us.LocationId = l.LocationId) 
+ left join {databaseOwner}{objectQualifier}EngageEmployment_lkpState s on (us.StateId = s.StateId) 
+ left join {databaseOwner}{objectQualifier}EngageEmployment_lkpJobCategory c on (us.CategoryId = c.JobCategoryId)
+GO
+
+IF EXISTS (SELECT NULL FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwUserStatuses]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwUserStatuses]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwUserStatuses]
+AS
+select 
+ UserStatusId, Status AS StatusName, PortalId
+ from 
+ {databaseOwner}{objectQualifier}EngageEmployment_lkpUserStatus
+GO
+
+IF EXISTS (SELECT NULL FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwStates]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwStates]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwStates]
+AS
+SELECT DISTINCT
+ s.StateId, [Name] AS StateName, Abbreviation AS StateAbbreviation, s.PortalId, JobGroupId
+ FROM 
+ {databaseOwner}{objectQualifier}EngageEmployment_lkpState s
+ LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_lkpLocation l ON (s.StateId = l.StateId)
+ LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_Job j ON (l.LocationId = j.LocationId)
+ LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg ON (j.JobId = jjg.JobId)
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwDocuments]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwDocuments]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwDocuments]
+AS
+select a.ApplicationId, d.ResumeId as DocumentId, d.FileName, d.ContentType, d.ContentLength, d.ResumeData, dt.DocumentTypeId, dt.Description as DocumentType, d.UserId, d.RevisionDate
+from {objectQualifier}EngageEmployment_vwApplications a
+join {objectQualifier}EngageEmployment_ApplicationDocument ad ON (ad.ApplicationId = a.ApplicationId)
+join {objectQualifier}EngageEmployment_Document d ON (ad.ResumeId = d.ResumeId)
+join {objectQualifier}EngageEmployment_DocumentType dt ON (d.DocumentTypeId = dt.DocumentTypeId)
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spSaveJobSearchQuery]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spSaveJobSearchQuery]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spSaveJobSearchQuery]
+@userId int, 
+@name nvarchar(255), 
+@positionId int, 
+@categoryId int, 
+@stateId int, 
+@locationId int, 
+@keywords ntext, 
+@jobGroupId int, 
+@portalId int
+AS
+	INSERT {objectQualifier}EngageEmployment_UserJobSearch
+	(UserId, Description, JobPositionId, CategoryId, StateId, LocationId, Keywords, CreationDate, JobGroupId, PortalId)
+	VALUES (@userId, @name, @positionId, @categoryId, @stateId, @locationId, @keywords, getdate(), @jobGroupId, @portalId)
+GO
+
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateLocation]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateLocation]
+@locationName nvarchar(255),
+@stateId int,
+@locationId int
+AS
+	UPDATE {objectQualifier}EngageEmployment_lkpLocation
+	SET [Description] = @locationName,
+	 StateId = @stateId
+	WHERE LocationId = @locationId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertLocation]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertLocation]
+@locationName nvarchar(255),
+@stateId int,
+@portalId int
+AS
+	INSERT {objectQualifier}EngageEmployment_lkpLocation
+	([Description], Stateid, PortalId)
+	VALUES (@locationName, @stateId, @portalId)
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteLocation]
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteLocation]  
+@locationId int  
+AS  
+ DELETE {objectQualifier}EngageEmployment_lkpLocation  
+    WHERE LocationId = @locationId  
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateState]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateState]
+@stateId int,
+@stateName nvarchar(255),
+@stateAbbreviation nvarchar(10)
+AS
+	UPDATE {objectQualifier}EngageEmployment_lkpState
+	SET [Name] = @stateName,
+	 Abbreviation = @stateAbbreviation
+	WHERE StateId = @stateId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertState]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertState]
+@stateName nvarchar(255),
+@stateAbbreviation nvarchar(10),
+@portalId int
+AS
+	INSERT {objectQualifier}EngageEmployment_lkpState
+	(Name, PortalId, Abbreviation)
+	VALUES (@stateName, @portalId, @stateAbbreviation) 
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteState]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteState]  
+@stateId int  
+AS  
+ DELETE {objectQualifier}EngageEmployment_lkpState
+    WHERE StateId = @stateId  
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateCategory]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateCategory]
+@categoryId int,
+@categoryName nvarchar(255)
+AS
+	UPDATE {objectQualifier}EngageEmployment_lkpJobCategory
+	SET [Description] = @categoryName
+	WHERE JobCategoryId = @categoryId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertCategory]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertCategory]
+@categoryName nvarchar(255),
+@portalId int
+AS
+	INSERT {objectQualifier}EngageEmployment_lkpJobCategory
+	([Description], PortalId)
+	VALUES (@categoryName, @portalId)
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteCategory]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteCategory]  
+@categoryId int  
+AS  
+ DELETE {objectQualifier}EngageEmployment_lkpJobCategory
+    WHERE JobCategoryId = @categoryId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdatePosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdatePosition]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdatePosition]
+@PositionId int,
+@JobTitle nvarchar(255),
+@JobDescription ntext
+AS
+
+	UPDATE {objectQualifier}EngageEmployment_lkpJobPosition
+	SET JobTitle = @JobTitle,
+	[Description] = @JobDescription
+	WHERE JobPositionId = @PositionId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertPosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertPosition]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertPosition]
+@JobTitle nvarchar(255),
+@JobDescription ntext,
+@portalId int
+AS
+	INSERT {objectQualifier}EngageEmployment_lkpJobPosition
+	(JobTitle, [Description], PortalId)
+	VALUES (@JobTitle, @JobDescription, @portalId)
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeletePosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeletePosition]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeletePosition]  
+@positionId int  
+AS  
+ DELETE {objectQualifier}EngageEmployment_lkpJobPosition
+    WHERE JobPositionId = @positionId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertJob]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertJob]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertJob]
+@positionId int, 
+@locationId int, 
+@categoryId int, 
+@isHot bit, 
+@isFilled bit, 
+@requiredQualifications ntext, 
+@desiredQualifications ntext,  
+@revisingUser int, 
+@sortOrder int, 
+@portalId int, 
+@NotificationEmailAddress nvarchar(320)
+AS
+	INSERT {objectQualifier}EngageEmployment_Job
+	(JobPositionId, LocationId, JobCategoryId, PostedDate, IsHot, IsFilled, RequiredQualifications, DesiredQualifications, RevisingUser, RevisionDate, SortOrder, PortalId, NotificationEmailAddress)
+	VALUES (@positionId, @locationId, @categoryId, getdate(), @isHot, @isFilled, @requiredQualifications, @desiredQualifications,  @revisingUser, getdate(), @sortOrder, @portalId, @NotificationEmailAddress )
+	SELECT CONVERT(int, SCOPE_IDENTITY())
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateJob]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateJob]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateJob]
+@jobId int,
+@positionId int,
+@categoryId int,
+@locationId int,
+@isHot bit,
+@isFilled bit,
+@requiredQualifications ntext,
+@desiredQualifications ntext,
+@revisingUser int,
+@sortOrder int,
+@notificationEmailAddress nvarchar(320)
+AS
+	UPDATE {objectQualifier}EngageEmployment_Job
+	SET JobPositionId = @positionId, 
+        LocationId = @locationId, 
+        JobCategoryId = @categoryId, 
+        IsHot = @isHot, 
+        IsFilled = @isFilled, 
+        RequiredQualifications = @requiredQualifications, 
+        DesiredQualifications = @desiredQualifications, 
+        RevisingUser = @revisingUser, 
+        RevisionDate = getdate(), 
+        SortOrder = @sortOrder, 
+        NotificationEmailAddress = @notificationEmailAddress 
+    WHERE JobId = @jobId
+
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetApplicationsByStatus]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetApplicationsByStatus]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetApplicationsByStatus]
+@statusId int
+AS
+	SELECT ApplicationId, UserId, JobId, AppliedDate, SalaryRequirement, Message, PortalId, PositionId, LocationId, CategoryId, StatusId
+	FROM {objectQualifier}EngageEmployment_vwApplications WHERE StatusId = @statusId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateApplication]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateApplication]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateApplication]
+@applicationId int,
+@statusId int,
+@revisingUserId int
+AS
+	UPDATE {objectQualifier}EngageEmployment_vwApplications
+	SET StatusId = @statusId,
+		RevisingUserId = @revisingUserId
+	WHERE ApplicationId = @applicationId
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetDocument]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetDocument]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetDocument]
+@documentId int
+AS
+	SELECT [DocumentId], [UserId], [FileName], [ContentType], [ContentLength], [ResumeData], [RevisionDate], [DocumentTypeId]
+	FROM {objectQualifier}EngageEmployment_vwDocuments
+	WHERE DocumentId = @documentId
+GO
+
+DELETE {databaseOwner}[{objectQualifier}ModuleControls] WHERE ControlKey='EditUserStatus' AND ControlSrc='DesktopModules/EngageEmployment/admin/UserStatusEdit.ascx'
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetPositions]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetPositions]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetPositions]
+@portalId int,
+@jobGroupId int
+AS
+    CREATE TABLE #positions (PositionId INT PRIMARY KEY);
+
+	INSERT INTO #positions
+	SELECT DISTINCT PositionId
+	FROM {objectQualifier}EngageEmployment_vwPositions
+	WHERE PortalId = @portalId
+	 AND (@jobGroupId IS NULL OR JobGroupId = @jobGroupId)
+	
+	SELECT JobPositionId AS PositionId, JobTitle, [Description] AS JobDescription
+	FROM {objectQualifier}EngageEmployment_lkpJobPosition
+	WHERE JobPositionId in (SELECT PositionId FROM #positions)
+	ORDER BY JobTitle
+GO
+
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetCategories]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetCategories]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetCategories]
+@portalId int,
+@jobGroupId int
+AS
+	SELECT DISTINCT CategoryId, CategoryName
+	FROM {objectQualifier}EngageEmployment_vwCategories
+	WHERE PortalId = @portalId
+	 AND (@jobGroupId IS NULL OR JobGroupId = @jobGroupId)
+	ORDER BY CategoryName
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetLocations]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetLocations]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetLocations]
+@portalId int,
+@jobGroupId int
+AS
+	SELECT DISTINCT LocationId, LocationName, StateId, StateName, StateAbbreviation
+	FROM {objectQualifier}EngageEmployment_vwLocations
+	WHERE PortalId = @portalId
+	 AND (@jobGroupId IS NULL OR JobGroupId = @jobGroupId)
+	ORDER BY StateName, LocationName
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetStates]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetStates]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetStates]
+@portalId int,
+@jobGroupId int
+AS
+	SELECT DISTINCT StateId, StateName, StateAbbreviation
+	FROM {objectQualifier}EngageEmployment_vwStates
+	WHERE PortalId = @portalId
+	 AND (@jobGroupId IS NULL OR JobGroupId = @jobGroupId)
+	ORDER BY StateName
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetDocumentJobGroups]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetDocumentJobGroups]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetDocumentJobGroups]
+@documentId int
+AS
+	SELECT DISTINCT jobGroupId FROM {objectQualifier}EngageEmployment_vwDocuments d
+	 JOIN {objectQualifier}EngageEmployment_vwApplications a ON (d.ApplicationId = a.ApplicationId)
+	 JOIN {objectQualifier}EngageEmployment_JobJobGroup jjg ON (a.JobId = jjg.JobId)
+	WHERE DocumentId = @documentId
+GO

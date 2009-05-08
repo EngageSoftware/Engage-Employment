@@ -1,0 +1,315 @@
+﻿#job_listing_copy h3 {
+font-size:136%;
+font-weight:400;
+letter-spacing:-2px;
+margin-bottom:10px;
+}
+
+#save_search body {
+background:#E6EAE9;
+color:#4f6b72;
+font:normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+#save_search caption {
+font:italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+padding:0 0 5px;
+text-align:right;
+}
+
+#save_search td {
+background:#fff;
+border-bottom:1px solid #C1DAD7;
+border-right:1px solid #C1DAD7;
+color:#4f6b72;
+padding:15px;
+}
+
+#save_search td.alt,.email_jobs td.alt,.job_search_table td.alt {
+background:#F5FAFA;
+color:#797268;
+}
+
+#save_search,.email_jobs,.settingsTable td {
+margin:0;
+padding:0;
+}
+
+.Help {
+text-align:left;
+white-space:normal;
+}
+
+.alignLeft {
+text-align:left;
+}
+
+.alignRight {
+text-align:right;
+}
+
+.alternatingApplicationRow {
+background:#CCC none repeat scroll 0;
+border-bottom:1px solid #CCC;
+color:#4F6B72;
+padding:10px 15px;
+}
+
+.applicaitonsTable td {
+padding:0;
+}
+
+.applicationRow {
+background:#FFF none repeat scroll 0;
+border-bottom:1px solid #FFF;
+color:#4F6B72;
+padding:10px 15px;
+}
+
+.applicationsTable {
+border-collapse:collapse;
+padding:0;
+width:100%;
+}
+
+.applicationsTable caption 
+{
+	padding: 1em 0 0.5em;
+}
+
+.applicationsTable th {
+background:#CAE8EA;
+border-bottom:1px solid #C1DAD7;
+border-right:1px solid #C1DAD7;
+border-top:1px solid #C1DAD7;
+color:#4F6B72;
+font-size:11px;
+font-style:normal;
+font-variant:normal;
+letter-spacing:2px;
+line-height:normal;
+padding:6px 6px 6px 12px;
+text-align:left;
+text-transform:uppercase;
+}
+
+.unusedItems .compositeTable .headerRow a {
+display:block;
+margin:-6px;
+margin-left:-12px;
+padding:6px;
+padding-left: -12px;
+}
+
+.unusedItems .compositeTable .headerRow a:hover {
+background:#C1DAD7;
+}
+
+.checkBoxList,.checkBoxList td {
+border:0;
+border-collapse:collapse;
+margin:0;
+padding:0;
+}
+
+.commentBackground {
+background-color:Gray;
+filter:alpha(opacity=70);
+height:100%;
+opacity:0.7px;
+width:100%;
+}
+
+.commentPopup {
+background-color:#ffd;
+border-color:Gray;
+border-style:solid;
+border-width:3px;
+padding:3px;
+}
+
+.contentColumn {
+vertical-align:top;
+width:100%;
+}
+
+.email_jobs th {
+border-bottom:1px solid #C1DAD7;
+border-right:1px solid #C1DAD7;
+color:#4f6b72;
+font:bold 11px;
+padding:10px;
+text-align:left;
+vertical-align:text-top;
+}
+
+.employmentTable {
+margin:0;
+padding:0;
+width:100%;
+}
+
+.employmentTable .Head {
+color:#960000;
+font:bold "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.employmentTable .SubHead,.email_jobs .SubHead {
+border-right:1px solid #C1DAD7;
+}
+
+.employmentTable a,#save_search a,.email_jobs a,.job_search_table a {
+color:#c75f3e;
+}
+
+.employmentTable td,.email_jobs td {
+background:#fff;
+border-bottom:1px solid #C1DAD7;
+color:#4f6b72;
+padding:10px 15px;
+}
+
+.employmentTable td.alt,.employmentTable td.alt,.employmentTable .DataGrid_AlternatingItem td,.employmentTable .alternateLocationRow td, .alternateListingRow td {
+background:#F5FAFA;
+border-right:1px solid #fff;
+color:#797268;
+}
+
+.employmentTable td.alternateJobRow {
+background:#f2f5f5;
+border-right:1px solid #fff;
+color:#797268;
+}
+
+.employmentTable td.job_title,#save_search td.job_title {
+color:maroon;
+font-size:medium;
+font-weight:700;
+}
+
+.employmentTable th,#save_search th,.job_search_table th {
+background:#CAE8EA;
+border-bottom:1px solid #C1DAD7;
+border-right:1px solid #C1DAD7;
+border-top:1px solid #C1DAD7;
+color:#4f6b72;
+font:bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+letter-spacing:2px;
+padding:6px 6px 6px 12px;
+text-align:left;
+text-transform:uppercase;
+}
+
+.employmentTable th.nobg,#save_search th.nobg,.email_jobs th.nobg {
+background:none;
+border-left:0;
+border-right:1px solid #C1DAD7;
+border-top:0;
+}
+
+.employmentTable th.spec,#save_search th.spec,.email_jobs th.spec {
+background:#fff;
+border-left:1px solid #C1DAD7;
+border-top:0;
+font:bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.employmentTable th.specalt,#save_search th.specalt,.email_jobs th.specalt {
+background:#f5fafa;
+border-left:1px solid #C1DAD7;
+border-top:0;
+color:#797268;
+font:bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.compositeTable {
+display:inline-table;
+float:left;
+width:25%;
+}
+
+.fieldLabel {
+font-weight:700;
+}
+
+.information {
+background:#CAE8EA;
+border-bottom:1px solid #C1DAD7;
+border-right:1px solid #C1DAD7;
+border-top:1px solid #C1DAD7;
+color:#4f6b72;
+font:bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+letter-spacing:2px;
+margin:10px;
+padding:6px 6px 6px 12px;
+text-align:left;
+text-transform:uppercase;
+}
+
+.instruction {
+font-style:italic;
+}
+
+.jobLabelCell {
+vertical-align:middle;
+}
+
+.job_search_ms {
+padding:10px 0;
+}
+
+.job_search_table td {
+background:#fff;
+border-bottom:1px solid #fff;
+color:#4f6b72;
+padding:4px 8px;
+}
+
+.jobs_listing,.job_applied_for_header,.save_searches {
+padding:0 15px;
+}
+
+.labelColumn {
+padding-right:10px;
+text-align:right;
+vertical-align:top;
+width:1%;
+}
+
+.lblErrorMessage {
+background:#F5E2E2;
+border:1px solid #c15c5c;
+display:block;
+margin:20px 0;
+padding:15px;
+}
+
+.nospacing {
+border:none 0;
+border-collapse:collapse;
+}
+
+.nospacing th,.nospacing td {
+border:none 0;
+}
+
+.nowrap,.nowrapTable td,.nowrapTable th {
+white-space:nowrap;
+}
+
+.padLeft {
+padding-left:15px;
+}
+
+.settingsTable {
+border:none 0;
+border-collapse:collapse;
+margin:0;
+padding:0;
+width:100%;
+}
+
+.unusedItems {
+clear:both;
+overflow:hidden;
+}

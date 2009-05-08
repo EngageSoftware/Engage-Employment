@@ -1,0 +1,412 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AD7CE875-D59D-4A05-90BD-2EC56C3F83EC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Engage.Dnn.Employment</RootNamespace>
+    <AssemblyName>EngageEmployment</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRules>-Microsoft.Design#CA1031;-Microsoft.Design#CA1054;-Microsoft.Design#CA1056;-Microsoft.Design#CA1055</CodeAnalysisRules>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetNuke, Version=4.5.1.28, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Assemblies\DNN 4.5.1\DotNetNuke.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.WebUtility, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Engage.Dnn.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>\\etg19\qa\Engage\Engage 3.0\Builds\Continuous Integration (Engage 3.0)_20080929.2\Release\Engage.Dnn.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Engage.Framework, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>\\etg19\qa\Engage\Engage 3.0\Builds\Continuous Integration (Engage 3.0)_20080929.2\Release\Engage.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\..\Program Files\Microsoft ASP.NET\ASP.NET 2.0 AJAX Extensions\v1.0.61025\System.Web.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="admin\ApplicationListing.ascx.cs">
+      <DependentUpon>ApplicationListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\ApplicationListing.ascx.designer.cs">
+      <DependentUpon>ApplicationListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\CategoryListing.ascx.cs">
+      <DependentUpon>CategoryListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\CategoryListing.ascx.designer.cs">
+      <DependentUpon>CategoryListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\ApplicationStatusListing.ascx.cs">
+      <DependentUpon>ApplicationStatusListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\ApplicationStatusListing.ascx.designer.cs">
+      <DependentUpon>ApplicationStatusListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\JobGroupAdmin.ascx.cs">
+      <DependentUpon>JobGroupAdmin.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\JobGroupAdmin.ascx.designer.cs">
+      <DependentUpon>JobGroupAdmin.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\StatusListing.ascx.cs">
+      <DependentUpon>StatusListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\StatusListing.ascx.designer.cs">
+      <DependentUpon>StatusListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\JobEdit.ascx.cs">
+      <DependentUpon>JobEdit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\JobEdit.ascx.designer.cs">
+      <DependentUpon>JobEdit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\JobListing.ascx.cs">
+      <DependentUpon>JobListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\JobListing.ascx.designer.cs">
+      <DependentUpon>JobListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\LocationListing.ascx.cs">
+      <DependentUpon>LocationListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\LocationListing.ascx.designer.cs">
+      <DependentUpon>LocationListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\PositionListing.ascx.cs">
+      <DependentUpon>PositionListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\PositionListing.ascx.designer.cs">
+      <DependentUpon>PositionListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\StateListing.ascx.cs">
+      <DependentUpon>StateListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\StateListing.ascx.designer.cs">
+      <DependentUpon>StateListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplicationPropertyDefinition.cs" />
+    <Compile Include="ApplicationStatus.cs" />
+    <Compile Include="Category.cs" />
+    <Compile Include="Document.cs" />
+    <Compile Include="JobApplication.cs" />
+    <Compile Include="EmploymentAdminController.cs" />
+    <Compile Include="EmploymentController.cs" />
+    <Compile Include="JobListingOptions.ascx.cs">
+      <DependentUpon>JobListingOptions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobListingOptions.ascx.designer.cs">
+      <DependentUpon>JobListingOptions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentType.cs" />
+    <Compile Include="JobDetailSettings.ascx.cs">
+      <DependentUpon>JobDetailSettings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobDetailSettings.ascx.designer.cs">
+      <DependentUpon>JobDetailSettings.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EmploymentModuleSettingsBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="JobListingSettings.ascx.cs">
+      <DependentUpon>JobListingSettings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobListingSettings.ascx.designer.cs">
+      <DependentUpon>JobListingSettings.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="JobSearchSettings.ascx.cs">
+      <DependentUpon>JobSearchSettings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobSearchSettings.ascx.designer.cs">
+      <DependentUpon>JobSearchSettings.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DataProvider.cs" />
+    <Compile Include="GetResume.aspx.cs">
+      <DependentUpon>GetResume.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GetResume.aspx.designer.cs">
+      <DependentUpon>GetResume.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JobDetailOptions.ascx.cs">
+      <DependentUpon>JobDetailOptions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobDetailOptions.ascx.designer.cs">
+      <DependentUpon>JobDetailOptions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Job.cs" />
+    <Compile Include="JobDetail.ascx.cs">
+      <DependentUpon>JobDetail.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobDetail.ascx.designer.cs">
+      <DependentUpon>JobDetail.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="JobListing.ascx.cs">
+      <DependentUpon>JobListing.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobListing.ascx.designer.cs">
+      <DependentUpon>JobListing.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="JobSearch.ascx.cs">
+      <DependentUpon>JobSearch.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="JobSearch.ascx.designer.cs">
+      <DependentUpon>JobSearch.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="JobSearchQuery.cs" />
+    <Compile Include="Location.cs" />
+    <Compile Include="ModuleBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Position.cs" />
+    <Compile Include="Providers\DataProviders\SqlDataProvider\SqlDataProvider.cs" />
+    <Compile Include="State.cs" />
+    <Compile Include="UserStatus.cs" />
+    <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\ApplicationListing.ascx" />
+    <Content Include="admin\CategoryListing.ascx" />
+    <Content Include="admin\JobEdit.ascx" />
+    <Content Include="admin\JobListing.ascx" />
+    <Content Include="admin\LocationListing.ascx" />
+    <Content Include="admin\PositionListing.ascx" />
+    <Content Include="admin\StateListing.ascx" />
+    <Content Include="GetResume.aspx" />
+    <Content Include="JobDetail.ascx" />
+    <Content Include="JobListing.ascx" />
+    <Content Include="JobSearch.ascx" />
+    <Content Include="module.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EngageEmployment.Build" />
+    <None Include="EngageEmployment.dnn" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.01.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.02.00.SqlDataProvider" />
+    <None Include="Uninstall.SqlDataProvider" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\JobDetail.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\JobListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\JobSearch.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\ApplicationListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\JobEdit.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\JobListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\LocationListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\CategoryListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\PositionListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\StateListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JobDetailOptions.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\StatusListing.ascx" />
+    <Content Include="App_LocalResources\JobDetailOptions.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Licenses\EULA-Enterprise.txt" />
+    <Content Include="Licenses\EULA-Professional.txt" />
+    <Content Include="Licenses\EULA-Standard.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\StatusListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\JobGroupAdmin.ascx" />
+    <Content Include="JobListingSettings.ascx" />
+    <Content Include="JobSearchSettings.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\JobGroupAdmin.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\JobListingSettings.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\JobSearchSettings.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="JobDetailSettings.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Providers\DataProviders\SqlDataProvider\01.00.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.03.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.03.02.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.04.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.04.01.SqlDataProvider" />
+    <Content Include="App_LocalResources\JobDetailSettings.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="JobListingOptions.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\JobListingOptions.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\ApplicationStatusListing.ascx" />
+    <Content Include="App_LocalResources\EmploymentController.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="References\DotNetNuke.dll" />
+    <Content Include="References\DotNetNuke.WebUtility.dll" />
+    <Content Include="References\Engage.Dnn.Framework.dll" />
+    <Content Include="References\Engage.Framework.dll" />
+    <Content Include="References\Microsoft.ApplicationBlocks.Data.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\App_LocalResources\ApplicationStatusListing.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\SharedResources.resx">
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v8.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(Solutions.VSVersion)' == '8.0'" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(Solutions.VSVersion)' == '9.0'" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>copy $(ProjectDir)module.css $(ProjectDir)admin\module.css</PostBuildEvent>
+  </PropertyGroup>
+</Project>

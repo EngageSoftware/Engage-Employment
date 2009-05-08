@@ -1,0 +1,21 @@
+﻿IF NOT EXISTS (SELECT * FROM syscolumns where name = 'Message' and id = OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_UserJob'))
+ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_UserJob	ADD
+    Message nvarchar(255) NULL
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] (
+	[UserStatusId] [int] IDENTITY (1, 1) NOT NULL ,
+	[Status] [nvarchar] (255) NOT NULL 
+) ON [PRIMARY]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] WITH NOCHECK ADD 
+	CONSTRAINT [PK_{objectQualifier}EngageEmployment_lkpUserStatus] PRIMARY KEY  CLUSTERED 
+	(
+		[UserStatusId]
+	)  ON [PRIMARY] 
+GO
+

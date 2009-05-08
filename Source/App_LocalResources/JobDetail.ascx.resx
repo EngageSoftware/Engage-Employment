@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AlreadyApplied.Text" xml:space="preserve">
+    <value>You've already applied for this job</value>
+  </data>
+  <data name="ApplicationAutoRespondSubject.Text" xml:space="preserve">
+    <value>Your Application Has Been Received</value>
+  </data>
+  <data name="ApplicationEmailLink.Text" xml:space="preserve">
+    <value>Click here to view job details</value>
+  </data>
+  <data name="ApplicationEmailMessageLabel.Text" xml:space="preserve">
+    <value>Message: </value>
+  </data>
+  <data name="ApplicationEmailResumeLink.Text" xml:space="preserve">
+    <value>Click here to view resumé</value>
+  </data>
+  <data name="ApplicationEmailSalaryLabel.Text" xml:space="preserve">
+    <value>Salary Requirements:</value>
+  </data>
+  <data name="ApplicationSent.Text" xml:space="preserve">
+    <value>Your application has been received.  Thank you for your interest.</value>
+  </data>
+  <data name="ApplicationSubject.Text" xml:space="preserve">
+    <value>A job application has been submitted for '{1}' by {0}</value>
+  </data>
+  <data name="Apply.Text" xml:space="preserve">
+    <value>Apply for this Job</value>
+  </data>
+  <data name="btnApply.Text" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="btnBack.Text" xml:space="preserve">
+    <value>Return to Job Listing</value>
+  </data>
+  <data name="btnCancelApply.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="btnCancelEmail.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="btnEmailFriend.Text" xml:space="preserve">
+    <value>Email this Job to a Friend</value>
+  </data>
+  <data name="btnSendToFriend.Text" xml:space="preserve">
+    <value>Send This Job</value>
+  </data>
+  <data name="ChooseLead.Text" xml:space="preserve">
+    <value>--Choose An Option--</value>
+  </data>
+  <data name="EmailToFriendSent.Text" xml:space="preserve">
+    <value>The email has been successfully sent.</value>
+  </data>
+  <data name="FriendEmailLink.Text" xml:space="preserve">
+    <value>Click here to view job details</value>
+  </data>
+  <data name="FriendEmailSubject.Text" xml:space="preserve">
+    <value>{0} has sent you information for a job opening at {1}</value>
+  </data>
+  <data name="JobDetailOptions.Text" xml:space="preserve">
+    <value>Job Detail Options</value>
+  </data>
+  <data name="JobIsFilled.Text" xml:space="preserve">
+    <value>This job has already been filled.  Thank you for your interest.</value>
+  </data>
+  <data name="lblApplicationCoverLetterHeader.Text" xml:space="preserve">
+    <value>Upload Cover Letter</value>
+  </data>
+  <data name="lblApplicationEmailHeader.Text" xml:space="preserve">
+    <value>Your Email Address</value>
+  </data>
+  <data name="lblApplicationMessageHeader.Text" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="lblApplicationResumeHeader.Text" xml:space="preserve">
+    <value>Upload Resumé</value>
+  </data>
+  <data name="lblApplicationResumeMessage.Text" xml:space="preserve">
+    <value>(Will use most recent resumé on file if left blank)&lt;br/&gt;&lt;br/&gt;</value>
+  </data>
+  <data name="lblApplicationSalaryHeader.Text" xml:space="preserve">
+    <value>Salary Requirements</value>
+  </data>
+  <data name="lblApplicationSalaryMessage.Text" xml:space="preserve">
+    <value>(Primary consideration will go to candidates submitting salary requirements)&lt;br/&gt;&lt;br/&gt;</value>
+  </data>
+  <data name="lblDatePostedHeader.Text" xml:space="preserve">
+    <value>Date Posted:</value>
+  </data>
+  <data name="lblDesiredQualificationsHeader.Text" xml:space="preserve">
+    <value>Desired Qualifications:</value>
+  </data>
+  <data name="lblEmailError.Text" xml:space="preserve">
+    <value>Your profile has an invalid email address.  Please correct it before submitting an application.</value>
+  </data>
+  <data name="lblEmailFromNameHeader.Text" xml:space="preserve">
+    <value> Name</value>
+  </data>
+  <data name="lblEmailMessageHeader.Text" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="lblEmailToAddressHeader.Text" xml:space="preserve">
+    <value> Email Address</value>
+  </data>
+  <data name="lblEmailToAddressMessage.Text" xml:space="preserve">
+    <value>(separate by , if sending to multiple recipients)</value>
+  </data>
+  <data name="lblLeadHeader.Text" xml:space="preserve">
+    <value>How did you hear about this job opening?</value>
+  </data>
+  <data name="lblLocationHeader.Text" xml:space="preserve">
+    <value>Location:</value>
+  </data>
+  <data name="lblPositionHeader.Text" xml:space="preserve">
+    <value>Position Description:</value>
+  </data>
+  <data name="lblRequired.Text" xml:space="preserve">
+    <value>* Required</value>
+  </data>
+  <data name="lblRequiredQualificationsHeader.Text" xml:space="preserve">
+    <value>Required Qualifications:</value>
+  </data>
+  <data name="lblStateHeader.Text" xml:space="preserve">
+    <value>State:</value>
+  </data>
+  <data name="lblTitleHeader.Text" xml:space="preserve">
+    <value>Job Title:</value>
+  </data>
+  <data name="regexApplicationEmail.Text" xml:space="preserve">
+    <value>You must supply a valid email address</value>
+  </data>
+  <data name="regexFriendEmailValidation.Text" xml:space="preserve">
+    <value>You must supply a valid email address</value>
+  </data>
+  <data name="Register.Text" xml:space="preserve">
+    <value>Register Now to Apply</value>
+  </data>
+  <data name="Required.Text" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="rfvApplicationEmail.Text" xml:space="preserve">
+    <value>You must supply an email address</value>
+  </data>
+  <data name="rfvCoverLetterFile.Text" xml:space="preserve">
+    <value>You must supply a cover letter</value>
+  </data>
+  <data name="rfvEmailMessage.Text" xml:space="preserve">
+    <value>You must supply a message.</value>
+  </data>
+  <data name="rfvFromName.Text" xml:space="preserve">
+    <value>You must supply a name</value>
+  </data>
+  <data name="rfvResumeFile.Text" xml:space="preserve">
+    <value>You must supply a resumé</value>
+  </data>
+  <data name="rfvSalaryRequirements.Text" xml:space="preserve">
+    <value>You must supply salary requirements</value>
+  </data>
+  <data name="rfvSendToAddress.Text" xml:space="preserve">
+    <value>You must supply an email address</value>
+  </data>
+  <data name="SmtpError.Text" xml:space="preserve">
+    <value>There was an error sending your email.</value>
+  </data>
+  <data name="regexCoverLetterFile.Text" xml:space="preserve">
+    <value>The cover letter you are uploading is an unsupported file type.  Supported file types include {0}.</value>
+    <comment>{0} replaced by the list of acceptable file extensions</comment>
+  </data>
+  <data name="regexResumeFile.Text" xml:space="preserve">
+    <value>The resumé you are uploading is an unsupported file type.  Supported file types include {0}.</value>
+    <comment>{0} replaced by the list of acceptable file extensions</comment>
+  </data>
+</root>

@@ -1,0 +1,24 @@
+﻿IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteJob]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteJob]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteJob]
+@JobId int
+AS
+
+	DELETE [{objectQualifier}EngageEmployment_JobJobGroup]
+	WHERE JobId = @JobId
+	
+	DELETE [{objectQualifier}EngageEmployment_UserJobProperty]
+	WHERE ApplicationId IN (SELECT ApplicationId FROM [{objectQualifier}EngageEmployment_UserJob] WHERE JobId = @JobId)
+	
+	DELETE [{objectQualifier}EngageEmployment_ApplicationDocument]
+	WHERE ApplicationId IN (SELECT ApplicationId FROM [{objectQualifier}EngageEmployment_UserJob] WHERE JobId = @JobId)
+	
+	DELETE [{objectQualifier}EngageEmployment_UserJob]
+	WHERE JobId = @JobId
+	
+	DELETE [{objectQualifier}EngageEmployment_Job]
+	WHERE JobId = @JobId
+GO
+
+

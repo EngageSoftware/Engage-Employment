@@ -1,0 +1,69 @@
+<%@ Import namespace="System.Globalization"%>
+<%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.StatusListing" AutoEventWireup="false" Codebehind="StatusListing.ascx.cs" %>
+<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
+<span class="Head"><dnn:Label ResourceKey="lblStatusesHeader" runat="server" /></span>
+
+<asp:Button ID="btnAdd" runat="server" resourcekey="btnAdd" />
+<asp:GridView ID="gvStatuses" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">
+    <AlternatingRowStyle CssClass="DataGrid_AlternatingItem" />
+    <RowStyle CssClass="DataGrid_Item" />
+    <SelectedRowStyle CssClass="DataGrid_SelectedItem" />
+    <HeaderStyle CssClass="DataGrid_Header" />
+    <FooterStyle CssClass="DataGrid_Footer" />
+    <EmptyDataTemplate>
+        <asp:Label ID="lblNoStatuses" runat="server" resourcekey="lblNoStatuses" />
+    </EmptyDataTemplate>
+    <Columns>
+        <asp:TemplateField HeaderText="StatusName">
+            <ItemTemplate>
+                <span class="Normal"><%#Eval("Status") %></span>
+                <asp:HiddenField ID="hdnStatusId" runat="server" Value='<%#((int)Eval("StatusId")).ToString(CultureInfo.InvariantCulture) %>' />
+            </ItemTemplate>
+            <EditItemTemplate>
+                <asp:TextBox ID="txtStatus" runat="server" Text='<%#Eval("Status") %>' CssClass="NormalTextBox" />
+                <asp:HiddenField ID="hdnStatusId" runat="server" Value='<%#((int)Eval("StatusId")).ToString(CultureInfo.InvariantCulture) %>' />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtStatus" Display="None" ValidationGroup="Edit" resourcekey="StatusRequired" />
+                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtStatus" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxLengthValidationExpression %>" ErrorMessage="<%#MaxLengthValidationText %>" />
+            </EditItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField>
+            <ItemStyle CssClass="labelColumn" />
+            <ItemTemplate>
+                <asp:Button ID="btnEdit" runat="server" resourcekey="Edit" CommandName="Edit" />
+            </ItemTemplate>
+            <EditItemTemplate>
+                <asp:Button ID="btnSave" runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
+            </EditItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField>
+            <ItemStyle CssClass="labelColumn" />
+            <ItemTemplate>
+                <asp:Button ID="btnDelete" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
+            </ItemTemplate>
+            <EditItemTemplate>
+                <asp:Button ID="btnCancel" runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
+            </EditItemTemplate>
+        </asp:TemplateField>
+    </Columns>
+</asp:GridView>
+<asp:Panel ID="pnlNew" runat="server" Visible="false">
+    <table class="employmentTable">
+        <tr id="rowNewHeader" runat="server" visible="false"><th>
+            <asp:Label ID="lblNewHeader" runat="server" resourcekey="StatusName.Header" />
+        </th><th></th><th></th></tr>
+        <tr class='<%=pnlNew.CssClass %>'><td>
+            <asp:TextBox ID="txtNewStatus" runat="server" CssClass="NormalTextBox" />
+        </td><td class="labelColumn">
+            <asp:Button ID="btnSaveNew" runat="server" resourcekey="btnSaveNew" ValidationGroup="New" />
+        </td><td class="labelColumn">
+            <asp:Button ID="btnCancelNew" runat="server" resourcekey="btnCancelNew" CausesValidation="false" />
+        </td></tr>
+    </table>
+    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNewStatus" Display="None" ValidationGroup="New" resourcekey="StatusRequired" />
+    <asp:RegularExpressionValidator ID="regexNewUserStatus" runat="server" ControlToValidate="txtNewStatus" Display="None" ValidationGroup="New" />
+</asp:Panel>
+<asp:CustomValidator ID="cvDuplicateUserStatus" runat="server" Display="None" ValidationGroup="Edit" resourcekey="DuplicateStatus.Text" />
+<asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="Edit" />
+<asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="New" />
+
+<asp:LinkButton ID="btnBack" runat="server" CssClass="Normal" resourcekey="btnBack" />
