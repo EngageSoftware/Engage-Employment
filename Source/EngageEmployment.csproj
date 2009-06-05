@@ -407,6 +407,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy $(ProjectDir)module.css $(ProjectDir)admin\module.css</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)module.css" "$(ProjectDir)admin\module.css"</PostBuildEvent>
   </PropertyGroup>
 </Project>
