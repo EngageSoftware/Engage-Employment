@@ -152,7 +152,7 @@
              <Properties>Property1=Value1;Property2=Value2</Properties>
          </SolutionToBuild>
     -->
-    <SolutionToBuild Include="$(BuildProjectFolderPath)/../../Source/EngageEmployment_VS2008.sln">
+    <SolutionToBuild Include="$(BuildProjectFolderPath)/../../Source/EngageEmployment.sln">
         <Targets></Targets>
         <Properties></Properties>
     </SolutionToBuild>
