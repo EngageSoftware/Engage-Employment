@@ -221,4 +221,14 @@
          <AdditionalReferencePath Include="C:\MyFolder2\" />
     -->
   </ItemGroup>
+  <Target Name="AfterCompile">
+    <!-- HACK: We aren't closing the quote around the OutDir parameter, so that we don't have to deal with escaping a potential trailing slash -->
+    <!-- See http://weblogs.asp.net/jgalloway/archive/2006/10/05/_5B002E00_NET-Gotcha_5D00_-Commandline-args-ending-in-_5C002200_-are-subject-to-CommandLineToArgvW-whackiness.aspx  -->
+    <Exec Command="D:\Tools\NAnt\bin\Nant.exe -D:build=false -D:bin.directory=&quot;$(OutDir)" WorkingDirectory="..\Sources\Source" />
+
+    <CreateItem Include="..\Sources\Source\package\*.zip">
+      <Output TaskParameter="Include" ItemName="Packages"/>
+    </CreateItem>
+    <Copy SourceFiles="@(Packages)" DestinationFolder="..\Binaries\Release\"/>
+  </Target>
 </Project>
