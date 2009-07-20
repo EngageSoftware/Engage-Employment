@@ -76,7 +76,7 @@ namespace Engage.Dnn.Employment
                                     searchItemTitle,
                                     searchDescription,
                                     (int)jobs["RevisingUser"],
-                                    (DateTime)jobs["PostedDate"],
+                                    (DateTime)jobs["RevisionDate"],
                                     modInfo.ModuleID,
                                     jobId,
                                     searchedContent,

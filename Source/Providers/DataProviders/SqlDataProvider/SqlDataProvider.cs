@@ -258,7 +258,7 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" select ");
             sql.Append(" j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, ");
             sql.Append(" j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, ");
-            sql.Append(" j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser ");
+            sql.Append(" j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs j", NamePrefix);
             if (jobGroupId.HasValue)
             {
