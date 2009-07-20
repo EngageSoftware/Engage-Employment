@@ -1,0 +1,20 @@
+﻿IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]') AND OBJECTPROPERTY(id, N'IsView') = 1)
+DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]
+AS
+select
+j.JobId, p.JobTitle, p.JobPositionId AS PositionId, l.[Description] as LocationName, 
+l.LocationId, s.[Name] as StateName, s.Abbreviation as StateAbbreviation, s.StateId,
+j.RequiredQualifications, j.DesiredQualifications, jc.[Description] as CategoryName, 
+jc.JobCategoryId AS CategoryId, j.IsHot, j.PostedDate, p.[Description] as JobDescription, 
+j.IsFilled, j.SortOrder, j.RevisingUser, j.PortalId, j.NotificationEmailAddress,
+j.RevisionDate
+from
+{objectQualifier}EngageEmployment_job j
+join {objectQualifier}EngageEmployment_lkpJobPosition p on (j.JobPositionId = p.JobPositionId)
+join {objectQualifier}EngageEmployment_lkpLocation l on (j.LocationId = l.LocationId)
+join {objectQualifier}EngageEmployment_lkpState s on (l.StateId = s.StateId)
+join {objectQualifier}EngageEmployment_lkpJobCategory jc on (j.JobCategoryId = jc.JobCategoryId)
+GO
+
