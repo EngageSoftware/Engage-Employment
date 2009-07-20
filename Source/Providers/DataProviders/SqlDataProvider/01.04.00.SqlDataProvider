@@ -84,7 +84,7 @@ AS
  JOIN [{objectQualifier}EngageEmployment_lkpJobPosition] pj ON (pd.JobPositionId = pj.JobPositionId)
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
@@ -193,7 +193,7 @@ join {objectQualifier}EngageEmployment_Document d ON (ad.ResumeId = d.ResumeId)
 join {objectQualifier}EngageEmployment_DocumentType dt ON (d.DocumentTypeId = dt.DocumentTypeId)
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spSaveJobSearchQuery]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spSaveJobSearchQuery]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spSaveJobSearchQuery]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spSaveJobSearchQuery]
@@ -213,7 +213,7 @@ AS
 GO
 
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateLocation]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateLocation]
@@ -227,7 +227,7 @@ AS
 	WHERE LocationId = @locationId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertLocation]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertLocation]
@@ -240,7 +240,7 @@ AS
 	VALUES (@locationName, @stateId, @portalId)
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteLocation]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteLocation]
 GO
 
@@ -251,7 +251,7 @@ AS
     WHERE LocationId = @locationId  
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateState]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateState]
@@ -265,7 +265,7 @@ AS
 	WHERE StateId = @stateId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertState]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertState]
@@ -278,7 +278,7 @@ AS
 	VALUES (@stateName, @portalId, @stateAbbreviation) 
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteState]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteState]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteState]  
@@ -288,7 +288,7 @@ AS
     WHERE StateId = @stateId  
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateCategory]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateCategory]
@@ -300,7 +300,7 @@ AS
 	WHERE JobCategoryId = @categoryId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertCategory]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertCategory]
@@ -312,7 +312,7 @@ AS
 	VALUES (@categoryName, @portalId)
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeleteCategory]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteCategory]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteCategory]  
@@ -322,7 +322,7 @@ AS
     WHERE JobCategoryId = @categoryId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdatePosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdatePosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdatePosition]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdatePosition]
@@ -337,7 +337,7 @@ AS
 	WHERE JobPositionId = @PositionId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertPosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertPosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertPosition]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertPosition]
@@ -350,7 +350,7 @@ AS
 	VALUES (@JobTitle, @JobDescription, @portalId)
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeletePosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spDeletePosition]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeletePosition]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeletePosition]  
@@ -360,7 +360,7 @@ AS
     WHERE JobPositionId = @positionId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertJob]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spInsertJob]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertJob]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spInsertJob]
@@ -382,7 +382,7 @@ AS
 	SELECT CONVERT(int, SCOPE_IDENTITY())
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateJob]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateJob]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateJob]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateJob]
@@ -414,7 +414,7 @@ AS
 
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetApplicationsByStatus]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetApplicationsByStatus]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetApplicationsByStatus]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetApplicationsByStatus]
@@ -424,7 +424,7 @@ AS
 	FROM {objectQualifier}EngageEmployment_vwApplications WHERE StatusId = @statusId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateApplication]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateApplication]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateApplication]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateApplication]
@@ -438,7 +438,7 @@ AS
 	WHERE ApplicationId = @applicationId
 GO
 
-IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetDocument]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetDocument]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetDocument]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetDocument]
