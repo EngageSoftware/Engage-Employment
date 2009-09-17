@@ -16,3 +16,89 @@ BEGIN
 END
 GO
 
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_vwJobs', N'V') IS NOT NULL
+    DROP VIEW {databaseOwner}{objectQualifier}EngageEmployment_vwJobs
+GO
+
+CREATE VIEW {databaseOwner}{objectQualifier}EngageEmployment_vwJobs
+AS  
+SELECT  
+j.JobId, p.JobTitle, p.JobPositionId AS PositionId, l.[Description] AS LocationName,   
+l.LocationId, s.[Name] AS StateName, s.Abbreviation AS StateAbbreviation, s.StateId,  
+j.RequiredQualifications, j.DesiredQualifications, jc.[Description] AS CategoryName,   
+jc.JobCategoryId AS CategoryId, j.IsHot, j.PostedDate, p.[Description] AS JobDescription,   
+j.IsFilled, j.SortOrder, j.RevisingUser, j.PortalId, j.NotificationEmailAddress,  
+j.RevisionDate, j.StartDate, j.ExpireDate
+FROM  
+{objectQualifier}EngageEmployment_job j  
+JOIN {objectQualifier}EngageEmployment_lkpJobPosition p ON (j.JobPositionId = p.JobPositionId)  
+JOIN {objectQualifier}EngageEmployment_lkpLocation l ON (j.LocationId = l.LocationId)  
+JOIN {objectQualifier}EngageEmployment_lkpState s ON (l.StateId = s.StateId)  
+JOIN {objectQualifier}EngageEmployment_lkpJobCategory jc ON (j.JobCategoryId = jc.JobCategoryId)  
+GO
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spInsertJob', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spInsertJob
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spInsertJob
+@positionId int,   
+@locationId int,   
+@categoryId int,   
+@isHot bit,   
+@isFilled bit,   
+@requiredQualifications ntext,   
+@desiredQualifications ntext,    
+@revisingUser int,   
+@sortOrder int,   
+@portalId int,   
+@notificationEmailAddress nvarchar(320),
+@startDate datetime,
+@expireDate datetime
+AS  
+ INSERT {objectQualifier}EngageEmployment_Job  
+ (JobPositionId, LocationId, JobCategoryId, PostedDate, IsHot, IsFilled, RequiredQualifications, 
+  DesiredQualifications, RevisingUser, RevisionDate, SortOrder, PortalId, NotificationEmailAddress,
+  StartDate, ExpireDate)
+ VALUES (@positionId, @locationId, @categoryId, getdate(), @isHot, @isFilled, @requiredQualifications,
+         @desiredQualifications,  @revisingUser, getdate(), @sortOrder, @portalId, @NotificationEmailAddress,
+         @startDate, @expireDate)  
+ SELECT CONVERT(int, SCOPE_IDENTITY())
+GO
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spUpdateJob', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateJob
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateJob
+@jobId int,  
+@positionId int,  
+@categoryId int,  
+@locationId int,  
+@isHot bit,  
+@isFilled bit,  
+@requiredQualifications ntext,  
+@desiredQualifications ntext,  
+@revisingUser int,  
+@sortOrder int,  
+@notificationEmailAddress nvarchar(320),
+@startDate datetime,
+@expireDate datetime
+AS  
+ UPDATE {objectQualifier}EngageEmployment_Job  
+ SET JobPositionId = @positionId,   
+        LocationId = @locationId,   
+        JobCategoryId = @categoryId,   
+        IsHot = @isHot,   
+        IsFilled = @isFilled,   
+        RequiredQualifications = @requiredQualifications,   
+        DesiredQualifications = @desiredQualifications,   
+        RevisingUser = @revisingUser,   
+        RevisionDate = getdate(),   
+        SortOrder = @sortOrder,   
+        NotificationEmailAddress = @notificationEmailAddress,
+        StartDate = @startDate,
+        ExpireDate = @expireDate
+    WHERE JobId = @jobId  
+GO
+

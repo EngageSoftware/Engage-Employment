@@ -322,10 +322,9 @@ namespace Engage.Dnn.Employment
         public static ReadOnlyCollection<Job> Load(int? maximumNumberOfJobs, bool limitRandomly, bool onlyHotJobs, int? jobGroupId, int portalId)
         {
             var jobs = new List<Job>();
-            using (
-                    IDataReader dr = limitRandomly
-                                              ? DataProvider.Instance().GetJobs(onlyHotJobs, jobGroupId, portalId)
-                                              : DataProvider.Instance().GetJobs(onlyHotJobs, maximumNumberOfJobs, jobGroupId, portalId))
+            using (IDataReader dr = limitRandomly
+                                             ? DataProvider.Instance().GetJobs(onlyHotJobs, jobGroupId, portalId)
+                                             : DataProvider.Instance().GetJobs(onlyHotJobs, maximumNumberOfJobs, jobGroupId, portalId))
             {
                 while (dr.Read())
                 {
@@ -419,7 +418,9 @@ namespace Engage.Dnn.Employment
                     this.desiredQualifications, 
                     this.SortOrder, 
                     portalId, 
-                    this.notificationEmailAddress);
+                    this.notificationEmailAddress,
+                    this.StartDate,
+                    this.ExpireDate);
 
             if (jobGroupId.HasValue)
             {
@@ -440,7 +441,9 @@ namespace Engage.Dnn.Employment
                     this.requiredQualifications, 
                     this.desiredQualifications, 
                     this.SortOrder, 
-                    this.notificationEmailAddress);
+                    this.notificationEmailAddress, 
+                    this.StartDate, 
+                    this.ExpireDate);
         }
     }
 }

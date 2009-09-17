@@ -168,47 +168,51 @@ namespace Engage.Dnn.Employment.Data
         }
 
         public override int InsertJob(
-                int userId, 
-                int positionId, 
-                int locationId, 
-                int categoryId, 
-                bool isHot, 
-                bool isFilled, 
-                string requiredQualifications, 
-                string desiredQualifications, 
-                int sortOrder, 
-                int portalId, 
-                string notificationEmailAddress)
+            int userId, 
+            int positionId, 
+            int locationId, 
+            int categoryId, 
+            bool isHot, 
+            bool isFilled, 
+            string requiredQualifications, 
+            string desiredQualifications, 
+            int sortOrder, 
+            int portalId, 
+            string notificationEmailAddress, 
+            DateTime startDate, 
+            DateTime? expireDate)
         {
-            return
-                    (int)
-                    this.ExecuteScalar(
-                            "InsertJob", 
-                            Engage.Utility.CreateIntegerParam("@positionId", positionId), 
-                            Engage.Utility.CreateIntegerParam("@locationId", locationId), 
-                            Engage.Utility.CreateIntegerParam("@categoryId", categoryId), 
-                            Engage.Utility.CreateBitParam("@isHot", isHot), 
-                            Engage.Utility.CreateBitParam("@isFilled", isFilled), 
-                            Engage.Utility.CreateTextParam("@requiredQualifications", requiredQualifications), 
-                            Engage.Utility.CreateTextParam("@desiredQualifications", desiredQualifications), 
-                            Engage.Utility.CreateIntegerParam("@revisingUser", userId), 
-                            Engage.Utility.CreateIntegerParam("@sortOrder", sortOrder), 
-                            Engage.Utility.CreateIntegerParam("@portalId", portalId), 
-                            Engage.Utility.CreateVarcharParam("@NotificationEmailAddress", notificationEmailAddress, MaxEmailLength));
+            return (int)this.ExecuteScalar(
+                "InsertJob",
+                Engage.Utility.CreateIntegerParam("@positionId", positionId),
+                Engage.Utility.CreateIntegerParam("@locationId", locationId),
+                Engage.Utility.CreateIntegerParam("@categoryId", categoryId),
+                Engage.Utility.CreateBitParam("@isHot", isHot),
+                Engage.Utility.CreateBitParam("@isFilled", isFilled),
+                Engage.Utility.CreateTextParam("@requiredQualifications", requiredQualifications),
+                Engage.Utility.CreateTextParam("@desiredQualifications", desiredQualifications),
+                Engage.Utility.CreateIntegerParam("@revisingUser", userId),
+                Engage.Utility.CreateIntegerParam("@sortOrder", sortOrder),
+                Engage.Utility.CreateIntegerParam("@portalId", portalId),
+                Engage.Utility.CreateVarcharParam("@notificationEmailAddress", notificationEmailAddress, MaxEmailLength),
+                Engage.Utility.CreateDateTimeParam("@startDate", startDate),
+                Engage.Utility.CreateDateTimeParam("@expireDate", expireDate));
         }
 
         public override void UpdateJob(
-                int userId, 
-                int jobId, 
-                int positionId, 
-                int locationId, 
-                int categoryId, 
-                bool isHot, 
-                bool isFilled, 
-                string requiredQualifications, 
-                string desiredQualifications, 
-                int sortOrder, 
-                string notificationEmailAddress)
+            int userId, 
+            int jobId, 
+            int positionId, 
+            int locationId, 
+            int categoryId, 
+            bool isHot, 
+            bool isFilled, 
+            string requiredQualifications, 
+            string desiredQualifications, 
+            int sortOrder, 
+            string notificationEmailAddress, 
+            DateTime startDate, 
+            DateTime? expireDate)
         {
             this.ExecuteNonQuery(
                     "UpdateJob", 
@@ -222,7 +226,9 @@ namespace Engage.Dnn.Employment.Data
                     Engage.Utility.CreateTextParam("@requiredQualifications", requiredQualifications), 
                     Engage.Utility.CreateIntegerParam("@revisingUser", userId), 
                     Engage.Utility.CreateIntegerParam("@sortOrder", sortOrder), 
-                    Engage.Utility.CreateVarcharParam("@notificationEmailAddress", notificationEmailAddress, MaxEmailLength));
+                    Engage.Utility.CreateVarcharParam("@notificationEmailAddress", notificationEmailAddress, MaxEmailLength),
+                    Engage.Utility.CreateDateTimeParam("@startDate", startDate),
+                    Engage.Utility.CreateDateTimeParam("@expireDate", expireDate));
         }
 
         public override void DeleteJob(int jobId)
@@ -237,7 +243,7 @@ namespace Engage.Dnn.Employment.Data
             sql.Append("select ");
             sql.Append(" JobId, JobTitle, PositionId, LocationName, LocationId, StateName, StateAbbreviation, StateId, ");
             sql.Append(" PostedDate, RequiredQualifications, DesiredQualifications, NotificationEmailAddress, ");
-            sql.Append(" CategoryName, CategoryId, IsHot, IsFilled, JobDescription, SortOrder ");
+            sql.Append(" CategoryName, CategoryId, IsHot, IsFilled, JobDescription, SortOrder, StartDate, ExpireDate ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs ", this.NamePrefix);
             sql.Append(" where JobId = @jobId ");
 
@@ -262,7 +268,7 @@ namespace Engage.Dnn.Employment.Data
 
             sql.Append("j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, ");
             sql.Append("j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, ");
-            sql.Append("j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.NotificationEmailAddress ");
+            sql.Append("j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.NotificationEmailAddress, j.StartDate, j.ExpireDate ");
             sql.Append("from ");
             sql.AppendFormat(CultureInfo.InvariantCulture, "{0}vwJobs j ", this.NamePrefix);
             if (jobGroupId.HasValue)
@@ -301,7 +307,7 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" select ");
             sql.Append(" j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, ");
             sql.Append(" j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, ");
-            sql.Append(" j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate ");
+            sql.Append(" j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs j", this.NamePrefix);
             if (jobGroupId.HasValue)
             {

@@ -181,24 +181,7 @@ namespace Engage.Dnn.Employment
 
         private void LoadJobListing()
         {
-#pragma warning disable 1692
-#pragma warning disable JoinDeclarationAndInitializer
-            ReadOnlyCollection<Job> jobs;
-#pragma warning restore JoinDeclarationAndInitializer
-#pragma warning restore 1692
-
-            //string s = Request.QueryString["jobType"];
-            //if (Engage.Utility.IsInteger(s, CultureInfo.InvariantCulture))
-            //{
-            //    JobListingType jt = (JobListingType)Enum.Parse(typeof(JobListingType), s);
-            //    jobs = Job.Load(jt, Boolean.True, Boolean.True, JobGroupId);
-            //}
-            //else
-            //{
-                jobs = Job.Load(this.MaximumNumberOfJobsDisplayed, this.LimitJobsRandomly, this.ShowOnlyHotJobs, this.JobGroupId, PortalId);
-            //}
-
-            this.rpJobListing.DataSource = jobs;
+            this.rpJobListing.DataSource = Job.Load(this.MaximumNumberOfJobsDisplayed, this.LimitJobsRandomly, this.ShowOnlyHotJobs, this.JobGroupId, this.PortalId);
             this.rpJobListing.DataBind();
         }
 

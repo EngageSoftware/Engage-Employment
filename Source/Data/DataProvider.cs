@@ -66,8 +66,8 @@ namespace Engage.Dnn.Employment.Data
         #region Job
         public abstract DataTable GetAdminData(int? jobGroupId, int portalId);
         public abstract DataSet GetUnusedAdminData(int? jobGroupId, int portalId);
-		public abstract int InsertJob(int userId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, int portalId, string notificationEmailAddress);
-        public abstract void UpdateJob(int userId, int jobId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, string notificationEmailAddress);
+		public abstract int InsertJob(int userId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, int portalId, string notificationEmailAddress, DateTime startDate, DateTime? expireDate);
+        public abstract void UpdateJob(int userId, int jobId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, string notificationEmailAddress, DateTime startDate, DateTime? expireDate);
         public abstract void DeleteJob(int jobId);
         public abstract IDataReader GetJob(int jobId);
         public abstract IDataReader GetJobs(int? jobGroupId, int portalId);
