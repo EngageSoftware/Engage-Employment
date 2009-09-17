@@ -133,6 +133,16 @@ namespace Engage.Dnn.Employment
             }
         }
 
+        /// <summary>
+        /// Gets or sets the date and time on which this job posting should no longer be displayed to the public.
+        /// </summary>
+        /// <value>The expiration date of this job posting.</value>
+        public DateTime? ExpireDate
+        {
+            get;
+            set;
+        }
+
         public bool IsFilled
         {
             get;
@@ -212,6 +222,16 @@ namespace Engage.Dnn.Employment
         }
 
         public int SortOrder
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the date and time at which this job posting should start being displayed to the public.
+        /// </summary>
+        /// <value>The start date of this job posting.</value>
+        public DateTime StartDate
         {
             get;
             set;
@@ -380,7 +400,9 @@ namespace Engage.Dnn.Employment
                                requiredQualifications = reader["RequiredQualifications"].ToString(),
                                desiredQualifications = reader["DesiredQualifications"].ToString(),
                                SortOrder = (int)reader["SortOrder"],
-                               notificationEmailAddress = reader["NotificationEmailAddress"].ToString()
+                               notificationEmailAddress = reader["NotificationEmailAddress"].ToString(),
+                               StartDate = (DateTime)reader["StartDate"],
+                               ExpireDate = reader["ExpireDate"] as DateTime?
                        };
         }
 
