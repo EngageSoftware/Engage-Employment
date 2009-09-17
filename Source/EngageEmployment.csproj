@@ -66,9 +66,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\..\Program Files\Microsoft ASP.NET\ASP.NET 2.0 AJAX Extensions\v1.0.61025\System.Web.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -253,7 +250,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="EngageEmployment.Build" />
-    <None Include="EngageEmployment.dnn" />
+    <None Include="EngageEmployment.4.dnn" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.01.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.02.00.SqlDataProvider" />
     <None Include="Uninstall.SqlDataProvider" />
@@ -316,9 +313,9 @@
     <Content Include="App_LocalResources\JobDetailOptions.ascx.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Licenses\EULA-Enterprise.txt" />
-    <Content Include="Licenses\EULA-Professional.txt" />
-    <Content Include="Licenses\EULA-Standard.txt" />
+    <Content Include="Licenses\EULA-Enterprise.htm" />
+    <Content Include="Licenses\EULA-Professional.htm" />
+    <Content Include="Licenses\EULA-Standard.htm" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="admin\App_LocalResources\StatusListing.ascx.resx">
@@ -347,6 +344,7 @@
     <Content Include="JobDetailSettings.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="EngageEmployment.5.dnn" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.00.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.03.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.03.02.SqlDataProvider" />
@@ -382,6 +380,9 @@
   <ItemGroup>
     <Content Include="App_LocalResources\SharedResources.resx">
     </Content>
+    <Content Include="References\Engage.Dnn.Framework.XML" />
+    <Content Include="References\Engage.Framework.xml" />
+    <Content Include="ReleaseNotes_1.5.0.htm" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

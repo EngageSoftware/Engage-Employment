@@ -1,4 +1,4 @@
-﻿IF EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+﻿IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
 GO
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
