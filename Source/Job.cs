@@ -1,217 +1,67 @@
-//Engage: Employment - http://www.engagesoftware.com
-//Copyright (c) 2004-2009
-//by Engage Software ( http://www.engagesoftware.com )
-
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-//TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-//THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-//CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-//DEALINGS IN THE SOFTWARE.
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Diagnostics;
-using System.Globalization;
-using System.Web;
-using Engage.Dnn.Employment.Data;
+// <copyright file="Job.cs" company="Engage Software">
+// Engage: Employment
+// Copyright (c) 2004-2009
+// by Engage Software ( http://www.engagesoftware.com )
+// </copyright>
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 namespace Engage.Dnn.Employment
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Web;
+    using Data;
+
     public class Job
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string categoryName;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string description;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string desiredQualifications;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string locationName;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string notificationEmailAddress;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string postedDate;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string requiredQualifications;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string stateAbbreviation;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string stateName;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string title;
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="Job"/> class from being created.
+        /// </summary>
         private Job()
         {
-        }
-
-        #region Properties
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _jobId = -1;
-        public int JobId
-        {
-            [DebuggerStepThrough]
-            get { return this._jobId; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _categoryId;        
-        public int CategoryId
-        {
-            [DebuggerStepThrough]
-            get { return this._categoryId; }
-            [DebuggerStepThrough]
-            set { this._categoryId = value; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _categoryName;
-        public string CategoryName
-        {
-            [DebuggerStepThrough]
-            set { this._categoryName = value; }
-            [DebuggerStepThrough]
-            get { return (this._categoryName ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _requiredQualifications;
-        public string RequiredQualifications
-        {
-            [DebuggerStepThrough]
-            set { this._requiredQualifications = value; }
-            [DebuggerStepThrough]
-            get { return (this._requiredQualifications ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _desiredQualifications;
-        public string DesiredQualifications
-        {
-            [DebuggerStepThrough]
-            set { this._desiredQualifications = value; }
-            [DebuggerStepThrough]
-            get { return (this._desiredQualifications ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _title;
-        public string Title
-        {
-            [DebuggerStepThrough]
-            set { this._title = value; }
-            [DebuggerStepThrough]
-            get { return (this._title ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _positionId;        
-        public int PositionId
-        {
-            [DebuggerStepThrough]
-            get { return this._positionId; }
-            [DebuggerStepThrough]
-            set { this._positionId = value; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _description;
-        public string Description
-        {
-            [DebuggerStepThrough]
-            set { this._description = value; }
-            [DebuggerStepThrough]
-            get { return (this._description ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _locationId;        
-        public int LocationId
-        {
-            [DebuggerStepThrough]
-            get { return this._locationId; }
-            [DebuggerStepThrough]
-            set { this._locationId = value; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _locationName;
-        public string LocationName
-        {
-            [DebuggerStepThrough]
-            private set { this._locationName = value; }
-            [DebuggerStepThrough]
-            get { return (this._locationName ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _postedDate;
-        public string PostedDate
-        {
-            [DebuggerStepThrough]
-            get { return (this._postedDate ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _stateId;        
-        public int StateId
-        {
-            [DebuggerStepThrough]
-            get { return this._stateId; }
-            [DebuggerStepThrough]
-            set { this._stateId = value; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _stateName;
-        public string StateName
-        {
-            [DebuggerStepThrough]
-            private set { this._stateName = value; }
-            [DebuggerStepThrough]
-            get { return (this._stateName ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _stateAbbreviation;
-        public string StateAbbreviation
-        {
-            [DebuggerStepThrough]
-            private set { this._stateAbbreviation = value; }
-            [DebuggerStepThrough]
-            get { return (this._stateAbbreviation ?? string.Empty); }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool _isHot;
-        public bool IsHot
-        {
-            [DebuggerStepThrough]
-            set { this._isHot = value; }
-            [DebuggerStepThrough]
-            get { return this._isHot; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool _isFilled;
-        public bool IsFilled
-        {
-            [DebuggerStepThrough]
-            set { this._isFilled = value; }
-            [DebuggerStepThrough]
-            get { return this._isFilled; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _sortOrder;
-        public int SortOrder
-        {
-            [DebuggerStepThrough]
-            get { return this._sortOrder; }
-            [DebuggerStepThrough]
-            set { this._sortOrder = value; }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _notificationEmailAddress;
-        public string NotificationEmailAddress
-        {
-            [DebuggerStepThrough]
-            get { return this._notificationEmailAddress ?? string.Empty; }
-            [DebuggerStepThrough]
-            set { this._notificationEmailAddress = value; }
+            this.JobId = -1;
         }
 
         public static int CurrentJobId
         {
-            set
-            {
-                if (HttpContext.Current != null)
-                {
-                    HttpContext.Current.Session["JobId"] = value;
-                }
-            }
-
             get
             {
                 object jobId = null;
@@ -219,36 +69,221 @@ namespace Engage.Dnn.Employment
                 {
                     jobId = HttpContext.Current.Session["JobId"];
                 }
-                return (jobId == null ? -1 : Convert.ToInt32(jobId, CultureInfo.InvariantCulture));
+
+                return jobId == null ? -1 : Convert.ToInt32(jobId, CultureInfo.InvariantCulture);
+            }
+
+            set
+            {
+                if (HttpContext.Current != null)
+                {
+                    HttpContext.Current.Session["JobId"] = value;
+                }
             }
         }
-        #endregion
+
+        public int CategoryId
+        {
+            get;
+            set;
+        }
+
+        public string CategoryName
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.categoryName ?? string.Empty;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                this.categoryName = value;
+            }
+        }
+
+        public string Description
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.description ?? string.Empty;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                this.description = value;
+            }
+        }
+
+        public string DesiredQualifications
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.desiredQualifications ?? string.Empty;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                this.desiredQualifications = value;
+            }
+        }
+
+        public bool IsFilled
+        {
+            get;
+            set;
+        }
+
+        public bool IsHot
+        {
+            get;
+            set;
+        }
+
+        public int JobId
+        {
+            get;
+            private set;
+        }
+
+        public int LocationId
+        {
+            get;
+            set;
+        }
+
+        public string LocationName
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.locationName ?? string.Empty;
+            }
+        }
+
+        public string NotificationEmailAddress
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.notificationEmailAddress ?? string.Empty;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                this.notificationEmailAddress = value;
+            }
+        }
+
+        public int PositionId
+        {
+            get;
+            set;
+        }
+
+        public string PostedDate
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.postedDate ?? string.Empty;
+            }
+        }
+
+        public string RequiredQualifications
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.requiredQualifications ?? string.Empty;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                this.requiredQualifications = value;
+            }
+        }
+
+        public int SortOrder
+        {
+            get;
+            set;
+        }
+
+        public string StateAbbreviation
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.stateAbbreviation ?? string.Empty;
+            }
+        }
+
+        public int StateId
+        {
+            get;
+            set;
+        }
+
+        public string StateName
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.stateName ?? string.Empty;
+            }
+        }
+
+        public string Title
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.title ?? string.Empty;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                this.title = value;
+            }
+        }
+
+        public static bool CanCreateJob(int portalId)
+        {
+            return DataProvider.Instance().CanCreateJob(portalId);
+        }
 
         public static Job CreateJob()
         {
             return new Job();
         }
 
-        public void Save(int userId, int? jobGroupId, int portalId)
-        {
-            if (this._jobId == -1)
-            {
-                InsertJob(userId, jobGroupId, portalId);
-            }
-            else
-            {
-                UpdateJob(userId);
-            }
-        }
-
-        public void Delete()
-        {
-            Delete(this._jobId);
-        }
-
         public static void Delete(int jobId)
         {
             DataProvider.Instance().DeleteJob(jobId);
+        }
+
+        public static DataTable GetAdminData(int? jobGroupId, int portalId)
+        {
+            return DataProvider.Instance().GetAdminData(jobGroupId, portalId);
+        }
+
+        public static int? GetJobId(int locationId, int positionId)
+        {
+            return DataProvider.Instance().GetJobId(locationId, positionId);
+        }
+
+        public static DataSet GetUnusedAdminData(int? jobGroupId, int portalId)
+        {
+            return DataProvider.Instance().GetUnusedAdminData(jobGroupId, portalId);
         }
 
         public static Job Load(int id)
@@ -260,13 +295,17 @@ namespace Engage.Dnn.Employment
                     return FillJob(dr);
                 }
             }
+
             return null;
         }
 
         public static ReadOnlyCollection<Job> Load(int? maximumNumberOfJobs, bool limitRandomly, bool onlyHotJobs, int? jobGroupId, int portalId)
         {
-            List<Job> jobs = new List<Job>();
-            using (IDataReader dr = (limitRandomly ? DataProvider.Instance().GetJobs(onlyHotJobs, jobGroupId, portalId) : DataProvider.Instance().GetJobs(onlyHotJobs, maximumNumberOfJobs, jobGroupId, portalId)))
+            var jobs = new List<Job>();
+            using (
+                    IDataReader dr = limitRandomly
+                                              ? DataProvider.Instance().GetJobs(onlyHotJobs, jobGroupId, portalId)
+                                              : DataProvider.Instance().GetJobs(onlyHotJobs, maximumNumberOfJobs, jobGroupId, portalId))
             {
                 while (dr.Read())
                 {
@@ -291,7 +330,7 @@ namespace Engage.Dnn.Employment
 
         public static ReadOnlyCollection<Job> LoadAll(int? jobGroupId, int portalId)
         {
-            List<Job> jobs = new List<Job>();
+            var jobs = new List<Job>();
             using (IDataReader dr = DataProvider.Instance().GetJobs(jobGroupId, portalId))
             {
                 while (dr.Read())
@@ -303,64 +342,83 @@ namespace Engage.Dnn.Employment
             return jobs.AsReadOnly();
         }
 
-        public static int? GetJobId(int locationId, int positionId)
+        public void Delete()
         {
-            return DataProvider.Instance().GetJobId(locationId, positionId);
+            Delete(this.JobId);
+        }
+
+        public void Save(int userId, int? jobGroupId, int portalId)
+        {
+            if (this.JobId == -1)
+            {
+                this.InsertJob(userId, jobGroupId, portalId);
+            }
+            else
+            {
+                this.UpdateJob(userId);
+            }
         }
 
         private static Job FillJob(IDataRecord reader)
         {
-            Job j = new Job();
-            j._jobId = (int)reader["JobId"];
-            j._title = reader["JobTitle"].ToString();
-            j._positionId = (int)reader["PositionId"];
-            j._description = reader["JobDescription"].ToString();
-            j._locationName = reader["LocationName"].ToString();
-            j._locationId = (int)reader["LocationId"];
-            j._stateName = reader["StateName"].ToString();
-            j._stateAbbreviation = reader["StateAbbreviation"].ToString();
-            j._stateId = (int)reader["StateId"];
-            j._postedDate = reader["PostedDate"].ToString();
-            j._isHot = (bool)reader["IsHot"];
-            j._isFilled = (bool)reader["IsFilled"];
-            j._categoryName = reader["CategoryName"].ToString();
-            j._categoryId = (int)reader["CategoryId"];
-            j._requiredQualifications = reader["RequiredQualifications"].ToString();
-            j._desiredQualifications = reader["DesiredQualifications"].ToString();
-            j._sortOrder = (int)reader["SortOrder"];
-            j._notificationEmailAddress = reader["NotificationEmailAddress"].ToString();
-            return j;
+            return new Job
+                       {
+                               JobId = (int)reader["JobId"],
+                               title = reader["JobTitle"].ToString(),
+                               PositionId = (int)reader["PositionId"],
+                               description = reader["JobDescription"].ToString(),
+                               locationName = reader["LocationName"].ToString(),
+                               LocationId = (int)reader["LocationId"],
+                               stateName = reader["StateName"].ToString(),
+                               stateAbbreviation = reader["StateAbbreviation"].ToString(),
+                               StateId = (int)reader["StateId"],
+                               postedDate = reader["PostedDate"].ToString(),
+                               IsHot = (bool)reader["IsHot"],
+                               IsFilled = (bool)reader["IsFilled"],
+                               categoryName = reader["CategoryName"].ToString(),
+                               CategoryId = (int)reader["CategoryId"],
+                               requiredQualifications = reader["RequiredQualifications"].ToString(),
+                               desiredQualifications = reader["DesiredQualifications"].ToString(),
+                               SortOrder = (int)reader["SortOrder"],
+                               notificationEmailAddress = reader["NotificationEmailAddress"].ToString()
+                       };
         }
 
         private void InsertJob(int userId, int? jobGroupId, int portalId)
         {
-            int jobId = DataProvider.Instance().InsertJob(userId, this._positionId, this._locationId, this._categoryId, this._isHot, this._isFilled, this._requiredQualifications, this._desiredQualifications, this._sortOrder, portalId, this._notificationEmailAddress);
+            int jobId = DataProvider.Instance().InsertJob(
+                    userId, 
+                    this.PositionId, 
+                    this.LocationId, 
+                    this.CategoryId, 
+                    this.IsHot, 
+                    this.IsFilled, 
+                    this.requiredQualifications, 
+                    this.desiredQualifications, 
+                    this.SortOrder, 
+                    portalId, 
+                    this.notificationEmailAddress);
+
             if (jobGroupId.HasValue)
             {
-                List<int> jobGroupList = new List<int>(1);
-                jobGroupList.Add(jobGroupId.Value);
-                DataProvider.Instance().AssignJobToJobGroups(jobId, jobGroupList);
+                DataProvider.Instance().AssignJobToJobGroups(jobId, new List<int>(1) { jobGroupId.Value });
             }
         }
 
         private void UpdateJob(int userId)
         {
-            DataProvider.Instance().UpdateJob(userId, this._jobId, this._positionId, this._locationId, this._categoryId, this._isHot, this._isFilled, this._requiredQualifications, this._desiredQualifications, this._sortOrder, this._notificationEmailAddress);
+            DataProvider.Instance().UpdateJob(
+                    userId, 
+                    this.JobId, 
+                    this.PositionId, 
+                    this.LocationId, 
+                    this.CategoryId, 
+                    this.IsHot, 
+                    this.IsFilled, 
+                    this.requiredQualifications, 
+                    this.desiredQualifications, 
+                    this.SortOrder, 
+                    this.notificationEmailAddress);
         }
-
-        public static DataTable GetAdminData(int? jobGroupId, int portalId)
-        {
-            return DataProvider.Instance().GetAdminData(jobGroupId, portalId);
-        }
-
-        public static DataSet GetUnusedAdminData(int? jobGroupId, int portalId)
-        {
-            return DataProvider.Instance().GetUnusedAdminData(jobGroupId, portalId);
-        }
-
-        public static bool CanCreateJob(int portalId)
-        {
-            return DataProvider.Instance().CanCreateJob(portalId);
-        }
-    } 
+    }
 }
