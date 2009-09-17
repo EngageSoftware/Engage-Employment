@@ -1,0 +1,18 @@
+﻿IF NOT EXISTS (SELECT NULL FROM syscolumns WHERE name = 'StartDate' AND id = OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_Job'))
+BEGIN
+    ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_Job
+      ADD StartDate DateTime NULL,
+          ExpireDate DateTime NULL
+END
+GO     
+
+IF EXISTS (SELECT NULL FROM syscolumns WHERE name = 'StartDate' AND id = OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_Job') AND isnullable = 1)
+BEGIN
+    UPDATE {databaseOwner}{objectQualifier}EngageEmployment_Job
+    SET StartDate = PostedDate
+    
+    ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_Job
+    ALTER COLUMN StartDate DateTime NOT NULL
+END
+GO
+

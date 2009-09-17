@@ -351,6 +351,7 @@
     <None Include="Providers\DataProviders\SqlDataProvider\01.04.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.04.01.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.04.02.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.05.00.SqlDataProvider" />
     <Content Include="App_LocalResources\JobDetailSettings.ascx.resx">
       <SubType>Designer</SubType>
     </Content>
