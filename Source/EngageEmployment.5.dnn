@@ -234,11 +234,11 @@
             </assembly>
             <assembly>
               <name>Engage.Framework.dll</name>
-              <version>3.1.1</version>
+              <version>3.1.2</version>
             </assembly>
             <assembly>
               <name>Engage.Dnn.Framework.dll</name>
-              <version>3.1.1</version>
+              <version>3.1.2</version>
             </assembly>
           </assemblies>
         </component>
