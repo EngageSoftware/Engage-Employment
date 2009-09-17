@@ -58,6 +58,22 @@
     </tr>
     <tr>
         <td class="SubHead">
+            <dnn:label ResourceKey="lblStartDate" controlname="StartDateTextBox" runat="server" />
+        </td>
+        <td valign="top">
+            <asp:CheckBox ID="StartDateTextBox" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="SubHead">
+            <dnn:label ResourceKey="lblExpireDate" controlname="ExpireDateTextBox" runat="server" />
+        </td>
+        <td valign="top">
+            <asp:CheckBox ID="ExpireDateTextBox" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="SubHead">
             <dnn:label ResourceKey="lblRequiredQualifications" controlname="RequiredQualificationsTextEditor" runat="server" />
         </td>
         <td valign="top">

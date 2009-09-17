@@ -138,6 +138,7 @@
         <exclude name="${references.directory}/DotNetNuke.dll"/>
         <exclude name="${references.directory}/DotNetNuke.WebUtility.dll"/>
         <exclude name="${references.directory}/Microsoft.ApplicationBlocks.Data.dll"/>
+        <exclude name="${references.directory}/System.Web.Extensions.dll"/>
       </fileset>
     </copy>
 
