@@ -27,7 +27,11 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.UI.Utilities;
     using Globals = DotNetNuke.Common.Globals;
 
-    partial class JobListing : ModuleBase, IActionable
+    /// <summary>
+    /// Display a listing of jobs (determined by the settings).  Also, when the user is logged in, shows lists of saved searches and the jobs they've applied for.  
+    /// Includes a link to the search module, and action menu access to <see cref="Admin.ApplicationListing"/>, <see cref="Admin.JobListing"/>, and <see cref="JobListingOptions"/>
+    /// </summary>
+    public partial class JobListing : ModuleBase, IActionable
     {
         private const string EditCommandName = "Edit";
 
