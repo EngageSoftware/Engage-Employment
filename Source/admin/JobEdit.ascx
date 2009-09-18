@@ -77,7 +77,7 @@
             <dnn:label ResourceKey="lblRequiredQualifications" controlname="RequiredQualificationsTextEditor" runat="server" />
         </td>
         <td valign="top">
-            <dnn:TextEditor Height="400px" Width="400px" ID="RequiredQualificationsTextEditor" runat="server" ChooseMode="false" HtmlEncode="false" TextRenderMode="raw"  />
+            <dnn:TextEditor Height="400px" Width="400px" ID="RequiredQualificationsTextEditor" runat="server" ChooseMode="false" HtmlEncode="false" TextRenderMode="raw" />
             <asp:CustomValidator ID="RequiredQualificationsRequiredValidator" runat="server" Display="None"/></td>
     </tr>
     <tr>
