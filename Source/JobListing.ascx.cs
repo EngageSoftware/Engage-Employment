@@ -206,7 +206,7 @@ namespace Engage.Dnn.Employment
 
         private void LoadJobListing()
         {
-            this.JobListingRepeater.DataSource = Job.Load(this.MaximumNumberOfJobsDisplayed, this.LimitJobsRandomly, this.ShowOnlyHotJobs, this.JobGroupId, this.PortalId);
+            this.JobListingRepeater.DataSource = Job.LoadActiveJobs(this.MaximumNumberOfJobsDisplayed, this.LimitJobsRandomly, this.ShowOnlyHotJobs, this.JobGroupId, this.PortalId);
             this.JobListingRepeater.DataBind();
         }
 
@@ -297,14 +297,14 @@ namespace Engage.Dnn.Employment
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
                 var jobApplication = e.Item.DataItem as JobApplication;
-                var btnEditApplication = (Button)e.Item.FindControl("btnEditApplication");
+                var editApplicationButton = (Button)e.Item.FindControl("EditApplicationButton");
 
                 if (jobApplication != null)
                 {
-                    if (btnEditApplication != null)
+                    if (editApplicationButton != null)
                     {
-                        btnEditApplication.CommandName = EditCommandName;
-                        btnEditApplication.CommandArgument = this.GetApplicationEditUrl(jobApplication.ApplicationId, jobApplication.JobId);
+                        editApplicationButton.CommandName = EditCommandName;
+                        editApplicationButton.CommandArgument = this.GetApplicationEditUrl(jobApplication.ApplicationId, jobApplication.JobId);
                     }
                 }
             }
@@ -320,20 +320,20 @@ namespace Engage.Dnn.Employment
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
                 var query = e.Item.DataItem as JobSearchQuery;
-                var btnDelete = e.Item.FindControl("btnDelete") as Button;
-                var lnkSearch = e.Item.FindControl("lnkSearch") as HyperLink;
+                var deleteButton = e.Item.FindControl("DeleteButton") as Button;
+                var searchLink = e.Item.FindControl("SearchLink") as HyperLink;
 
                 if (query != null)
                 {
-                    if (btnDelete != null)
+                    if (deleteButton != null)
                     {
-                        ClientAPI.AddButtonConfirm(btnDelete, Localization.GetString("DeleteConfirm.Text", this.LocalResourceFile));
-                        btnDelete.CommandArgument = query.Id.ToString(CultureInfo.InvariantCulture);
+                        ClientAPI.AddButtonConfirm(deleteButton, Localization.GetString("DeleteConfirm.Text", this.LocalResourceFile));
+                        deleteButton.CommandArgument = query.Id.ToString(CultureInfo.InvariantCulture);
                     }
 
-                    if (lnkSearch != null)
+                    if (searchLink != null)
                     {
-                        lnkSearch.NavigateUrl = Globals.NavigateURL(Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings), string.Empty, "usid=" + query.Id);
+                        searchLink.NavigateUrl = Globals.NavigateURL(Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings), string.Empty, "usid=" + query.Id);
                     }
                 }
             }

@@ -319,12 +319,24 @@ namespace Engage.Dnn.Employment
             return null;
         }
 
-        public static ReadOnlyCollection<Job> Load(int? maximumNumberOfJobs, bool limitRandomly, bool onlyHotJobs, int? jobGroupId, int portalId)
+        /// <summary>
+        /// Loads a listing of jobs for the given criteria.  Only retrieves jobs that have started and not ended.
+        /// </summary>
+        /// <param name="maximumNumberOfJobs">The maximum number of jobs to retrieve, or <c>null</c> for no limit.</param>
+        /// <param name="limitRandomly">
+        /// if set to <c>true</c>, retrieves a random segment of the jobs.  This only applies when 
+        /// <paramref name="maximumNumberOfJobs"/> is less than the number of jobs retrieved.
+        /// </param>
+        /// <param name="onlyHotJobs">if set to <c>true</c> only retrieves jobs marked as hot.</param>
+        /// <param name="jobGroupId">The job group ID, or <c>null</c> not to restrict the results to a particular job group.</param>
+        /// <param name="portalId">The portal ID.</param>
+        /// <returns>A collection of the active jobs meeting the given criteria</returns>
+        public static ReadOnlyCollection<Job> LoadActiveJobs(int? maximumNumberOfJobs, bool limitRandomly, bool onlyHotJobs, int? jobGroupId, int portalId)
         {
             var jobs = new List<Job>();
             using (IDataReader dr = limitRandomly
-                                             ? DataProvider.Instance().GetJobs(onlyHotJobs, jobGroupId, portalId)
-                                             : DataProvider.Instance().GetJobs(onlyHotJobs, maximumNumberOfJobs, jobGroupId, portalId))
+                                             ? DataProvider.Instance().GetActiveJobs(onlyHotJobs, jobGroupId, portalId)
+                                             : DataProvider.Instance().GetActiveJobs(onlyHotJobs, maximumNumberOfJobs, jobGroupId, portalId))
             {
                 while (dr.Read())
                 {

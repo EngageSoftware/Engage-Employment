@@ -251,45 +251,47 @@ namespace Engage.Dnn.Employment.Data
                     this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@jobId", jobId));
         }
 
-        public override IDataReader GetJobs(bool onlyHotJobs, int? jobGroupId, int portalId)
+        public override IDataReader GetActiveJobs(bool onlyHotJobs, int? jobGroupId, int portalId)
         {
-            return this.GetJobs(onlyHotJobs, null, jobGroupId, portalId);
+            return this.GetActiveJobs(onlyHotJobs, null, jobGroupId, portalId);
         }
 
-        public override IDataReader GetJobs(bool onlyHotJobs, int? maximumNumberOfJobs, int? jobGroupId, int portalId)
+        public override IDataReader GetActiveJobs(bool onlyHotJobs, int? maximumNumberOfJobs, int? jobGroupId, int portalId)
         {
             var sql = new StringBuilder(512);
 
-            sql.Append(" select ");
+            sql.Append(" SELECT ");
             if (maximumNumberOfJobs.HasValue)
             {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " top {0} ", maximumNumberOfJobs.Value);
+                sql.AppendFormat(CultureInfo.InvariantCulture, " TOP {0} ", maximumNumberOfJobs.Value);
             }
 
             sql.Append("j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, ");
             sql.Append("j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, ");
             sql.Append("j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.NotificationEmailAddress, j.StartDate, j.ExpireDate ");
-            sql.Append("from ");
+            sql.Append("FROM ");
             sql.AppendFormat(CultureInfo.InvariantCulture, "{0}vwJobs j ", this.NamePrefix);
             if (jobGroupId.HasValue)
             {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (j.JobId = jlg.JobId) ", this.NamePrefix);
+                sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}JobJobGroup jlg ON (j.JobId = jlg.JobId) ", this.NamePrefix);
             }
 
-            sql.Append(" where ");
+            sql.Append(" WHERE ");
             sql.Append(" j.IsFilled = 0 ");
-            sql.Append(" and j.PortalId = @portalId ");
+            sql.Append(" AND j.PortalId = @portalId ");
+            sql.Append(" AND j.StartDate < @now ");
+            sql.Append(" AND (j.ExpireDate IS NULL OR j.ExpireDate > @now) ");
             if (jobGroupId.HasValue)
             {
-                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
+                sql.Append(" AND jlg.jobGroupId = @jobGroupId ");
             }
 
             if (onlyHotJobs)
             {
-                sql.Append(" and j.IsHot = 1 ");
+                sql.Append(" AND j.IsHot = 1 ");
             }
 
-            sql.Append(" order by ");
+            sql.Append(" ORDER BY ");
             sql.Append(" j.SortOrder, j.CategoryName, j.JobTitle");
 
             return SqlHelper.ExecuteReader(
@@ -297,7 +299,8 @@ namespace Engage.Dnn.Employment.Data
                     CommandType.Text, 
                     sql.ToString(), 
                     Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                    Engage.Utility.CreateIntegerParam("@portalId", portalId),
+                    Engage.Utility.CreateDateTimeParam("@now", DateTime.Now));
         }
 
         public override IDataReader GetJobs(int? jobGroupId, int portalId)

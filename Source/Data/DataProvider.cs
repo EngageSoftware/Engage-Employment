@@ -71,8 +71,8 @@ namespace Engage.Dnn.Employment.Data
         public abstract void DeleteJob(int jobId);
         public abstract IDataReader GetJob(int jobId);
         public abstract IDataReader GetJobs(int? jobGroupId, int portalId);
-        public abstract IDataReader GetJobs(bool onlyHotJobs, int? jobGroupId, int portalId);
-        public abstract IDataReader GetJobs(bool onlyHotJobs, int? maximumNumberOfJobs, int? jobGroupId, int portalId);
+        public abstract IDataReader GetActiveJobs(bool onlyHotJobs, int? jobGroupId, int portalId);
+        public abstract IDataReader GetActiveJobs(bool onlyHotJobs, int? maximumNumberOfJobs, int? jobGroupId, int portalId);
         public abstract int? GetJobId(int locationId, int positionId);
         public abstract bool CanCreateJob(int portalId);
         #endregion
