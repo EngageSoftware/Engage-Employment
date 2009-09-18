@@ -237,4 +237,28 @@
   <data name="rfvEmailAddress.Text" xml:space="preserve">
     <value>Application Notification Email is required</value>
   </data>
+  <data name="ExpireDateTypeValidator.Text" xml:space="preserve">
+    <value>Expire Date must be a valid date</value>
+  </data>
+  <data name="lblExpireDate.Help" xml:space="preserve">
+    <value>Select the day on which this job posting should stop being shown.  At this point, the listing will not appear in the job listing and will not be accessible from the job details page, so no more applications can be submitted for it.  It will still be visible from the Manage Jobs page, and applications for it will be visible from the Manage Applications page.  Leave this blank to allow the job posting to be viewed indefinitely.</value>
+  </data>
+  <data name="lblExpireDate.Text" xml:space="preserve">
+    <value>Expire Date</value>
+  </data>
+  <data name="lblStartDate.Help" xml:space="preserve">
+    <value>Select when this job posting should begin being displayed.</value>
+  </data>
+  <data name="lblStartDate.Text" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="StartDateRequiredValidator.Text" xml:space="preserve">
+    <value>Start Date is required</value>
+  </data>
+  <data name="StartDateTypeValidator.Text" xml:space="preserve">
+    <value>Start Date must be a valid date</value>
+  </data>
+  <data name="StartExpireDateCompareValidator.Text" xml:space="preserve">
+    <value>Expire Date must occur after Start Date</value>
+  </data>
 </root>

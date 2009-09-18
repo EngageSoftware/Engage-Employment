@@ -91,18 +91,21 @@ namespace Engage.Dnn.Employment.Admin
                     int jobId;
                     if (int.TryParse(this.Request.QueryString["jobId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
                     {
-                        //updating
+                        // updating
                         this.UpdateFields(jobId);
                         this.DeleteButton.Visible = true;
                         ClientAPI.AddButtonConfirm(this.DeleteButton, Localization.GetString("DeleteConfirm", this.LocalResourceFile));
                     }
                     else
                     {
-                        //adding new
+                        // adding new
                         this.DeleteButton.Visible = false;
                         this.SortOrderTextBox.Text = DefaultSortOrder.ToString(CultureInfo.InvariantCulture);
+                        this.StartDateTextBox.Text = DateTime.Now.ToShortDateString();
                     }
                 }
+
+                this.RegisterDatePickerBehavior();
             }
             catch (Exception exc) //Module failed to load
             {
@@ -160,6 +163,8 @@ namespace Engage.Dnn.Employment.Admin
             newJob.PositionId = int.Parse(this.PositionDropDownList.SelectedValue, CultureInfo.InvariantCulture);
             newJob.SortOrder = Convert.ToInt32(this.SortOrderTextBox.Text, CultureInfo.CurrentCulture);
             newJob.NotificationEmailAddress = this.EmailAddressTextBox.Text;
+            newJob.StartDate = DateTime.Parse(this.StartDateTextBox.Text, CultureInfo.CurrentCulture);
+            newJob.ExpireDate = Engage.Utility.ParseNullableDateTime(this.ExpireDateTextBox.Text, CultureInfo.CurrentCulture);
             newJob.Save(this.UserId, this.JobGroupId, this.PortalId);
 
             this.Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
@@ -332,8 +337,23 @@ namespace Engage.Dnn.Employment.Admin
 
                 this.SortOrderTextBox.Text = j.SortOrder.ToString(CultureInfo.CurrentCulture);
 
+                this.StartDateTextBox.Text = j.StartDate.ToShortDateString();
+                this.ExpireDateTextBox.Text = j.ExpireDate.HasValue ? j.ExpireDate.Value.ToShortDateString() : string.Empty;
+
                 this.EmailAddressTextBox.Text = Engage.Utility.HasValue(j.NotificationEmailAddress) ? j.NotificationEmailAddress : this.ApplicationEmailAddress;
             }
+        }
+
+        /// <summary>
+        /// Registers the jQuery date picker plugin on the page.
+        /// </summary>
+        private void RegisterDatePickerBehavior()
+        {
+            this.AddJQueryReference();
+            this.Page.ClientScript.RegisterClientScriptResource(typeof(JobEdit), "Engage.Dnn.Employment.JavaScript.jquery-ui.js");
+
+            var datePickerOptions = new DatePickerOptions(CultureInfo.CurrentCulture, this.LocalSharedResourceFile);
+            this.Page.ClientScript.RegisterClientScriptBlock(typeof(JobEdit), "datepicker options", "var datePickerOpts = " + datePickerOptions.Serialize() + ";", true);
         }
     }
 }

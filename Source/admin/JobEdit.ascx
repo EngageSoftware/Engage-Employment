@@ -9,8 +9,8 @@
         </td>
         <td valign="top">
             <asp:DropDownList ID="PositionDropDownList" runat="server"/>
-            <asp:CompareValidator runat="server" ControlToValidate="PositionDropDownList" Operator="NotEqual" SetFocusOnError="True" ValueToCompare="-1" Display="None" resourcekey="cvPosition"/>
-            <asp:CustomValidator ID="UniquePositionLocationValidator" runat="server" Display="None" resourcekey="cvUniquePositionLocation" />
+            <asp:CompareValidator runat="server" ControlToValidate="PositionDropDownList" Operator="NotEqual" SetFocusOnError="True" ValueToCompare="-1" Display="None" resourcekey="cvPosition" ValidationGroup="JobEdit"/>
+            <asp:CustomValidator ID="UniquePositionLocationValidator" runat="server" Display="None" resourcekey="cvUniquePositionLocation" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>
@@ -19,7 +19,7 @@
         </td>
         <td valign="top">
             <asp:DropDownList ID="CategoryDropDownList" runat="server"/>
-            <asp:CompareValidator runat="server" ControlToValidate="CategoryDropDownList" Operator="NotEqual" SetFocusOnError="True" ValueToCompare="-1" Display="None" resourcekey="cvCategory"/>
+            <asp:CompareValidator runat="server" ControlToValidate="CategoryDropDownList" Operator="NotEqual" SetFocusOnError="True" ValueToCompare="-1" Display="None" resourcekey="cvCategory" ValidationGroup="JobEdit"/>
         </td>
     </tr>
     <tr>
@@ -28,7 +28,7 @@
         </td>
         <td valign="top">
             <asp:DropDownList ID="LocationDropDownList" runat="server" />
-            <asp:CompareValidator runat="server" ControlToValidate="LocationDropDownList" Operator="NotEqual" SetFocusOnError="True" ValueToCompare="-1" Display="None" resourcekey="cvLocation" />
+            <asp:CompareValidator runat="server" ControlToValidate="LocationDropDownList" Operator="NotEqual" SetFocusOnError="True" ValueToCompare="-1" Display="None" resourcekey="cvLocation" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>
@@ -37,7 +37,7 @@
         </td>
         <td valign="top">
             <asp:TextBox ID="SortOrderTextBox" runat="server" CssClass="NormalTextBox" />
-            <asp:CompareValidator runat="server" ControlToValidate="SortOrderTextBox" Operator="DataTypeCheck" SetFocusOnError="True" Type="Integer" Display="None" resourcekey="cvSortOrder" />
+            <asp:CompareValidator runat="server" ControlToValidate="SortOrderTextBox" Operator="DataTypeCheck" SetFocusOnError="True" Type="Integer" Display="None" resourcekey="cvSortOrder" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>
@@ -61,7 +61,10 @@
             <dnn:label ResourceKey="lblStartDate" controlname="StartDateTextBox" runat="server" />
         </td>
         <td valign="top">
-            <asp:CheckBox ID="StartDateTextBox" runat="server" />
+            <asp:TextBox ID="StartDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateTypeValidator ValidationGroup="JobEdit"" />
+            <asp:RequiredFieldValidator runat="server" InitialValue="" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateRequiredValidator" ValidationGroup="JobEdit" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="LessThan" ControlToValidate="StartDateTextBox" ControlToCompare="ExpireDateTextBox" Display="None" resourcekey="StartExpireDateCompareValidator" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>
@@ -69,7 +72,8 @@
             <dnn:label ResourceKey="lblExpireDate" controlname="ExpireDateTextBox" runat="server" />
         </td>
         <td valign="top">
-            <asp:CheckBox ID="ExpireDateTextBox" runat="server" />
+            <asp:TextBox ID="ExpireDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="ExpireDateTextBox" Display="None" resourcekey="ExpireDateTypeValidator" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>
@@ -78,7 +82,7 @@
         </td>
         <td valign="top">
             <dnn:TextEditor Height="400px" Width="400px" ID="RequiredQualificationsTextEditor" runat="server" ChooseMode="false" HtmlEncode="false" TextRenderMode="raw" />
-            <asp:CustomValidator ID="RequiredQualificationsRequiredValidator" runat="server" Display="None"/></td>
+            <asp:CustomValidator ID="RequiredQualificationsRequiredValidator" runat="server" Display="None" ValidationGroup="JobEdit"/></td>
     </tr>
     <tr>
         <td class="SubHead">
@@ -86,7 +90,7 @@
         </td>
         <td valign="top">
             <dnn:TextEditor Height="400px" Width="400px" ID="DesiredQualificationsTextEditor" runat="server" ChooseMode="false" HtmlEncode="false" TextRenderMode="raw"  />
-            <asp:CustomValidator ID="DesiredQualificationsRequiredValidator" runat="server" Display="None"/></td>
+            <asp:CustomValidator ID="DesiredQualificationsRequiredValidator" runat="server" Display="None" ValidationGroup="JobEdit"/></td>
     </tr>
     <tr>
         <td class="SubHead">
@@ -94,8 +98,8 @@
         </td>
         <td valign="top">
             <asp:TextBox ID="EmailAddressTextBox" runat="server" CssClass="NormalTextBox"/>
-            <asp:RegularExpressionValidator ID="EmailAddressRegexValidator" runat="server" Display="None" ControlToValidate="EmailAddressTextBox" resourcekey="regexEmailAddress" />
-            <asp:RequiredFieldValidator runat="server" Display="None" ControlToValidate="EmailAddressTextBox" resourcekey="rfvEmailAddress" />
+            <asp:RegularExpressionValidator ID="EmailAddressRegexValidator" runat="server" Display="None" ControlToValidate="EmailAddressTextBox" resourcekey="regexEmailAddress" ValidationGroup="JobEdit" />
+            <asp:RequiredFieldValidator runat="server" Display="None" ControlToValidate="EmailAddressTextBox" resourcekey="rfvEmailAddress" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>
@@ -103,11 +107,14 @@
     </tr>
     <tr>
         <td colspan="2">
-            <asp:LinkButton ID="UpdateButton" runat="server" CssClass="CommandButton" resourcekey="lnkUpdate"/>&nbsp;
+            <asp:LinkButton ID="UpdateButton" runat="server" CssClass="CommandButton" resourcekey="lnkUpdate" ValidationGroup="JobEdit"/>&nbsp;
             <asp:LinkButton ID="DeleteButton" runat="server" CssClass="CommandButton" CausesValidation="False" resourcekey="lnkDelete"/>&nbsp;
             <asp:LinkButton ID="CancelButton" runat="server" CssClass="CommandButton" CausesValidation="False" resourcekey="lnkCancel"/>
-            <asp:ValidationSummary runat="server" DisplayMode="BulletList" ShowMessageBox="true" ShowSummary="false" />
+            <asp:ValidationSummary runat="server" DisplayMode="BulletList" ShowMessageBox="true" ShowSummary="false" ValidationGroup="JobEdit" />
         </td>
     </tr>
 </table>
 
+<script type="text/javascript">
+    jQuery(function() { jQuery('.DatePicker').datepicker(datePickerOpts); });
+</script>

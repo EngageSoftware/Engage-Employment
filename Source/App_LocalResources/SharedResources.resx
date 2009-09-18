@@ -117,6 +117,85 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CalendarClearStatus.Text" xml:space="preserve">
+    <value>Erase the current date</value>
+  </data>
+  <data name="CalendarClearText.Text" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="CalendarCloseStatus.Text" xml:space="preserve">
+    <value>Close without change</value>
+  </data>
+  <data name="CalendarCloseText.Text" xml:space="preserve">
+    <value>Clode</value>
+  </data>
+  <data name="CalendarCurrentStatus.Text" xml:space="preserve">
+    <value>Show the current month</value>
+  </data>
+  <data name="CalendarCurrentText.Text" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="CalendarDateStatus.Text" xml:space="preserve">
+    <value>Select DD, M d</value>
+    <comment>The format can be combinations of the following:
+	   d  - day of month (no leading zero)
+	   dd - day of month (two digit)
+	   D  - day name short
+	   DD - day name long
+	   m  - month of year (no leading zero)
+	   mm - month of year (two digit)
+	   M  - month name short
+	   MM - month name long
+	   y  - year (two digit)
+	   yy - year (four digit)
+	   @ - Unix timestamp (ms since 01/01/1970)
+	   '...' - literal text
+	   '' - single quote</comment>
+  </data>
+  <data name="CalendarDayStatus.Text" xml:space="preserve">
+    <value>Set DD as first week day</value>
+    <comment>The format can be combinations of the following:
+	   d  - day of month (no leading zero)
+	   dd - day of month (two digit)
+	   D  - day name short
+	   DD - day name long
+	   m  - month of year (no leading zero)
+	   mm - month of year (two digit)
+	   M  - month name short
+	   MM - month name long
+	   y  - year (two digit)
+	   yy - year (four digit)
+	   @ - Unix timestamp (ms since 01/01/1970)
+	   '...' - literal text
+	   '' - single quote</comment>
+  </data>
+  <data name="CalendarInitStatus.Text" xml:space="preserve">
+    <value>Select a date</value>
+  </data>
+  <data name="CalendarMonthStatus.Text" xml:space="preserve">
+    <value>Show a different month</value>
+  </data>
+  <data name="CalendarNextStatus.Text" xml:space="preserve">
+    <value>Show the next month</value>
+  </data>
+  <data name="CalendarNextText.Text" xml:space="preserve">
+    <value>Next&amp;#x3e;</value>
+  </data>
+  <data name="CalendarPrevStatus.Text" xml:space="preserve">
+    <value>Show the previous month</value>
+  </data>
+  <data name="CalendarPrevText.Text" xml:space="preserve">
+    <value>&amp;#x3c;Prev</value>
+  </data>
+  <data name="CalendarWeekHeader.Text" xml:space="preserve">
+    <value>Wk</value>
+  </data>
+  <data name="CalendarWeekStatus.Text" xml:space="preserve">
+    <value>Week of the year</value>
+  </data>
+  <data name="CalendarYearStatus.Text" xml:space="preserve">
+    <value>Show a different year</value>
+  </data>
   <data name="UserName.Text" xml:space="preserve">
     <value>{0}</value>
     <comment>{0} is replaced by Display Name, {1} is replaced by First Name, {2} is replaced by Last Name</comment>

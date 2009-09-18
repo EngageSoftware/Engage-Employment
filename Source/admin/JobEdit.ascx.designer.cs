@@ -83,7 +83,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox StartDateTextBox;
+        protected global::System.Web.UI.WebControls.TextBox StartDateTextBox;
         
         /// <summary>
         /// ExpireDateTextBox control.
@@ -92,7 +92,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ExpireDateTextBox;
+        protected global::System.Web.UI.WebControls.TextBox ExpireDateTextBox;
         
         /// <summary>
         /// RequiredQualificationsTextEditor control.
