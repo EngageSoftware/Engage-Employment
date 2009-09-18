@@ -1,12 +1,13 @@
-//Engage: Employment - http://www.engagesoftware.com
-//Copyright (c) 2004-2009
-//by Engage Software ( http://www.engagesoftware.com )
-
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-//TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-//THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-//CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-//DEALINGS IN THE SOFTWARE.
+// <copyright file="JobListing.ascx.cs" company="Engage Software">
+// Engage: Employment
+// Copyright (c) 2004-2009
+// by Engage Software ( http://www.engagesoftware.com )
+// </copyright>
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 namespace Engage.Dnn.Employment
 {
@@ -14,6 +15,7 @@ namespace Engage.Dnn.Employment
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Web.UI;
     using System.Web.UI.WebControls;
     using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Modules;
@@ -23,32 +25,55 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
-    using Globals=DotNetNuke.Common.Globals;
+    using Globals = DotNetNuke.Common.Globals;
 
     partial class JobListing : ModuleBase, IActionable
     {
         private const string EditCommandName = "Edit";
 
-        #region Module Settings
-        private bool ShowOnlyHotJobs
+        public ModuleActionCollection ModuleActions
         {
             get
             {
-                return Dnn.Utility.GetBoolSetting(Settings, "ShowOnlyHotJobs", true);
-            }
-        }
-
-        private int? MaximumNumberOfJobsDisplayed
-        {
-            get
-            {
-                int? value = Dnn.Utility.GetIntSetting(Settings, "MaximumNumberOfJobsDisplayed");
-                if (!value.HasValue)
-                {
-                    //if the settings has never been set, keep the setting from the last version (5), otherwise the settings has been set to null
-                    value = Settings.ContainsKey("MaximumNumberOfJobsDisplayed") ? (int?)null : 5;
-                }
-                return value;
+                return new ModuleActionCollection
+                           {
+                                   {
+                                           this.GetNextActionID(), 
+                                           Localization.GetString("ManageApplications", this.LocalResourceFile), 
+                                           ModuleActionType.AddContent, 
+                                           string.Empty, 
+                                           string.Empty, 
+                                           this.EditUrl(ControlKey.ManageApplications.ToString()), 
+                                           false, 
+                                           SecurityAccessLevel.Edit, 
+                                           true, 
+                                           false
+                                   }, 
+                                   {
+                                           this.GetNextActionID(), 
+                                           Localization.GetString("ManageJobs", this.LocalResourceFile), 
+                                           ModuleActionType.AddContent, 
+                                           string.Empty, 
+                                           string.Empty, 
+                                           this.EditUrl(ControlKey.Edit.ToString()), 
+                                           false, 
+                                           SecurityAccessLevel.Edit, 
+                                           true, 
+                                           false
+                                   }, 
+                                   {
+                                           this.GetNextActionID(), 
+                                           Localization.GetString("JobListingOptions", this.LocalResourceFile), 
+                                           ModuleActionType.AddContent, 
+                                           string.Empty, 
+                                           string.Empty, 
+                                           this.EditUrl(ControlKey.Options.ToString()), 
+                                           false, 
+                                           SecurityAccessLevel.Edit, 
+                                           true, 
+                                           false
+                                   }
+                           };
             }
         }
 
@@ -56,259 +81,258 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                return Dnn.Utility.GetBoolSetting(Settings, "LimitJobsRandomly", true);
-            }
-        }
-        #endregion
-
-        #region Event Handlers
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        protected void Page_Init(Object sender, EventArgs e)
-        {
-            try
-            {
-                if (AJAX.IsInstalled())
-                {
-                    //AJAX.RegisterScriptManager();
-                    AJAX.WrapUpdatePanelControl(rpSavedSearches, true);
-                }
-                rpSavedSearches.ItemDataBound += rpSavedSearches_ItemDataBound;
-                rpAppliedJobs.ItemDataBound += rpAppliedJobs_ItemDataBound;
-                rpAppliedJobs.ItemCommand += rpAppliedJobs_ItemCommand;
-            }
-            catch (Exception exc)
-            {
-                Exceptions.ProcessModuleLoadException(this, exc);
+                return Dnn.Utility.GetBoolSetting(this.Settings, "LimitJobsRandomly", true);
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        protected void Page_Load(Object sender, EventArgs e)
+        private int? MaximumNumberOfJobsDisplayed
         {
-            try
+            get
             {
-                if (!IsPostBack)
+                int? value = Dnn.Utility.GetIntSetting(this.Settings, "MaximumNumberOfJobsDisplayed");
+                if (!value.HasValue)
                 {
-                    LoadJobListing();
-                    LoadJobsAppliedFor();
-                    LoadSavedSearches();
+                    // if the settings has never been set, keep the setting from the last version (5), otherwise the settings has been set to null
+                    value = this.Settings.ContainsKey("MaximumNumberOfJobsDisplayed") ? (int?)null : 5;
                 }
 
-                SetLinkUrls();
-            }
-            catch (Exception exc)
-            {
-                Exceptions.ProcessModuleLoadException(this, exc);
+                return value;
             }
         }
 
-//        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-//        protected void rpJobListing_ItemDataBound(object sender, RepeaterItemEventArgs e)
-//        {
-//            if (e != null)
-//            {
-//                Job j = (Job)e.Item.DataItem;
-//
-//                this.currentCategory = (j == null ? null : j.CategoryName);
-//            }
-//        }
-
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void rpSavedSearches_ItemDataBound(object source, RepeaterItemEventArgs e)
+        private bool ShowOnlyHotJobs
         {
-            if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
+            get
             {
-                JobSearchQuery query = e.Item.DataItem as JobSearchQuery;
-                Button btnDelete = e.Item.FindControl("btnDelete") as Button;
-                HyperLink lnkSearch = e.Item.FindControl("lnkSearch") as HyperLink;
-
-                if (query != null)
-                {
-                    if (btnDelete != null)
-                    {
-                        ClientAPI.AddButtonConfirm(btnDelete, Localization.GetString("DeleteConfirm.Text", LocalResourceFile));
-                        btnDelete.CommandArgument = query.Id.ToString(CultureInfo.InvariantCulture);
-                    }
-                    if (lnkSearch != null)
-                    {
-                        lnkSearch.NavigateUrl = Globals.NavigateURL(Utility.GetSearchResultsTabId(this.JobGroupId, PortalSettings), string.Empty, "usid=" + query.Id);
-                    }
-                }
+                return Dnn.Utility.GetBoolSetting(this.Settings, "ShowOnlyHotJobs", true);
             }
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void rpAppliedJobs_ItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
-            if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
-            {
-                JobApplication jobApplication = e.Item.DataItem as JobApplication;
-                Button btnEditApplication = (Button)e.Item.FindControl("btnEditApplication");
-
-                if (jobApplication != null)
-                {
-                    if (btnEditApplication != null)
-                    {
-                        btnEditApplication.CommandName = EditCommandName;
-                        btnEditApplication.CommandArgument = GetApplicationEditUrl(jobApplication.ApplicationId, jobApplication.JobId);
-                    }
-                }
-            }
-        }
-
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void rpAppliedJobs_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e != null && e.CommandName == EditCommandName)
-            {
-                Response.Redirect((string)e.CommandArgument);
-            }
-        }
-
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnDelete_Command(object sender, CommandEventArgs e)
+        /// <summary>
+        /// Handles the <see cref="Button.Command"/> event of the <c>btnDelete</c> control in the <see cref="SavedSearchesRepeater"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Web.UI.WebControls.CommandEventArgs"/> instance containing the event data.</param>
+        protected void DeleteButton_Command(object sender, CommandEventArgs e)
         {
             int queryId;
             if (e != null && e.CommandArgument != null && int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out queryId))
             {
                 JobSearchQuery.Delete(queryId);
-                LoadSavedSearches();
+                this.LoadSavedSearches();
             }
-            LoadSavedSearches();
+
+            this.LoadSavedSearches();
         }
-        #endregion
+
+        protected string GetJobDetailUrl(object jobId)
+        {
+            return Utility.GetJobDetailUrl(jobId, this.JobGroupId, this.PortalSettings);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Does not represent object state")]
+        protected string GetJobListingHeader()
+        {
+            if (this.MaximumNumberOfJobsDisplayed.HasValue)
+            {
+                if (this.LimitJobsRandomly)
+                {
+                    return this.ShowOnlyHotJobs
+                                   ? string.Format(
+                                             CultureInfo.CurrentCulture, 
+                                             Localization.GetString("HotJobs", this.LocalResourceFile), 
+                                             this.MaximumNumberOfJobsDisplayed.Value)
+                                   : string.Format(
+                                             CultureInfo.CurrentCulture, 
+                                             Localization.GetString("Jobs", this.LocalResourceFile), 
+                                             this.MaximumNumberOfJobsDisplayed.Value);
+                }
+
+                return this.ShowOnlyHotJobs
+                               ? string.Format(
+                                         CultureInfo.CurrentCulture, 
+                                         Localization.GetString("TopHotJobs", this.LocalResourceFile), 
+                                         this.MaximumNumberOfJobsDisplayed.Value)
+                               : string.Format(
+                                         CultureInfo.CurrentCulture, 
+                                         Localization.GetString("TopJobs", this.LocalResourceFile), 
+                                         this.MaximumNumberOfJobsDisplayed.Value);
+            }
+
+            return this.ShowOnlyHotJobs
+                           ? Localization.GetString("AllHotJobs", this.LocalResourceFile)
+                           : Localization.GetString("AllJobs", this.LocalResourceFile);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="Control.Init"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
+        protected override void OnInit(EventArgs e)
+        {
+            try
+            {
+                if (AJAX.IsInstalled())
+                {
+                    // AJAX.RegisterScriptManager();
+                    AJAX.WrapUpdatePanelControl(this.SavedSearchesRepeater, true);
+                }
+
+                this.Load += this.Page_Load;
+                this.SavedSearchesRepeater.ItemDataBound += this.SavedSearchesRepeater_ItemDataBound;
+                this.AppliedJobsRepeater.ItemDataBound += this.AppliedJobsRepeater_ItemDataBound;
+                this.AppliedJobsRepeater.ItemCommand += this.AppliedJobsRepeater_ItemCommand;
+            }
+            catch (Exception exc)
+            {
+                Exceptions.ProcessModuleLoadException(this, exc);
+            }
+
+            base.OnInit(e);
+        }
+
+        private string GetApplicationEditUrl(int applicationId, int jobId)
+        {
+            return Globals.NavigateURL(
+                    Utility.GetJobDetailTabId(this.JobGroupId, this.PortalSettings), 
+                    string.Empty, 
+                    "jobId=" + jobId.ToString(CultureInfo.InvariantCulture), 
+                    "applicationId=" + applicationId.ToString(CultureInfo.InvariantCulture));
+        }
 
         private void LoadJobListing()
         {
-            this.rpJobListing.DataSource = Job.Load(this.MaximumNumberOfJobsDisplayed, this.LimitJobsRandomly, this.ShowOnlyHotJobs, this.JobGroupId, this.PortalId);
-            this.rpJobListing.DataBind();
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        protected string GetJobListingHeader() 
-        {
-            if (MaximumNumberOfJobsDisplayed.HasValue)
-            {
-                if (LimitJobsRandomly)
-                {
-                    if (ShowOnlyHotJobs)
-                    {
-                        return string.Format(CultureInfo.CurrentCulture, Localization.GetString("HotJobs", LocalResourceFile),
-                            MaximumNumberOfJobsDisplayed.Value);
-                    }
-                    else
-                    {
-                        return string.Format(CultureInfo.CurrentCulture, Localization.GetString("Jobs", LocalResourceFile),
-                            MaximumNumberOfJobsDisplayed.Value);
-                    }
-                }
-                else
-                {
-                    if (ShowOnlyHotJobs)
-                    {
-                        return string.Format(CultureInfo.CurrentCulture, Localization.GetString("TopHotJobs", LocalResourceFile),
-                            MaximumNumberOfJobsDisplayed.Value);
-                    }
-                    else
-                    {
-                        return string.Format(CultureInfo.CurrentCulture, Localization.GetString("TopJobs", LocalResourceFile),
-                            MaximumNumberOfJobsDisplayed.Value);
-                    }
-                }
-            }
-            else
-            {
-                if (ShowOnlyHotJobs)
-                {
-                    return Localization.GetString("AllHotJobs", LocalResourceFile);
-                }
-                else
-                {
-                    return Localization.GetString("AllJobs", LocalResourceFile);
-                }
-            }
+            this.JobListingRepeater.DataSource = Job.Load(this.MaximumNumberOfJobsDisplayed, this.LimitJobsRandomly, this.ShowOnlyHotJobs, this.JobGroupId, this.PortalId);
+            this.JobListingRepeater.DataBind();
         }
 
         private void LoadJobsAppliedFor()
         {
-            if (Engage.Utility.IsLoggedIn == false) return;
+            if (Engage.Utility.IsLoggedIn == false)
+            {
+                return;
+            }
 
-            ReadOnlyCollection<JobApplication> applications = JobApplication.GetAppliedFor(UserId, this.JobGroupId, PortalId);
+            ReadOnlyCollection<JobApplication> applications = JobApplication.GetAppliedFor(this.UserId, this.JobGroupId, this.PortalId);
             if (applications != null && applications.Count > 0)
             {
-                this.rpAppliedJobs.DataSource = applications;
-                this.rpAppliedJobs.DataBind();
+                this.AppliedJobsRepeater.DataSource = applications;
+                this.AppliedJobsRepeater.DataBind();
             }
         }
 
         private void LoadSavedSearches()
         {
-            rpSavedSearches.Controls.Clear();
-            if (!Null.IsNull(UserId))
+            this.SavedSearchesRepeater.Controls.Clear();
+            if (!Null.IsNull(this.UserId))
             {
-                ReadOnlyCollection<JobSearchQuery> queries = JobSearchQuery.LoadSearches(UserId, this.JobGroupId);
+                ReadOnlyCollection<JobSearchQuery> queries = JobSearchQuery.LoadSearches(this.UserId, this.JobGroupId);
 
                 if (queries.Count > 0)
                 {
-                    rpSavedSearches.DataSource = queries;
-                    rpSavedSearches.DataBind();
+                    this.SavedSearchesRepeater.DataSource = queries;
+                    this.SavedSearchesRepeater.DataBind();
                 }
             }
         }
 
         private void SetLinkUrls()
         {
-            //this.hlAllHotJobs.NavigateUrl = Globals.NavigateURL(TabId, string.Empty, "jobType=" + Convert.ToInt32(JobListingType.AllHot, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture));
-            int searchResultsTabId = Utility.GetSearchResultsTabId(this.JobGroupId, PortalSettings);
-            this.hlSearchJobs.Visible = searchResultsTabId != TabId;
-            if (this.hlSearchJobs.Visible)
+            int searchResultsTabId = Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings);
+            this.SearchJobsLink.Visible = searchResultsTabId != this.TabId;
+            if (this.SearchJobsLink.Visible)
             {
-                this.hlSearchJobs.NavigateUrl = Globals.NavigateURL(searchResultsTabId);
+                this.SearchJobsLink.NavigateUrl = Globals.NavigateURL(searchResultsTabId);
             }
         }
 
-//        protected string GetCategory(object o)
-//        {
-//            if (o != null && string.Equals(this.currentCategory, o.ToString(), StringComparison.OrdinalIgnoreCase))
-//            {
-//                return string.Empty;
-//            }
-//            else
-//            {
-//                //return "<h3>" + o + "</h3><br />";
-//                return "<br /><strong>" + o + "</strong><br />";
-//            }
-//        }
-
-// ReSharper disable SuggestBaseTypeForParameter
-        private string GetApplicationEditUrl(int applicationId, int jobId)
-// ReSharper restore SuggestBaseTypeForParameter
+        /// <summary>
+        /// Handles the <see cref="Control.Load"/> event of this control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void Page_Load(object sender, EventArgs e)
         {
-            return Globals.NavigateURL(Utility.GetJobDetailTabId(this.JobGroupId, PortalSettings), string.Empty, "jobId=" + jobId.ToString(CultureInfo.InvariantCulture), "applicationId=" + applicationId.ToString(CultureInfo.InvariantCulture));
-        }
-
-        #region IActionable Members
-
-        public ModuleActionCollection ModuleActions
-        {
-            get
+            try
             {
-                ModuleActionCollection actions = new ModuleActionCollection();
+                if (!this.IsPostBack)
+                {
+                    this.LoadJobListing();
+                    this.LoadJobsAppliedFor();
+                    this.LoadSavedSearches();
+                }
 
-                actions.Add(GetNextActionID(), Localization.GetString("ManageApplications", LocalResourceFile), ModuleActionType.AddContent, "", "", EditUrl(ControlKey.ManageApplications.ToString()), false, SecurityAccessLevel.Edit, true, false);
-                actions.Add(GetNextActionID(), Localization.GetString("ManageJobs", LocalResourceFile), ModuleActionType.AddContent, "", "", EditUrl(ControlKey.Edit.ToString()), false, SecurityAccessLevel.Edit, true, false);
-                actions.Add(GetNextActionID(), Localization.GetString("JobListingOptions", LocalResourceFile), ModuleActionType.AddContent, "", "", EditUrl(ControlKey.Options.ToString()), false, SecurityAccessLevel.Edit, true, false);
-
-                return actions;
+                this.SetLinkUrls();
+            }
+            catch (Exception exc)
+            {
+                Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
 
-        #endregion
-
-        protected string GetJobDetailUrl(object jobId)
+        /// <summary>
+        /// Handles the <see cref="Repeater.ItemCommand"/> event of the <see cref="AppliedJobsRepeater"/> control.
+        /// </summary>
+        /// <param name="source">The source of the event.</param>
+        /// <param name="e">The <see cref="RepeaterCommandEventArgs"/> instance containing the event data.</param>
+        private void AppliedJobsRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            return Utility.GetJobDetailUrl(jobId, this.JobGroupId, PortalSettings);
+            if (e != null && e.CommandName == EditCommandName)
+            {
+                this.Response.Redirect((string)e.CommandArgument);
+            }
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Repeater.ItemDataBound"/> event of the <see cref="AppliedJobsRepeater"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RepeaterItemEventArgs"/> instance containing the event data.</param>
+        private void AppliedJobsRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
+            {
+                var jobApplication = e.Item.DataItem as JobApplication;
+                var btnEditApplication = (Button)e.Item.FindControl("btnEditApplication");
+
+                if (jobApplication != null)
+                {
+                    if (btnEditApplication != null)
+                    {
+                        btnEditApplication.CommandName = EditCommandName;
+                        btnEditApplication.CommandArgument = this.GetApplicationEditUrl(jobApplication.ApplicationId, jobApplication.JobId);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Repeater.ItemDataBound"/> event of the <see cref="SavedSearchesRepeater"/> control.
+        /// </summary>
+        /// <param name="source">The source of the event.</param>
+        /// <param name="e">The <see cref="RepeaterItemEventArgs"/> instance containing the event data.</param>
+        private void SavedSearchesRepeater_ItemDataBound(object source, RepeaterItemEventArgs e)
+        {
+            if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
+            {
+                var query = e.Item.DataItem as JobSearchQuery;
+                var btnDelete = e.Item.FindControl("btnDelete") as Button;
+                var lnkSearch = e.Item.FindControl("lnkSearch") as HyperLink;
+
+                if (query != null)
+                {
+                    if (btnDelete != null)
+                    {
+                        ClientAPI.AddButtonConfirm(btnDelete, Localization.GetString("DeleteConfirm.Text", this.LocalResourceFile));
+                        btnDelete.CommandArgument = query.Id.ToString(CultureInfo.InvariantCulture);
+                    }
+
+                    if (lnkSearch != null)
+                    {
+                        lnkSearch.NavigateUrl = Globals.NavigateURL(Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings), string.Empty, "usid=" + query.Id);
+                    }
+                }
+            }
         }
     }
 }
