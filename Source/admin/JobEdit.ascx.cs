@@ -25,7 +25,7 @@ namespace Engage.Dnn.Employment.Admin
     /// <summary>
     /// A form to create and edit job openings
     /// </summary>
-    partial class JobEdit : ModuleBase
+    public partial class JobEdit : ModuleBase
     {
         /// <summary>
         /// The default sort order for a new job
@@ -73,7 +73,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void Page_Load(object sender, EventArgs e)
         {
             try
@@ -107,7 +106,7 @@ namespace Engage.Dnn.Employment.Admin
 
                 this.RegisterDatePickerBehavior();
             }
-            catch (Exception exc) //Module failed to load
+            catch (Exception exc)
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
@@ -118,7 +117,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void Page_PreRender(object sender, EventArgs e)
         {
             try
@@ -211,11 +209,11 @@ namespace Engage.Dnn.Employment.Admin
                     this.RequiredQualificationsRequiredValidator.ErrorMessage = Localization.GetString("RequiredQualificationsRequired", this.LocalResourceFile);
                     args.IsValid = false;
                 }
-                //else if (length > MaximumQualificationLength)
-                //{
-                //    this.RequiredQualificationsRequiredValidator.ErrorMessage = String.Format(CultureInfo.CurrentCulture, Localization.GetString("RequiredQualificationsMaxLength", LocalResourceFile), MaximumQualificationLength, length);
-                //    args.IsValid = false;
-                //}
+                ////else if (length > MaximumQualificationLength)
+                ////{
+                ////    this.RequiredQualificationsRequiredValidator.ErrorMessage = String.Format(CultureInfo.CurrentCulture, Localization.GetString("RequiredQualificationsMaxLength", LocalResourceFile), MaximumQualificationLength, length);
+                ////    args.IsValid = false;
+                ////}
             }
         }
 
@@ -234,11 +232,11 @@ namespace Engage.Dnn.Employment.Admin
                     this.DesiredQualificationsRequiredValidator.ErrorMessage = Localization.GetString("DesiredQualificationsRequired", this.LocalResourceFile);
                     args.IsValid = false;
                 }
-                //else if (length > MaximumQualificationLength)
-                //{
-                //    this.DesiredQualificationsRequiredValidator.ErrorMessage = String.Format(CultureInfo.CurrentCulture, Localization.GetString("DesiredQualificationsMaxLength", LocalResourceFile), MaximumQualificationLength, length);
-                //    args.IsValid = false;
-                //}
+                ////else if (length > MaximumQualificationLength)
+                ////{
+                ////    this.DesiredQualificationsRequiredValidator.ErrorMessage = String.Format(CultureInfo.CurrentCulture, Localization.GetString("DesiredQualificationsMaxLength", LocalResourceFile), MaximumQualificationLength, length);
+                ////    args.IsValid = false;
+                ////}
             }
         }
 
@@ -258,12 +256,12 @@ namespace Engage.Dnn.Employment.Admin
                 int jobId;
                 if (int.TryParse(this.Request.QueryString["jobId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
                 {
-                    //editing
+                    // editing
                     args.IsValid = !id.HasValue || id.Value == jobId;
                 }
                 else
                 {
-                    //inserting
+                    // inserting
                     args.IsValid = !id.HasValue;
                 }
 
