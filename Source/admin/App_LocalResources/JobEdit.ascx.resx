@@ -261,4 +261,10 @@
   <data name="StartExpireDateCompareValidator.Text" xml:space="preserve">
     <value>Expire Date must occur after Start Date</value>
   </data>
+  <data name="lblApplicationUrl.Help" xml:space="preserve">
+    <value>Enter the URL to which an applicant should be redirected when they click the "Apply for this Job" link.  Enter a URL here only if you want to circumvent the application functionality of this module.</value>
+  </data>
+  <data name="lblApplicationUrl.Text" xml:space="preserve">
+    <value>Application URL</value>
+  </data>
 </root>

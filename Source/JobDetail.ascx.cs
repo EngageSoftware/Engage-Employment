@@ -529,10 +529,15 @@ namespace Engage.Dnn.Employment
                         this.EmailErrorLabel.Visible = true;
                         this.NextActionButton.Enabled = false;
                     }
+                    else if (!string.IsNullOrEmpty(this.CurrentJob.ApplicationUrl))
+                    {
+                        this.NextActionButton.Text = Localization.GetString("RemoteApply", this.LocalResourceFile);
+                        this.NextActionButton.Click += this.NextActionButtonRedirect_Click;
+                    }
                     else
                     {
                         this.NextActionButton.Text = Localization.GetString("Apply", this.LocalResourceFile);
-                        this.NextActionButton.Click += this.NextActionButtonApply_Click; // new EventHandler(btnNextAction_Click);
+                        this.NextActionButton.Click += this.NextActionButtonApply_Click;
                     }
                 }
             }
@@ -657,7 +662,7 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Handles the Click event of the NextActionButton control.
+        /// Handles the Click event of the NextActionButton control, displaying the application panel.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -667,13 +672,23 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Handles the Click event of the NextActionButton control.
+        /// Handles the Click event of the NextActionButton control, redirecting the user to the login.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void NextActionButtonLogOn_Click(object sender, EventArgs e)
         {
             this.Response.Redirect(Dnn.Utility.GetLoginUrl(this.PortalSettings, this.Request));
+        }
+
+        /// <summary>
+        /// Handles the Click event of the NextActionButton control, redirecting the user to the job's <see cref="Job.ApplicationUrl"/>.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void NextActionButtonRedirect_Click(object sender, EventArgs e)
+        {
+            this.Response.Redirect(this.CurrentJob.ApplicationUrl);
         }
 
         /// <summary>

@@ -287,4 +287,7 @@
     <value>The resumé you are uploading is an unsupported file type.  Supported file types include {0}.</value>
     <comment>{0} replaced by the list of acceptable file extensions</comment>
   </data>
+  <data name="RemoteApply.Text" xml:space="preserve">
+    <value>Apply for this Job</value>
+  </data>
 </root>

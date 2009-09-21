@@ -13,10 +13,10 @@ namespace Engage.Dnn.Employment.Admin
 {
     using System;
     using System.Collections;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Web.UI;
     using System.Web.UI.WebControls;
+    using Data;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
@@ -82,6 +82,7 @@ namespace Engage.Dnn.Employment.Admin
                     this.LoadCategories();
                     this.LoadPositions();
                     this.LoadLocations();
+                    this.SetMaxLengths();
 
                     this.EmailAddressTextBox.Text = this.ApplicationEmailAddress;
                     this.EmailAddressRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
@@ -163,6 +164,7 @@ namespace Engage.Dnn.Employment.Admin
             newJob.NotificationEmailAddress = this.EmailAddressTextBox.Text;
             newJob.StartDate = DateTime.Parse(this.StartDateTextBox.Text, CultureInfo.CurrentCulture);
             newJob.ExpireDate = Engage.Utility.ParseNullableDateTime(this.ExpireDateTextBox.Text, CultureInfo.CurrentCulture);
+            newJob.ApplicationUrl = this.ApplicationUrlTextBox.Text.Trim();
             newJob.Save(this.UserId, this.JobGroupId, this.PortalId);
 
             this.Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
@@ -310,6 +312,15 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
+        /// Sets the <see cref="TextBox.MaxLength"/> property for fields with a maximum length defined.
+        /// </summary>
+        private void SetMaxLengths()
+        {
+            this.EmailAddressTextBox.MaxLength = DataProvider.MaxEmailLength;
+            this.ApplicationUrlTextBox.MaxLength = DataProvider.MaxUrlLength;
+        }
+
+        /// <summary>
         /// Sets up the form with the information for the specified job
         /// </summary>
         /// <param name="jobId">The job ID.</param>
@@ -339,6 +350,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.ExpireDateTextBox.Text = j.ExpireDate.HasValue ? j.ExpireDate.Value.ToShortDateString() : string.Empty;
 
                 this.EmailAddressTextBox.Text = Engage.Utility.HasValue(j.NotificationEmailAddress) ? j.NotificationEmailAddress : this.ApplicationEmailAddress;
+                this.ApplicationUrlTextBox.Text = j.ApplicationUrl;
             }
         }
 

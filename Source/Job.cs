@@ -22,33 +22,69 @@ namespace Engage.Dnn.Employment
 
     public class Job
     {
+        /// <summary>
+        /// Backing field for <see cref="ApplicationUrl"/>
+        /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string applicationUrl;
+
+        /// <summary>
+        /// Backing field for <see cref="CategoryName"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string categoryName;
 
+        /// <summary>
+        /// Backing field for <see cref="Description"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string description;
 
+        /// <summary>
+        /// Backing field for <see cref="DesiredQualifications"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string desiredQualifications;
 
+        /// <summary>
+        /// Backing field for <see cref="LocationName"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string locationName;
 
+        /// <summary>
+        /// Backing field for <see cref="NotificationEmailAddress"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string notificationEmailAddress;
 
+        /// <summary>
+        /// Backing field for <see cref="PostedDate"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string postedDate;
 
+        /// <summary>
+        /// Backing field for <see cref="RequiredQualifications"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string requiredQualifications;
 
+        /// <summary>
+        /// Backing field for <see cref="StateAbbreviation"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string stateAbbreviation;
 
+        /// <summary>
+        /// Backing field for <see cref="StateName"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string stateName;
 
+        /// <summary>
+        /// Backing field for <see cref="Title"/>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string title;
 
@@ -79,6 +115,21 @@ namespace Engage.Dnn.Employment
                 {
                     HttpContext.Current.Session["JobId"] = value;
                 }
+            }
+        }
+
+        public string ApplicationUrl
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return this.applicationUrl ?? string.Empty;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                this.applicationUrl = value;
             }
         }
 
@@ -408,9 +459,9 @@ namespace Engage.Dnn.Employment
             return new Job
                        {
                                JobId = (int)reader["JobId"],
-                               title = reader["JobTitle"].ToString(),
+                               Title = reader["JobTitle"].ToString(),
                                PositionId = (int)reader["PositionId"],
-                               description = reader["JobDescription"].ToString(),
+                               Description = reader["JobDescription"].ToString(),
                                locationName = reader["LocationName"].ToString(),
                                LocationId = (int)reader["LocationId"],
                                stateName = reader["StateName"].ToString(),
@@ -419,14 +470,15 @@ namespace Engage.Dnn.Employment
                                postedDate = reader["PostedDate"].ToString(),
                                IsHot = (bool)reader["IsHot"],
                                IsFilled = (bool)reader["IsFilled"],
-                               categoryName = reader["CategoryName"].ToString(),
+                               CategoryName = reader["CategoryName"].ToString(),
                                CategoryId = (int)reader["CategoryId"],
-                               requiredQualifications = reader["RequiredQualifications"].ToString(),
-                               desiredQualifications = reader["DesiredQualifications"].ToString(),
+                               RequiredQualifications = reader["RequiredQualifications"].ToString(),
+                               DesiredQualifications = reader["DesiredQualifications"].ToString(),
                                SortOrder = (int)reader["SortOrder"],
-                               notificationEmailAddress = reader["NotificationEmailAddress"].ToString(),
+                               NotificationEmailAddress = reader["NotificationEmailAddress"].ToString(),
                                StartDate = (DateTime)reader["StartDate"],
-                               ExpireDate = reader["ExpireDate"] as DateTime?
+                               ExpireDate = reader["ExpireDate"] as DateTime?,
+                               ApplicationUrl = reader["ApplicationUrl"].ToString()
                        };
         }
 
@@ -445,7 +497,8 @@ namespace Engage.Dnn.Employment
                     portalId, 
                     this.notificationEmailAddress,
                     this.StartDate,
-                    this.ExpireDate);
+                    this.ExpireDate,
+                    this.ApplicationUrl);
 
             if (jobGroupId.HasValue)
             {
@@ -468,7 +521,8 @@ namespace Engage.Dnn.Employment
                     this.SortOrder, 
                     this.notificationEmailAddress, 
                     this.StartDate, 
-                    this.ExpireDate);
+                    this.ExpireDate,
+                    this.ApplicationUrl);
         }
     }
 }

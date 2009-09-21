@@ -1,24 +1,47 @@
-//Engage: Employment - http://www.engagesoftware.com
-//Copyright (c) 2004-2009
-//by Engage Software ( http://www.engagesoftware.com )
-
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-//TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-//THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-//CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-//DEALINGS IN THE SOFTWARE.
-
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Framework.Providers;
+// <copyright file="DataProvider.cs" company="Engage Software">
+// Engage: Employment
+// Copyright (c) 2004-2009
+// by Engage Software ( http://www.engagesoftware.com )
+// </copyright>
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 namespace Engage.Dnn.Employment.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+    using DotNetNuke.Common.Utilities;
+    using DotNetNuke.Framework.Providers;
+
     internal abstract class DataProvider
     {
+        /// <summary>
+        /// The length of <c>(n)varchar</c> fields in the database for general text fields.
+        /// Does not include State <c>abbreviation</c> or CommonWords <c>locale</c> fields, the length of which is defined in <see cref="AbbreviationLength"/>.
+        /// Also does not include Job <c>RequiredQualifications</c> or <c>DesiredQualifications</c>, UserJobSearch <c>Keywords</c> or <c>SearchSql</c>, or Position <c>description</c>, which are text fields.
+        /// </summary>
+        public const int VarcharLength = 255;
+
+        /// <summary>
+        /// The length of <c>(n)varchar</c> fields in the database for small text fields.  Includes State <c>abbreviation</c> and CommonWords <c>locale</c>.
+        /// </summary>
+        public const int AbbreviationLength = 10;
+
+        /// <summary>
+        /// The length of columns containing email addresses (<c>Job.NotificationEmailAddress</c>)
+        /// </summary>
+        public const int MaxEmailLength = 320;
+
+        /// <summary>
+        /// The length of columns containing URLs (<c>Job.ApplicationUrl</c>)
+        /// </summary>
+        public const int MaxUrlLength = 2000;
+
         #region Shared/Static Methods
         // singleton reference to the instantiated object 
         private static DataProvider provider;
@@ -66,8 +89,8 @@ namespace Engage.Dnn.Employment.Data
         #region Job
         public abstract DataTable GetAdminData(int? jobGroupId, int portalId);
         public abstract DataSet GetUnusedAdminData(int? jobGroupId, int portalId);
-		public abstract int InsertJob(int userId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, int portalId, string notificationEmailAddress, DateTime startDate, DateTime? expireDate);
-        public abstract void UpdateJob(int userId, int jobId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, string notificationEmailAddress, DateTime startDate, DateTime? expireDate);
+		public abstract int InsertJob(int userId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, int portalId, string notificationEmailAddress, DateTime startDate, DateTime? expireDate, string applicationUrl);
+        public abstract void UpdateJob(int userId, int jobId, int positionId, int locationId, int categoryId, bool isHot, bool isFilled, string requiredQualifications, string desiredQualifications, int sortOrder, string notificationEmailAddress, DateTime startDate, DateTime? expireDate, string applicationUrl);
         public abstract void DeleteJob(int jobId);
         public abstract IDataReader GetJob(int jobId);
         public abstract IDataReader GetJobs(int? jobGroupId, int portalId);

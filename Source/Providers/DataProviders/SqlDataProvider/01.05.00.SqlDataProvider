@@ -2,7 +2,8 @@
 BEGIN
     ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_Job
       ADD StartDate DateTime NULL,
-          ExpireDate DateTime NULL
+          ExpireDate DateTime NULL,
+          ApplicationUrl nvarchar(2000) NULL
 END
 GO     
 
@@ -28,7 +29,7 @@ l.LocationId, s.[Name] AS StateName, s.Abbreviation AS StateAbbreviation, s.Stat
 j.RequiredQualifications, j.DesiredQualifications, jc.[Description] AS CategoryName,   
 jc.JobCategoryId AS CategoryId, j.IsHot, j.PostedDate, p.[Description] AS JobDescription,   
 j.IsFilled, j.SortOrder, j.RevisingUser, j.PortalId, j.NotificationEmailAddress,  
-j.RevisionDate, j.StartDate, j.ExpireDate
+j.RevisionDate, j.StartDate, j.ExpireDate, j.ApplicationUrl
 FROM  
 {objectQualifier}EngageEmployment_job j  
 JOIN {objectQualifier}EngageEmployment_lkpJobPosition p ON (j.JobPositionId = p.JobPositionId)  
@@ -54,15 +55,16 @@ CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spInsertJob
 @portalId int,   
 @notificationEmailAddress nvarchar(320),
 @startDate datetime,
-@expireDate datetime
+@expireDate datetime,
+@applicationUrl nvarchar(2000)
 AS  
  INSERT {objectQualifier}EngageEmployment_Job  
  (JobPositionId, LocationId, JobCategoryId, PostedDate, IsHot, IsFilled, RequiredQualifications, 
   DesiredQualifications, RevisingUser, RevisionDate, SortOrder, PortalId, NotificationEmailAddress,
-  StartDate, ExpireDate)
- VALUES (@positionId, @locationId, @categoryId, getdate(), @isHot, @isFilled, @requiredQualifications,
-         @desiredQualifications,  @revisingUser, getdate(), @sortOrder, @portalId, @NotificationEmailAddress,
-         @startDate, @expireDate)  
+  StartDate, ExpireDate, ApplicationUrl)
+ VALUES (@positionId, @locationId, @categoryId, GETDATE(), @isHot, @isFilled, @requiredQualifications,
+         @desiredQualifications,  @revisingUser, GETDATE(), @sortOrder, @portalId, @NotificationEmailAddress,
+         @startDate, @expireDate, @applicationUrl)  
  SELECT CONVERT(int, SCOPE_IDENTITY())
 GO
 
@@ -83,7 +85,8 @@ CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateJob
 @sortOrder int,  
 @notificationEmailAddress nvarchar(320),
 @startDate datetime,
-@expireDate datetime
+@expireDate datetime,
+@applicationUrl nvarchar(2000)
 AS  
  UPDATE {objectQualifier}EngageEmployment_Job  
  SET JobPositionId = @positionId,   
@@ -94,11 +97,12 @@ AS
         RequiredQualifications = @requiredQualifications,   
         DesiredQualifications = @desiredQualifications,   
         RevisingUser = @revisingUser,   
-        RevisionDate = getdate(),   
+        RevisionDate = GETDATE(),   
         SortOrder = @sortOrder,   
         NotificationEmailAddress = @notificationEmailAddress,
         StartDate = @startDate,
-        ExpireDate = @expireDate
+        ExpireDate = @expireDate,
+        ApplicationUrl = @applicationUrl
     WHERE JobId = @jobId  
 GO
 

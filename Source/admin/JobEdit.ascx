@@ -103,6 +103,14 @@
         </td>
     </tr>
     <tr>
+        <td class="SubHead">
+            <dnn:label ResourceKey="lblApplicationUrl" controlname="ApplicationUrlTextBox" runat="server" />
+        </td>
+        <td valign="top">
+            <asp:TextBox ID="ApplicationUrlTextBox" runat="server" CssClass="NormalTextBox"/>
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
