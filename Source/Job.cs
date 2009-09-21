@@ -276,6 +276,19 @@ namespace Engage.Dnn.Employment
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is active, i.e. whether it is in the time frame between its <see cref="StartDate"/> and <see cref="ExpireDate"/>.
+        /// </summary>
+        /// <value><c>true</c> if this instance is active; otherwise, <c>false</c>.</value>
+        public bool IsActive
+        {
+            get
+            {
+                return (!this.ExpireDate.HasValue || this.ExpireDate.Value.ToUniversalTime() > DateTime.UtcNow)
+                       && this.StartDate.ToUniversalTime() < DateTime.UtcNow;
+            }
+        }
+
         public static bool CanCreateJob(int portalId)
         {
             return DataProvider.Instance().CanCreateJob(portalId);

@@ -107,7 +107,7 @@ namespace Engage.Dnn.Employment
 
             set
             {
-                this.Context.Items["Job"] = value;
+                this.Context.Items["Job"] = this.currentJob = value;
             }
         }
 
@@ -226,7 +226,11 @@ namespace Engage.Dnn.Employment
             return string.Format(CultureInfo.InvariantCulture, @".*\.(?:{0})$", fileExtensionsBuilder);
         }
 
-        private void FillApplication()
+        /// <summary>
+        /// Fills in the information about the application, if one is specified and it belongs to this user.
+        /// </summary>
+        /// <returns>Whether the specified application was filled in</returns>
+        private bool FillApplication()
         {
             JobApplication jobApplication = JobApplication.Load(this.ApplicationId.Value);
             if (this.UserId == jobApplication.UserId && !Null.IsNull(this.UserId))
@@ -271,7 +275,11 @@ namespace Engage.Dnn.Employment
                         lnkDocument.NavigateUrl = Utility.GetDocumentUrl(this.Request, document.DocumentId);
                     }
                 }
+
+                return true;
             }
+
+            return false;
         }
 
         private void FillLeadDropDown()
@@ -679,15 +687,22 @@ namespace Engage.Dnn.Employment
             {
                 if (!this.IsPostBack)
                 {
+                    bool editingApplication = false;
+                    if (this.ApplicationId.HasValue)
+                    {
+                        editingApplication = this.FillApplication();
+                    }
+
                     int jobId;
                     if (int.TryParse(this.Request.QueryString["jobid"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
                     {
                         Job.CurrentJobId = jobId;
-                    }
 
-                    if (this.ApplicationId.HasValue)
-                    {
-                        this.FillApplication();
+                        if (!this.CurrentJob.IsActive && !editingApplication)
+                        {
+                            Job.CurrentJobId = Null.NullInteger;
+                            this.CurrentJob = null;
+                        }
                     }
                 }
 
