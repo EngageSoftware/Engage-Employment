@@ -2,7 +2,7 @@
 <%@ Import Namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.JobSearch" AutoEventWireup="false" Codebehind="JobSearch.ascx.cs" %>
 <asp:Label ID="lblErrorMessage" runat="server" ForeColor="Red" ></asp:Label>
-<asp:Panel ID="pnlSearchInput" runat="server" DefaultButton="btnSearch">
+<asp:Panel ID="pnlSearchInput" runat="server" DefaultButton="SearchButton">
     <div class="job_search_table">
         <table class="Normal">
             <tr >
@@ -20,7 +20,7 @@
             <tr>
                 <td class="SubHead"><asp:Label runat="server" ID="lblLocationHeader"/></td>
                 <td><asp:DropDownList ID="ddlLocation" runat="server"/></td>
-                <td><asp:RadioButtonList ID="rblLocation" runat="server" AutoPostBack="true" RepeatDirection="Horizontal" /></td>
+                <td><asp:RadioButtonList ID="LocationRadioButtonList" runat="server" AutoPostBack="true" RepeatDirection="Horizontal" /></td>
              </tr>
              <tr>
                 <td class="SubHead"><asp:Label runat="server" ID="lblKeywordsHeader" resourcekey="lblKeywordsHeader" /></td>
@@ -30,8 +30,8 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    <asp:LinkButton ID="btnSearch" runat="server" OnClick="btnSearch_Click" CssClass="CommandButton" resourcekey="btnSearch" />&nbsp;
-                    <asp:LinkButton ID="btnBack" runat="server" OnClick="btnBack_Click" CssClass="CommandButton" resourcekey="btnBack" />
+                    <asp:LinkButton ID="SearchButton" runat="server" CssClass="CommandButton" resourcekey="btnSearch" />&nbsp;
+                    <asp:LinkButton ID="BackButton" runat="server" CssClass="CommandButton" resourcekey="btnBack" />
                 </td>
             </tr>
         </table>
@@ -69,7 +69,7 @@
 <asp:Label ID="lblNoResults" runat="server" CssClass="Normal" resourcekey="lblNoResults" EnableViewState="false" Visible="false" />
 </div>
 
-<asp:Panel ID="pnlSaveSearch" runat="server" Visible="false" DefaultButton="btnSaveSearch">
+<asp:Panel ID="pnlSaveSearch" runat="server" Visible="false" DefaultButton="SaveSearchButton">
     <br />
     <table class="job_search_table nospacing Normal">
         <tr>
@@ -91,7 +91,7 @@
         </tr>
         <tr>
             <td>
-                <asp:LinkButton ID="btnSaveSearch" runat="server" OnClick="btnSaveSearch_Click" CssClass="CommandButton" resourcekey="btnSaveSearch" ValidationGroup="saveSearch" />
+                <asp:LinkButton ID="SaveSearchButton" runat="server" CssClass="CommandButton" resourcekey="btnSaveSearch" ValidationGroup="saveSearch" />
             </td>
         </tr>
     </table>
