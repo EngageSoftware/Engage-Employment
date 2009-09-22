@@ -170,6 +170,10 @@
           <name>01.04.02.SqlDataProvider</name>
         </file>
         <file>
+          <path>Providers\DataProviders\SqlDataProvider</path>
+          <name>1.5.0.SqlDataProvider</name>
+        </file>
+        <file>
           <name>Uninstall.SqlDataProvider</name>
         </file>
         <file>

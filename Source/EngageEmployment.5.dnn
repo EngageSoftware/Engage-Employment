@@ -55,6 +55,10 @@
               <name>01.04.02.SqlDataProvider</name>
               <version>01.04.02</version>
             </script>
+            <script type="Install">
+              <name>1.5.0.SqlDataProvider</name>
+              <version>1.5.0</version>
+            </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>
               <version>REPLACED BY NANT</version>
