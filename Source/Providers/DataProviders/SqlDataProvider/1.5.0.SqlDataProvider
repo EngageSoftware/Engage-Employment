@@ -5,7 +5,7 @@ BEGIN
           ExpireDate DateTime NULL,
           ApplicationUrl nvarchar(2000) NULL
 END
-GO     
+GO
 
 IF EXISTS (SELECT NULL FROM syscolumns WHERE name = 'StartDate' AND id = OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_Job') AND isnullable = 1)
 BEGIN
