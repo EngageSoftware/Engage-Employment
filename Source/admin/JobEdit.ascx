@@ -37,6 +37,7 @@
         </td>
         <td valign="top">
             <asp:TextBox ID="SortOrderTextBox" runat="server" CssClass="NormalTextBox" />
+            <asp:RequiredFieldValidator runat="server" ControlToValidate="SortOrderTextBox" SetFocusOnError="True" Display="None" resourcekey="rfvSortOrder" ValidationGroup="JobEdit" />
             <asp:CompareValidator runat="server" ControlToValidate="SortOrderTextBox" Operator="DataTypeCheck" SetFocusOnError="True" Type="Integer" Display="None" resourcekey="cvSortOrder" ValidationGroup="JobEdit" />
         </td>
     </tr>
@@ -108,6 +109,7 @@
         </td>
         <td valign="top">
             <asp:TextBox ID="ApplicationUrlTextBox" runat="server" CssClass="NormalTextBox"/>
+            <asp:RegularExpressionValidator runat="server" ControlToValidate="ApplicationUrlTextBox" Display="None" ResourceKey="regexApplicationUrl" ValidationGroup="JobEdit" ValidationExpression=".*:.*|^/.*" />
         </td>
     </tr>
     <tr>

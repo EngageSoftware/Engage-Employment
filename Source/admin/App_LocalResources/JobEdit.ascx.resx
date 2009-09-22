@@ -262,9 +262,15 @@
     <value>Expire Date must occur after Start Date</value>
   </data>
   <data name="lblApplicationUrl.Help" xml:space="preserve">
-    <value>Enter the URL to which an applicant should be redirected when they click the "Apply for this Job" link.  Enter a URL here only if you want to circumvent the application functionality of this module.</value>
+    <value>Enter the URL to which an applicant should be redirected when they click the "Apply for this Job" link.  Enter a URL here only if you want to circumvent the application functionality of this module.  Make sure you include the URL's protocol, i.e. "http://www.engagesoftware.com," instead of just "www.engagesoftware.com"</value>
   </data>
   <data name="lblApplicationUrl.Text" xml:space="preserve">
     <value>Application URL</value>
+  </data>
+  <data name="regexApplicationUrl.Text" xml:space="preserve">
+    <value>The Application URL must be a valid URL.  Did you forget to include "http://"?</value>
+  </data>
+  <data name="rfvSortOrder.Text" xml:space="preserve">
+    <value>Sort Order is required</value>
   </data>
 </root>
