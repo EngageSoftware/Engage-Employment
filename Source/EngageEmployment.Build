@@ -75,6 +75,8 @@
     <call target="add-sources-to-resource-zip"/>
     <call target="create-packages"/>
 
+    <call target="get-dependency-source"/>
+
     <property name="dnn.version" value="4"/>
     <call target="combine-enterprise"/>
     <property name="dnn.version" value="5"/>
@@ -82,6 +84,7 @@
 
     <call target="project-specific-tasks"/>
 
+    <delete file="${package.directory}\${project.name}_${package.license}_${project.version}_DependencySource.zip" failonerror="false"/>
     <delete file="${package.directory}\${package.name}" failonerror="false"/>
     <delete dir="${package.directory}\temp" failonerror="false"/>
   </target>
@@ -196,14 +199,12 @@
       <fileset basedir="${package.directory}">
         <include name="${project.name}_${package.license}_${project.version}_Install_${dnn.version}.zip"/>
         <include name="${project.name}_${package.license}_${project.version}_Source_${dnn.version}.zip"/>
+        <include name="${project.name}_${package.license}_${project.version}_DependencySource.zip"/>
       </fileset>
     </zip>
 
     <delete file="${package.directory}/${project.name}_${package.license}_${project.version}_Install_${dnn.version}.zip" failonerror="false"/>
     <delete file="${package.directory}/${project.name}_${package.license}_${project.version}_Source_${dnn.version}.zip" failonerror="false"/>
-  </target>
-  <target name="project-specific-tasks" description="Place tasks specific to the current project in this task">
-    <call target="get-dependency-source"/>
   </target>
   <target name="get-dependency-source" description="Gets the latest source packages for the Engage Framework dependencies for this module">
     <property name="build.directory" value="_0.0"/>
@@ -220,8 +221,11 @@
     <zip zipfile="${package.directory}/${project.name}_${package.license}_${project.version}_DependencySource.zip" ziplevel="${ziplevel}">
       <fileset basedir="${package.directory}/temp/dependencies">
         <include name="*_Source.zip"/>
+        <exclude name="*Events_Source.zip"/>
       </fileset>
     </zip>
+  </target>
+  <target name="project-specific-tasks" description="Place tasks specific to the current project in this task">
   </target>
   <script language="C#" prefix="build-directory" >
     <imports>

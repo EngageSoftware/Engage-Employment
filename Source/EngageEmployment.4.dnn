@@ -210,8 +210,7 @@
       </modules>
       <files>
         <file>
-          <path>Admin</path>
-          <name>JobGroupAdmin.ascx</name>
+          <name>EngageEmployment.dll</name>
         </file>
       </files>
     </folder>
