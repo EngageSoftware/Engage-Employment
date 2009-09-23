@@ -223,6 +223,10 @@ IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spDeleteJob]
 GO
 
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetDocumentJobGroups]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetDocumentJobGroups]
+GO
+
 IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwPositions]') AND OBJECTPROPERTY(id, N'IsView') = 1)
 DROP VIEW {databaseOwner}[{objectQualifier}EngageEmployment_vwPositions]
 GO
