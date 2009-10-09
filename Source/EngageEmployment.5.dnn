@@ -59,6 +59,10 @@
               <name>1.5.0.SqlDataProvider</name>
               <version>1.5.0</version>
             </script>
+            <script type="Install">
+              <name>1.5.1.SqlDataProvider</name>
+              <version>1.5.1</version>
+            </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>
               <version>REPLACED BY NANT</version>
@@ -226,7 +230,7 @@
             <attributes>
               <businessControllerClass>Engage.Dnn.Employment.EmploymentController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,01.01.00,01.02.00,01.03.00,01.03.02,01.04.00,01.04.01,01.04.02,1.5.0</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,01.01.00,01.02.00,01.03.00,01.03.02,01.04.00,01.04.01,01.04.02,1.5.0,1.5.1</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -291,7 +295,7 @@
             <attributes>
               <businessControllerClass>Engage.Dnn.Employment.EmploymentAdminController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,01.01.00,01.02.00,01.03.00,01.03.02,01.04.00,01.04.01,01.04.02,1.5.0</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,01.01.00,01.02.00,01.03.00,01.03.02,01.04.00,01.04.01,01.04.02,1.5.0,1.5.1</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>

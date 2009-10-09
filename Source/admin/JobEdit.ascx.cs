@@ -65,7 +65,6 @@ namespace Engage.Dnn.Employment.Admin
             this.CancelButton.Click += this.CancelButton_Click;
             this.RequiredQualificationsRequiredValidator.ServerValidate += this.RequiredQualificationsRequiredValidator_ServerValidate;
             this.DesiredQualificationsRequiredValidator.ServerValidate += this.DesiredQualificationsRequiredValidator_ServerValidate;
-            this.UniquePositionLocationValidator.ServerValidate += this.UniquePositionLocationValidator_ServerValidate;
         }
 
         /// <summary>
@@ -239,35 +238,6 @@ namespace Engage.Dnn.Employment.Admin
                 ////    this.DesiredQualificationsRequiredValidator.ErrorMessage = String.Format(CultureInfo.CurrentCulture, Localization.GetString("DesiredQualificationsMaxLength", LocalResourceFile), MaximumQualificationLength, length);
                 ////    args.IsValid = false;
                 ////}
-            }
-        }
-
-        /// <summary>
-        /// Handles the ServerValidate event of the <see cref="UniquePositionLocationValidator"/> control.
-        /// </summary>
-        /// <param name="source">The source of the event.</param>
-        /// <param name="args">The <see cref="System.Web.UI.WebControls.ServerValidateEventArgs"/> instance containing the event data.</param>
-        private void UniquePositionLocationValidator_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-            if (args != null)
-            {
-                int positionId = int.Parse(this.PositionDropDownList.SelectedValue, CultureInfo.InvariantCulture);
-                int locationId = int.Parse(this.LocationDropDownList.SelectedValue, CultureInfo.InvariantCulture);
-
-                int? id = Job.GetJobId(locationId, positionId);
-                int jobId;
-                if (int.TryParse(this.Request.QueryString["jobId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
-                {
-                    // editing
-                    args.IsValid = !id.HasValue || id.Value == jobId;
-                }
-                else
-                {
-                    // inserting
-                    args.IsValid = !id.HasValue;
-                }
-
-                this.UniquePositionLocationValidator.ErrorMessage = Localization.GetString("cvUniquePositionLocation.Text", this.LocalResourceFile);
             }
         }
 

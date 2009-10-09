@@ -10,7 +10,6 @@
         <td valign="top">
             <asp:DropDownList ID="PositionDropDownList" runat="server"/>
             <asp:CompareValidator runat="server" ControlToValidate="PositionDropDownList" Operator="NotEqual" SetFocusOnError="True" ValueToCompare="-1" Display="None" resourcekey="cvPosition" ValidationGroup="JobEdit"/>
-            <asp:CustomValidator ID="UniquePositionLocationValidator" runat="server" Display="None" resourcekey="cvUniquePositionLocation" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>

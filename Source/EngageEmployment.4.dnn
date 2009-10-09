@@ -8,7 +8,7 @@
       <description>
         The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com) used to manage job openings in your organization and allow for applicants to view jobs and submit applications.
       </description>
-      <version>01.05.00</version>
+      <version>REPLACED BY NANT</version>
       <businesscontrollerclass>Engage.Dnn.Employment.EmploymentController</businesscontrollerclass>
       <resourcefile>Resources.zip</resourcefile>
       <modules>
@@ -172,6 +172,10 @@
         <file>
           <path>Providers\DataProviders\SqlDataProvider</path>
           <name>1.5.0.SqlDataProvider</name>
+        </file>
+        <file>
+          <path>Providers\DataProviders\SqlDataProvider</path>
+          <name>1.5.1.SqlDataProvider</name>
         </file>
         <file>
           <name>Uninstall.SqlDataProvider</name>

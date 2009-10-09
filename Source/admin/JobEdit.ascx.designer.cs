@@ -23,15 +23,6 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.DropDownList PositionDropDownList;
         
         /// <summary>
-        /// UniquePositionLocationValidator control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator UniquePositionLocationValidator;
-        
-        /// <summary>
         /// CategoryDropDownList control.
         /// </summary>
         /// <remarks>

@@ -1,0 +1,3 @@
+﻿IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}IX_EngageEmployment_Job_PositionId_LocationId]', N'UQ') IS NOT NULL
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] DROP CONSTRAINT [{objectQualifier}IX_EngageEmployment_Job_PositionId_LocationId]
+GO
