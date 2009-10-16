@@ -141,7 +141,8 @@
         </member>
         <member name="M:Engage.Dnn.Framework.Setting`1.GetValueAsEnumFor``1(Engage.Dnn.Framework.IModuleControlBase)">
             <summary>
-            Gets the value of this setting for the given <paramref name="moduleControl"/> as an <see cref="T:System.Enum"/> of <typeparamref name="TEnum"/>.
+            Gets the value of this setting for the given <paramref name="moduleControl"/> as an <see cref="T:System.Enum"/> of <typeparamref name="TEnum"/>, 
+            or <see cref="P:Engage.Dnn.Framework.Setting`1.DefaultValue"/> if the setting hasn't been set or isn't an <see cref="T:System.Enum"/> of <typeparamref name="TEnum"/>.
             </summary>
             <typeparam name="TEnum">The type of the <see cref="T:System.Enum"/> to which the value should be converted.</typeparam>
             <param name="moduleControl">A module control instance to which this setting applies.</param>
@@ -167,7 +168,8 @@
         </member>
         <member name="M:Engage.Dnn.Framework.Setting`1.GetValueAsInt32For(Engage.Dnn.Framework.IModuleControlBase)">
             <summary>
-            Gets the value of this setting for the given <paramref name="moduleControl"/> as an <see cref="T:System.Int32"/>.
+            Gets the value of this setting for the given <paramref name="moduleControl"/> as an <see cref="T:System.Int32"/>, 
+            or <see cref="P:Engage.Dnn.Framework.Setting`1.DefaultValue"/> if the setting hasn't been set or isn't an <see cref="T:System.Int32"/>.
             </summary>
             <param name="moduleControl">A module control instance to which this setting applies.</param>
             <returns>
@@ -190,7 +192,8 @@
         </member>
         <member name="M:Engage.Dnn.Framework.Setting`1.GetValueAsDecimalFor(Engage.Dnn.Framework.IModuleControlBase)">
             <summary>
-            Gets the value of this setting for the given <paramref name="moduleControl"/> as a <see cref="T:System.Decimal"/>.
+            Gets the value of this setting for the given <paramref name="moduleControl"/> as a <see cref="T:System.Decimal"/>, 
+            or <see cref="P:Engage.Dnn.Framework.Setting`1.DefaultValue"/> if the setting hasn't been set or isn't an <see cref="T:System.Decimal"/>.
             </summary>
             <param name="moduleControl">A module control instance to which this setting applies.</param>
             <returns>
@@ -213,7 +216,8 @@
         </member>
         <member name="M:Engage.Dnn.Framework.Setting`1.GetValueAsBooleanFor(Engage.Dnn.Framework.IModuleControlBase)">
             <summary>
-            Gets the value of this setting for the given <paramref name="moduleControl"/> as a <see cref="T:System.Boolean"/>.
+            Gets the value of this setting for the given <paramref name="moduleControl"/> as a <see cref="T:System.Boolean"/>, 
+            or <see cref="P:Engage.Dnn.Framework.Setting`1.DefaultValue"/> if the setting hasn't been set or isn't an <see cref="T:System.Boolean"/>.
             </summary>
             <param name="moduleControl">A module control instance to which this setting applies.</param>
             <returns>
@@ -236,7 +240,8 @@
         </member>
         <member name="M:Engage.Dnn.Framework.Setting`1.GetValueAsDateTimeFor(Engage.Dnn.Framework.IModuleControlBase)">
             <summary>
-            Gets the value of this setting for the given <paramref name="moduleControl"/> as a <see cref="T:System.DateTime"/>.
+            Gets the value of this setting for the given <paramref name="moduleControl"/> as a <see cref="T:System.DateTime"/>, 
+            or <see cref="P:Engage.Dnn.Framework.Setting`1.DefaultValue"/> if the setting hasn't been set or isn't an <see cref="T:System.DateTime"/>.
             </summary>
             <param name="moduleControl">A module control instance to which this setting applies.</param>
             <returns>
