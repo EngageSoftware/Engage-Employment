@@ -382,6 +382,25 @@
             Adds a reference to jQuery 1.3.2 (minified) to this page.
             </summary>
         </member>
+        <member name="M:Engage.Dnn.Framework.SettingsBase.Localize(System.String)">
+            <summary>
+            Localizes the specified resource key, from this control's <see cref="P:DotNetNuke.Entities.Modules.PortalModuleBase.LocalResourceFile"/>.
+            </summary>
+            <param name="resourceKey">The resource key.</param>
+            <returns>
+            The localized text for the given <paramref name="resourceKey"/>
+            </returns>
+        </member>
+        <member name="M:Engage.Dnn.Framework.SettingsBase.Localize(System.String,System.String)">
+            <summary>
+            Localizes the specified resource key, from the given <paramref name="resourceFileRoot"/>.
+            </summary>
+            <param name="resourceKey">The resource key.</param>
+            <param name="resourceFileRoot">The path to the file with the localized resources.</param>
+            <returns>
+            The localized text for the given <paramref name="resourceKey"/>
+            </returns>
+        </member>
         <member name="M:Engage.Dnn.Framework.SettingsBase.Engage#Dnn#Framework#IModuleControlBase#get_ModuleConfiguration">
             <summary>
             The base class for all settings controls in Engage DotNetNuke modules.
@@ -641,6 +660,25 @@
             The <see cref="T:Engage.Dnn.Framework.Templating.TemplateInfo"/> instance representing the template in the given folder.
             </returns>
             <exception cref="T:System.Xml.Schema.XmlSchemaValidationException">The one of the templates' manifests does not conform to the EngageManifest schema.</exception>
+        </member>
+        <member name="M:Engage.Dnn.Framework.ModuleBase.Localize(System.String)">
+            <summary>
+            Localizes the specified resource key, from this control's <see cref="P:DotNetNuke.Entities.Modules.PortalModuleBase.LocalResourceFile"/>.
+            </summary>
+            <param name="resourceKey">The resource key.</param>
+            <returns>
+            The localized text for the given <paramref name="resourceKey"/>
+            </returns>
+        </member>
+        <member name="M:Engage.Dnn.Framework.ModuleBase.Localize(System.String,System.String)">
+            <summary>
+            Localizes the specified resource key, from the given <paramref name="resourceFileRoot"/>.
+            </summary>
+            <param name="resourceKey">The resource key.</param>
+            <param name="resourceFileRoot">The path to the file with the localized resources.</param>
+            <returns>
+            The localized text for the given <paramref name="resourceKey"/>
+            </returns>
         </member>
         <member name="M:Engage.Dnn.Framework.ModuleBase.OnInit(System.EventArgs)">
             <summary>
