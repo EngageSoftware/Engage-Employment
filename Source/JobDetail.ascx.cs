@@ -332,13 +332,17 @@ namespace Engage.Dnn.Employment
 
                     ModuleInfo jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
 
-                    var jobDetailLink = new HyperLink();
+                    var jobDetailLink = new HyperLink
+                                            {
+                                                    Text = Localization.GetString("ApplicationEmailLink", this.LocalResourceFile),
+                                                    NavigateUrl = this.MakeUrlAbsolute(
+                                                        Globals.NavigateURL(
+                                                            jobDetailModule == null ? -1 : jobDetailModule.TabID,
+                                                            string.Empty,
+                                                            "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)))
+                                            };
+
                     cell.Controls.Add(jobDetailLink);
-                    jobDetailLink.Text = Localization.GetString("ApplicationEmailLink", this.LocalResourceFile);
-                    jobDetailLink.NavigateUrl = Globals.NavigateURL(
-                                                            jobDetailModule == null ? -1 : jobDetailModule.TabID, 
-                                                            string.Empty, 
-                                                            "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture));
 
                     if (this.SalaryTextBox.Text.Length > 0)
                     {
@@ -395,17 +399,17 @@ namespace Engage.Dnn.Employment
 
                     ModuleInfo jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
 
-                    var jobDetailsLink = new HyperLink
+                    var jobDetailLink = new HyperLink
                                              {
                                                      Text = Localization.GetString("FriendEmailLink", this.LocalResourceFile),
-                                                     NavigateUrl =
-                                                             Globals.NavigateURL(
-                                                             jobDetailModule == null ? -1 : jobDetailModule.TabID,
-                                                             string.Empty,
-                                                             "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture))
+                                                     NavigateUrl = this.MakeUrlAbsolute(
+                                                        Globals.NavigateURL(
+                                                            jobDetailModule == null ? -1 : jobDetailModule.TabID,
+                                                            string.Empty,
+                                                            "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)))
                                              };
 
-                    cell.Controls.Add(jobDetailsLink);
+                    cell.Controls.Add(jobDetailLink);
                     row = new TableRow();
                     table.Rows.Add(row);
 
@@ -448,6 +452,26 @@ namespace Engage.Dnn.Employment
 
             this.ApplicationMessageRow.Visible = this.DisplayMessage != Visibility.Hidden;
             this.ApplicationMessageRequiredValidator.Enabled = this.MessageRequiredLabel.Visible = this.DisplayMessage == Visibility.Required;
+        }
+
+        /// <summary>
+        /// Transforms the given <paramref name="url"/> into an absolute URL.
+        /// </summary>
+        /// <param name="url">The URL to transform.</param>
+        /// <returns>An absolute URL</returns>
+        private string MakeUrlAbsolute(string url)
+        {
+            if (url.StartsWith("~", StringComparison.Ordinal))
+            {
+                url = this.ResolveUrl(url);
+            }
+
+            if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                return url;
+            }
+
+            return new Uri(this.Request.Url, url).AbsoluteUri;
         }
 
         private void SendNotificationEmail(int resumeId)

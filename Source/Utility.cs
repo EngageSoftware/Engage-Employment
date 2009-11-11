@@ -141,31 +141,25 @@ namespace Engage.Dnn.Employment
         /// <returns>The URL used to retrieve the document.</returns>
         public static string GetDocumentUrl(HttpRequest request, int documentId)
         {
-            UriBuilder u = new UriBuilder();
-            u.Scheme = request.Url.Scheme;
-            u.Host = request.Url.Host;
-            u.Path = Globals.ResolveUrl(DesktopModuleRelativePath + "GetResume.aspx");
-            u.Query = "rid=" + documentId.ToString(CultureInfo.InvariantCulture);
-            u.Port = Convert.ToInt32(request.ServerVariables["SERVER_PORT"], CultureInfo.InvariantCulture);
-            return u.ToString();
+            return new Uri(request.Url, Globals.ResolveUrl(DesktopModuleRelativePath + "GetResume.aspx?rid=" + documentId.ToString(CultureInfo.InvariantCulture))).AbsoluteUri;
         }
 
         public static int GetSearchResultsTabId(int? jobGroupId, PortalSettings portalSettings)
         {
             ModuleInfo mi = GetCurrentModuleByDefinition(portalSettings, ModuleDefinition.JobSearch, jobGroupId);
-            return (mi == null ? -1 : mi.TabID);
+            return mi == null ? -1 : mi.TabID;
         }
 
         public static int GetJobDetailTabId(int? jobGroupId, PortalSettings portalSettings)
         {
             ModuleInfo mi = GetCurrentModuleByDefinition(portalSettings, ModuleDefinition.JobDetail, jobGroupId);
-            return (mi == null ? -1 : mi.TabID);
+            return mi == null ? -1 : mi.TabID;
         }
 
         public static int? GetJobListingTabId(int? jobGroupId, PortalSettings portalSettings)
         {
             ModuleInfo mi = GetCurrentModuleByDefinition(portalSettings, ModuleDefinition.JobListing, jobGroupId);
-            return (mi == null ? (int?)null : mi.TabID);
+            return mi == null ? (int?)null : mi.TabID;
         }
 
         public static string GetJobDetailUrl(object jobId, int? jobGroupId, PortalSettings portalSettings)
@@ -175,6 +169,7 @@ namespace Engage.Dnn.Employment
                 return Globals.NavigateURL(
                     GetJobDetailTabId(jobGroupId, portalSettings), string.Empty, "jobid=" + ((int)jobId).ToString(CultureInfo.InvariantCulture));
             }
+
             return Globals.NavigateURL();
         }
 
@@ -196,7 +191,7 @@ namespace Engage.Dnn.Employment
 
         public static string GetMaxLengthValidationExpression(int length)
         {
-            //validate that status length is no longer than StatusMaxLength
+            // validate that status length is no longer than StatusMaxLength
             return ".{1," + length.ToString(CultureInfo.InvariantCulture) + "}";
         }
 
