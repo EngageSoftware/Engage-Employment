@@ -113,6 +113,15 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.RegularExpressionValidator NewJobTitleLengthValidator;
         
         /// <summary>
+        /// NewJobDescriptionRequiredValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator NewJobDescriptionRequiredValidator;
+        
+        /// <summary>
         /// DuplicatePositionValidator control.
         /// </summary>
         /// <remarks>

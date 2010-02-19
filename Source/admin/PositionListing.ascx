@@ -76,7 +76,7 @@
     </table>
     <asp:RequiredFieldValidator runat="server" ControlToValidate="NewJobTitleTextBox" Display="None" ValidationGroup="New" resourcekey="JobTitleRequired" />
     <asp:RegularExpressionValidator ID="NewJobTitleLengthValidator" runat="server" ControlToValidate="NewJobTitleTextBox" Display="None" ValidationGroup="New" />
-    <asp:CustomValidator runat="server" Display="None" ValidationGroup="New" ValidateEmptyText="true" OnServerValidate="NewJobDescriptionRequiredValidator_ServerValidate" resourcekey="cvJobDescription" />
+    <asp:CustomValidator ID="NewJobDescriptionRequiredValidator" runat="server" Display="None" ValidationGroup="New" ValidateEmptyText="true" resourcekey="cvJobDescription" />
 </asp:Panel>
 <asp:CustomValidator ID="DuplicatePositionValidator" runat="server" Display="None" ValidationGroup="Edit" resourcekey="DuplicatePosition.Text" />
 <asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="Edit" />
