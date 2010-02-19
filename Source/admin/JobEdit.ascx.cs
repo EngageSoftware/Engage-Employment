@@ -83,6 +83,8 @@ namespace Engage.Dnn.Employment.Admin
                     this.LoadLocations();
                     this.SetMaxLengths();
 
+                    // if a number that's too large is entered, SortOrderIntegerValidator is invalid after a postback, but its ErrorMessage is shown, instead of its Text
+                    this.SortOrderIntegerValidator.ErrorMessage = this.Localize("cvSortOrder");
                     this.EmailAddressTextBox.Text = this.ApplicationEmailAddress;
                     this.EmailAddressRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
 

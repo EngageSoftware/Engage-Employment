@@ -50,6 +50,15 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.TextBox SortOrderTextBox;
         
         /// <summary>
+        /// SortOrderIntegerValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator SortOrderIntegerValidator;
+        
+        /// <summary>
         /// IsHotCheckBox control.
         /// </summary>
         /// <remarks>

@@ -37,7 +37,7 @@
         <td valign="top">
             <asp:TextBox ID="SortOrderTextBox" runat="server" CssClass="NormalTextBox" />
             <asp:RequiredFieldValidator runat="server" ControlToValidate="SortOrderTextBox" SetFocusOnError="True" Display="None" resourcekey="rfvSortOrder" ValidationGroup="JobEdit" />
-            <asp:CompareValidator runat="server" ControlToValidate="SortOrderTextBox" Operator="DataTypeCheck" SetFocusOnError="True" Type="Integer" Display="None" resourcekey="cvSortOrder" ValidationGroup="JobEdit" />
+            <asp:CompareValidator ID="SortOrderIntegerValidator" runat="server" ControlToValidate="SortOrderTextBox" Operator="DataTypeCheck" SetFocusOnError="True" Type="Integer" Display="None" resourcekey="cvSortOrder" ValidationGroup="JobEdit" />
         </td>
     </tr>
     <tr>
