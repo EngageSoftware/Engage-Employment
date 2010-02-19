@@ -168,9 +168,9 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Raises the <see cref="ModuleBase.Init"/> event.
+        /// Raises the <see cref="Control.Init"/> event.
         /// </summary>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
@@ -474,7 +474,7 @@ namespace Engage.Dnn.Employment
             return new Uri(this.Request.Url, url).AbsoluteUri;
         }
 
-        private void SendNotificationEmail(int resumeId)
+        private void SendNotificationEmail(int resumeId, bool isNewApplication)
         {
             try
             {
@@ -485,7 +485,7 @@ namespace Engage.Dnn.Employment
                                            : this.DefaultNotificationEmailAddress;
                 string subject = String.Format(
                         CultureInfo.CurrentCulture, 
-                        Localization.GetString("ApplicationSubject", this.LocalResourceFile), 
+                        Localization.GetString(isNewApplication ? "ApplicationSubject" : "ApplicationUpdateSubject", this.LocalResourceFile), 
                         this.UserInfo.DisplayName, 
                         this.CurrentJob.Title);
                 string message = this.GetMessageBody(resumeId);
@@ -509,13 +509,13 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        private void SendRecieptEmail()
+        private void SendRecieptEmail(bool isNewApplication)
         {
             if (Engage.Utility.IsLoggedIn)
             {
                 string fromAddress = this.DefaultNotificationEmailAddress;
                 string toAddress = this.UserInfo.Email;
-                string subject = Localization.GetString("ApplicationAutoRespondSubject", this.LocalResourceFile);
+                string subject = Localization.GetString(isNewApplication ? "ApplicationAutoRespondSubject" : "ApplicationUpdateAutoRespondSubject", this.LocalResourceFile);
                 string message = this.GetMessageBody();
                 Mail.SendMail(
                         fromAddress, 
@@ -593,7 +593,8 @@ namespace Engage.Dnn.Employment
                 jobApplication = JobApplication.Load(this.ApplicationId.Value);
             }
 
-            if (Job.CurrentJobId != -1 && (this.UserId == -1 || (jobApplication != null && jobApplication.UserId == this.UserId) || !JobApplication.HasAppliedForJob(Job.CurrentJobId, this.UserId)))
+            bool isNewApplication = jobApplication == null;
+            if (Job.CurrentJobId != -1 && (this.UserId == -1 || (!isNewApplication && jobApplication.UserId == this.UserId) || !JobApplication.HasAppliedForJob(Job.CurrentJobId, this.UserId)))
             {
                 string resumeFile = string.Empty;
                 string resumeContentType = string.Empty;
@@ -619,9 +620,9 @@ namespace Engage.Dnn.Employment
                 }
 
                 int? userId = (this.UserId == -1) ? (int?)null : this.UserId;
-                int resumeId = this.ApplicationId.HasValue
-                                       ? JobApplication.UpdateApplication(
-                                                 this.ApplicationId.Value, 
+                int resumeId = isNewApplication
+                                       ? JobApplication.Apply(
+                                                 Job.CurrentJobId, 
                                                  userId, 
                                                  resumeFile, 
                                                  resumeContentType, 
@@ -632,8 +633,8 @@ namespace Engage.Dnn.Employment
                                                  this.SalaryTextBox.Text, 
                                                  this.ApplicationMessageTextBox.Text, 
                                                  leadId)
-                                       : JobApplication.Apply(
-                                                 Job.CurrentJobId, 
+                                       : JobApplication.UpdateApplication(
+                                                 this.ApplicationId.Value, 
                                                  userId, 
                                                  resumeFile, 
                                                  resumeContentType, 
@@ -645,11 +646,11 @@ namespace Engage.Dnn.Employment
                                                  this.ApplicationMessageTextBox.Text, 
                                                  leadId);
 
-                this.SendNotificationEmail(resumeId);
+                this.SendNotificationEmail(resumeId, isNewApplication);
 
                 try
                 {
-                    this.SendRecieptEmail();
+                    this.SendRecieptEmail(isNewApplication);
                 }
                 catch (SmtpException exc)
                 {

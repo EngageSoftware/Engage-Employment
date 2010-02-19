@@ -290,4 +290,10 @@
   <data name="RemoteApply.Text" xml:space="preserve">
     <value>Apply for this Job</value>
   </data>
+  <data name="ApplicationUpdateAutoRespondSubject.Text" xml:space="preserve">
+    <value>Your application has been updated</value>
+  </data>
+  <data name="ApplicationUpdateSubject.Text" xml:space="preserve">
+    <value>A job application has been updated for '{1}' by {0}</value>
+  </data>
 </root>
