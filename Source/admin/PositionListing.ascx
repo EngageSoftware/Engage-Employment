@@ -3,7 +3,7 @@
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/texteditor.ascx" %>
 
-<span class="Head"><dnn:Label ResourceKey="lblPositionsHeader" runat="server" /></span>
+<div class="information"><asp:Label ResourceKey="lblPositionsHeader.Help" runat="server" /></div>
 
 <asp:Button ID="AddButton" runat="server" resourcekey="btnAdd" />
 <asp:GridView ID="PositionsGrid" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">

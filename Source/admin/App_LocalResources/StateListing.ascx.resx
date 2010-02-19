@@ -141,9 +141,6 @@
   <data name="lblStatesHeader.Help" xml:space="preserve">
     <value>Use regions to categorize your locations.  This will typically be states (Missouri, New York, Florida), but could potentially be neighborhoods, countries, or anything else that works better for you, so long as you change the localization (Admin-&gt;Languages-&gt;Language Editor-&gt;LocalResources\DesktopModules\EngageEmployment\App_LocalResources-&gt;JobListing.ascx, JobDetail.ascx, JobSearch.ascx).</value>
   </data>
-  <data name="lblStatesHeader.Text" xml:space="preserve">
-    <value>Regions</value>
-  </data>
   <data name="Save.Text" xml:space="preserve">
     <value>Save</value>
   </data>
@@ -170,5 +167,8 @@
   </data>
   <data name="lblNoStates.Text" xml:space="preserve">
     <value>No regions have been defined yet</value>
+  </data>
+  <data name="ControlTitle_managestates.Text" xml:space="preserve">
+    <value>Manage Regions</value>
   </data>
 </root>

@@ -389,6 +389,7 @@
     <Content Include="App_LocalResources\SharedResources.resx">
     </Content>
     <EmbeddedResource Include="JavaScript\jquery-ui.js" />
+    <Content Include="images\info.png" />
     <Content Include="ReleaseNotes_1.5.1.htm" />
     <Content Include="images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="images\ui-bg_flat_75_ffffff_40x100.png" />

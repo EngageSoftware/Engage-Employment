@@ -3,7 +3,7 @@
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.JobGroupAdmin" AutoEventWireup="true" Codebehind="JobGroupAdmin.ascx.cs" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
-<span class="Head"><dnn:Label ResourceKey="lblJobGroupsHeader" runat="server" /></span>
+<div class="information"><asp:Label ResourceKey="lblJobGroupsHeader.Help" runat="server" /></div>
 
 <asp:MultiView ID="mvAuthorization" runat="server">
     <asp:View ID="vwUnauthorized" runat="server">

@@ -129,9 +129,6 @@
   <data name="JobTitle.Header" xml:space="preserve">
     <value>Job Title</value>
   </data>
-  <data name="ApplicationHeaderLabel.Text" xml:space="preserve">
-    <value>Applications</value>
-  </data>
   <data name="DateAppliedHeaderLabel.Text" xml:space="preserve">
     <value>Date Applied</value>
   </data>
@@ -186,5 +183,8 @@
   </data>
   <data name="ManageApplicationStatuses.Text" xml:space="preserve">
     <value>Manage Application Statuses</value>
+  </data>
+  <data name="ControlTitle_manageapplications.Text" xml:space="preserve">
+    <value>Manage Applications</value>
   </data>
 </root>

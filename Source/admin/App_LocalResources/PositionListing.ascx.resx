@@ -164,12 +164,12 @@
     <value>No positions have been created yet.</value>
   </data>
   <data name="lblPositionsHeader.Help" xml:space="preserve">
-    <value>Job Positions are titles and descriptions of positions within your company.  These positions will often exist at many different locations.  This is the place to define their common characteristics.  If a specific location has specific needs, specify that when creating the job entry itself.  &lt;br/&gt;If a position is used by any job, you won't be able to delete it here.  Delete the related job first.</value>
-  </data>
-  <data name="lblPositionsHeader.Text" xml:space="preserve">
-    <value>Positions</value>
+    <value>Job Positions are titles and descriptions of positions within your company.  These positions will often exist at many different locations.  This is the place to define their common characteristics.  If a specific location has specific needs, specify that when creating the job entry itself.  If a position is used by any job, you won't be able to delete it here.  Delete the related job first.</value>
   </data>
   <data name="Save.Text" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="ControlTitle_managepositions.Text" xml:space="preserve">
+    <value>Manage Job Positions</value>
   </data>
 </root>

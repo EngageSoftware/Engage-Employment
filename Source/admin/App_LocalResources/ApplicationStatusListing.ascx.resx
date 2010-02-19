@@ -132,9 +132,6 @@
   <data name="lblStatusesHeader.Help" xml:space="preserve">
     <value>Application statuses are used to keep track of a particular application as it progresses through your application process.  Typical values could include Received, Phone Interview, Group Interview, Rejected, etc.</value>
   </data>
-  <data name="lblStatusesHeader.Text" xml:space="preserve">
-    <value>Application Statuses</value>
-  </data>
   <data name="StatusName.Header" xml:space="preserve">
     <value>Application Status</value>
   </data>
@@ -167,5 +164,8 @@
   </data>
   <data name="DuplicateStatus.Text" xml:space="preserve">
     <value>That status already exists, you must provide a unique status.</value>
+  </data>
+  <data name="ControlTitle_manageapplicationstatuses.Text" xml:space="preserve">
+    <value>Manage Application Statuses</value>
   </data>
 </root>

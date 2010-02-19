@@ -144,9 +144,6 @@
   <data name="lblJobsHeader.Help" xml:space="preserve">
     <value>Jobs are the specific openings you have at specific locations.  Jobs are what an applicant will apply for (rather than positions).  Every job is for a specific position at a specific locaiton.  Each job has a category.  Jobs have required and desired qualifications for their applicants.  Each location may only have one opening for each position, so you will have to differentiate two similar positions to have them both available to the same location.</value>
   </data>
-  <data name="lblJobsHeader.Text" xml:space="preserve">
-    <value>Add/Edit Jobs</value>
-  </data>
   <data name="lnkCancel.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -269,5 +266,8 @@
   </data>
   <data name="rfvSortOrder.Text" xml:space="preserve">
     <value>Sort Order is required</value>
+  </data>
+  <data name="ControlTitle_editjob.Text" xml:space="preserve">
+    <value>Add/Edit Job Opening</value>
   </data>
 </root>

@@ -136,9 +136,6 @@
   <data name="btnSaveAssignments.Text" xml:space="preserve">
     <value>Save</value>
   </data>
-  <data name="lblJobGroupsHeader.Text" xml:space="preserve">
-    <value>Job Groups</value>
-  </data>
   <data name="btnEditAssignments.Text" xml:space="preserve">
     <value>Edit Job Group Assignments</value>
   </data>

@@ -4,8 +4,6 @@
 <%@ Import namespace="DotNetNuke.Services.Localization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.ApplicationListing" Codebehind="ApplicationListing.ascx.cs" AutoEventWireup="false" %>
 
-<asp:Label ID="ApplicationHeaderLabel" runat="server" CssClass="Head" resourcekey="ApplicationHeaderLabel" />
-
 <asp:Repeater ID="JobsRepeater" runat="server">
     <HeaderTemplate>
     </HeaderTemplate>                

@@ -222,4 +222,7 @@
   <data name="lblEnableDnnSearch.Text" xml:space="preserve">
     <value>Enable Indexing by DNN Search</value>
   </data>
+  <data name="ControlTitle_options.Text" xml:space="preserve">
+    <value>Engage: Employment Job Detail Options</value>
+  </data>
 </root>

@@ -1,7 +1,7 @@
 <%@ Import namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.StatusListing" AutoEventWireup="false" Codebehind="StatusListing.ascx.cs" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
-<span class="Head"><dnn:Label ResourceKey="lblStatusesHeader" runat="server" /></span>
+<div class="information"><asp:Label ResourceKey="lblStatusesHeader.Help" runat="server" /></div>
 
 <asp:Button ID="btnAdd" runat="server" resourcekey="btnAdd" />
 <asp:GridView ID="gvStatuses" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">

@@ -126,9 +126,6 @@
   <data name="lblLocationsHeader.Help" xml:space="preserve">
     <value>Typically this is a city, but it could be a specific location of your business, or a neighborhood, or anything else that makes sense within your context.</value>
   </data>
-  <data name="lblLocationsHeader.Text" xml:space="preserve">
-    <value>Locations</value>
-  </data>
   <data name="DuplicateLocation.Text" xml:space="preserve">
     <value>This location name already exists for the selected region.  Location names must be unique for each region.</value>
   </data>
@@ -167,5 +164,8 @@
   </data>
   <data name="Save.Text" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="ControlTitle_managelocations.Text" xml:space="preserve">
+    <value>Manage Locations</value>
   </data>
 </root>

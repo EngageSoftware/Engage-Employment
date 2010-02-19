@@ -1,7 +1,7 @@
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.JobEdit" AutoEventWireup="false" Codebehind="JobEdit.ascx.cs" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/texteditor.ascx" %>
-<span class="Head"><dnn:Label ResourceKey="lblJobsHeader" runat="server" /></span>
+<div class="information"><asp:Label ResourceKey="lblJobsHeader.Help" runat="server" /></div>
 <table>
     <tr>
         <td class="SubHead">

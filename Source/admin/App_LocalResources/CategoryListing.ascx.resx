@@ -154,15 +154,15 @@
     <value>Edit</value>
   </data>
   <data name="lblCategoriesHeader.Help" xml:space="preserve">
-    <value>Job Categories are used to help applicants understand what sort of jobs are offered by your organization.  Exmaples could be "Management," "Traveling," or "Salaried."</value>
-  </data>
-  <data name="lblCategoriesHeader.Text" xml:space="preserve">
-    <value>Job Categories</value>
+    <value>Job Categories are used to help applicants understand what sort of jobs are offered by your organization.  Examples could be "Management," "Traveling," or "Salaried."</value>
   </data>
   <data name="lblNoCategories.Text" xml:space="preserve">
     <value>No categories have been created yet</value>
   </data>
   <data name="Save.Text" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="ControlTitle_managecategories.Text" xml:space="preserve">
+    <value>Manage Job Categories</value>
   </data>
 </root>

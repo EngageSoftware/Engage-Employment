@@ -3,7 +3,7 @@
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.LocationListing" AutoEventWireup="false" Codebehind="LocationListing.ascx.cs" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
-<span class="Head"><dnn:Label ResourceKey="lblLocationsHeader" runat="server" /></span>
+<div class="information"><asp:Label ResourceKey="lblLocationsHeader.Help" runat="server" /></div>
 
 <asp:Button ID="btnAdd" runat="server" resourcekey="btnAdd" />
 <asp:GridView ID="gvLocations" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">

@@ -139,9 +139,6 @@
   <data name="ManageStates.Text" xml:space="preserve">
     <value>Manage Regions</value>
   </data>
-  <data name="lblJobsHeader.Text" xml:space="preserve">
-    <value>Job Openings</value>
-  </data>
   <data name="btnBack.Text" xml:space="preserve">
     <value>Return to Job Listing</value>
   </data>
@@ -226,5 +223,11 @@
   </data>
   <data name="lblNoJobs.Text" xml:space="preserve">
     <value>No job openings have been created yet.  Please click on the headers to manage each type of job component.</value>
+  </data>
+  <data name="ControlTitle_edit.Text" xml:space="preserve">
+    <value>Manage Jobs</value>
+  </data>
+  <data name="lblJobsHeader.Text" xml:space="preserve">
+    <value>Job Openings</value>
   </data>
 </root>
