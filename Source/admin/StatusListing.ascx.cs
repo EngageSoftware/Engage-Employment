@@ -10,112 +10,231 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
-using DotNetNuke.UI.Utilities;
-
 namespace Engage.Dnn.Employment.Admin
 {
-    partial class StatusListing : ModuleBase
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Web.UI;
+    using System.Web.UI.WebControls;
+    using DotNetNuke.Services.Exceptions;
+    using DotNetNuke.Services.Localization;
+    using DotNetNuke.UI.Utilities;
+
+    public partial class StatusListing : ModuleBase
     {
         private const int StatusMaxLength = 255;
 
-        protected string MaxLengthValidationText
-        {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StatusMaxLength", LocalResourceFile), StatusMaxLength); }
-        }
-
         protected static string MaxLengthValidationExpression
         {
-            get { return Utility.GetMaxLengthValidationExpression(StatusMaxLength); }
+            get
+            {
+                return Utility.GetMaxLengthValidationExpression(StatusMaxLength);
+            }
         }
 
+        protected string MaxLengthValidationText
+        {
+            get
+            {
+                return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StatusMaxLength", this.LocalResourceFile), StatusMaxLength);
+            }
+        }
+
+        /// <summary>
+        /// Raises the <see cref="Control.Init"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         protected override void OnInit(EventArgs e)
         {
-            this.Load += Page_Load;
-            btnAdd.Click += btnAdd_Click;
-            btnBack.Click += btnBack_Click;
-            btnCancelNew.Click += btnCancelNew_Click;
-            btnSaveNew.Click += btnSaveNew_Click;
-            gvStatuses.RowCancelingEdit += gvStatuses_RowCancelingEdit;
-            gvStatuses.RowCommand += gvStatuses_RowCommand;
-            gvStatuses.RowDataBound += gvStatuses_RowDataBound;
-            gvStatuses.RowDeleting += gvStatuses_RowDeleting;
-            gvStatuses.RowEditing += gvStatuses_RowEditing;
+            this.Load += this.Page_Load;
+            this.btnAdd.Click += this.btnAdd_Click;
+            this.btnBack.Click += this.btnBack_Click;
+            this.btnCancelNew.Click += this.btnCancelNew_Click;
+            this.btnSaveNew.Click += this.btnSaveNew_Click;
+            this.gvStatuses.RowCancelingEdit += this.gvStatuses_RowCancelingEdit;
+            this.gvStatuses.RowCommand += this.gvStatuses_RowCommand;
+            this.gvStatuses.RowDataBound += this.gvStatuses_RowDataBound;
+            this.gvStatuses.RowDeleting += this.gvStatuses_RowDeleting;
+            this.gvStatuses.RowEditing += this.gvStatuses_RowEditing;
 
             base.OnInit(e);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void Page_Load(Object sender, EventArgs e)
+        private static int? GetStatusId(Control row)
         {
-            try
+            var hdnStatusId = (HiddenField)row.FindControl("hdnStatusId");
+
+            int statusId;
+            if (hdnStatusId != null && int.TryParse(hdnStatusId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
             {
-                if (!IsPostBack)
-                {
-                    Engage.Dnn.Utility.LocalizeGridView(ref gvStatuses, LocalResourceFile);
-                    SetupStatusLengthValidation();
-                    BindData();
-                }
+                return statusId;
             }
-            catch (Exception exc) //Module failed to load
-            {
-                Exceptions.ProcessModuleLoadException(this, exc);
-            }
+
+            return null;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnBack_Click(object sender, EventArgs e)
+        private void BindData()
         {
-            Response.Redirect(EditUrl(ControlKey.ManageApplications.ToString()));
+            List<UserStatus> statuses = UserStatus.LoadStatuses(this.PortalId);
+            this.gvStatuses.DataSource = statuses;
+            this.gvStatuses.DataBind();
+
+            if (statuses == null || statuses.Count % 2 == 0)
+            {
+                this.pnlNew.CssClass = this.gvStatuses.RowStyle.CssClass;
+            }
+            else
+            {
+                this.pnlNew.CssClass = this.gvStatuses.AlternatingRowStyle.CssClass;
+            }
+
+            this.rowNewHeader.Visible = statuses == null || statuses.Count < 1;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        private int? GetStatusId(int rowIndex)
+        {
+            if (this.gvStatuses != null && this.gvStatuses.Rows.Count > rowIndex)
+            {
+                return GetStatusId(this.gvStatuses.Rows[rowIndex]);
+            }
+
+            return null;
+        }
+
+        private string GetStatusName(int rowIndex)
+        {
+            if (this.gvStatuses != null && this.gvStatuses.Rows.Count > rowIndex)
+            {
+                GridViewRow row = this.gvStatuses.Rows[rowIndex];
+                var txtStatus = (TextBox)row.FindControl("txtStatus");
+                return txtStatus.Text;
+            }
+
+            return null;
+        }
+
+        private void HideAndClearNewStatusPanel()
+        {
+            this.pnlNew.Visible = false;
+            this.txtNewStatus.Text = string.Empty;
+        }
+
+        private bool IsStatusNameUnique(int? statusId, string newStatusName)
+        {
+            int? newStatusId = UserStatus.GetStatusId(newStatusName, this.PortalId);
+            return !newStatusId.HasValue || (statusId.HasValue && newStatusId.Value == statusId.Value);
+        }
+
+        private void SetupStatusLengthValidation()
+        {
+            this.regexNewUserStatus.ValidationExpression = MaxLengthValidationExpression;
+            this.regexNewUserStatus.ErrorMessage = this.MaxLengthValidationText;
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Button.Click"/> event of the <see cref="btnAdd"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            pnlNew.Visible = true;
-            txtNewStatus.Focus();
+            this.pnlNew.Visible = true;
+            this.txtNewStatus.Focus();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        /// <summary>
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="btnBack"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Response.Redirect(this.EditUrl(ControlKey.ManageApplications.ToString()));
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Button.Click"/> event of the <see cref="btnCancelNew"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void btnCancelNew_Click(object sender, EventArgs e)
+        {
+            this.HideAndClearNewStatusPanel();
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Button.Click"/> event of the <see cref="btnSaveNew"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void btnSaveNew_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
+            if (this.Page.IsValid)
             {
-                if (IsStatusNameUnique(null, txtNewStatus.Text))
+                if (this.IsStatusNameUnique(null, this.txtNewStatus.Text))
                 {
-                    UserStatus.InsertStatus(txtNewStatus.Text, PortalId);
-                    HideAndClearNewStatusPanel();
-                    BindData();
+                    UserStatus.InsertStatus(this.txtNewStatus.Text, this.PortalId);
+                    this.HideAndClearNewStatusPanel();
+                    this.BindData();
                 }
                 else
                 {
-                    cvDuplicateUserStatus.IsValid = false;
+                    this.cvDuplicateUserStatus.IsValid = false;
                 }
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnCancelNew_Click(object sender, EventArgs e)
-        {
-            HideAndClearNewStatusPanel();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        /// <summary>
+        /// Handles the <see cref="GridView.RowCancelingEdit"/> event of the <see cref="gvStatuses"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="GridViewCancelEditEventArgs"/> instance containing the event data.</param>
         private void gvStatuses_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvStatuses.EditIndex = -1;
-            BindData();
+            this.gvStatuses.EditIndex = -1;
+            this.BindData();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        /// <summary>
+        /// Handles the <see cref="GridView.RowCommand"/> event of the <see cref="gvStatuses"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="GridViewCommandEventArgs"/> instance containing the event data.</param>
+        private void gvStatuses_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
+            {
+                if (this.Page.IsValid)
+                {
+                    int rowIndex;
+                    if (int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
+                    {
+                        int? statusId = GetStatusId(rowIndex);
+                        if (statusId.HasValue)
+                        {
+                            string newStatusName = this.GetStatusName(rowIndex);
+                            if (this.IsStatusNameUnique(statusId, newStatusName))
+                            {
+                                UserStatus.UpdateStatus(statusId.Value, newStatusName);
+                                this.gvStatuses.EditIndex = -1;
+                                this.BindData();
+                            }
+                            else
+                            {
+                                this.cvDuplicateUserStatus.IsValid = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles the <see cref="GridView.RowDataBound"/> event of the <see cref="gvStatuses"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="GridViewRowEventArgs"/> instance containing the event data.</param>
         private void gvStatuses_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -133,128 +252,63 @@ namespace Engage.Dnn.Employment.Admin
                         }
                         else
                         {
-                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", LocalResourceFile)));
+                            btnDelete.OnClientClick = string.Format(
+                                    CultureInfo.CurrentCulture, 
+                                    "return confirm('{0}');", 
+                                    ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", this.LocalResourceFile)));
                         }
                     }
                 }
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        /// <summary>
+        /// Handles the <see cref="GridView.RowDeleting"/> event of the <see cref="gvStatuses"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="GridViewDeleteEventArgs"/> instance containing the event data.</param>
         private void gvStatuses_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? statusId = GetStatusId(e.RowIndex);
             if (statusId.HasValue)
             {
                 UserStatus.DeleteStatus(statusId.Value);
-                BindData();
+                this.BindData();
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        /// <summary>
+        /// Handles the <see cref="GridView.RowEditing"/> event of the <see cref="gvStatuses"/> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="GridViewEditEventArgs"/> instance containing the event data.</param>
         private void gvStatuses_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            gvStatuses.EditIndex = e.NewEditIndex;
-            HideAndClearNewStatusPanel();
-            BindData();
+            this.gvStatuses.EditIndex = e.NewEditIndex;
+            this.HideAndClearNewStatusPanel();
+            this.BindData();
         }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvStatuses_RowCommand(object sender, GridViewCommandEventArgs e)
+
+        /// <summary>
+        /// Handles the <see cref="Control.Load"/> event of this control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void Page_Load(object sender, EventArgs e)
         {
-            if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
+            try
             {
-                if (Page.IsValid)
+                if (!this.IsPostBack)
                 {
-                    int rowIndex;
-                    if (int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
-                    {
-                        int? statusId = GetStatusId(rowIndex);
-                        if (statusId.HasValue)
-                        {
-                            string newStatusName = GetStatusName(rowIndex);
-                            if (IsStatusNameUnique(statusId, newStatusName))
-                            {
-                                UserStatus.UpdateStatus(statusId.Value, newStatusName);
-                                gvStatuses.EditIndex = -1;
-                                BindData();
-                            }
-                            else
-                            {
-                                cvDuplicateUserStatus.IsValid = false;
-                            }
-                        }
-                    }
+                    Dnn.Utility.LocalizeGridView(ref this.gvStatuses, this.LocalResourceFile);
+                    this.SetupStatusLengthValidation();
+                    this.BindData();
                 }
             }
-        }
-
-        private void BindData()
-        {
-            List<UserStatus> statuses = UserStatus.LoadStatuses(PortalId);
-            this.gvStatuses.DataSource = statuses;
-            this.gvStatuses.DataBind();
-
-            if (statuses == null || statuses.Count % 2 == 0)
+            catch (Exception exc)
             {
-                pnlNew.CssClass = gvStatuses.RowStyle.CssClass;
+                Exceptions.ProcessModuleLoadException(this, exc);
             }
-            else
-            {
-                pnlNew.CssClass = gvStatuses.AlternatingRowStyle.CssClass;
-            }
-
-            rowNewHeader.Visible = (statuses == null || statuses.Count < 1);
-        }
-
-        private bool IsStatusNameUnique(int? statusId, string newStatusName)
-        {
-            int? newStatusId = UserStatus.GetStatusId(newStatusName, PortalId);
-            return !newStatusId.HasValue || (statusId.HasValue && newStatusId.Value == statusId.Value);
-        }
-
-        private void SetupStatusLengthValidation()
-        {
-            this.regexNewUserStatus.ValidationExpression = MaxLengthValidationExpression;
-            this.regexNewUserStatus.ErrorMessage = MaxLengthValidationText;
-        }
-
-        private void HideAndClearNewStatusPanel()
-        {
-            this.pnlNew.Visible = false;
-            this.txtNewStatus.Text = string.Empty;
-        }
-
-        private string GetStatusName(int rowIndex)
-        {
-            if (gvStatuses != null && gvStatuses.Rows.Count > rowIndex)
-            {
-                GridViewRow row = gvStatuses.Rows[rowIndex];
-                TextBox txtStatus = row.FindControl("txtStatus") as TextBox;
-                Debug.Assert(txtStatus != null);
-                return txtStatus.Text;
-            }
-            return null;
-        }
-
-        private static int? GetStatusId(Control row)
-        {
-            HiddenField hdnStatusId = (HiddenField)row.FindControl("hdnStatusId");
-
-            int statusId;
-            if (hdnStatusId != null && int.TryParse(hdnStatusId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
-            {
-                return statusId;
-            }
-            return null;
-        }
-
-        private int? GetStatusId(int rowIndex)
-        {
-            if (gvStatuses != null && gvStatuses.Rows.Count > rowIndex)
-            {
-                return GetStatusId(gvStatuses.Rows[rowIndex]);
-            }
-            return null;
         }
     }
- }
+}
