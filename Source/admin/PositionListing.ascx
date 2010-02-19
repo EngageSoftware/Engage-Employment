@@ -67,7 +67,7 @@
         <tr class='<%=this.NewPositionPanel.CssClass %>'><td>
             <asp:TextBox ID="NewJobTitleTextBox" runat="server" CssClass="NormalTextBox" />
         </td><td>
-            <dnn:TextEditor ID="NewJobDescriptionTextEditor" runat="server" Height="400px" Width="400px" ChooseMode="true" HtmlEncode="false" TextRenderMode="raw" EnableViewState="false" />
+            <dnn:TextEditor ID="NewJobDescriptionTextEditor" runat="server" Height="400px" Width="400px" ChooseMode="true" HtmlEncode="false" TextRenderMode="raw" />
         </td><td class="labelColumn">
             <asp:Button ID="SaveNewPositionButton" runat="server" resourcekey="btnSaveNew" ValidationGroup="New" />
         </td><td class="labelColumn">
