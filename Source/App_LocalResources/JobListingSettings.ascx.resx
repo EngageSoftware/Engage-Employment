@@ -121,9 +121,12 @@
     <value>Engage: Employment Job Listing Settings</value>
   </data>
   <data name="lblJobGroup.Help" xml:space="preserve">
-    <value>Choose if you would like this Job Listing to only display items from a particular Job Group.  This can be used to restrict viewing and/or editing permissions for a specific Job Group.</value>
+    <value>If you would like this Job Listing module to only display jobs from a particular Job Group, choose that group below.  This can be used to restrict viewing and/or editing permissions for a specific Job Group.</value>
   </data>
   <data name="lblJobGroup.Text" xml:space="preserve">
     <value>Job Group</value>
+  </data>
+  <data name="NoJobGroups.Help" xml:space="preserve">
+    <value>You have not defined any Job Groups, so this settings is disabled.  You can use the &lt;em&gt;Engage: Emp. Group Admin&lt;/em&gt; module to create Job Groups and assign jobs to them.  You can then use this setting to restrict viewing and/or editing permissions for a specific Job Group.</value>
   </data>
 </root>

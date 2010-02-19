@@ -8,19 +8,40 @@
 //CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 //DEALINGS IN THE SOFTWARE.
 
-using System.Globalization;
-using DotNetNuke.Entities.Modules;
-
 namespace Engage.Dnn.Employment
 {
-    public abstract class EmploymentModuleSettingsBase : ModuleSettingsBase
+    using System.Globalization;
+    using DotNetNuke.Entities.Modules;
+    using Framework;
+
+    /// <summary>
+    /// Base functionality for controls integrating with DNN settings
+    /// </summary>
+    public abstract class EmploymentModuleSettingsBase : SettingsBase
     {
+        /// <summary>
+        /// Gets the name of the this module's desktop module record in DNN.
+        /// </summary>
+        /// <value>The name of this module's desktop module record in DNN.</value>
+        public override string DesktopModuleName
+        {
+            get
+            {
+                return "Engage: Employment";
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the job group ID setting for this module instance.
+        /// </summary>
+        /// <value>The job group ID.</value>
         protected int? JobGroupId
         {
             get
             {
-                return Engage.Dnn.Utility.GetIntSetting(Settings, Utility.JobGroupIdSetting);
+                return Dnn.Utility.GetIntSetting(Settings, Utility.JobGroupIdSetting);
             }
+
             set
             {
                 string settingValue = string.Empty;
@@ -28,6 +49,7 @@ namespace Engage.Dnn.Employment
                 {
                     settingValue = value.Value.ToString(CultureInfo.InvariantCulture);
                 }
+
                 (new ModuleController()).UpdateTabModuleSetting(TabModuleId, Utility.JobGroupIdSetting, settingValue);
             }
         }
