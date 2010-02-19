@@ -659,7 +659,8 @@ namespace Engage.Dnn.Employment
                 }
             }
 
-            this.ErrorMessageLabel.Text = Localization.GetString("ApplicationSent", this.LocalResourceFile);
+            this.SuccessLabel.Visible = true;
+            this.SuccessLabel.Text = Localization.GetString("ApplicationSent", this.LocalResourceFile);
             this.ApplicantInfoSection.Visible = false;
         }
 
@@ -802,7 +803,8 @@ namespace Engage.Dnn.Employment
                 }
             }
 
-            this.ErrorMessageLabel.Text = Localization.GetString("EmailToFriendSent", this.LocalResourceFile);
+            this.SuccessLabel.Visible = true;
+            this.SuccessLabel.Text = Localization.GetString("EmailToFriendSent", this.LocalResourceFile);
             this.EmailFriendSection.Visible = false;
         }
     }
