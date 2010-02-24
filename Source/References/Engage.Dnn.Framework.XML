@@ -1406,64 +1406,9 @@
         <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.EngageManifestNamespaceUri">
             <summary>The namespace URL for the Engage Manifest schema</summary>
         </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.folderName">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.FolderName"/>
-            </summary>
-        </member>
         <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.templateProvider">
             <summary>
             The template provider to use to interact with the template files
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.description">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.Description"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.title">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.Title"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.previewImage">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.PreviewImage"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.resourceFile">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.ResourceFile"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.stylesheet">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.Stylesheet"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.templateFileName">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.TemplateFileName"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.settings">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.Settings"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.template">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.Template"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.moduleName">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.ModuleName"/>
-            </summary>
-        </member>
-        <member name="F:Engage.Dnn.Framework.Templating.TemplateInfo.templateType">
-            <summary>
-            Backing field for <see cref="P:Engage.Dnn.Framework.Templating.TemplateInfo.TemplateType"/>
             </summary>
         </member>
         <member name="M:Engage.Dnn.Framework.Templating.TemplateInfo.#ctor(System.String,Engage.Dnn.Framework.Templating.ITemplateProvider)">
@@ -1597,6 +1542,12 @@
             Gets the list of module settings to set when applying this template.
             </summary>
             <value>The list of module settings to set when applying this template</value>
+        </member>
+        <member name="P:Engage.Dnn.Framework.Templating.TemplateInfo.Scripts">
+            <summary>
+            Gets the list of the scripts to reference when applying this template.
+            </summary>
+            <value>The list of the scripts to reference when applying this template</value>
         </member>
         <member name="T:Engage.Dnn.Framework.Templating.TagProcessor">
             <summary>
