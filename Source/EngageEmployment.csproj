@@ -50,7 +50,9 @@
       <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Engage.Dnn.Framework, Version=3.1.4.37708, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Engage.Dnn.Framework, Version=3.1.4.37708, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Engage.Framework, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\etg19\qa\Engage\Engage 3.0\Builds\Continuous Integration (Engage 3.0)_20080929.2\Release\Engage.Framework.dll</HintPath>
