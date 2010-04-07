@@ -4496,6 +4496,18 @@
             <paramref name="dateValue"/> as a DateTime, if possible, otherwise <c>null</c>
             </returns>
         </member>
+        <member name="M:Engage.Utility.TryParseGuid(System.String,System.Guid@)">
+            <summary>
+            Converts the string representation of a GUID to the equivalent <see cref="T:System.Guid"/> structure. 
+            </summary>
+            <param name="input">The GUID to convert.</param>
+            <param name="result">The structure that will contain the parsed result.</param>
+            <returns><c>true</c> if the parse operation was successful; otherwise, <c>false</c>.</returns>
+            <remarks>
+            This method returns <c>false</c> if <paramref name="input"/> is <c>null</c> or not in a recognized format, and does not return an exception.
+            Documentation based on http://msdn.microsoft.com/en-us/library/system.guid.tryparse%28VS.100%29.aspx
+            </remarks>
+        </member>
         <member name="M:Engage.Utility.GetRandomSeed">
             <summary>
             Gets a random number to use as a seed.
