@@ -55,6 +55,164 @@
             </summary>
             <value>The module configuration.</value>
         </member>
+        <member name="T:Engage.Licensing.LicenseProviderBase">
+            <summary>
+            The base for license providers
+            </summary>
+        </member>
+        <member name="M:Engage.Licensing.LicenseProviderBase.#ctor(System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Engage.Licensing.LicenseProviderBase"/> class.
+            </summary>
+            <param name="productLicenseKey">The product key for the module/product.</param>
+        </member>
+        <member name="M:Engage.Licensing.LicenseProviderBase.ValidateLicense(Engage.Dnn.Framework.ModuleBase)">
+            <summary>
+            Determines whether this instance represents a valid license.
+            </summary>
+            <param name="control">The control requesting license validation.</param>
+            <returns>
+            <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Engage.Licensing.LicenseProviderBase.IsValid(Engage.Dnn.Framework.ModuleBase)">
+            <summary>
+            Determines whether this instance represents a valid license.
+            </summary>
+            <param name="control">The control requesting license validation.</param>
+            <returns>
+            <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="P:Engage.Licensing.LicenseProviderBase.ProductLicenseKey">
+            <summary>
+            Gets the license key for this module/product.
+            </summary>
+            <value>The product license key.</value>
+        </member>
+        <member name="T:Engage.Licensing.RemoteAuthenticationLicenseProviderBase">
+            <summary>
+            The base for a license provider that connects to a remote web service to authenticate the license
+            </summary>
+        </member>
+        <member name="F:Engage.Licensing.RemoteAuthenticationLicenseProviderBase.EngageLicensingAuthorizationKey">
+            <summary>
+            <see cref="T:System.Guid"/> used to authenticate with the Engage licensing server.
+            </summary>
+        </member>
+        <member name="F:Engage.Licensing.RemoteAuthenticationLicenseProviderBase.LicenseDictionary">
+            <summary>
+            The licenses retrieved from the server for each module
+            </summary>
+        </member>
+        <member name="M:Engage.Licensing.RemoteAuthenticationLicenseProviderBase.#ctor(System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Engage.Licensing.RemoteAuthenticationLicenseProviderBase"/> class.
+            </summary>
+            <param name="moduleLicenseKey">The license key for the module for which this license provider is to be used</param>
+        </member>
+        <member name="M:Engage.Licensing.RemoteAuthenticationLicenseProviderBase.HasValidLicense(Engage.Dnn.Framework.ModuleBase,System.Guid,System.String)">
+            <summary>
+            Determines whether the site has a valid license for this module.
+            </summary>
+            <param name="control">The control being validated.</param>
+            <param name="siteGuid">The site's GUID.</param>
+            <param name="siteName">The portal's name.</param>
+            <returns>
+            <c>true</c> if the site has a valid license for this module; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Engage.Licensing.RemoteAuthenticationLicenseProviderBase.IsValid(Engage.Dnn.Framework.ModuleBase)">
+            <summary>
+            Determines whether this instance represents a valid license.
+            </summary>
+            <param name="control">The control requesting license validation.</param>
+            <returns>
+            <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Engage.Licensing.RemoteAuthenticationLicenseProviderBase.GetLicense(Engage.Dnn.Framework.ModuleBase,System.Boolean)">
+            <summary>
+            Gets a license for an instance of a DNN module, when given a context and whether the denial of a license throws an exception.
+            </summary>
+            <param name="control">A control that is requesting the license.</param>
+            <param name="allowExceptions"><c>true</c> if a <see cref="T:System.ComponentModel.LicenseException"/> should be thrown when the component cannot be granted a license; otherwise, <c>false</c>.</param>
+            <returns>
+            A valid <see cref="T:System.ComponentModel.License"/>.
+            </returns>
+            <exception cref="T:System.ComponentModel.LicenseException">This module is not licensed. Not need to call this service.</exception>
+        </member>
+        <member name="T:Engage.Licensing.SingleServerLicenseProvider">
+            <summary>
+            Determines whether a given module is correctly licensed for a specific server.
+            </summary>
+        </member>
+        <member name="F:Engage.Licensing.SingleServerLicenseProvider.MaximumSpanSinceSuccessfulValidation">
+            <summary>
+            The span of time for which the module can go unvalidated
+            </summary>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.#ctor(System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Engage.Licensing.SingleServerLicenseProvider"/> class.
+            </summary>
+            <param name="moduleLicenseKey">The license key for the module for which this license provider is to be used</param>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.HasValidLicense(Engage.Dnn.Framework.ModuleBase,System.Guid,System.String)">
+            <summary>
+            Determines whether the site has a valid license for this module.
+            </summary>
+            <param name="control">The control being validated.</param>
+            <param name="siteGuid">The site's GUID.</param>
+            <param name="siteName">The portal's name.</param>
+            <returns>
+            <c>true</c> if the site has a valid license for this module; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ComponentModel.LicenseException">License file was not found</exception>
+            <exception cref="T:System.ComponentModel.LicenseException">Unable to validate license for more than three days</exception>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.GetLicenseFilePath(Engage.Dnn.Framework.ModuleBase)">
+            <summary>
+            Gets the full physical path to the license file.
+            </summary>
+            <param name="control">The control being validated.</param>
+            <returns>The full physical path to the license file.</returns>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.HandleWebServiceException(Engage.Dnn.Framework.ModuleBase,System.String,System.Exception)">
+            <summary>
+            Handles exceptions from the web service call.
+            </summary>
+            <param name="control">The control being validated.</param>
+            <param name="licenseFilePath">The full physical path to the license file.</param>
+            <param name="exc">The exception to log.</param>
+            <returns>Whether to count this as a valid license</returns>
+            <exception cref="T:System.ComponentModel.LicenseException">Unable to validate license for more than three days</exception>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.HasLicenseFile(System.String)">
+            <summary>
+            Determines whether the license file exists.
+            </summary>
+            <param name="licenseFilePath">The full physical path to the license file.</param>
+            <returns>
+            <c>true</c> if the license file exists; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.IsLicenseFileOutOfDate(System.String)">
+            <summary>
+            Determines whether the license file has been updated within the <see cref="F:Engage.Licensing.SingleServerLicenseProvider.MaximumSpanSinceSuccessfulValidation"/>.
+            </summary>
+            <param name="licenseFilePath">The full physical path to the license file.</param>
+            <returns>
+            <c>true</c> if the license file has been updated within the <see cref="F:Engage.Licensing.SingleServerLicenseProvider.MaximumSpanSinceSuccessfulValidation"/>; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.UpdateLicenseFile(System.String,System.DateTime)">
+            <summary>
+            Updates the content of the license file with the given date.
+            </summary>
+            <param name="licenseFilePath">The full physical path to the license file.</param>
+            <param name="date">The date to which the license should be updated.</param>
+        </member>
         <member name="T:Engage.Dnn.Framework.SettingScope">
             <summary>
             The scope of the setting, how which instances of the module it affects
@@ -466,51 +624,27 @@
             A license key granted to this component.
             </returns>
         </member>
-        <member name="T:Engage.Licensing.EngageLicenseProvider">
+        <member name="T:Engage.Licensing.TrialLicenseProvider">
             <summary>
-            Determines whether a given module is correctly licensed.
+            Determines whether a given trial version of a module is still licensed.
             </summary>
         </member>
-        <member name="F:Engage.Licensing.EngageLicenseProvider.EngageLicensingAuthorizationKey">
+        <member name="M:Engage.Licensing.TrialLicenseProvider.#ctor(System.Guid)">
             <summary>
-            <see cref="T:System.Guid"/> used to authenticate with the Engage licensing server.
-            </summary>
-        </member>
-        <member name="F:Engage.Licensing.EngageLicenseProvider.moduleLicenseKey">
-            <summary>
-            The license key for the module for which this license provider is to be used
-            </summary>
-        </member>
-        <member name="F:Engage.Licensing.EngageLicenseProvider.license">
-            <summary>
-            Licensed retrieved from the server
-            </summary>
-        </member>
-        <member name="M:Engage.Licensing.EngageLicenseProvider.#ctor(System.Guid)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Engage.Licensing.EngageLicenseProvider"/> class.
+            Initializes a new instance of the <see cref="T:Engage.Licensing.TrialLicenseProvider"/> class.
             </summary>
             <param name="moduleLicenseKey">The license key for the module for which this license provider is to be used</param>
         </member>
-        <member name="M:Engage.Licensing.EngageLicenseProvider.IsValid(Engage.Dnn.Framework.ModuleBase)">
+        <member name="M:Engage.Licensing.TrialLicenseProvider.HasValidLicense(Engage.Dnn.Framework.ModuleBase,System.Guid,System.String)">
             <summary>
-            Determines whether this instance represents a valid license.
+            Determines whether the site has a valid license for this module.
             </summary>
-            <param name="control">The control requesting license validation.</param>
+            <param name="control">The control being validated.</param>
+            <param name="siteGuid">The site's GUID.</param>
+            <param name="siteName">The portal's name.</param>
             <returns>
-            <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+            <c>true</c> if the site has a valid license for this module; otherwise, <c>false</c>.
             </returns>
-        </member>
-        <member name="M:Engage.Licensing.EngageLicenseProvider.GetLicense(Engage.Dnn.Framework.ModuleBase,System.Boolean)">
-            <summary>
-            Gets a license for an instance of a DotNetNuke module, when given a context and whether the denial of a license throws an exception.
-            </summary>
-            <param name="control">A control that is requesting the license.</param>
-            <param name="allowExceptions"><c>true</c> if a <see cref="T:System.ComponentModel.LicenseException"/> should be thrown when the component cannot be granted a license; otherwise, <c>false</c>.</param>
-            <returns>
-            A valid <see cref="T:System.ComponentModel.License"/>.
-            </returns>
-            <exception cref="T:System.ComponentModel.LicenseException">This module is not licensed. Not need to call this service.</exception>
         </member>
         <member name="T:Engage.Licensing.NullLicenseProvider">
             <summary>
@@ -2141,6 +2275,13 @@
             <param name="desktopModuleName">The name of this module's desktop module record in DNN.</param>
             <returns>The relative path to the templates folder.</returns>
         </member>
+        <member name="M:Engage.Dnn.Framework.Utility.GetPhysicalDesktopModuleFolderName(System.String)">
+            <summary>
+            Gets the full physical path to the desktop module folder.
+            </summary>
+            <param name="desktopModuleName">The name of the module's desktop module record in DNN.</param>
+            <returns>The full physical path to the module's desktop module folder.</returns>
+        </member>
         <member name="M:Engage.Dnn.Framework.Utility.GetPhysicialTemplatesFolderName(System.String)">
             <summary>
             Gets the physical path to the templates folder.
@@ -2168,49 +2309,49 @@
         <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.#ctor">
             <remarks/>
         </member>
-        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.VerifyLicenseKey(System.String,System.String,System.String)">
+        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateSingleServer(System.Guid,System.Guid,System.String,System.Guid)">
             <remarks/>
         </member>
-        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.VerifyLicenseKeyAsync(System.String,System.String,System.String)">
+        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateSingleServerAsync(System.Guid,System.Guid,System.String,System.Guid)">
             <remarks/>
         </member>
-        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.VerifyLicenseKeyAsync(System.String,System.String,System.String,System.Object)">
+        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateSingleServerAsync(System.Guid,System.Guid,System.String,System.Guid,System.Object)">
             <remarks/>
         </member>
-        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.RegisterLicense(System.String,System.String,System.String,System.String)">
+        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateTrialLicense(System.Guid,System.Guid,System.String,System.Guid)">
             <remarks/>
         </member>
-        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.RegisterLicenseAsync(System.String,System.String,System.String,System.String)">
+        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateTrialLicenseAsync(System.Guid,System.Guid,System.String,System.Guid)">
             <remarks/>
         </member>
-        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.RegisterLicenseAsync(System.String,System.String,System.String,System.String,System.Object)">
+        <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateTrialLicenseAsync(System.Guid,System.Guid,System.String,System.Guid,System.Object)">
             <remarks/>
         </member>
         <member name="M:Engage.Dnn.Framework.EngageLicensing.LicenseService.CancelAsync(System.Object)">
             <remarks/>
         </member>
-        <member name="E:Engage.Dnn.Framework.EngageLicensing.LicenseService.VerifyLicenseKeyCompleted">
+        <member name="E:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateSingleServerCompleted">
             <remarks/>
         </member>
-        <member name="E:Engage.Dnn.Framework.EngageLicensing.LicenseService.RegisterLicenseCompleted">
+        <member name="E:Engage.Dnn.Framework.EngageLicensing.LicenseService.AuthenticateTrialLicenseCompleted">
             <remarks/>
         </member>
-        <member name="T:Engage.Dnn.Framework.EngageLicensing.VerifyLicenseKeyCompletedEventHandler">
+        <member name="T:Engage.Dnn.Framework.EngageLicensing.AuthenticateSingleServerCompletedEventHandler">
             <remarks/>
         </member>
-        <member name="T:Engage.Dnn.Framework.EngageLicensing.VerifyLicenseKeyCompletedEventArgs">
+        <member name="T:Engage.Dnn.Framework.EngageLicensing.AuthenticateSingleServerCompletedEventArgs">
             <remarks/>
         </member>
-        <member name="P:Engage.Dnn.Framework.EngageLicensing.VerifyLicenseKeyCompletedEventArgs.Result">
+        <member name="P:Engage.Dnn.Framework.EngageLicensing.AuthenticateSingleServerCompletedEventArgs.Result">
             <remarks/>
         </member>
-        <member name="T:Engage.Dnn.Framework.EngageLicensing.RegisterLicenseCompletedEventHandler">
+        <member name="T:Engage.Dnn.Framework.EngageLicensing.AuthenticateTrialLicenseCompletedEventHandler">
             <remarks/>
         </member>
-        <member name="T:Engage.Dnn.Framework.EngageLicensing.RegisterLicenseCompletedEventArgs">
+        <member name="T:Engage.Dnn.Framework.EngageLicensing.AuthenticateTrialLicenseCompletedEventArgs">
             <remarks/>
         </member>
-        <member name="P:Engage.Dnn.Framework.EngageLicensing.RegisterLicenseCompletedEventArgs.Result">
+        <member name="P:Engage.Dnn.Framework.EngageLicensing.AuthenticateTrialLicenseCompletedEventArgs.Result">
             <remarks/>
         </member>
     </members>
