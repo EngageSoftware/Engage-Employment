@@ -436,7 +436,7 @@
             if <paramref name="value"/> is an <see cref="T:System.IConvertible"/>.
             </summary>
             <param name="value">The value to convert.</param>
-            <returns>An invariant M<see cref="T:System.String"/> representation of <paramref name="value"/></returns>
+            <returns>An invariant <see cref="T:System.String"/> representation of <paramref name="value"/></returns>
         </member>
         <member name="M:Engage.Dnn.Framework.Setting`1.FormatSettingNameForSiteSetting(System.String)">
             <summary>
