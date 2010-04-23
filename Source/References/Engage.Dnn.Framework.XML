@@ -66,6 +66,12 @@
             </summary>
             <param name="productLicenseKey">The product key for the module/product.</param>
         </member>
+        <member name="M:Engage.Licensing.LicenseProviderBase.DisplayInvalidLicenseMessage(Engage.Dnn.Framework.ModuleBase)">
+            <summary>
+            Displays a message indicating that the license for this module has been determined to be invalid.
+            </summary>
+            <param name="control">The control on which to show the message.</param>
+        </member>
         <member name="M:Engage.Licensing.LicenseProviderBase.ValidateLicense(Engage.Dnn.Framework.ModuleBase)">
             <summary>
             Determines whether this instance represents a valid license.
@@ -74,6 +80,12 @@
             <returns>
             <c>true</c> if this instance is valid; otherwise, <c>false</c>.
             </returns>
+        </member>
+        <member name="M:Engage.Licensing.LicenseProviderBase.GetInvalidLicenseMessage">
+            <summary>
+            Gets the message to display when the license evaluates as invalid.
+            </summary>
+            <returns>The heading, message, and message type to display</returns>
         </member>
         <member name="M:Engage.Licensing.LicenseProviderBase.IsValid(Engage.Dnn.Framework.ModuleBase)">
             <summary>
@@ -89,6 +101,35 @@
             Gets the license key for this module/product.
             </summary>
             <value>The product license key.</value>
+        </member>
+        <member name="T:Engage.Licensing.LicenseProviderBase.LicenseMessage">
+            <summary>The parts of a message to display</summary>
+        </member>
+        <member name="M:Engage.Licensing.LicenseProviderBase.LicenseMessage.#ctor(System.String,System.String,DotNetNuke.UI.Skins.Controls.ModuleMessage.ModuleMessageType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Engage.Licensing.LicenseProviderBase.LicenseMessage"/> struct.
+            </summary>
+            <param name="heading">The heading of the message.</param>
+            <param name="message">The text of the message itself.</param>
+            <param name="messageType">The type of message.</param>
+        </member>
+        <member name="P:Engage.Licensing.LicenseProviderBase.LicenseMessage.Heading">
+            <summary>
+            Gets the heading of the message.
+            </summary>
+            <value>The heading of the message.</value>
+        </member>
+        <member name="P:Engage.Licensing.LicenseProviderBase.LicenseMessage.Message">
+            <summary>
+            Gets the message text.
+            </summary>
+            <value>The text of the message itself.</value>
+        </member>
+        <member name="P:Engage.Licensing.LicenseProviderBase.LicenseMessage.MessageType">
+            <summary>
+            Gets the type of the message.
+            </summary>
+            <value>The type of message.</value>
         </member>
         <member name="T:Engage.Licensing.RemoteAuthenticationLicenseProviderBase">
             <summary>
@@ -157,6 +198,14 @@
             Initializes a new instance of the <see cref="T:Engage.Licensing.SingleServerLicenseProvider"/> class.
             </summary>
             <param name="moduleLicenseKey">The license key for the module for which this license provider is to be used</param>
+        </member>
+        <member name="M:Engage.Licensing.SingleServerLicenseProvider.GetInvalidLicenseMessage">
+            <summary>
+            Gets the message to display when the license evaluates as invalid.
+            </summary>
+            <returns>
+            The heading, message, and message type to display
+            </returns>
         </member>
         <member name="M:Engage.Licensing.SingleServerLicenseProvider.HasValidLicense(Engage.Dnn.Framework.ModuleBase,System.Guid,System.String)">
             <summary>
@@ -635,6 +684,14 @@
             </summary>
             <param name="moduleLicenseKey">The license key for the module for which this license provider is to be used</param>
         </member>
+        <member name="M:Engage.Licensing.TrialLicenseProvider.GetInvalidLicenseMessage">
+            <summary>
+            Gets the message to display when the license evaluates as invalid.
+            </summary>
+            <returns>
+            The heading, message, and message type to display
+            </returns>
+        </member>
         <member name="M:Engage.Licensing.TrialLicenseProvider.HasValidLicense(Engage.Dnn.Framework.ModuleBase,System.Guid,System.String)">
             <summary>
             Determines whether the site has a valid license for this module.
@@ -663,6 +720,14 @@
             <param name="control">The control requesting license validation.</param>
             <returns>
             <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Engage.Licensing.NullLicenseProvider.GetInvalidLicenseMessage">
+            <summary>
+            Gets the message to display when the license evaluates as invalid.
+            </summary>
+            <returns>
+            The heading, message, and message type to display
             </returns>
         </member>
         <member name="T:Engage.Licensing.RuntimeEngageLicense">
