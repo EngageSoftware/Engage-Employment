@@ -11,6 +11,12 @@
 
 namespace Engage.Dnn.Employment
 {
+#if TRIAL
+    using System;
+    using System.Web.UI;
+#endif
+    using Engage.Licensing;
+
     /// <summary>
     /// Base class for all controls in this module
     /// </summary>
@@ -36,5 +42,18 @@ namespace Engage.Dnn.Employment
                 return Dnn.Utility.GetIntSetting(this.Settings, Utility.JobGroupIdSetting);
             }
         }
+
+#if TRIAL
+        /// <summary>
+        /// Raises the <see cref="Control.Init"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
+        protected override void OnInit(EventArgs e)
+        {
+            this.LicenseProvider = new TrialLicenseProvider(EmploymentController.ModuleLicenseKey);
+
+            base.OnInit(e);
+        }
+#endif
     }
 }

@@ -14,6 +14,7 @@ namespace Engage.Dnn.Employment
     using System;
     using System.Collections;
     using System.Data;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Data;
     using DotNetNuke.Common.Utilities;
@@ -24,13 +25,20 @@ namespace Engage.Dnn.Employment
     /// <summary>
     /// Exposes the capabilities of this module to DNN.  Implements the method to allow searching and syndication integration.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called by DNN through reflection")]
+    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called by DNN through reflection")]
     internal class EmploymentController : ISearchable
     {
         /// <summary>
         /// The file from which to retrieve localized text for this type
         /// </summary>
         private const string LocalResourceFile = Utility.DesktopModuleRelativePath + "App_LocalResources/EmploymentController.resx";
+
+#if TRIAL
+        /// <summary>
+        /// The license key for this module
+        /// </summary>
+        public static readonly Guid ModuleLicenseKey = new Guid("FF8492A1-C02B-4A8F-979C-7CCB9EAAC31A");
+#endif
 
         #region ISearchable Members
 
