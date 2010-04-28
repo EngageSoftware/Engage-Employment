@@ -8,7 +8,7 @@
       <description>
         The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com) used to manage job openings in your organization and allow for applicants to view jobs and submit applications.
       </description>
-      <version>REPLACED BY NANT</version>
+      <version latestVersion="latestVersion">1.6.0</version>
       <businesscontrollerclass>Engage.Dnn.Employment.EmploymentController</businesscontrollerclass>
       <resourcefile>Resources.zip</resourcefile>
       <modules>
@@ -201,7 +201,7 @@
         Use this module to create job groups and assign jobs into them.  You can use job groups to control which jobs 
         display in any particular instance of the Engage: Employment module.
       </description>
-      <version>01.05.00</version>
+      <version latestVersion="latestVersion">1.6.0</version>
       <businesscontrollerclass>Engage.Dnn.Employment.EmploymentAdminController</businesscontrollerclass>
       <modules>
         <module>

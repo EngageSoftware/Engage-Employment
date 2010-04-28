@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Engage: Employment" type="Module" version="REPLACED BY NANT">
+    <package name="Engage: Employment" type="Module" version="1.6.0">
       <friendlyName>Engage: Employment</friendlyName>
       <description>The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com) used to manage job openings in your organization and allow for applicants to view jobs and submit applications.</description>
       <owner>
@@ -9,8 +9,8 @@
         <url>http://www.engagesoftware.com/</url>
         <email>support@engagemodules.com</email>
       </owner>
-      <license src="REPLACED BY NANT"/>
-      <releaseNotes src="REPLACED BY NANT" />
+      <license src="Licenses/EULA-Standard.htm"/>
+      <releaseNotes src="ReleaseNotes_1.6.0.htm" />
       <components>
         <component type="ResourceFile">
           <resourceFiles>
@@ -65,7 +65,7 @@
             </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>
-              <version>REPLACED BY NANT</version>
+              <version latestVersion="latestVersion">1.6.0</version>
             </script>
           </scripts>
         </component>
@@ -238,7 +238,7 @@
           <assemblies>
             <assembly>
               <name>EngageEmployment.dll</name>
-              <version>REPLACED BY NANT</version>
+              <version latestVersion="latestVersion">1.6.0</version>
             </assembly>
             <assembly>
               <name>Engage.Framework.dll</name>
@@ -252,7 +252,7 @@
         </component>
       </components>
     </package>
-    <package name="Engage: Employment Group Admin" type="Module" version="REPLACED BY NANT">
+    <package name="Engage: Employment Group Admin" type="Module" version="1.6.0">
       <friendlyName>Engage: Emp. Group Admin</friendlyName>
       <description>
         Administration of Job Groups for The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com).
@@ -265,8 +265,8 @@
         <url>http://www.engagesoftware.com/</url>
         <email>support@engagemodules.com</email>
       </owner>
-      <license src="REPLACED BY NANT"/>
-      <releaseNotes src="REPLACED BY NANT" />
+      <license src="Licenses/EULA-Standard.htm"/>
+      <releaseNotes src="ReleaseNotes_1.6.0.htm" />
       <components>
         <component type="Module">
           <desktopModule>
