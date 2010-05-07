@@ -4434,6 +4434,13 @@
             </param>
             <returns>Whether the specified email address(es) are in a valid format.</returns>
         </member>
+        <member name="M:Engage.Utility.ValidatePhoneNumber(System.String)">
+            <summary>
+            Validates a phone number against <see cref="F:Engage.Utility.PhoneRegularExpressionPattern"/>.
+            </summary>
+            <param name="phoneNumber">The phone number to validate.</param>
+            <returns>Whether the specified phone number is in a valid format.</returns>
+        </member>
         <member name="M:Engage.Utility.IsInteger(System.String)">
             <summary>
             Determines whether the specified <see cref="T:System.String"/> is an integer value.  Uses <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/>.
