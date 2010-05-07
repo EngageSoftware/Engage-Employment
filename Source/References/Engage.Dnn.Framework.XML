@@ -889,18 +889,17 @@
             Raises the <see cref="E:System.Web.UI.Control.Init"/> event.
             </summary>
             <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
-            <exception cref="T:System.ComponentModel.LicenseException">If this module's <see cref="P:Engage.Dnn.Framework.ModuleBase.LicenseProvider"/> cannot validate its license.</exception>
         </member>
         <member name="M:Engage.Dnn.Framework.ModuleBase.Page_Load(System.Object,System.EventArgs)">
             <summary>
-            Handles the Load event of the Page control.
+            Handles the <see cref="E:System.Web.UI.Control.Load"/> event of this control.
             </summary>
             <param name="sender">The source of the event.</param>
             <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         </member>
         <member name="M:Engage.Dnn.Framework.ModuleBase.Page_PreRender(System.Object,System.EventArgs)">
             <summary>
-            Handles the <see cref="E:System.Web.UI.Control.PreRender"/> event of the Page control.
+            Handles the <see cref="E:System.Web.UI.Control.PreRender"/> event of this control.
             </summary>
             <param name="sender">The source of the event.</param>
             <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
