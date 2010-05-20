@@ -2058,6 +2058,28 @@
             </remarks>
             <param name="page">The page to which the reference will be added.</param>
         </member>
+        <member name="M:Engage.Dnn.Utility.InjectJQueryLibrary(System.Web.UI.Page,System.Boolean)">
+            <summary>
+            Includes the jQuery library onto the page
+            </summary>
+            <remarks>Based on http://www.ifinity.com.au/Blog/EntryId/75/Include-jQuery-in-a-DotNetNuke-Module-with-version-independent-code</remarks>
+            <param name="page">Page object from calling page/control</param>
+            <param name="includeNoConflict">if <c>true</c>, includes the uncompressed libraries</param>
+        </member>
+        <member name="M:Engage.Dnn.Utility.SafeDnnVersion(System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Returns a version-safe set of version numbers for DNN
+            </summary>
+            <param name="major">out value of major version (i.e., 4,5 etc)</param>
+            <param name="minor">out value of minor version (i.e., 1 in 5.1 etc)</param>
+            <param name="revision">out value of revision (i.e., 3 in 5.1.3)</param>
+            <param name="build">out value of build number</param>
+            <remarks>
+            Based on http://www.ifinity.com.au/Blog/EntryId/75/Include-jQuery-in-a-DotNetNuke-Module-with-version-independent-code
+            DNN moved the version number during about the 4.9 version, 
+            which to [Bruce] was a bit frustrating and caused the need for this reflection method call</remarks>
+            <returns><c>true</c> if successful, <c>false</c> if not</returns>
+        </member>
         <member name="M:Engage.Dnn.Utility.GetStringSetting(System.Collections.Hashtable,System.String)">
             <summary>
             Gets the given setting as a <see cref="T:System.String"/> or <c>null</c> if the setting is not set
