@@ -432,6 +432,8 @@ namespace Engage.Dnn.Employment
             this.ApplicantInfoSection.Visible = true;
             this.EmailFriendSection.Visible = false;
 
+            this.BasePage.ScrollToControl(this.ApplicantInfoSection);
+
             this.FillLeadDropDown();
 
             this.ResumeFileRequiredValidator.Enabled = this.ResumeRequiredLabel.Visible = this.UserId == -1 || JobApplication.GetResumeId(this.UserId) == -1;
@@ -443,6 +445,9 @@ namespace Engage.Dnn.Employment
             this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, Localization.GetString("regexResumeFile.Text", this.LocalResourceFile), fileExtensionsList);
             this.CoverLetterFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, Localization.GetString("regexCoverLetterFile.Text", this.LocalResourceFile), fileExtensionsList);
 
+            this.ApplicationMessageRow.Visible = this.DisplayMessage != Visibility.Hidden;
+            this.ApplicationMessageRequiredValidator.Enabled = this.MessageRequiredLabel.Visible = this.DisplayMessage == Visibility.Required;
+
             this.CoverLetterRow.Visible = this.DisplayCoverLetter != Visibility.Hidden;
             this.CoverLetterFileRequiredValidator.Enabled = this.CoverLetterRequiredLabel.Visible = this.DisplayCoverLetter == Visibility.Required;
 
@@ -450,8 +455,16 @@ namespace Engage.Dnn.Employment
             this.SalaryMessageRow.Visible = this.DisplaySalaryRequirement == Visibility.Optional;
             this.SalaryRequiredTextBox.Enabled = this.SalaryRequiredLabel.Visible = this.DisplaySalaryRequirement == Visibility.Required;
 
-            this.ApplicationMessageRow.Visible = this.DisplayMessage != Visibility.Hidden;
-            this.ApplicationMessageRequiredValidator.Enabled = this.MessageRequiredLabel.Visible = this.DisplayMessage == Visibility.Required;
+            var firstVisibleInputControl = this.ApplicationMessageTextBox.Visible
+                                               ? this.ApplicationMessageTextBox
+                                               : this.SalaryTextBox.Visible
+                                                     ? this.SalaryTextBox
+                                                     : this.LeadDropDownList.Visible
+                                                           ? this.LeadDropDownList
+                                                           : this.CoverLetterUpload.Visible 
+                                                                ? (Control)this.CoverLetterUpload 
+                                                                : this.ResumeUpload;
+            firstVisibleInputControl.Focus();
         }
 
         /// <summary>
@@ -695,8 +708,6 @@ namespace Engage.Dnn.Employment
         private void NextActionButtonApply_Click(object sender, EventArgs e)
         {
             this.InitializeApplicantInfoSection();
-            this.BasePage.ScrollToControl(this.ApplicantInfoSection);
-            this.ApplicationMessageTextBox.Focus();
         }
 
         /// <summary>
