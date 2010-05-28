@@ -695,6 +695,8 @@ namespace Engage.Dnn.Employment
         private void NextActionButtonApply_Click(object sender, EventArgs e)
         {
             this.InitializeApplicantInfoSection();
+            this.BasePage.ScrollToControl(this.ApplicantInfoSection);
+            this.ApplicationMessageTextBox.Focus();
         }
 
         /// <summary>
