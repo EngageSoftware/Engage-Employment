@@ -954,6 +954,12 @@
             <value>The template provider to use for providing templating functionality within this control</value>
             <exception cref="T:System.ArgumentNullException"><c>value</c> is null.</exception>
         </member>
+        <member name="P:Engage.Dnn.Framework.ModuleBase.BasePage">
+            <summary>
+            Gets this control's page as the DNN Framework page.
+            </summary>
+            <value>The DNN Framework page on which this control sits, or <c>null</c> if it doesn't sit on the DNN Framework page.</value>
+        </member>
         <member name="P:Engage.Dnn.Framework.ModuleBase.LicenseProvider">
             <summary>
             Gets or sets the license provider to use for validating a license for this module.
