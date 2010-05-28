@@ -33,11 +33,6 @@ namespace Engage.Dnn.Employment.Data
         public const int AbbreviationLength = 10;
 
         /// <summary>
-        /// The length of columns containing email addresses (<c>Job.NotificationEmailAddress</c>)
-        /// </summary>
-        public const int MaxEmailLength = 320;
-
-        /// <summary>
         /// The length of columns containing URLs (<c>Job.ApplicationUrl</c>)
         /// </summary>
         public const int MaxUrlLength = 2000;

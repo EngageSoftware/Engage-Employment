@@ -51,6 +51,9 @@ namespace Engage.Dnn.Employment
             {
                 if (!IsPostBack)
                 {
+                    this.ApplicationEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx;
+                    this.FriendEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
+
                     txtApplicationEmailAddress.Text = ApplicationEmailAddress;
                     txtFriendEmailAddress.Text = FriendEmailAddress;
                     chkRequireRegistration.Checked = RequireRegistration;

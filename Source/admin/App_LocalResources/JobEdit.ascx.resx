@@ -220,13 +220,13 @@
     <value>A relative order used for sorting.  Jobs in the job listing are sorted first by their Sort Order, then by their category, and lastly by their position.</value>
   </data>
   <data name="lblEmailAddress.Help" xml:space="preserve">
-    <value>The email address that should receive notifcations when an applicant applies for this position</value>
+    <value>The email address(es) that should receive notifcations when an applicant applies for this position (separate multiple email addresses with commas)</value>
   </data>
   <data name="lblEmailAddress.Text" xml:space="preserve">
     <value>Application Notification Email: </value>
   </data>
   <data name="regexEmailAddress.Text" xml:space="preserve">
-    <value>The provided email address is invalid, please provide a valid email address</value>
+    <value>The provided email address list is invalid, please provide valid email addresses</value>
   </data>
   <data name="rfvEmailAddress.Text" xml:space="preserve">
     <value>Application Notification Email is required</value>
@@ -259,7 +259,7 @@
     <value>Enter the URL to which an applicant should be redirected when they click the "Apply for this Job" link.  Enter a URL here only if you want to circumvent the application functionality of this module.  Make sure you include the URL's protocol, i.e. "http://www.engagesoftware.com," instead of just "www.engagesoftware.com"</value>
   </data>
   <data name="lblApplicationUrl.Text" xml:space="preserve">
-    <value>Application URL</value>
+    <value>Application URL:</value>
   </data>
   <data name="regexApplicationUrl.Text" xml:space="preserve">
     <value>The Application URL must be a valid URL.  Did you forget to include "http://"?</value>

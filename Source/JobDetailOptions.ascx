@@ -8,6 +8,8 @@
 		    </td>
 		    <td class="contentColumn">
 		        <asp:TextBox ID="txtApplicationEmailAddress" runat="server" cssclass="NormalTextBox" Width="75%" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtApplicationEmailAddress" ValidationGroup="SaveSettings" ResourceKey="ApplicationEmailRequired" Display="None" />
+                <asp:RegularExpressionValidator ID="ApplicationEmailRegexValidator" runat="server" Display="None" ControlToValidate="txtApplicationEmailAddress" resourcekey="ApplicationEmailPatternValidator" ValidationGroup="SaveSettings" />
 		    </td>
 	    </tr>
 	    <tr>
@@ -16,6 +18,8 @@
 	        </td>
 	        <td class="contentColumn">
 	            <asp:TextBox ID="txtFriendEmailAddress" runat="server" cssclass="NormalTextBox" Width="75%" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtFriendEmailAddress" ValidationGroup="SaveSettings" ResourceKey="FriendEmailRequired" Display="None" />
+                <asp:RegularExpressionValidator ID="FriendEmailRegexValidator" runat="server" Display="None" ControlToValidate="txtFriendEmailAddress" resourcekey="FriendEmailPatternValidator" ValidationGroup="SaveSettings" />
 	        </td>
 	    </tr>
 	    <tr>

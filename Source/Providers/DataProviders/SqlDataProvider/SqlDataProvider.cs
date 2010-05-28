@@ -177,7 +177,7 @@ namespace Engage.Dnn.Employment.Data
                 Engage.Utility.CreateIntegerParam("@revisingUser", userId),
                 Engage.Utility.CreateIntegerParam("@sortOrder", sortOrder),
                 Engage.Utility.CreateIntegerParam("@portalId", portalId),
-                Engage.Utility.CreateVarcharParam("@notificationEmailAddress", notificationEmailAddress, MaxEmailLength),
+                Engage.Utility.CreateTextParam("@notificationEmailAddress", notificationEmailAddress),
                 Engage.Utility.CreateDateTimeParam("@startDate", startDate),
                 Engage.Utility.CreateDateTimeParam("@expireDate", expireDate),
                 Engage.Utility.CreateVarcharParam("@applicationUrl", applicationUrl, MaxUrlLength));
@@ -211,7 +211,7 @@ namespace Engage.Dnn.Employment.Data
                     Engage.Utility.CreateTextParam("@requiredQualifications", requiredQualifications), 
                     Engage.Utility.CreateIntegerParam("@revisingUser", userId), 
                     Engage.Utility.CreateIntegerParam("@sortOrder", sortOrder), 
-                    Engage.Utility.CreateVarcharParam("@notificationEmailAddress", notificationEmailAddress, MaxEmailLength),
+                    Engage.Utility.CreateTextParam("@notificationEmailAddress", notificationEmailAddress),
                     Engage.Utility.CreateDateTimeParam("@startDate", startDate),
                     Engage.Utility.CreateDateTimeParam("@expireDate", expireDate),
                     Engage.Utility.CreateVarcharParam("@applicationUrl", applicationUrl, MaxUrlLength));

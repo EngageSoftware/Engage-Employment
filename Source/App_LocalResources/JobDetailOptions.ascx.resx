@@ -121,7 +121,7 @@
     <value>Job Detail Settings</value>
   </data>
   <data name="lblApplicationEmailAddress.Help" xml:space="preserve">
-    <value>Specify the email address that email applicaitons will be sent to.  This will be used as the default email address for new jobs that are displayed in this module.</value>
+    <value>Specify the email address(es) that email applicaitons will be sent to.  These will be used as the default email address(es) for new jobs that are displayed in this module.  Separate multiple email addresses with commas.</value>
   </data>
   <data name="lblApplicationEmailAddress.Text" xml:space="preserve">
     <value>Default Email Address to which to Send Applications:</value>
@@ -224,5 +224,17 @@
   </data>
   <data name="ControlTitle_options.Text" xml:space="preserve">
     <value>Engage: Employment Job Detail Options</value>
+  </data>
+  <data name="ApplicationEmailPatternValidator.Text" xml:space="preserve">
+    <value>The Email Address to which to Send Applications is not a valid list of email addresses, please validate the format of the email addresses.</value>
+  </data>
+  <data name="ApplicationEmailRequired.Text" xml:space="preserve">
+    <value>Default Email Address to which to Send Applications is required</value>
+  </data>
+  <data name="FriendEmailPatternValidator.Text" xml:space="preserve">
+    <value>The Email Address from which to Email a Friend is not a valid email address, please validate the format of the email address.</value>
+  </data>
+  <data name="FriendEmailRequired.Text" xml:space="preserve">
+    <value>Email Address from which to Email a Friend is required</value>
   </data>
 </root>

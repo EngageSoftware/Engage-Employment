@@ -286,6 +286,7 @@
     <None Include="Migrated rules for EngageEmployment.ruleset" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.01.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.02.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\1.7.0.SqlDataProvider" />
     <None Include="Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
