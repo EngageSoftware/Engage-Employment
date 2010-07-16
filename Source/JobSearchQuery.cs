@@ -33,22 +33,10 @@ namespace Engage.Dnn.Employment
         private const int WordsPerSnippet = 10;
 
         /// <summary>
-        /// Backing field for <see cref="Category"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] 
-        private string category;
-
-        /// <summary>
         /// Backing field for <see cref="CleanKeywordList"/>
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)] 
         private List<string> cleanKeywordList;
-
-        /// <summary>
-        /// Backing field for <see cref="JobPosition"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string jobPosition;
 
         /// <summary>
         /// Backing field for <see cref="KeywordList"/>
@@ -63,31 +51,11 @@ namespace Engage.Dnn.Employment
         private string keywords;
 
         /// <summary>
-        /// Backing field for <see cref="LocationName"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] 
-        private string locationName;
-
-        /// <summary>
-        /// Backing field for <see cref="StateName"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] 
-        private string stateName;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="JobSearchQuery"/> class.
         /// </summary>
         public JobSearchQuery()
         {
             this.Id = -1;
-        }
-
-        public string Category
-        {
-            get
-            {
-                return this.category ?? string.Empty;
-            }
         }
 
         public int? CategoryId
@@ -109,12 +77,6 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        public DateTime CreationDate
-        {
-            get;
-            private set;
-        }
-
         public string Description
         {
             get;
@@ -131,14 +93,6 @@ namespace Engage.Dnn.Employment
         {
             private get;
             set;
-        }
-
-        public string JobPosition
-        {
-            get
-            {
-                return this.jobPosition ?? string.Empty;
-            }
         }
 
         public int? JobPositionId
@@ -183,26 +137,10 @@ namespace Engage.Dnn.Employment
             set;
         }
 
-        public string LocationName
-        {
-            get
-            {
-                return this.locationName ?? string.Empty;
-            }
-        }
-
         public int? StateId
         {
             get;
             set;
-        }
-
-        public string StateName
-        {
-            get
-            {
-                return this.stateName ?? string.Empty;
-            }
         }
 
         private static int PortalId
@@ -382,16 +320,11 @@ namespace Engage.Dnn.Employment
                        {
                                Id = (int)dr["UserSearchId"],
                                Description = dr["SearchName"].ToString(),
-                               jobPosition = dr["JobTitle"].ToString(),
                                JobPositionId = dr["PositionId"] as int?,
                                CategoryId = dr["CategoryId"] as int?,
-                               category = dr["CategoryName"].ToString(),
-                               locationName = dr["LocationName"].ToString(),
                                LocationId = dr["LocationId"] as int?,
-                               stateName = dr["StateName"].ToString(),
                                StateId = dr["StateId"] as int?,
                                keywords = dr["Keywords"].ToString(),
-                               CreationDate = (DateTime)dr["CreationDate"],
                                JobGroupId = dr["JobGroupId"] as int?
                        };
         }

@@ -14,85 +14,28 @@ namespace Engage.Dnn.Employment
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Diagnostics;
+
     using Data;
 
     internal class Location
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int? _locationId;
-        public int? LocationId
-        {
-            [DebuggerStepThrough]
-            get { return _locationId; }
-            //[DebuggerStepThrough]
-            //set { _locationId = value; }
-        }
+        public int? LocationId { get; private set; }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _locationName;
-        public string LocationName
-        {
-            [DebuggerStepThrough]
-            get { return _locationName; }
-            [DebuggerStepThrough]
-            set { _locationName = value; }
-        }
+        public string LocationName { get; set; }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _stateId;
-        public int StateId
-        {
-            [DebuggerStepThrough]
-            get { return _stateId; }
-            [DebuggerStepThrough]
-            set { _stateId = value; }
-        }
+        public int StateId { get; set; }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _stateName;
-        public string StateName
-        {
-            [DebuggerStepThrough]
-            get { return _stateName; }
-        }
+        public string StateName { get; private set; }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _stateAbbreviation;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called in Eval statements from markup")]
-        public string StateAbbreviation
-        {
-            [DebuggerStepThrough]
-            get { return _stateAbbreviation; }
-        }
-
-        private Location(int locationId, string locationName, int stateId)
-            : this(locationId, locationName, stateId, string.Empty, string.Empty)
-        { }
-
-        public Location(string locationName, int stateId)
-            : this(null, locationName, stateId, string.Empty, string.Empty)
-        { }
+        public string StateAbbreviation { get; private set; }
 
         private Location(int? locationId, string locationName, int stateId, string stateName, string stateAbbreviation)
         {
-            _locationId = locationId;
-            _locationName = locationName;
-            _stateId = stateId;
-            _stateName = stateName;
-            _stateAbbreviation = stateAbbreviation;
-        }
-
-        public void Save(int portalId)
-        {
-            if (_locationId.HasValue)
-            {
-                UpdateLocation(_locationId.Value, _locationName, _stateId);
-            }
-            else
-            {
-                InsertLocation(_locationName, _stateId, portalId);
-            }
+            this.LocationId = locationId;
+            this.LocationName = locationName;
+            this.StateId = stateId;
+            this.StateName = stateName;
+            this.StateAbbreviation = stateAbbreviation;
         }
 
         /// <summary>
@@ -104,13 +47,7 @@ namespace Engage.Dnn.Employment
         public bool IsUsed()
         {
             ValidateLocationId();
-            return IsLocationUsed(_locationId.Value);
-        }
-
-        public void Delete()
-        {
-            ValidateLocationId();
-            DeleteLocation(_locationId.Value);
+            return IsLocationUsed(this.LocationId.Value);
         }
 
         private static Location FillLocation(IDataRecord dr)
@@ -120,7 +57,7 @@ namespace Engage.Dnn.Employment
 
         private void ValidateLocationId()
         {
-            if (!_locationId.HasValue)
+            if (!this.LocationId.HasValue)
             {
                 throw new InvalidOperationException("This method is only valid for Locations that have been retrieved from the database");
             }
@@ -137,18 +74,6 @@ namespace Engage.Dnn.Employment
                 }
             }
             return locations;
-        }
-
-        public static Location LoadLocation(int locationId)
-        {
-            using (IDataReader dr = DataProvider.Instance().GetLocation(locationId))
-            {
-                if (dr.Read())
-                {
-                    return FillLocation(dr);
-                }
-            }
-            return null;
         }
 
         public static void UpdateLocation(int id, string description, int stateId)

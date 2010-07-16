@@ -16,6 +16,7 @@ namespace Engage.Dnn.Employment
     using System.Collections.ObjectModel;
     using System.Data;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Data;
 
@@ -24,17 +25,7 @@ namespace Engage.Dnn.Employment
     /// </summary>
     internal class JobApplication
     {
-        /// <summary>
-        /// Backing field for <see cref="ApplicationId"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int applicationId;
-
-        /// <summary>
-        /// Backing field for <see cref="JobId"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int jobId = -1;
+        public int ApplicationId { get; private set; }
 
         /// <summary>
         /// Backing field for <see cref="Job"/>
@@ -42,116 +33,39 @@ namespace Engage.Dnn.Employment
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Job job;
 
-        /// <summary>
-        /// Backing field for <see cref="AppliedForDate"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DateTime appliedForDate;
-
-        /// <summary>
-        /// Backing field for <see cref="SalaryRequirement"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string salaryRequirement;
-
-        /// <summary>
-        /// Backing field for <see cref="Message"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string message;
-
-        /// <summary>
-        /// Backing field for <see cref="UserId"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int? userId;
-
-        /// <summary>
-        /// Backing field for <see cref="DisplayName"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string displayName;
-        
-        /// <summary>
-        /// Backing field for <see cref="StatusId"/>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int? statusId;
-
-        public int ApplicationId
-        {
-            [DebuggerStepThrough]
-            get { return this.applicationId; }
-        }
-
-        public int JobId
-        {
-            [DebuggerStepThrough]
-            get { return this.jobId; }
-        }
-
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
         public Job Job
         {
             get 
             {
                 if (this.job == null)
                 {
-                    this.job = Job.Load(this.jobId);
+                    this.job = Job.Load(this.JobId);
                 }
+
                 return this.job;
             }
         }
 
-        public DateTime AppliedForDate
-        {
-            //[DebuggerStepThrough]
-            //set { this.appliedForDate = value; }
-            [DebuggerStepThrough]
-            get { return this.appliedForDate; }
-        }
+        public int JobId { get; private set; }
 
-        public string SalaryRequirement
-        {
-            //[DebuggerStepThrough]
-            //set { this.salaryRequirement = value; }
-            [DebuggerStepThrough]
-            get { return this.salaryRequirement; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public DateTime AppliedForDate { get; private set; }
 
-        public string Message
-        {
-            //[DebuggerStepThrough]
-            //set { this.message = value; }
-            [DebuggerStepThrough]
-            get { return this.message; }
-        }
+        public string SalaryRequirement { get; private set; }
 
-        public int? UserId
-        {
-            get { return this.userId; }
-        }
+        public string Message { get; private set; }
 
-        public string DisplayName
-        {
-            [DebuggerStepThrough]
-            get { return this.displayName; }
-            //[DebuggerStepThrough]
-            //set { displayName = value; }
-        }
+        public int? UserId { get; private set; }
 
-        public int? StatusId
-        {
-            [DebuggerStepThrough]
-            get { return this.statusId; }
-            [DebuggerStepThrough]
-            set { this.statusId = value; }
-        }
+        public int? StatusId { get; set; }
 
         /// <summary>
         /// Prevents a default instance of the JobApplication class from being created
         /// </summary>
         private JobApplication()
         {
+            this.JobId = -1;
         }
 
         /// <summary>
@@ -160,7 +74,7 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of the <see cref="Document"/>s for this application</returns>
         public List<Document> GetDocuments()
         {
-            return Document.GetDocuments(this.applicationId);
+            return Document.GetDocuments(this.ApplicationId);
         }
 
         /// <summary>
@@ -170,7 +84,7 @@ namespace Engage.Dnn.Employment
         public Dictionary<string, string> GetApplicationProperties()
         {
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            DataTable dt = DataProvider.Instance().GetApplicationProperties(this.applicationId);
+            DataTable dt = DataProvider.Instance().GetApplicationProperties(this.ApplicationId);
 
             if (dt != null)
             {
@@ -190,7 +104,7 @@ namespace Engage.Dnn.Employment
         /// </summary>
         public void Save(int revisingUserId)
         {
-            DataProvider.Instance().UpdateApplication(this.applicationId, this.statusId, revisingUserId);
+            DataProvider.Instance().UpdateApplication(this.ApplicationId, this.StatusId, revisingUserId);
         }
 
         #region Static Methods
@@ -312,14 +226,13 @@ namespace Engage.Dnn.Employment
         private static JobApplication FillApplication(IDataRecord reader)
         {
             JobApplication jobApplication = new JobApplication();
-            jobApplication.applicationId = (int)reader["ApplicationId"];
-            jobApplication.jobId = (int)reader["JobId"];
-            jobApplication.userId = reader["UserId"] as int?;
-            jobApplication.appliedForDate = (DateTime)reader["AppliedDate"];
-            jobApplication.salaryRequirement = reader["SalaryRequirement"] as string;
-            jobApplication.message = reader["Message"] as string;
-            jobApplication.displayName = reader["DisplayName"] as string;
-            jobApplication.statusId = reader["StatusId"] as int?;
+            jobApplication.ApplicationId = (int)reader["ApplicationId"];
+            jobApplication.JobId = (int)reader["JobId"];
+            jobApplication.UserId = reader["UserId"] as int?;
+            jobApplication.AppliedForDate = (DateTime)reader["AppliedDate"];
+            jobApplication.SalaryRequirement = reader["SalaryRequirement"] as string;
+            jobApplication.Message = reader["Message"] as string;
+            jobApplication.StatusId = reader["StatusId"] as int?;
             return jobApplication;
         }
 

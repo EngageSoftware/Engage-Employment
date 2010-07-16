@@ -14,7 +14,7 @@ namespace Engage.Dnn.Employment
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Data;
     using DotNetNuke.Common.Lists;
@@ -24,28 +24,17 @@ namespace Engage.Dnn.Employment
 
     internal class UserStatus
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _status;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _statusId;
-
         public UserStatus(string status, int statusId)
         {
-            this._status = status;
-            this._statusId = statusId;
+            this.Status = status;
+            this.StatusId = statusId;
         }
 
-        public int StatusId
-        {
-            [DebuggerStepThrough]
-            get { return this._statusId; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Only used via reflection (i.e. databinding)")]
+        public int StatusId { get; private set; }
 
-        public string Status
-        {
-            [DebuggerStepThrough]
-            get { return this._status; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Only used via reflection (i.e. databinding)")]
+        public string Status { get; private set; }
 
         public static List<UserStatus> LoadStatuses(int portalId)
         {
@@ -57,18 +46,6 @@ namespace Engage.Dnn.Employment
             }
 
             return statuses;
-        }
-
-        public static UserStatus LoadStatus(int statusId)
-        {
-            UserStatus status = null;
-            DataTable statusTable = DataProvider.Instance().GetUserStatus(statusId);
-            if (statusTable != null && statusTable.Rows.Count > 0)
-            {
-                status = FillUserStatus(statusTable.Rows[0]);
-            }
-
-            return status;
         }
 
         public static void UpdateStatus(int statusId, string status)
