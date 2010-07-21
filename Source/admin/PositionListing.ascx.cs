@@ -63,6 +63,11 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="args">The <see cref="System.Web.UI.WebControls.ServerValidateEventArgs"/> instance containing the event data.</param>
         protected void JobDescriptionRequiredValidator_ServerValidate(object sender, ServerValidateEventArgs args)
         {
+            if (args == null)
+            {
+                throw new ArgumentNullException("args", "args must not be null");
+            }
+
             args.IsValid = TextEditorHasValue(this.GetJobDescription(this.PositionsGrid.EditIndex));
         }
 

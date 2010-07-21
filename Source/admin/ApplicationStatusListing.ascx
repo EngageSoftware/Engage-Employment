@@ -46,12 +46,12 @@
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
-<asp:Panel ID="pnlNew" runat="server" Visible="false">
+<asp:Panel ID="NewPanel" runat="server" Visible="false">
     <table class="employmentTable">
         <tr id="rowNewHeader" runat="server" visible="false"><th>
-            <asp:Label ID="lblNewHeader" runat="server" resourcekey="StatusName.Header" />
+            <asp:Label ID="NewHeaderLabel" runat="server" resourcekey="StatusName.Header" />
         </th><th></th><th></th></tr>
-        <tr class='<%=pnlNew.CssClass %>'><td>
+        <tr class='<%=this.NewPanel.CssClass %>'><td>
             <asp:TextBox ID="txtNewStatus" runat="server" CssClass="NormalTextBox" />
         </td><td class="labelColumn">
             <asp:Button ID="SaveNewStatusButton" runat="server" resourcekey="btnSaveNew" ValidationGroup="New" />

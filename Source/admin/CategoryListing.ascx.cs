@@ -40,15 +40,15 @@ namespace Engage.Dnn.Employment.Admin
         protected override void OnInit(EventArgs e)
         {
             this.Load += Page_Load;
-            btnAdd.Click += btnAdd_Click;
-            btnBack.Click += btnBack_Click;
-            btnCancelNew.Click += btnCancelNew_Click;
-            btnSaveNew.Click += btnSaveNew_Click;
-            gvCategories.RowCancelingEdit += gvCategories_RowCancelingEdit;
-            gvCategories.RowCommand += gvCategories_RowCommand;
-            gvCategories.RowDataBound += gvCategories_RowDataBound;
-            gvCategories.RowDeleting += gvCategories_RowDeleting;
-            gvCategories.RowEditing += gvCategories_RowEditing;
+            AddButton.Click += AddButton_Click;
+            BackButton.Click += BackButton_Click;
+            CancelNewButton.Click += CancelNewButton_Click;
+            SaveNewButton.Click += SaveNewButton_Click;
+            this.CategoriesGridView.RowCancelingEdit += this.CategoriesGridView_RowCancelingEdit;
+            this.CategoriesGridView.RowCommand += this.CategoriesGridView_RowCommand;
+            this.CategoriesGridView.RowDataBound += this.CategoriesGridView_RowDataBound;
+            this.CategoriesGridView.RowDeleting += this.CategoriesGridView_RowDeleting;
+            this.CategoriesGridView.RowEditing += this.CategoriesGridView_RowEditing;
 
             base.OnInit(e);
         }
@@ -60,7 +60,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!IsPostBack)
                 {
-                    Engage.Dnn.Utility.LocalizeGridView(ref gvCategories, LocalResourceFile);
+                    Engage.Dnn.Utility.LocalizeGridView(ref this.CategoriesGridView, LocalResourceFile);
                     SetupLengthValidation();
                     LoadCategories();
                 }
@@ -72,20 +72,20 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnBack_Click(object sender, EventArgs e)
+        protected void BackButton_Click(object sender, EventArgs e)
         {
             Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
-            pnlNew.Visible = true;
+            this.PanelNew.Visible = true;
             txtNewCategoryName.Focus();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnSaveNew_Click(object sender, EventArgs e)
+        private void SaveNewButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
@@ -103,20 +103,20 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnCancelNew_Click(object sender, EventArgs e)
+        private void CancelNewButton_Click(object sender, EventArgs e)
         {
             HideAndClearNewCategoryPanel();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvCategories_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        private void CategoriesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvCategories.EditIndex = -1;
+            this.CategoriesGridView.EditIndex = -1;
             LoadCategories();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvCategories_RowDataBound(object sender, GridViewRowEventArgs e)
+        private void CategoriesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -141,7 +141,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvCategories_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        private void CategoriesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? categoryId = GetCategoryId(e.RowIndex);
             if (categoryId.HasValue)
@@ -152,14 +152,14 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvCategories_RowEditing(object sender, GridViewEditEventArgs e)
+        private void CategoriesGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            gvCategories.EditIndex = e.NewEditIndex;
+            this.CategoriesGridView.EditIndex = e.NewEditIndex;
             HideAndClearNewCategoryPanel();
             LoadCategories();
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvCategories_RowCommand(object sender, GridViewCommandEventArgs e)
+        private void CategoriesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
             {
@@ -175,7 +175,7 @@ namespace Engage.Dnn.Employment.Admin
                             if (IsCategoryNameUnique(categoryId, newCategoryName))
                             {
                                 Category.UpdateCategory(categoryId.Value, newCategoryName);
-                                gvCategories.EditIndex = -1;
+                                this.CategoriesGridView.EditIndex = -1;
                                 LoadCategories();
                             }
                             else
@@ -191,16 +191,16 @@ namespace Engage.Dnn.Employment.Admin
         private void LoadCategories()
         {
             List<Category> categories = Category.LoadCategories(null, PortalId);
-            this.gvCategories.DataSource = categories;
-            this.gvCategories.DataBind();
+            this.CategoriesGridView.DataSource = categories;
+            this.CategoriesGridView.DataBind();
 
             if (categories == null || categories.Count % 2 == 0)
             {
-                pnlNew.CssClass = gvCategories.RowStyle.CssClass;
+                this.PanelNew.CssClass = this.CategoriesGridView.RowStyle.CssClass;
             }
             else
             {
-                pnlNew.CssClass = gvCategories.AlternatingRowStyle.CssClass;
+                this.PanelNew.CssClass = this.CategoriesGridView.AlternatingRowStyle.CssClass;
             }
 
             rowNewHeader.Visible = (categories == null || categories.Count < 1);
@@ -220,15 +220,15 @@ namespace Engage.Dnn.Employment.Admin
 
         private void HideAndClearNewCategoryPanel()
         {
-            this.pnlNew.Visible = false;
+            this.PanelNew.Visible = false;
             this.txtNewCategoryName.Text = string.Empty;
         }
 
         private string GetCategoryName(int rowIndex)
         {
-            if (gvCategories != null && gvCategories.Rows.Count > rowIndex)
+            if (this.CategoriesGridView != null && this.CategoriesGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = gvCategories.Rows[rowIndex];
+                GridViewRow row = this.CategoriesGridView.Rows[rowIndex];
                 TextBox txtCategoryName = row.FindControl("txtCategoryName") as TextBox;
                 Debug.Assert(txtCategoryName != null);
                 return txtCategoryName.Text;
@@ -250,9 +250,9 @@ namespace Engage.Dnn.Employment.Admin
 
         private int? GetCategoryId(int rowIndex)
         {
-            if (gvCategories != null && gvCategories.Rows.Count > rowIndex)
+            if (this.CategoriesGridView != null && this.CategoriesGridView.Rows.Count > rowIndex)
             {
-                return GetCategoryId(gvCategories.Rows[rowIndex]);
+                return GetCategoryId(this.CategoriesGridView.Rows[rowIndex]);
             }
             return null;
         }

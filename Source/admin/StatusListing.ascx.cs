@@ -48,15 +48,15 @@ namespace Engage.Dnn.Employment.Admin
         protected override void OnInit(EventArgs e)
         {
             this.Load += this.Page_Load;
-            this.btnAdd.Click += this.btnAdd_Click;
-            this.btnBack.Click += this.btnBack_Click;
-            this.btnCancelNew.Click += this.btnCancelNew_Click;
-            this.btnSaveNew.Click += this.btnSaveNew_Click;
-            this.gvStatuses.RowCancelingEdit += this.gvStatuses_RowCancelingEdit;
-            this.gvStatuses.RowCommand += this.gvStatuses_RowCommand;
-            this.gvStatuses.RowDataBound += this.gvStatuses_RowDataBound;
-            this.gvStatuses.RowDeleting += this.gvStatuses_RowDeleting;
-            this.gvStatuses.RowEditing += this.gvStatuses_RowEditing;
+            this.AddButton.Click += this.AddButton_Click;
+            this.BackButton.Click += this.BackButton_Click;
+            this.CancelNewButton.Click += this.CancelNewButton_Click;
+            this.SaveNewButton.Click += this.SaveNewButton_Click;
+            this.StatusesGridView.RowCancelingEdit += this.StatusesGridView_RowCancelingEdit;
+            this.StatusesGridView.RowCommand += this.StatusesGridView_RowCommand;
+            this.StatusesGridView.RowDataBound += this.StatusesGridView_RowDataBound;
+            this.StatusesGridView.RowDeleting += this.StatusesGridView_RowDeleting;
+            this.StatusesGridView.RowEditing += this.StatusesGridView_RowEditing;
 
             base.OnInit(e);
         }
@@ -77,16 +77,16 @@ namespace Engage.Dnn.Employment.Admin
         private void BindData()
         {
             List<UserStatus> statuses = UserStatus.LoadStatuses(this.PortalId);
-            this.gvStatuses.DataSource = statuses;
-            this.gvStatuses.DataBind();
+            this.StatusesGridView.DataSource = statuses;
+            this.StatusesGridView.DataBind();
 
             if (statuses == null || statuses.Count % 2 == 0)
             {
-                this.pnlNew.CssClass = this.gvStatuses.RowStyle.CssClass;
+                this.NewPanel.CssClass = this.StatusesGridView.RowStyle.CssClass;
             }
             else
             {
-                this.pnlNew.CssClass = this.gvStatuses.AlternatingRowStyle.CssClass;
+                this.NewPanel.CssClass = this.StatusesGridView.AlternatingRowStyle.CssClass;
             }
 
             this.rowNewHeader.Visible = statuses == null || statuses.Count < 1;
@@ -94,9 +94,9 @@ namespace Engage.Dnn.Employment.Admin
 
         private int? GetStatusId(int rowIndex)
         {
-            if (this.gvStatuses != null && this.gvStatuses.Rows.Count > rowIndex)
+            if (this.StatusesGridView != null && this.StatusesGridView.Rows.Count > rowIndex)
             {
-                return GetStatusId(this.gvStatuses.Rows[rowIndex]);
+                return GetStatusId(this.StatusesGridView.Rows[rowIndex]);
             }
 
             return null;
@@ -104,9 +104,9 @@ namespace Engage.Dnn.Employment.Admin
 
         private string GetStatusName(int rowIndex)
         {
-            if (this.gvStatuses != null && this.gvStatuses.Rows.Count > rowIndex)
+            if (this.StatusesGridView != null && this.StatusesGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = this.gvStatuses.Rows[rowIndex];
+                GridViewRow row = this.StatusesGridView.Rows[rowIndex];
                 var txtStatus = (TextBox)row.FindControl("txtStatus");
                 return txtStatus.Text;
             }
@@ -116,7 +116,7 @@ namespace Engage.Dnn.Employment.Admin
 
         private void HideAndClearNewStatusPanel()
         {
-            this.pnlNew.Visible = false;
+            this.NewPanel.Visible = false;
             this.txtNewStatus.Text = string.Empty;
         }
 
@@ -133,42 +133,42 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="Button.Click"/> event of the <see cref="btnAdd"/> control.
+        /// Handles the <see cref="Button.Click"/> event of the <see cref="AddButton"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
-            this.pnlNew.Visible = true;
+            this.NewPanel.Visible = true;
             this.txtNewStatus.Focus();
         }
 
         /// <summary>
-        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="btnBack"/> control.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="BackButton"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btnBack_Click(object sender, EventArgs e)
+        private void BackButton_Click(object sender, EventArgs e)
         {
             this.Response.Redirect(this.EditUrl(ControlKey.ManageApplications.ToString()));
         }
 
         /// <summary>
-        /// Handles the <see cref="Button.Click"/> event of the <see cref="btnCancelNew"/> control.
+        /// Handles the <see cref="Button.Click"/> event of the <see cref="CancelNewButton"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btnCancelNew_Click(object sender, EventArgs e)
+        private void CancelNewButton_Click(object sender, EventArgs e)
         {
             this.HideAndClearNewStatusPanel();
         }
 
         /// <summary>
-        /// Handles the <see cref="Button.Click"/> event of the <see cref="btnSaveNew"/> control.
+        /// Handles the <see cref="Button.Click"/> event of the <see cref="SaveNewButton"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btnSaveNew_Click(object sender, EventArgs e)
+        private void SaveNewButton_Click(object sender, EventArgs e)
         {
             if (this.Page.IsValid)
             {
@@ -186,22 +186,22 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="GridView.RowCancelingEdit"/> event of the <see cref="gvStatuses"/> control.
+        /// Handles the <see cref="GridView.RowCancelingEdit"/> event of the <see cref="StatusesGridView"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewCancelEditEventArgs"/> instance containing the event data.</param>
-        private void gvStatuses_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        private void StatusesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            this.gvStatuses.EditIndex = -1;
+            this.StatusesGridView.EditIndex = -1;
             this.BindData();
         }
 
         /// <summary>
-        /// Handles the <see cref="GridView.RowCommand"/> event of the <see cref="gvStatuses"/> control.
+        /// Handles the <see cref="GridView.RowCommand"/> event of the <see cref="StatusesGridView"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewCommandEventArgs"/> instance containing the event data.</param>
-        private void gvStatuses_RowCommand(object sender, GridViewCommandEventArgs e)
+        private void StatusesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
             {
@@ -217,7 +217,7 @@ namespace Engage.Dnn.Employment.Admin
                             if (this.IsStatusNameUnique(statusId, newStatusName))
                             {
                                 UserStatus.UpdateStatus(statusId.Value, newStatusName);
-                                this.gvStatuses.EditIndex = -1;
+                                this.StatusesGridView.EditIndex = -1;
                                 this.BindData();
                             }
                             else
@@ -231,11 +231,11 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="GridView.RowDataBound"/> event of the <see cref="gvStatuses"/> control.
+        /// Handles the <see cref="GridView.RowDataBound"/> event of the <see cref="StatusesGridView"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewRowEventArgs"/> instance containing the event data.</param>
-        private void gvStatuses_RowDataBound(object sender, GridViewRowEventArgs e)
+        private void StatusesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -263,11 +263,11 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="GridView.RowDeleting"/> event of the <see cref="gvStatuses"/> control.
+        /// Handles the <see cref="GridView.RowDeleting"/> event of the <see cref="StatusesGridView"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewDeleteEventArgs"/> instance containing the event data.</param>
-        private void gvStatuses_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        private void StatusesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? statusId = GetStatusId(e.RowIndex);
             if (statusId.HasValue)
@@ -278,13 +278,13 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="GridView.RowEditing"/> event of the <see cref="gvStatuses"/> control.
+        /// Handles the <see cref="GridView.RowEditing"/> event of the <see cref="StatusesGridView"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewEditEventArgs"/> instance containing the event data.</param>
-        private void gvStatuses_RowEditing(object sender, GridViewEditEventArgs e)
+        private void StatusesGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            this.gvStatuses.EditIndex = e.NewEditIndex;
+            this.StatusesGridView.EditIndex = e.NewEditIndex;
             this.HideAndClearNewStatusPanel();
             this.BindData();
         }
@@ -300,7 +300,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!this.IsPostBack)
                 {
-                    Dnn.Utility.LocalizeGridView(ref this.gvStatuses, this.LocalResourceFile);
+                    Dnn.Utility.LocalizeGridView(ref this.StatusesGridView, this.LocalResourceFile);
                     this.SetupStatusLengthValidation();
                     this.BindData();
                 }

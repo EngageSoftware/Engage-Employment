@@ -14,7 +14,7 @@
 		        <dnn:label ResourceKey="lblDisplayOption" runat="server" />
 		    </td>
 		    <td class="contentColumn">
-		        <asp:RadioButtonList ID="rblDisplayOption" runat="server"/>
+		        <asp:RadioButtonList ID="DisplayOptionRadioButtonList" runat="server"/>
 		    </td>
 	    </tr>
 	    <tr>
@@ -24,9 +24,9 @@
 		    <td class="contentColumn">
 		        <asp:PlaceHolder ID="phLimitOption" runat="server">
 		        <%--<asp:UpdatePanel ID="upnlLimitOption" runat="server" RenderMode="Inline" UpdateMode="Conditional"><ContentTemplate>--%>
-		            <asp:CheckBox ID="chkLimit" runat="server" /> <asp:Label runat="server" resourcekey="lblLimitTextStart"/><asp:TextBox ID="txtLimit" runat="server" Columns="4"/><asp:Label runat="server" resourcekey="lblLimitTextEnd"/>
-		            <asp:RadioButtonList ID="rblLimitOption" runat="server"/>
-		            <asp:RequiredFieldValidator ID="rfvLimit" runat="server" ControlToValidate="txtLimit" Display="None" resourcekey="rfvLimit" ValidationGroup="SaveSettings" />
+		            <asp:CheckBox ID="LimitCheckBox" runat="server" /> <asp:Label runat="server" resourcekey="lblLimitTextStart"/><asp:TextBox ID="txtLimit" runat="server" Columns="4"/><asp:Label runat="server" resourcekey="lblLimitTextEnd"/>
+		            <asp:RadioButtonList ID="LimitOptionRadioButtonList" runat="server"/>
+		            <asp:RequiredFieldValidator ID="LimitRequiredFieldValidator" runat="server" ControlToValidate="txtLimit" Display="None" resourcekey="rfvLimit" ValidationGroup="SaveSettings" />
 		            <asp:RangeValidator ID="rvLimit" runat="server" ControlToValidate="txtLimit" Display="None" MinimumValue="1" Operator="DataTypeCheck" Type="Integer" resourcekey="rvLimit" ValidationGroup="SaveSettings" />
 		        <%--</ContentTemplate></asp:UpdatePanel>--%>
 		        </asp:PlaceHolder>
@@ -39,10 +39,10 @@
 	    </tr>
 	    <tr>
 	        <td class="labelColumn">
-	            <asp:Button ID="btnUpdate" runat="server" resourcekey="btnUpdate" ValidationGroup="SaveSettings"/>
+	            <asp:Button ID="UpdateButton" runat="server" resourcekey="btnUpdate" ValidationGroup="SaveSettings"/>
 	        </td>
 	        <td class="contentColumn">
-	            <asp:Button ID="btnCancel" runat="server" resourcekey="btnCancel" CausesValidation="false" />
+	            <asp:Button ID="CancelButton" runat="server" resourcekey="btnCancel" CausesValidation="false" />
 	        </td>
 	    </tr>
     </table>

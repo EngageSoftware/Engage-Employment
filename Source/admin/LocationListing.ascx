@@ -5,8 +5,8 @@
 
 <div class="information"><asp:Label ResourceKey="lblLocationsHeader.Help" runat="server" /></div>
 
-<asp:Button ID="btnAdd" runat="server" resourcekey="btnAdd" />
-<asp:GridView ID="gvLocations" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">
+<asp:Button ID="AddButton" runat="server" resourcekey="btnAdd" />
+<asp:GridView ID="LocationsGridView" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">
     <AlternatingRowStyle CssClass="DataGrid_AlternatingItem" />
     <RowStyle CssClass="DataGrid_Item" />
     <SelectedRowStyle CssClass="DataGrid_SelectedItem" />
@@ -56,21 +56,21 @@
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
-<asp:Panel ID="pnlNew" runat="server" Visible="false">
+<asp:Panel ID="NewPanel" runat="server" Visible="false">
     <table class="employmentTable">
         <tr id="rowNewHeader" runat="server" visible="false"><th>
-            <asp:Label ID="lblNewHeader" runat="server" resourcekey="LocationName.Header" />
+            <asp:Label ID="NewHeaderLabel" runat="server" resourcekey="LocationName.Header" />
         </th><th>
-            <asp:Label ID="lblNewStateHeader" runat="server" resourcekey="ParentState.Header" />
+            <asp:Label ID="NewStateHeaderLabel" runat="server" resourcekey="ParentState.Header" />
         </th><th></th><th></th></tr>
-        <tr class='<%=pnlNew.CssClass %>'><td>
+        <tr class='<%=this.NewPanel.CssClass %>'><td>
             <asp:TextBox ID="txtNewLocationName" runat="server" CssClass="NormalTextBox" />
         </td><td>
-            <asp:DropDownList ID="ddlNewState" runat="server"/>
+            <asp:DropDownList ID="NewStateDropDownList" runat="server"/>
         </td><td class="labelColumn">
-            <asp:Button ID="btnSaveNew" runat="server" resourcekey="btnSaveNew" ValidationGroup="New" />
+            <asp:Button ID="SaveNewButton" runat="server" resourcekey="btnSaveNew" ValidationGroup="New" />
         </td><td class="labelColumn">
-            <asp:Button ID="btnCancelNew" runat="server" resourcekey="btnCancelNew" CausesValidation="false" />
+            <asp:Button ID="CancelNewButton" runat="server" resourcekey="btnCancelNew" CausesValidation="false" />
         </td></tr>
     </table>
     <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNewLocationName" Display="None" ValidationGroup="New" resourcekey="LocationNameRequired" />
@@ -80,4 +80,4 @@
 <asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="Edit" />
 <asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="New" />
 
-<asp:LinkButton ID="btnBack" runat="server" CssClass="Normal" resourcekey="btnBack" />
+<asp:LinkButton ID="BackButton" runat="server" CssClass="Normal" resourcekey="btnBack" />

@@ -60,9 +60,9 @@
 <asp:Panel ID="NewPositionPanel" runat="server" Visible="false">
     <table class="employmentTable">
         <tr id="NewPositionHeaderRow" runat="server" visible="false"><th>
-            <asp:Label ID="lblNewHeader" runat="server" resourcekey="JobTitle.Header" />
+            <asp:Label ID="NewHeaderLabel" runat="server" resourcekey="JobTitle.Header" />
         </th><th>
-            <asp:Label ID="lblNewDescriptionHeader" runat="server" resourcekey="JobDescription.Header" />
+            <asp:Label ID="NewDescriptionHeaderLabel" runat="server" resourcekey="JobDescription.Header" />
         </th><th></th><th></th></tr>
         <tr class='<%=this.NewPositionPanel.CssClass %>'><td>
             <asp:TextBox ID="NewJobTitleTextBox" runat="server" CssClass="NormalTextBox" />

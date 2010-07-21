@@ -39,15 +39,15 @@ namespace Engage.Dnn.Employment.Admin
         protected override void OnInit(EventArgs e)
         {
             this.Load += Page_Load;
-            btnAdd.Click += btnAdd_Click;
-            btnBack.Click += btnBack_Click;
-            btnCancelNew.Click += btnCancelNew_Click;
-            btnSaveNew.Click += btnSaveNew_Click;
-            gvLocations.RowCancelingEdit += gvLocations_RowCancelingEdit;
-            gvLocations.RowCommand += gvLocations_RowCommand;
-            gvLocations.RowDataBound += gvLocations_RowDataBound;
-            gvLocations.RowDeleting += gvLocations_RowDeleting;
-            gvLocations.RowEditing += gvLocations_RowEditing;
+            this.AddButton.Click += this.AddButton_Click;
+            this.BackButton.Click += this.BackButton_Click;
+            this.CancelNewButton.Click += this.CancelNewButton_Click;
+            this.SaveNewButton.Click += this.SaveNewButton_Click;
+            this.LocationsGridView.RowCancelingEdit += this.LocationsGridView_RowCancelingEdit;
+            this.LocationsGridView.RowCommand += this.LocationsGridView_RowCommand;
+            this.LocationsGridView.RowDataBound += this.LocationsGridView_RowDataBound;
+            this.LocationsGridView.RowDeleting += this.LocationsGridView_RowDeleting;
+            this.LocationsGridView.RowEditing += this.LocationsGridView_RowEditing;
 
             base.OnInit(e);
         }
@@ -59,9 +59,9 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!IsPostBack)
                 {
-                    Engage.Dnn.Utility.LocalizeGridView(ref gvLocations, LocalResourceFile);
+                    Engage.Dnn.Utility.LocalizeGridView(ref this.LocationsGridView, LocalResourceFile);
                     SetupLengthValidation();
-                    BindStates(ddlNewState);
+                    BindStates(this.NewStateDropDownList);
                     LoadLocations();
                 }
             }
@@ -72,25 +72,25 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnBack_Click(object sender, EventArgs e)
+        protected void BackButton_Click(object sender, EventArgs e)
         {
             Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
-            pnlNew.Visible = true;
+            this.NewPanel.Visible = true;
             txtNewLocationName.Focus();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnSaveNew_Click(object sender, EventArgs e)
+        private void SaveNewButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 int stateId;
-                if (int.TryParse(ddlNewState.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId)
+                if (int.TryParse(this.NewStateDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId)
                     && IsLocationNameUnique(null, txtNewLocationName.Text, stateId))
                 {
                     Location.InsertLocation(txtNewLocationName.Text, stateId, PortalId);
@@ -105,20 +105,20 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnCancelNew_Click(object sender, EventArgs e)
+        private void CancelNewButton_Click(object sender, EventArgs e)
         {
             HideAndClearNewStatusPanel();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLocations_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        private void LocationsGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvLocations.EditIndex = -1;
+            this.LocationsGridView.EditIndex = -1;
             LoadLocations();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLocations_RowDataBound(object sender, GridViewRowEventArgs e)
+        private void LocationsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -149,7 +149,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLocations_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        private void LocationsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? locationId = GetLocationId(e.RowIndex);
             if (locationId.HasValue)
@@ -160,14 +160,14 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLocations_RowEditing(object sender, GridViewEditEventArgs e)
+        private void LocationsGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            gvLocations.EditIndex = e.NewEditIndex;
+            this.LocationsGridView.EditIndex = e.NewEditIndex;
             HideAndClearNewStatusPanel();
             LoadLocations();
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLocations_RowCommand(object sender, GridViewCommandEventArgs e)
+        private void LocationsGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
             {
@@ -184,7 +184,7 @@ namespace Engage.Dnn.Employment.Admin
                             if (IsLocationNameUnique(locationId, newLocationName, stateId))
                             {
                                 Location.UpdateLocation(locationId.Value, newLocationName, stateId.Value);
-                                gvLocations.EditIndex = -1;
+                                this.LocationsGridView.EditIndex = -1;
                                 LoadLocations();
                             }
                             else
@@ -206,16 +206,16 @@ namespace Engage.Dnn.Employment.Admin
         private void LoadLocations()
         {
             List<Location> locations = Location.LoadLocations(null, PortalId);
-            this.gvLocations.DataSource = locations;
-            this.gvLocations.DataBind();
+            this.LocationsGridView.DataSource = locations;
+            this.LocationsGridView.DataBind();
 
             if (locations == null || locations.Count % 2 == 0)
             {
-                pnlNew.CssClass = gvLocations.RowStyle.CssClass;
+                this.NewPanel.CssClass = this.LocationsGridView.RowStyle.CssClass;
             }
             else
             {
-                pnlNew.CssClass = gvLocations.AlternatingRowStyle.CssClass;
+                this.NewPanel.CssClass = this.LocationsGridView.AlternatingRowStyle.CssClass;
             }
 
             rowNewHeader.Visible = (locations == null || locations.Count < 1);
@@ -247,16 +247,16 @@ namespace Engage.Dnn.Employment.Admin
 
         private void HideAndClearNewStatusPanel()
         {
-            this.pnlNew.Visible = false;
+            this.NewPanel.Visible = false;
             this.txtNewLocationName.Text = string.Empty;
-            this.ddlNewState.ClearSelection();
+            this.NewStateDropDownList.ClearSelection();
         }
 
         private string GetLocationName(int rowIndex)
         {
-            if (gvLocations != null && gvLocations.Rows.Count > rowIndex)
+            if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = gvLocations.Rows[rowIndex];
+                GridViewRow row = this.LocationsGridView.Rows[rowIndex];
                 TextBox txtLocationName = row.FindControl("txtLocationName") as TextBox;
                 Debug.Assert(txtLocationName != null);
                 return txtLocationName.Text;
@@ -266,9 +266,9 @@ namespace Engage.Dnn.Employment.Admin
 
         private int? GetStateId(int rowIndex)
         {
-            if (gvLocations != null && gvLocations.Rows.Count > rowIndex)
+            if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = gvLocations.Rows[rowIndex];
+                GridViewRow row = this.LocationsGridView.Rows[rowIndex];
                 DropDownList ddlState = row.FindControl("ddlState") as DropDownList;
                 Debug.Assert(ddlState != null);
 
@@ -295,9 +295,9 @@ namespace Engage.Dnn.Employment.Admin
 
         private int? GetLocationId(int rowIndex)
         {
-            if (gvLocations != null && gvLocations.Rows.Count > rowIndex)
+            if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
             {
-                return GetLocationId(gvLocations.Rows[rowIndex]);
+                return GetLocationId(this.LocationsGridView.Rows[rowIndex]);
             }
             return null;
         }

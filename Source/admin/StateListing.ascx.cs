@@ -10,7 +10,7 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
+using System; 
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -51,15 +51,15 @@ namespace Engage.Dnn.Employment.Admin
         protected override void OnInit(EventArgs e)
         {
             this.Load += Page_Load;
-            btnAdd.Click += btnAdd_Click;
-            btnBack.Click += btnBack_Click;
-            btnCancelNew.Click += btnCancelNew_Click;
-            btnSaveNew.Click += btnSaveNew_Click;
-            gvStates.RowCancelingEdit += gvStates_RowCancelingEdit;
-            gvStates.RowCommand += gvStates_RowCommand;
-            gvStates.RowDataBound += gvStates_RowDataBound;
-            gvStates.RowDeleting += gvStates_RowDeleting;
-            gvStates.RowEditing += gvStates_RowEditing;
+            this.AddButton.Click += this.AddButton_Click;
+            this.BackButton.Click += this.BackButton_Click;
+            this.CancelNewButton.Click += this.CancelNewButton_Click;
+            this.SaveNewButton.Click += this.SaveNewButton_Click;
+            this.StatesGridView.RowCancelingEdit += this.StatesGridView_RowCancelingEdit;
+            this.StatesGridView.RowCommand += this.StatesGridView_RowCommand;
+            this.StatesGridView.RowDataBound += this.StatesGridView_RowDataBound;
+            this.StatesGridView.RowDeleting += this.StatesGridView_RowDeleting;
+            this.StatesGridView.RowEditing += this.StatesGridView_RowEditing;
             
             base.OnInit(e);
         }
@@ -71,7 +71,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!Page.IsPostBack)
                 {
-                    Engage.Dnn.Utility.LocalizeGridView(ref gvStates, LocalResourceFile);
+                    Engage.Dnn.Utility.LocalizeGridView(ref this.StatesGridView, LocalResourceFile);
                     SetupLengthValidation();
                     LoadStates();
                 }
@@ -83,20 +83,20 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnBack_Click(object sender, EventArgs e)
+        protected void BackButton_Click(object sender, EventArgs e)
         {
             Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
-            pnlNew.Visible = true;
+            this.NewPanel.Visible = true;
             txtNewState.Focus();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnSaveNew_Click(object sender, EventArgs e)
+        private void SaveNewButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
@@ -114,20 +114,20 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnCancelNew_Click(object sender, EventArgs e)
+        private void CancelNewButton_Click(object sender, EventArgs e)
         {
             HideAndClearNewStatePanel();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvStates_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        private void StatesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvStates.EditIndex = -1;
+            this.StatesGridView.EditIndex = -1;
             LoadStates();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvStates_RowDataBound(object sender, GridViewRowEventArgs e)
+        private void StatesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -152,7 +152,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvStates_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        private void StatesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? stateId = GetStateId(e.RowIndex);
             if (stateId.HasValue)
@@ -163,14 +163,14 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvStates_RowEditing(object sender, GridViewEditEventArgs e)
+        private void StatesGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            gvStates.EditIndex = e.NewEditIndex;
+            this.StatesGridView.EditIndex = e.NewEditIndex;
             HideAndClearNewStatePanel();
             LoadStates();
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvStates_RowCommand(object sender, GridViewCommandEventArgs e)
+        private void StatesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
             {
@@ -186,7 +186,7 @@ namespace Engage.Dnn.Employment.Admin
                             if (IsStateNameUnique(stateId, newStateName))
                             {
                                 State.UpdateState(stateId.Value, newStateName, GetStateAbbreviation(rowIndex));
-                                gvStates.EditIndex = -1;
+                                this.StatesGridView.EditIndex = -1;
                                 LoadStates();
                             }
                             else
@@ -208,16 +208,16 @@ namespace Engage.Dnn.Employment.Admin
         private void LoadStates()
         {
             List<State> states = State.LoadStates(null, PortalId);
-            this.gvStates.DataSource = states;
-            this.gvStates.DataBind();
+            this.StatesGridView.DataSource = states;
+            this.StatesGridView.DataBind();
 
             if (states == null || states.Count % 2 == 0)
             {
-                pnlNew.CssClass = gvStates.RowStyle.CssClass;
+                this.NewPanel.CssClass = this.StatesGridView.RowStyle.CssClass;
             }
             else
             {
-                pnlNew.CssClass = gvStates.AlternatingRowStyle.CssClass;
+                this.NewPanel.CssClass = this.StatesGridView.AlternatingRowStyle.CssClass;
             }
 
             rowNewHeader.Visible = (states == null || states.Count < 1);
@@ -233,16 +233,16 @@ namespace Engage.Dnn.Employment.Admin
 
         private void HideAndClearNewStatePanel()
         {
-            this.pnlNew.Visible = false;
+            this.NewPanel.Visible = false;
             this.txtNewState.Text = string.Empty;
             this.txtNewAbbreviation.Text = string.Empty;
         }
 
         private string GetStateName(int rowIndex)
         {
-            if (gvStates != null && gvStates.Rows.Count > rowIndex)
+            if (this.StatesGridView != null && this.StatesGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = gvStates.Rows[rowIndex];
+                GridViewRow row = this.StatesGridView.Rows[rowIndex];
                 TextBox txtState = row.FindControl("txtState") as TextBox;
                 Debug.Assert(txtState != null);
                 return txtState.Text;
@@ -252,9 +252,9 @@ namespace Engage.Dnn.Employment.Admin
 
         private string GetStateAbbreviation(int rowIndex)
         {
-            if (gvStates != null && gvStates.Rows.Count > rowIndex)
+            if (this.StatesGridView != null && this.StatesGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = gvStates.Rows[rowIndex];
+                GridViewRow row = this.StatesGridView.Rows[rowIndex];
                 TextBox txtAbbreviation = row.FindControl("txtAbbreviation") as TextBox;
                 Debug.Assert(txtAbbreviation != null);
                 return txtAbbreviation.Text;
@@ -276,9 +276,9 @@ namespace Engage.Dnn.Employment.Admin
 
         private int? GetStateId(int rowIndex)
         {
-            if (gvStates != null && gvStates.Rows.Count > rowIndex)
+            if (this.StatesGridView != null && this.StatesGridView.Rows.Count > rowIndex)
             {
-                return GetStateId(gvStates.Rows[rowIndex]);
+                return GetStateId(this.StatesGridView.Rows[rowIndex]);
             }
             return null;
         }

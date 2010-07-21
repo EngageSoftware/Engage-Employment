@@ -3,8 +3,8 @@
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <div class="information"><asp:Label ResourceKey="lblStatesHeader.Help" runat="server"/></div>
 
-<asp:Button ID="btnAdd" runat="server" resourcekey="btnAdd" />
-<asp:GridView ID="gvStates" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">
+<asp:Button ID="AddButton" runat="server" resourcekey="btnAdd" />
+<asp:GridView ID="StatesGridView" runat="server" AutoGenerateColumns="False" CssClass="employmentTable" BorderStyle="None" GridLines="None">
     <AlternatingRowStyle CssClass="DataGrid_AlternatingItem" />
     <RowStyle CssClass="DataGrid_Item" />
     <SelectedRowStyle CssClass="DataGrid_SelectedItem" />
@@ -12,7 +12,7 @@
     <FooterStyle CssClass="DataGrid_Footer" />
     <EmptyDataTemplate>
         <asp:Label ID="lblNoStates" runat="server" resourcekey="lblNoStates" />
-    </EmptyDataTemplate>
+    </EmptyDataTemplate> 
     <Columns>
         <asp:TemplateField HeaderText="StateName">
             <ItemTemplate>
@@ -55,21 +55,21 @@
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
-<asp:Panel ID="pnlNew" runat="server" Visible="false">
+<asp:Panel ID="NewPanel" runat="server" Visible="false">
     <table class="employmentTable">
         <tr id="rowNewHeader" runat="server" visible="false"><th>
-            <asp:Label ID="lblNewHeader" runat="server" resourcekey="StateName.Header" />
+            <asp:Label ID="NewHeaderLabel" runat="server" resourcekey="StateName.Header" />
         </th><th>
-            <asp:Label ID="lblNewAbbreviationHeader" runat="server" resourcekey="Abbreviation.Header" />
+            <asp:Label ID="NewAbbreviationHeaderLabel" runat="server" resourcekey="Abbreviation.Header" />
         </th><th></th><th></th></tr>
-        <tr class='<%=pnlNew.CssClass %>'><td>
+        <tr class='<%=this.NewPanel.CssClass %>'><td>
             <asp:TextBox ID="txtNewState" runat="server" CssClass="NormalTextBox" />
         </td><td>
             <asp:TextBox ID="txtNewAbbreviation" runat="server" CssClass="NormalTextBox" />
         </td><td class="labelColumn">
-            <asp:Button ID="btnSaveNew" runat="server" resourcekey="btnSaveNew" ValidationGroup="New" />
+            <asp:Button ID="SaveNewButton" runat="server" resourcekey="btnSaveNew" ValidationGroup="New" />
         </td><td class="labelColumn">
-            <asp:Button ID="btnCancelNew" runat="server" resourcekey="btnCancelNew" CausesValidation="false" />
+            <asp:Button ID="CancelNewButton" runat="server" resourcekey="btnCancelNew" CausesValidation="false" />
         </td></tr>
     </table>
     <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNewState" Display="None" ValidationGroup="New" resourcekey="StateRequired" />
@@ -79,4 +79,4 @@
 <asp:CustomValidator ID="cvDuplicateState" runat="server" Display="None" ValidationGroup="Edit" resourcekey="DuplicateState.Text" />
 <asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="Edit" />
 <asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="New" />
-<asp:LinkButton ID="btnBack" runat="server" CssClass="Normal" OnClick="btnBack_Click" resourcekey="btnBack" />
+<asp:LinkButton ID="BackButton" runat="server" CssClass="Normal" OnClick="BackButton_Click" resourcekey="btnBack" />

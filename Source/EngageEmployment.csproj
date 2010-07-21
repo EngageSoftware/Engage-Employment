@@ -265,6 +265,7 @@
     <Content Include="admin\LocationListing.ascx" />
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
     <Content Include="ReleaseNotes_1.7.0.htm" />
     <Content Include="GetResume.aspx" />
     <Content Include="JobDetail.ascx" />

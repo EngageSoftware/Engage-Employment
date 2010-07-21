@@ -26,21 +26,21 @@ namespace Engage.Dnn.Employment
     public partial class JobDetailOptions : ModuleBase
     {
         #region Event Handlers
-        protected override void OnInit(EventArgs e)
+        protected override void OnInit(EventArgs e) 
         {
             this.Load += Page_Load;
-            btnUpdate.Click += btnUpdate_Click;
-            btnCancel.Click += btnCancel_Click;
-            gvLeadItems.RowDataBound += gvLeadItems_RowDataBound;
-            gvLeadItems.RowCancelingEdit += gvLeadItems_RowCancelingEdit;
-            gvLeadItems.RowEditing += gvLeadItems_RowEditing;
-            gvLeadItems.RowCommand += gvLeadItems_RowCommand;
-            gvLeadItems.RowDeleting += gvLeadItems_RowDeleting;
-            btnNewLeadItem.Click += btnNewLeadItem_Click;
-            btnSaveNewLead.Click += btnSaveNewLead_Click;
-            cvNewLead.ServerValidate += cvNewLead_ServerValidate;
-            cvSaveLeadRequirement.ServerValidate += cvSaveLeadRequirement_ServerValidate;
-            rblDisplayLead.SelectedIndexChanged += rblDisplayLead_SelectedIndexChanged;
+            this.UpdateButton.Click += this.UpdateButton_Click;
+            CancelButton.Click += CancelButton_Click;
+            this.LeadItemsGridView.RowDataBound += this.LeadItemsGridView_RowDataBound;
+            this.LeadItemsGridView.RowCancelingEdit += this.LeadItemsGridView_RowCancelingEdit;
+            this.LeadItemsGridView.RowEditing += this.LeadItemsGridView_RowEditing;
+            this.LeadItemsGridView.RowCommand += this.LeadItemsGridView_RowCommand;
+            this.LeadItemsGridView.RowDeleting += this.LeadItemsGridView_RowDeleting;
+            this.NewLeadItemButton.Click += this.NewLeadItemButton_Click;
+            this.SaveNewLeadButton.Click += this.SaveNewLeadButton_Click;
+            this.NewLeadUniqueValidator.ServerValidate += NewLeadUniqueValidator_ServerValidate;
+            this.SaveLeadRequirementValidator.ServerValidate += this.SaveLeadRequirementValidator_ServerValidate;
+            this.DisplayLeadRadioButtonList.SelectedIndexChanged += this.DisplayLeadRadioButtonListSelectedIndexChanged;
             base.OnInit(e);
         }
 
@@ -56,34 +56,34 @@ namespace Engage.Dnn.Employment
 
                     txtApplicationEmailAddress.Text = ApplicationEmailAddress;
                     txtFriendEmailAddress.Text = FriendEmailAddress;
-                    chkRequireRegistration.Checked = RequireRegistration;
-                    chkEnableDnnSearch.Checked = EnableDnnSearch;
+                    this.RequireRegistrationCheckBox.Checked = RequireRegistration;
+                    this.EnableDnnSearchCheckBox.Checked = EnableDnnSearch;
 
-                    rblDisplayLead.DataSource = Enum.GetValues(typeof(Visibility));
-                    rblDisplayLead.DataBind();
+                    this.DisplayLeadRadioButtonList.DataSource = Enum.GetValues(typeof(Visibility));
+                    this.DisplayLeadRadioButtonList.DataBind();
                     //rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
                     //rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
                     //rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    rblDisplayLead.SelectedValue = DisplayLead.ToString();
+                    this.DisplayLeadRadioButtonList.SelectedValue = DisplayLead.ToString();
                     rowLeadItems.Visible = (DisplayLead != Visibility.Hidden);
-                    Engage.Dnn.Utility.LocalizeListControl(rblDisplayLead, LocalResourceFile);
+                    Engage.Dnn.Utility.LocalizeListControl(this.DisplayLeadRadioButtonList, LocalResourceFile);
 
-                    rblDisplaySalary.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
-                    rblDisplaySalary.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
-                    rblDisplaySalary.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    rblDisplaySalary.SelectedValue = DisplaySalaryRequirement.ToString();
+                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
+                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
+                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
+                    this.DisplaySalaryRadioButtonList.SelectedValue = DisplaySalaryRequirement.ToString();
 
-                    rblDisplayCoverLetter.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
-                    rblDisplayCoverLetter.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
-                    rblDisplayCoverLetter.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    rblDisplayCoverLetter.SelectedValue = DisplayCoverLetter.ToString();
+                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
+                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
+                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
+                    this.DisplayCoverLetterRadioButtonList.SelectedValue = DisplayCoverLetter.ToString();
 
-                    rblDisplayMessage.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
-                    rblDisplayMessage.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
-                    rblDisplayMessage.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    rblDisplayMessage.SelectedValue = DisplayMessage.ToString();
+                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
+                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
+                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
+                    this.DisplayMessageRadioButtonList.SelectedValue = DisplayMessage.ToString();
 
-                    Engage.Dnn.Utility.LocalizeGridView(ref gvLeadItems, LocalResourceFile);
+                    Engage.Dnn.Utility.LocalizeGridView(ref this.LeadItemsGridView, LocalResourceFile);
                     BindLeadItems();
                 }
             }
@@ -94,7 +94,7 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnUpdate_Click(object sender, EventArgs e)
+        protected void UpdateButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -103,12 +103,12 @@ namespace Engage.Dnn.Employment
                     ModuleController modules = new ModuleController();
                     modules.UpdateTabModuleSetting(this.TabModuleId, "ApplicationEmailAddress", txtApplicationEmailAddress.Text);
                     modules.UpdateTabModuleSetting(this.TabModuleId, "FriendEmailAddress", txtFriendEmailAddress.Text);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "RequireRegistration", chkRequireRegistration.Checked.ToString(CultureInfo.InvariantCulture));
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayLead", rblDisplayLead.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplaySalaryRequirement", rblDisplaySalary.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayCoverLetter", rblDisplayCoverLetter.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayMessage", rblDisplayMessage.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, Utility.EnableDnnSearchSetting, chkEnableDnnSearch.Checked.ToString(CultureInfo.InvariantCulture));
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "RequireRegistration", this.RequireRegistrationCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayLead", this.DisplayLeadRadioButtonList.SelectedValue);
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplaySalaryRequirement", this.DisplaySalaryRadioButtonList.SelectedValue);
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayCoverLetter", this.DisplayCoverLetterRadioButtonList.SelectedValue);
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayMessage", this.DisplayMessageRadioButtonList.SelectedValue);
+                    modules.UpdateTabModuleSetting(this.TabModuleId, Utility.EnableDnnSearchSetting, this.EnableDnnSearchCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
 
                     Response.Redirect(Globals.NavigateURL(TabId));
                 }
@@ -120,22 +120,22 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnCancel_Click(object sender, EventArgs e)
+        protected void CancelButton_Click(object sender, EventArgs e)
         {
-            //return to the main page view
+            //return to the main page view 
             Response.Redirect(Globals.NavigateURL(TabId), false);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void rblDisplayLead_SelectedIndexChanged(object sender, EventArgs e)
+        protected void DisplayLeadRadioButtonListSelectedIndexChanged(object sender, EventArgs e)
         {
-            Visibility leadVisibility = (Visibility)Enum.Parse(typeof(Visibility), rblDisplayLead.SelectedValue, true);
+            Visibility leadVisibility = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true);
             rowLeadItems.Visible = (leadVisibility != Visibility.Hidden);
         }
 
         #region Lead GridView Event Handlers
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLeadItems_RowDataBound(object sender, GridViewRowEventArgs e)
+        private void LeadItemsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e != null && e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -156,14 +156,14 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnNewLeadItem_Click(object sender, EventArgs e)
+        private void NewLeadItemButton_Click(object sender, EventArgs e)
         {
-            pnlNewLeadItem.Visible = true;
+            this.NewLeadItemPanel.Visible = true;
             txtNewLeadText.Focus();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void btnSaveNewLead_Click(object sender, EventArgs e)
+        private void SaveNewLeadButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
@@ -176,14 +176,14 @@ namespace Engage.Dnn.Employment
 
                 (new ListController()).AddListEntry(listItem);
 
-                pnlNewLeadItem.Visible = false;
+                this.NewLeadItemPanel.Visible = false;
                 txtNewLeadText.Text = string.Empty;
                 BindLeadItems();
             }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private static void cvNewLead_ServerValidate(object sender, ServerValidateEventArgs e)
+        private static void NewLeadUniqueValidator_ServerValidate(object sender, ServerValidateEventArgs e)
         {
             int leadId;
             if (e != null && Engage.Utility.HasValue(e.Value) && int.TryParse(e.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out leadId))
@@ -193,13 +193,13 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void cvSaveLeadRequirement_ServerValidate(object source, ServerValidateEventArgs args)
+        private void SaveLeadRequirementValidator_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = (Visibility)Enum.Parse(typeof(Visibility), rblDisplayLead.SelectedValue, true) == Visibility.Hidden || (new ListController()).GetListEntryInfoCollection(Utility.LeadListName).Count > 0;
+            args.IsValid = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true) == Visibility.Hidden || (new ListController()).GetListEntryInfoCollection(Utility.LeadListName).Count > 0;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLeadItems_RowCommand(object sender, CommandEventArgs e)
+        private void LeadItemsGridView_RowCommand(object sender, CommandEventArgs e)
         {
             if (Page.IsValid && e != null)
             {
@@ -220,7 +220,7 @@ namespace Engage.Dnn.Employment
                             {
                                 leadItem.Text = newLeadText;
                                 lists.UpdateListEntry(leadItem);
-                                gvLeadItems.EditIndex = -1;
+                                this.LeadItemsGridView.EditIndex = -1;
                                 BindLeadItems();
                             }
                             else
@@ -234,7 +234,7 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLeadItems_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        private void LeadItemsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? leadId = GetLeadItemId(e.RowIndex);
             if (leadId.HasValue)
@@ -245,19 +245,19 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void gvLeadItems_RowEditing(object sender, GridViewEditEventArgs e)
+        private void LeadItemsGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
             if (e != null)
             {
-                gvLeadItems.EditIndex = e.NewEditIndex;
+                this.LeadItemsGridView.EditIndex = e.NewEditIndex;
                 BindLeadItems();
             }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member")]
-        private void gvLeadItems_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        private void LeadItemsGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvLeadItems.EditIndex = -1;
+            this.LeadItemsGridView.EditIndex = -1;
             BindLeadItems();
         }
         #endregion
@@ -268,16 +268,16 @@ namespace Engage.Dnn.Employment
         {
             ListEntryInfoCollection leadItems = (new ListController()).GetListEntryInfoCollection(Utility.LeadListName);
 
-            gvLeadItems.DataSource = leadItems;
-            gvLeadItems.DataBind();
+            this.LeadItemsGridView.DataSource = leadItems;
+            this.LeadItemsGridView.DataBind();
 
             if (leadItems == null || leadItems.Count % 2 == 0)
             {
-                pnlNewLeadItem.CssClass = gvLeadItems.RowStyle.CssClass;
+                this.NewLeadItemPanel.CssClass = this.LeadItemsGridView.RowStyle.CssClass;
             }
             else
             {
-                pnlNewLeadItem.CssClass = gvLeadItems.AlternatingRowStyle.CssClass;
+                this.NewLeadItemPanel.CssClass = this.LeadItemsGridView.AlternatingRowStyle.CssClass;
             }
 
             rowNewLeadItemHeader.Visible = (leadItems == null || leadItems.Count < 1);
@@ -285,9 +285,9 @@ namespace Engage.Dnn.Employment
 
         private string GetLeadItemText(int rowIndex)
         {
-            if (gvLeadItems != null && gvLeadItems.Rows.Count > rowIndex)
+            if (this.LeadItemsGridView != null && this.LeadItemsGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = gvLeadItems.Rows[rowIndex];
+                GridViewRow row = this.LeadItemsGridView.Rows[rowIndex];
                 TextBox txtLeadText = row.FindControl("txtLeadText") as TextBox;
 
                 return txtLeadText != null ? txtLeadText.Text : null;
@@ -313,9 +313,9 @@ namespace Engage.Dnn.Employment
 
         private int? GetLeadItemId(int rowIndex)
         {
-            if (gvLeadItems != null && gvLeadItems.Rows.Count > rowIndex)
+            if (this.LeadItemsGridView != null && this.LeadItemsGridView.Rows.Count > rowIndex)
             {
-                return GetLeadItemId(gvLeadItems.Rows[rowIndex]);
+                return GetLeadItemId(this.LeadItemsGridView.Rows[rowIndex]);
             }
             return null;
         }

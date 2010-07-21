@@ -49,49 +49,49 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.RegularExpressionValidator FriendEmailRegexValidator;
         
         /// <summary>
-        /// chkRequireRegistration control.
+        /// RequireRegistrationCheckBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkRequireRegistration;
+        protected global::System.Web.UI.WebControls.CheckBox RequireRegistrationCheckBox;
         
         /// <summary>
-        /// rblDisplayMessage control.
+        /// DisplayMessageRadioButtonList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblDisplayMessage;
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplayMessageRadioButtonList;
         
         /// <summary>
-        /// rblDisplaySalary control.
+        /// DisplaySalaryRadioButtonList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblDisplaySalary;
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplaySalaryRadioButtonList;
         
         /// <summary>
-        /// rblDisplayCoverLetter control.
+        /// DisplayCoverLetterRadioButtonList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblDisplayCoverLetter;
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplayCoverLetterRadioButtonList;
         
         /// <summary>
-        /// rblDisplayLead control.
+        /// DisplayLeadRadioButtonList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblDisplayLead;
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplayLeadRadioButtonList;
         
         /// <summary>
         /// rowLeadItems control.
@@ -103,22 +103,22 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.HtmlControls.HtmlTableRow rowLeadItems;
         
         /// <summary>
-        /// btnNewLeadItem control.
+        /// NewLeadItemButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNewLeadItem;
+        protected global::System.Web.UI.WebControls.Button NewLeadItemButton;
         
         /// <summary>
-        /// gvLeadItems control.
+        /// LeadItemsGridView control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvLeadItems;
+        protected global::System.Web.UI.WebControls.GridView LeadItemsGridView;
         
         /// <summary>
         /// cvLeadEdit control.
@@ -130,22 +130,22 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.CustomValidator cvLeadEdit;
         
         /// <summary>
-        /// cvSaveLeadRequirement control.
+        /// SaveLeadRequirementValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvSaveLeadRequirement;
+        protected global::System.Web.UI.WebControls.CustomValidator SaveLeadRequirementValidator;
         
         /// <summary>
-        /// pnlNewLeadItem control.
+        /// NewLeadItemPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNewLeadItem;
+        protected global::System.Web.UI.WebControls.Panel NewLeadItemPanel;
         
         /// <summary>
         /// rowNewLeadItemHeader control.
@@ -157,13 +157,13 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.HtmlControls.HtmlTableRow rowNewLeadItemHeader;
         
         /// <summary>
-        /// lblNewLeadItemHeader control.
+        /// NewLeadItemHeaderLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNewLeadItemHeader;
+        protected global::System.Web.UI.WebControls.Label NewLeadItemHeaderLabel;
         
         /// <summary>
         /// txtNewLeadText control.
@@ -175,57 +175,57 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.TextBox txtNewLeadText;
         
         /// <summary>
-        /// btnSaveNewLead control.
+        /// SaveNewLeadButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSaveNewLead;
+        protected global::System.Web.UI.WebControls.Button SaveNewLeadButton;
         
         /// <summary>
-        /// cvNewLead control.
+        /// NewLeadUniqueValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvNewLead;
+        protected global::System.Web.UI.WebControls.CustomValidator NewLeadUniqueValidator;
         
         /// <summary>
-        /// rfvNewLead control.
+        /// NewLeadRequiredFieldValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNewLead;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator NewLeadRequiredFieldValidator;
         
         /// <summary>
-        /// chkEnableDnnSearch control.
+        /// EnableDnnSearchCheckBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkEnableDnnSearch;
+        protected global::System.Web.UI.WebControls.CheckBox EnableDnnSearchCheckBox;
         
         /// <summary>
-        /// btnUpdate control.
+        /// UpdateButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnUpdate;
+        protected global::System.Web.UI.WebControls.Button UpdateButton;
         
         /// <summary>
-        /// btnCancel control.
+        /// CancelButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancel;
+        protected global::System.Web.UI.WebControls.Button CancelButton;
     }
 }

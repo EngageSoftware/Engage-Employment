@@ -49,6 +49,11 @@ namespace Engage.Dnn.Employment
         /// <returns>A collection of <see cref="SearchItemInfo"/> instances</returns>
         public SearchItemInfoCollection GetSearchItems(ModuleInfo modInfo)
         {
+            if (modInfo == null)
+            {
+                throw new ArgumentNullException("modInfo", "modInfo must not be null.");
+            }
+
             SearchItemInfoCollection searchItems = new SearchItemInfoCollection();
             Hashtable moduleSettings = (new ModuleController()).GetTabModuleSettings(modInfo.TabModuleID);
 

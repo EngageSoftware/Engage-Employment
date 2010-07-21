@@ -5,19 +5,19 @@
 
 <div class="information"><asp:Label ResourceKey="lblJobGroupsHeader.Help" runat="server" /></div>
 
-<asp:MultiView ID="mvAuthorization" runat="server">
+<asp:MultiView ID="AuthorizationMultiview" runat="server">
     <asp:View ID="vwUnauthorized" runat="server">
         <asp:Label runat="server" CssClass="NormalRed" resourcekey="Unauthorized" />
     </asp:View>
     <asp:View ID="vwJobGroups" runat="server">
         <table class="employmentTable">
             <tr><td>
-                <asp:Button ID="btnNewJobGroup" runat="server" resourcekey="btnNewJobGroup"  />
+                <asp:Button ID="NewJobGroupButton" runat="server" resourcekey="btnNewJobGroup"  />
             </td><td class="labelColumn">
-                <asp:Button ID="btnEditAssignments" runat="server" resourcekey="btnEditAssignments" />
+                <asp:Button ID="EditAssignmentsButton" runat="server" resourcekey="btnEditAssignments" />
             </td></tr>
         </table>
-        <asp:GridView ID="gvJobGroups" runat="server" AutoGenerateColumns="false" CssClass="employmentTable" BorderStyle="None" GridLines="None">
+        <asp:GridView ID="JobGroupsGridView" runat="server" AutoGenerateColumns="false" CssClass="employmentTable" BorderStyle="None" GridLines="None">
             <AlternatingRowStyle CssClass="DataGrid_AlternatingItem" />
             <RowStyle CssClass="DataGrid_Item" />
             <SelectedRowStyle CssClass="DataGrid_SelectedItem" />
@@ -60,19 +60,19 @@
         </asp:GridView>
         <asp:CustomValidator ID="cvJobGroupEdit" runat="server" Display="None" CssClass="NormalRed" ValidationGroup="JobGroupEdit" resourcekey="cvNewJobGroup" />
         <asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="JobGroupEdit" />
-        <asp:Panel ID="pnlNewJobGroup" runat="server" Visible="false">
+        <asp:Panel ID="NewJobGroupPanel" runat="server" Visible="false">
             <table class="employmentTable">
                 <tr id="rowNewJobGroupHeader" runat="server" visible="false"><th>
-                    <asp:Label ID="lblNewJobGroupHeader" runat="server" resourcekey="Name.Header" />
+                    <asp:Label ID="NewJobGroupHeaderLabel" runat="server" resourcekey="Name.Header" />
                 </th><th></th></tr>
-                <tr class='<%=pnlNewJobGroup.CssClass %>'><td>
+                <tr class='<%=this.NewJobGroupPanel.CssClass %>'><td>
                     <asp:TextBox ID="txtNewJobGroupName" runat="server" CssClass="NormalTextBox" />
                 </td><td class="labelColumn">
-                    <asp:Button ID="btnSaveNewJobGroup" runat="server" resourcekey="btnSaveNewJobGroup" ValidationGroup="NewJobGroup" />
+                    <asp:Button ID="SaveNewJobGroupButton" runat="server" resourcekey="btnSaveNewJobGroup" ValidationGroup="NewJobGroup" />
                 </td></tr>
                 <tr><td colspan="2">
                     <asp:CustomValidator ID="cvNewJobGroup" runat="server" ControlToValidate="txtNewJobGroupName" Display="Dynamic" CssClass="NormalRed" ValidationGroup="NewJobGroup" resourcekey="cvNewJobGroup" />
-                    <asp:RequiredFieldValidator ID="rfvNewJobGroup" runat="server" ControlToValidate="txtNewJobGroupName" Display="Dynamic" CssClass="NormalRed" ValidationGroup="NewJobGroup" resourcekey="rfvNewJobGroup" />
+                    <asp:RequiredFieldValidator ID="NewJobGroupRequiredFieldValidator" runat="server" ControlToValidate="txtNewJobGroupName" Display="Dynamic" CssClass="NormalRed" ValidationGroup="NewJobGroup" resourcekey="rfvNewJobGroup" />
                 </td></tr>
             </table>
         </asp:Panel>
@@ -82,7 +82,7 @@
         <table class="settingsTable">
             <tr><td>
             </td><td class="labelColumn">
-                <asp:Button ID="btnEditJobGroups" runat="server" resourcekey="btnEditJobGroups" />
+                <asp:Button ID="EditJobGroupsButton" runat="server" resourcekey="btnEditJobGroups" />
             </td></tr>
         </table>
 
@@ -109,6 +109,6 @@
                 </table>
             </FooterTemplate>
         </asp:Repeater>
-        <asp:Button ID="btnSaveAssignments" runat="server" resourcekey="btnSaveAssignments" />
+        <asp:Button ID="SaveAssignmentsButton" runat="server" resourcekey="btnSaveAssignments" />
     </asp:View>
 </asp:MultiView>

@@ -113,7 +113,7 @@ namespace Engage.Dnn.Employment.Admin
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void AddButton_Click(object sender, EventArgs e)
         {
-            this.pnlNew.Visible = true;
+            this.NewPanel.Visible = true;
             this.txtNewStatus.Focus();
         }
 
@@ -272,11 +272,11 @@ namespace Engage.Dnn.Employment.Admin
 
             if (statuses == null || statuses.Count % 2 == 0)
             {
-                this.pnlNew.CssClass = this.StatusesGrid.RowStyle.CssClass;
+                this.NewPanel.CssClass = this.StatusesGrid.RowStyle.CssClass;
             }
             else
             {
-                this.pnlNew.CssClass = this.StatusesGrid.AlternatingRowStyle.CssClass;
+                this.NewPanel.CssClass = this.StatusesGrid.AlternatingRowStyle.CssClass;
             }
 
             this.rowNewHeader.Visible = (statuses == null || statuses.Count < 1);
@@ -310,7 +310,7 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private void HideAndClearNewStatusPanel()
         {
-            this.pnlNew.Visible = false;
+            this.NewPanel.Visible = false;
             this.txtNewStatus.Text = string.Empty;
         }
 

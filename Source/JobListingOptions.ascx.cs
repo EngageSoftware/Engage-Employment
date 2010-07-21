@@ -30,14 +30,14 @@ namespace Engage.Dnn.Employment
             {
                 //AJAX.AddScriptManager(Page);
                 AJAX.WrapUpdatePanelControl(phLimitOption, false);
-                chkLimit.CheckedChanged += chkLimit_CheckedChanged;
-                chkLimit.AutoPostBack = true;
+                this.LimitCheckBox.CheckedChanged += this.LimitCheckBox_CheckedChanged;
+                this.LimitCheckBox.AutoPostBack = true;
             }
             rvLimit.MaximumValue = int.MaxValue.ToString(CultureInfo.InvariantCulture);
 
             this.Load += Page_Load;
-            btnUpdate.Click += btnUpdate_Click;
-            btnCancel.Click += btnCancel_Click;
+            this.UpdateButton.Click += this.UpdateButton_Click;
+            this.CancelButton.Click += this.CancelButton_Click;
             base.OnInit(e);
         }
 
@@ -50,14 +50,14 @@ namespace Engage.Dnn.Employment
                 {
                     FillDisplayOptionList();
                     FillLimitOptionList();
-                    rblDisplayOption.SelectedValue = ShowOnlyHotJobs.ToString(CultureInfo.InvariantCulture);
-                    chkLimit.Checked = MaximumNumberOfJobsDisplayed.HasValue;
-                    SetLimitEnabled(chkLimit.Checked);
-                    if (chkLimit.Checked)
+                    this.DisplayOptionRadioButtonList.SelectedValue = ShowOnlyHotJobs.ToString(CultureInfo.InvariantCulture);
+                    this.LimitCheckBox.Checked = MaximumNumberOfJobsDisplayed.HasValue;
+                    SetLimitEnabled(this.LimitCheckBox.Checked);
+                    if (this.LimitCheckBox.Checked)
                     {
                         txtLimit.Text = MaximumNumberOfJobsDisplayed.Value.ToString(CultureInfo.CurrentCulture);
                     }
-                    rblLimitOption.SelectedValue = LimitJobsRandomly.ToString(CultureInfo.InvariantCulture);
+                    this.LimitOptionRadioButtonList.SelectedValue = LimitJobsRandomly.ToString(CultureInfo.InvariantCulture);
                 }
             }
             catch (Exception exc)
@@ -67,16 +67,16 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnUpdate_Click(object sender, EventArgs e)
+        protected void UpdateButton_Click(object sender, EventArgs e)
         {
             try
             {
                 if (Page.IsValid)
                 {
                     ModuleController modules = new ModuleController();
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "ShowOnlyHotJobs", rblDisplayOption.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "MaximumNumberOfJobsDisplayed", chkLimit.Checked ? Convert.ToInt32(txtLimit.Text, CultureInfo.CurrentCulture).ToString(CultureInfo.InvariantCulture) : string.Empty);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "LimitJobsRandomly", rblLimitOption.SelectedValue);
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "ShowOnlyHotJobs", this.DisplayOptionRadioButtonList.SelectedValue);
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "MaximumNumberOfJobsDisplayed", this.LimitCheckBox.Checked ? Convert.ToInt32(txtLimit.Text, CultureInfo.CurrentCulture).ToString(CultureInfo.InvariantCulture) : string.Empty);
+                    modules.UpdateTabModuleSetting(this.TabModuleId, "LimitJobsRandomly", this.LimitOptionRadioButtonList.SelectedValue);
 
                     Response.Redirect(Globals.NavigateURL(TabId));
                 }
@@ -88,37 +88,37 @@ namespace Engage.Dnn.Employment
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void btnCancel_Click(object sender, EventArgs e)
+        protected void CancelButton_Click(object sender, EventArgs e)
         {
             //return to the main page view
             Response.Redirect(Globals.NavigateURL(TabId), false);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        protected void chkLimit_CheckedChanged(object sender, EventArgs e)
+        protected void LimitCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            SetLimitEnabled(this.chkLimit.Checked);
+            SetLimitEnabled(this.LimitCheckBox.Checked);
         }
         #endregion
 
         #region Helper Methods
 
         private void SetLimitEnabled(bool enabled) {
-            this.txtLimit.Enabled = this.rblLimitOption.Enabled = this.rfvLimit.Enabled = this.rvLimit.Enabled = enabled;
+            this.txtLimit.Enabled = this.LimitOptionRadioButtonList.Enabled = this.LimitRequiredFieldValidator.Enabled = this.rvLimit.Enabled = enabled;
         }
 
         private void FillDisplayOptionList()
         {
-            this.rblDisplayOption.Items.Clear();
-            this.rblDisplayOption.Items.Add(new ListItem(Localization.GetString("ShowHotJobs", LocalResourceFile), true.ToString(CultureInfo.InvariantCulture)));
-            this.rblDisplayOption.Items.Add(new ListItem(Localization.GetString("ShowAllJobs", LocalResourceFile), false.ToString(CultureInfo.InvariantCulture)));
+            this.DisplayOptionRadioButtonList.Items.Clear();
+            this.DisplayOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("ShowHotJobs", LocalResourceFile), true.ToString(CultureInfo.InvariantCulture)));
+            this.DisplayOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("ShowAllJobs", LocalResourceFile), false.ToString(CultureInfo.InvariantCulture)));
         }
 
         private void FillLimitOptionList()
         {
-            this.rblLimitOption.Items.Clear();
-            this.rblLimitOption.Items.Add(new ListItem(Localization.GetString("Sorted", LocalResourceFile), false.ToString(CultureInfo.InvariantCulture)));
-            this.rblLimitOption.Items.Add(new ListItem(Localization.GetString("Random", LocalResourceFile), true.ToString(CultureInfo.InvariantCulture)));
+            this.LimitOptionRadioButtonList.Items.Clear();
+            this.LimitOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("Sorted", LocalResourceFile), false.ToString(CultureInfo.InvariantCulture)));
+            this.LimitOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("Random", LocalResourceFile), true.ToString(CultureInfo.InvariantCulture)));
         }
 
         #endregion

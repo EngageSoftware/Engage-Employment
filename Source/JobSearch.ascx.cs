@@ -47,26 +47,26 @@ namespace Engage.Dnn.Employment
             var query = new JobSearchQuery { Description = this.txtSearchName.Text, JobGroupId = this.JobGroupId };
 
             int result;
-            if (int.TryParse(this.ddlJobTitle.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
+            if (int.TryParse(this.JobTitleDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
             {
                 query.JobPositionId = result;
             }
 
-            if (int.TryParse(this.ddlCategory.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
+            if (int.TryParse(this.CategoryDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
             {
                 query.CategoryId = result;
             }
 
             if (string.Equals(this.LocationRadioButtonList.SelectedValue, LocationType.City.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                if (int.TryParse(this.ddlLocation.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
+                if (int.TryParse(this.LocationDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
                 {
                     query.LocationId = result;
                 }
             }
             else
             {
-                if (int.TryParse(this.ddlLocation.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
+                if (int.TryParse(this.LocationDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
                 {
                     query.StateId = result;
                 }
@@ -91,34 +91,34 @@ namespace Engage.Dnn.Employment
 
         private void LoadCategories()
         {
-            this.ddlCategory.DataSource = Category.LoadCategories(this.JobGroupId, this.PortalId);
-            this.ddlCategory.DataTextField = "CategoryName";
-            this.ddlCategory.DataValueField = "CategoryId";
-            this.ddlCategory.DataBind();
+            this.CategoryDropDownList.DataSource = Category.LoadCategories(this.JobGroupId, this.PortalId);
+            this.CategoryDropDownList.DataTextField = "CategoryName";
+            this.CategoryDropDownList.DataValueField = "CategoryId";
+            this.CategoryDropDownList.DataBind();
 
-            this.ddlCategory.Items.Insert(0, new ListItem(string.Empty));
+            this.CategoryDropDownList.Items.Insert(0, new ListItem(string.Empty));
         }
 
         private void LoadJobTitles()
         {
-            this.ddlJobTitle.DataSource = Position.LoadPositions(this.JobGroupId, this.PortalId);
-            this.ddlJobTitle.DataTextField = "JobTitle";
-            this.ddlJobTitle.DataValueField = "PositionId";
-            this.ddlJobTitle.DataBind();
+            this.JobTitleDropDownList.DataSource = Position.LoadPositions(this.JobGroupId, this.PortalId);
+            this.JobTitleDropDownList.DataTextField = "JobTitle";
+            this.JobTitleDropDownList.DataValueField = "PositionId";
+            this.JobTitleDropDownList.DataBind();
 
-            this.ddlJobTitle.Items.Insert(0, new ListItem(string.Empty));
+            this.JobTitleDropDownList.Items.Insert(0, new ListItem(string.Empty));
         }
 
         private void LoadLocations()
         {
-            this.lblLocationHeader.Text = Localization.GetString(this.LocationRadioButtonList.SelectedValue, this.LocalResourceFile);
+            this.LocationHeaderLabel.Text = Localization.GetString(this.LocationRadioButtonList.SelectedValue, this.LocalResourceFile);
 
             if (string.Equals(this.LocationRadioButtonList.SelectedValue, LocationType.City.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                this.ddlLocation.Items.Clear();
+                this.LocationDropDownList.Items.Clear();
                 foreach (Location location in Location.LoadLocations(this.JobGroupId, this.PortalId))
                 {
-                    this.ddlLocation.Items.Add(new ListItem(
+                    this.LocationDropDownList.Items.Add(new ListItem(
                         string.Format(
                             CultureInfo.CurrentCulture, 
                             Localization.GetString("Location.Text", this.LocalResourceFile), 
@@ -130,13 +130,13 @@ namespace Engage.Dnn.Employment
             }
             else
             {
-                this.ddlLocation.DataSource = State.LoadStates(this.JobGroupId, this.PortalId);
-                this.ddlLocation.DataTextField = "StateName";
-                this.ddlLocation.DataValueField = "StateId";
-                this.ddlLocation.DataBind();
+                this.LocationDropDownList.DataSource = State.LoadStates(this.JobGroupId, this.PortalId);
+                this.LocationDropDownList.DataTextField = "StateName";
+                this.LocationDropDownList.DataValueField = "StateId";
+                this.LocationDropDownList.DataBind();
             }
 
-            this.ddlLocation.Items.Insert(0, new ListItem(string.Empty));
+            this.LocationDropDownList.Items.Insert(0, new ListItem(string.Empty));
         }
 
         private void UpdateSearchFields(JobSearchQuery q)
@@ -144,12 +144,12 @@ namespace Engage.Dnn.Employment
             this.txtKeywords.Text = q.Keywords;
             if (q.JobPositionId.HasValue)
             {
-                this.ddlJobTitle.SelectedValue = q.JobPositionId.Value.ToString(CultureInfo.InvariantCulture);
+                this.JobTitleDropDownList.SelectedValue = q.JobPositionId.Value.ToString(CultureInfo.InvariantCulture);
             }
 
             if (q.CategoryId.HasValue)
             {
-                this.ddlCategory.SelectedValue = q.CategoryId.Value.ToString(CultureInfo.InvariantCulture);
+                this.CategoryDropDownList.SelectedValue = q.CategoryId.Value.ToString(CultureInfo.InvariantCulture);
             }
 
             string value = string.Empty;
@@ -169,7 +169,7 @@ namespace Engage.Dnn.Employment
                 value = q.LocationId.Value.ToString(CultureInfo.InvariantCulture);
             }
 
-            this.ddlLocation.SelectedValue = value;
+            this.LocationDropDownList.SelectedValue = value;
         }
 
         /// <summary>
@@ -219,11 +219,11 @@ namespace Engage.Dnn.Employment
                         this.UpdateSearchFields(q);
                     }
 
-                    ClientAPI.RegisterKeyCapture(this.pnlSearchInput, this.SearchButton, (int)Keys.Enter);
-                    ClientAPI.RegisterKeyCapture(this.pnlSaveSearch, this.SaveSearchButton, (int)Keys.Enter);
+                    ClientAPI.RegisterKeyCapture(this.SearchInputPanel, this.SearchButton, (int)Keys.Enter);
+                    ClientAPI.RegisterKeyCapture(this.SaveSearchPanel, this.SaveSearchButton, (int)Keys.Enter);
                 }
 
-                this.pnlSaveSearch.Visible = Engage.Utility.IsLoggedIn && this.IsPostBack;
+                this.SaveSearchPanel.Visible = Engage.Utility.IsLoggedIn && this.IsPostBack;
                 this.BackButton.Visible = Utility.GetJobListingTabId(this.JobGroupId, this.PortalSettings) != this.TabId;
             }
             catch (Exception exc)
@@ -263,10 +263,10 @@ namespace Engage.Dnn.Employment
                 }
                 else
                 {
-                    this.lblNoResults.Visible = true;
+                    this.NoResultsLabel.Visible = true;
                 }
 
-                this.pnlSaveSearch.Visible = Engage.Utility.IsLoggedIn;
+                this.SaveSearchPanel.Visible = Engage.Utility.IsLoggedIn;
             }
             catch (Exception exc)
             {

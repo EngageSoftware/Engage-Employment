@@ -1,29 +1,29 @@
 <%@ Import Namespace="DotNetNuke.Services.Localization"%>
 <%@ Import Namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.JobSearch" AutoEventWireup="false" Codebehind="JobSearch.ascx.cs" %>
-<asp:Label ID="lblErrorMessage" runat="server" ForeColor="Red" ></asp:Label>
-<asp:Panel ID="pnlSearchInput" runat="server" DefaultButton="SearchButton">
+<asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red" ></asp:Label>
+<asp:Panel ID="SearchInputPanel" runat="server" DefaultButton="SearchButton">
     <div class="job_search_table">
         <table class="Normal">
             <tr >
                 <td class="SubHead"><asp:Label runat="server" resourcekey="lblCategoryHeader" /></td>
                 <td colspan="2">
-                    <asp:DropDownList ID="ddlCategory" runat="server"/>
+                    <asp:DropDownList ID="CategoryDropDownList" runat="server"/>
                 </td>
             </tr>
             <tr>
                 <td class="SubHead"><asp:Label runat="server" resourcekey="lblJobTitleHeader" /></td>
                 <td colspan="2">
-                    <asp:DropDownList ID="ddlJobTitle" runat="server"/>
+                    <asp:DropDownList ID="JobTitleDropDownList" runat="server"/>
                 </td>
             </tr>
             <tr>
-                <td class="SubHead"><asp:Label runat="server" ID="lblLocationHeader"/></td>
-                <td><asp:DropDownList ID="ddlLocation" runat="server"/></td>
+                <td class="SubHead"><asp:Label runat="server" ID="LocationHeaderLabel"/></td>
+                <td><asp:DropDownList ID="LocationDropDownList" runat="server"/></td>
                 <td><asp:RadioButtonList ID="LocationRadioButtonList" runat="server" AutoPostBack="true" RepeatDirection="Horizontal" /></td>
              </tr>
              <tr>
-                <td class="SubHead"><asp:Label runat="server" ID="lblKeywordsHeader" resourcekey="lblKeywordsHeader" /></td>
+                <td class="SubHead"><asp:Label runat="server" ID="KeywordsHeaderLabel" resourcekey="lblKeywordsHeader" /></td>
                 <td colspan="2">
                     <asp:TextBox ID="txtKeywords" runat="server" />
                 </td>
@@ -66,27 +66,27 @@
         </table>
     </FooterTemplate>
 </asp:Repeater>
-<asp:Label ID="lblNoResults" runat="server" CssClass="Normal" resourcekey="lblNoResults" EnableViewState="false" Visible="false" />
+<asp:Label ID="NoResultsLabel" runat="server" CssClass="Normal" resourcekey="lblNoResults" EnableViewState="false" Visible="false" />
 </div>
 
-<asp:Panel ID="pnlSaveSearch" runat="server" Visible="false" DefaultButton="SaveSearchButton">
+<asp:Panel ID="SaveSearchPanel" runat="server" Visible="false" DefaultButton="SaveSearchButton">
     <br />
     <table class="job_search_table nospacing Normal">
         <tr>
             <td>
-                <asp:Label runat="server" ID="lblSaveHeader" CssClass="SubHead" resourcekey="lblSaveHeader" />
+                <asp:Label runat="server" ID="SaveHeaderLabel" CssClass="SubHead" resourcekey="lblSaveHeader" />
             </td>
         </tr>
         <tr>
             <td>
-                <asp:Label runat="server" ID="lblSearchName" CssClass="Normal" resourcekey="lblSearchName" />
+                <asp:Label runat="server" ID="SearchNameLabel" CssClass="Normal" resourcekey="lblSearchName" />
             </td>
         </tr>
         <tr>
             <td>
                 <asp:TextBox ID="txtSearchName" runat="server" MaxLength="255" EnableViewState="false" />&nbsp;
-                <asp:RequiredFieldValidator ID="rfvSearchName" runat="server" ControlToValidate="txtSearchName" ValidationGroup="saveSearch" resourcekey="rfvSearchName" Display="None" />
-                <asp:ValidationSummary ID="valSummary" runat="server" DisplayMode="BulletList" ShowMessageBox="true" ShowSummary="false" ValidationGroup="saveSearch" />
+                <asp:RequiredFieldValidator ID="SearchNameRequiredFieldValidator" runat="server" ControlToValidate="txtSearchName" ValidationGroup="saveSearch" resourcekey="rfvSearchName" Display="None" />
+                <asp:ValidationSummary ID="ValidationSummary" runat="server" DisplayMode="BulletList" ShowMessageBox="true" ShowSummary="false" ValidationGroup="saveSearch" />
             </td>
         </tr>
         <tr>
