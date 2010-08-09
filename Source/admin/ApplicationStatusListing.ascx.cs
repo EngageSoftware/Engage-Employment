@@ -173,10 +173,10 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                GridViewRow row = e.Row;
+                var row = e.Row;
                 if (row != null)
                 {
-                    Button deleteButton = (Button)row.FindControl("DeleteButton");
+                    var deleteButton = (Button)row.FindControl("DeleteButton");
                     if (deleteButton != null)
                     {
                         int? statusId = GetStatusId(row);
@@ -205,7 +205,7 @@ namespace Engage.Dnn.Employment.Admin
          SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatusesGrid_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int? statusId = GetStatusId(e.RowIndex);
+            var statusId = GetStatusId(e.RowIndex);
             if (statusId.HasValue)
             {
                 ApplicationStatus.DeleteStatus(statusId.Value);
@@ -324,7 +324,7 @@ namespace Engage.Dnn.Employment.Admin
             if (this.StatusesGrid != null && this.StatusesGrid.Rows.Count > rowIndex)
             {
                 GridViewRow row = this.StatusesGrid.Rows[rowIndex];
-                TextBox statusTextBox = row.FindControl("StatusTextBox") as TextBox;
+                var statusTextBox = row.FindControl("StatusTextBox") as TextBox;
                 Debug.Assert(statusTextBox != null);
                 return statusTextBox.Text;
             }
@@ -339,7 +339,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>The ID of the status represented in the given row</returns>
         private static int? GetStatusId(Control row)
         {
-            HiddenField statusIdHiddenField = (HiddenField)row.FindControl("StatusIdHiddenField");
+            var statusIdHiddenField = (HiddenField)row.FindControl("StatusIdHiddenField");
 
             int statusId;
             if (statusIdHiddenField != null && int.TryParse(statusIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))

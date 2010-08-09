@@ -43,7 +43,7 @@ namespace Engage.Dnn.Employment
 
         public static List<State> LoadStates(int? jobGroupId, int portalId)
         {
-            List<State> states = new List<State>();
+            var states = new List<State>();
             using (IDataReader dr = DataProvider.Instance().GetStates(jobGroupId, portalId))
             {
                 while (dr.Read())

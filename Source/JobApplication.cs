@@ -36,15 +36,7 @@ namespace Engage.Dnn.Employment
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
         public Job Job
         {
-            get 
-            {
-                if (this.job == null)
-                {
-                    this.job = Job.Load(this.JobId);
-                }
-
-                return this.job;
-            }
+            get { return this.job ?? (this.job = Job.Load(this.JobId)); }
         }
 
         public int JobId { get; private set; }
@@ -83,7 +75,7 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of the properties for this application</returns>
         public Dictionary<string, string> GetApplicationProperties()
         {
-            Dictionary<string, string> properties = new Dictionary<string, string>();
+            var properties = new Dictionary<string, string>();
             DataTable dt = DataProvider.Instance().GetApplicationProperties(this.ApplicationId);
 
             if (dt != null)
@@ -123,7 +115,7 @@ namespace Engage.Dnn.Employment
 
         public static ReadOnlyCollection<JobApplication> GetAppliedFor(int userId, int? jobGroupId, int portalId)
         {
-            List<JobApplication> applications = new List<JobApplication>();
+            var applications = new List<JobApplication>();
             using (IDataReader dr = DataProvider.Instance().GetJobs(userId, jobGroupId, portalId))
             {
                 while (dr.Read())
@@ -185,7 +177,7 @@ namespace Engage.Dnn.Employment
 
         public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId)
         {
-            List<JobApplication> applications =new List<JobApplication>();
+            var applications =new List<JobApplication>();
             using (IDataReader dr = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId))
             {
                 while (dr.Read())
@@ -225,14 +217,17 @@ namespace Engage.Dnn.Employment
 
         private static JobApplication FillApplication(IDataRecord reader)
         {
-            JobApplication jobApplication = new JobApplication();
-            jobApplication.ApplicationId = (int)reader["ApplicationId"];
-            jobApplication.JobId = (int)reader["JobId"];
-            jobApplication.UserId = reader["UserId"] as int?;
-            jobApplication.AppliedForDate = (DateTime)reader["AppliedDate"];
-            jobApplication.SalaryRequirement = reader["SalaryRequirement"] as string;
-            jobApplication.Message = reader["Message"] as string;
-            jobApplication.StatusId = reader["StatusId"] as int?;
+            var jobApplication = new JobApplication 
+            {
+                ApplicationId = (int)reader["ApplicationId"],
+                JobId = (int)reader["JobId"],
+                UserId = reader["UserId"] as int?,
+                AppliedForDate = (DateTime)reader["AppliedDate"],
+                SalaryRequirement = reader["SalaryRequirement"] as string,
+                Message = reader["Message"] as string,
+                StatusId = reader["StatusId"] as int?
+            };
+
             return jobApplication;
         }
 

@@ -39,7 +39,7 @@ namespace Engage.Dnn.Employment
         public static List<UserStatus> LoadStatuses(int portalId)
         {
             DataTable statusTable = DataProvider.Instance().GetUserStatuses(portalId);
-            List<UserStatus> statuses = new List<UserStatus>(statusTable.Rows.Count);
+            var statuses = new List<UserStatus>(statusTable.Rows.Count);
             foreach (DataRow row in statusTable.Rows)
             {
                 statuses.Add(FillUserStatus(row));
@@ -83,19 +83,18 @@ namespace Engage.Dnn.Employment
         public static int? LoadUserStatus(PortalSettings portalSettings, int userId)
         {
             CheckUserStatusPropertyExists(portalSettings);
-            UserInfo user = (new UserController()).GetUser(portalSettings.PortalId, userId);
+            var user = (new UserController()).GetUser(portalSettings.PortalId, userId);
             ProfileController.GetUserProfile(ref user);
-            string status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
+            var status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
 
             int statusId;
+            
             if (int.TryParse(status, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
             {
                 return statusId;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>
@@ -137,16 +136,20 @@ namespace Engage.Dnn.Employment
 
         private static ProfilePropertyDefinition GetUserStatusProfilePropertyDefinition(PortalSettings portalSettings)
         {
-            ProfilePropertyDefinition property = new ProfilePropertyDefinition();
-            property.PortalId = portalSettings.PortalId;
-            property.ModuleDefId = Utility.GetCurrentModuleByDefinition(portalSettings, ModuleDefinition.JobListing, null).ModuleDefID;
-            property.DataType = (new ListController()).GetListEntryInfo("DataType", "Integer").EntryID;
-            property.PropertyCategory = "Engage: Employment";
-            property.PropertyName = Utility.UserStatusPropertyName;
-            property.Required = false;
-            property.ViewOrder = 0;
-            property.Visibility = UserVisibilityMode.AdminOnly;
-            property.Length = 0;
+            var property = new ProfilePropertyDefinition
+                {
+                    PortalId = portalSettings.PortalId,
+                    ModuleDefId =
+                        Utility.GetCurrentModuleByDefinition(
+                            portalSettings, ModuleDefinition.JobListing, null).ModuleDefID,
+                    DataType = (new ListController()).GetListEntryInfo("DataType", "Integer").EntryID,
+                    PropertyCategory = "Engage: Employment",
+                    PropertyName = Utility.UserStatusPropertyName,
+                    Required = false,
+                    ViewOrder = 0,
+                    Visibility = UserVisibilityMode.AdminOnly,
+                    Length = 0
+                };
 
             return property;
         }

@@ -242,7 +242,7 @@ namespace Engage.Dnn.Employment.Admin
                 GridViewRow row = e.Row;
                 if (row != null)
                 {
-                    Button btnDelete = (Button)row.FindControl("btnDelete");
+                    var btnDelete = (Button)row.FindControl("btnDelete");
                     if (btnDelete != null)
                     {
                         int? statusId = GetStatusId(row);

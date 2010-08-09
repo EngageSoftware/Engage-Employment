@@ -66,15 +66,7 @@ namespace Engage.Dnn.Employment
 
         public List<string> CleanKeywordList
         {
-            get
-            {
-                if (this.cleanKeywordList == null)
-                {
-                    this.cleanKeywordList = Utility.RemoveCommonWords(this.KeywordList);
-                }
-
-                return this.cleanKeywordList;
-            }
+            get { return this.cleanKeywordList ?? (this.cleanKeywordList = Utility.RemoveCommonWords(this.KeywordList)); }
         }
 
         public string Description
@@ -103,14 +95,9 @@ namespace Engage.Dnn.Employment
 
         public List<string> KeywordList
         {
-            get
-            {
-                if (this.keywordList == null)
-                {
-                    this.keywordList = Engage.Utility.HasValue(this.keywords) ? Utility.SplitQuoted(this.keywords) : new List<string>(0);
-                }
-
-                return this.keywordList;
+            get {
+                return this.keywordList ??
+                       (this.keywordList = Engage.Utility.HasValue(this.keywords) ? Utility.SplitQuoted(this.keywords) : new List<string>(0));
             }
         }
 

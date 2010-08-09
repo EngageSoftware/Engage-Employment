@@ -83,21 +83,22 @@ namespace Engage.Dnn.Employment
 
         private static Document FillDocument(DataRow dr)
         {
-            Document document = new Document();
-
-            document._documentId = (int)dr["DocumentId"];
-            document._documentTypeId = (int)dr["DocumentTypeId"];
-            document._fileName = (string)dr["FileName"];
-            //document._contentType = (string)dr["ContentType"];
-            //document._contentLength = (int)dr["ContentLength"];
-            //document._data = (byte[])dr["ResumeData"];
+            var document = new Document 
+            {
+                _documentId = (int)dr["DocumentId"],
+                _documentTypeId = (int)dr["DocumentTypeId"],
+                _fileName = (string)dr["FileName"]
+                //document._contentType = (string)dr["ContentType"];
+                //document._contentLength = (int)dr["ContentLength"];
+                //document._data = (byte[])dr["ResumeData"];
+            };
 
             return document;
         }
 
         public static List<Document> GetDocuments(int applicationId)
         {
-            List<Document> documents = new List<Document>();
+            var documents = new List<Document>();
             DataTable dt = DataProvider.Instance().GetApplicationDocuments(applicationId);
             
             if (dt != null)

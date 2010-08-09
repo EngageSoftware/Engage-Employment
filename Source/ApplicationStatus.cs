@@ -78,7 +78,7 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of all of the application statuses for this portal</returns>
         public static List<ApplicationStatus> GetStatuses(int portalId)
         {
-            List<ApplicationStatus> statuses = new List<ApplicationStatus>();
+            var statuses = new List<ApplicationStatus>();
             ListEntryInfoCollection statusList = (new ListController()).GetListEntryInfoCollection(Utility.ApplicationStatusListName);
 
             foreach (ListEntryInfo entry in statusList)
@@ -101,7 +101,7 @@ namespace Engage.Dnn.Employment
         public static int? GetStatusId(string statusName, int portalId)
         {
             // TODO: test this on multiple portals
-            ListEntryInfo statusEntry = new ListController().GetListEntryInfo(Utility.ApplicationStatusListName, statusName);
+            var statusEntry = new ListController().GetListEntryInfo(Utility.ApplicationStatusListName, statusName);
             if (statusEntry != null && statusEntry.PortalID == portalId)
             {
                 return statusEntry.EntryID;
@@ -115,7 +115,7 @@ namespace Engage.Dnn.Employment
         /// </summary>
         /// <param name="statusId">The ID of the status.</param>
         /// <returns>
-        /// 	<c>true</c> if the status with the given ID is used on any applications; otherwise, <c>false</c>.
+        /// <c>true</c> if the status with the given ID is used on any applications; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsStatusUsed(int statusId)
         {
@@ -129,12 +129,14 @@ namespace Engage.Dnn.Employment
         /// <param name="portalId">The portal ID.</param>
         public static void InsertStatus(string statusName, int portalId)
         {
-            ListEntryInfo listItem = new ListEntryInfo();
-            listItem.Text = statusName;
-            listItem.DefinitionID = Null.NullInteger;
-            listItem.PortalID = portalId;
-            listItem.ListName = Utility.ApplicationStatusListName;
-            listItem.Value = string.Empty;
+            var listItem = new ListEntryInfo 
+            {
+                Text = statusName,
+                DefinitionID = Null.NullInteger,
+                PortalID = portalId,
+                ListName = Utility.ApplicationStatusListName,
+                Value = string.Empty
+            };
 
             new ListController().AddListEntry(listItem);
         }

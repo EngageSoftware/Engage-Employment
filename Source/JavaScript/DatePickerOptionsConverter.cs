@@ -14,6 +14,7 @@ namespace Engage.Dnn.Employment
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Web.Script.Serialization;
 
     /// <summary>
@@ -29,7 +30,7 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                return new ReadOnlyCollection<Type>(new Type[] { typeof(DatePickerOptions) });
+                return new ReadOnlyCollection<Type>(new[] { typeof(DatePickerOptions) });
             }
         }
 
@@ -41,6 +42,7 @@ namespace Engage.Dnn.Employment
         /// <param name="serializer">The <see cref="JavaScriptSerializer"/> instance. </param>
         /// <returns>The deserialized object. </returns>
         /// <exception cref="InvalidOperationException">We only serialize <see cref="CycleOptions"/></exception>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DatePickerOptions", Justification = "DatePickerOptions is understandable.")]
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
             throw new InvalidOperationException("We only serialize DatePickerOptions");
@@ -53,39 +55,42 @@ namespace Engage.Dnn.Employment
         /// <param name="serializer">The object that is responsible for the serialization. </param>
         /// <returns>An object that contains key/value pairs that represent the object’s data. </returns>
         /// <exception cref="InvalidOperationException"><paramref name="obj"/> must be of the <see cref="CycleOptions"/> type</exception>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DatePickerOptions", Justification = "DatePickerOptions is understandable.")]
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
-            DatePickerOptions opts = obj as DatePickerOptions;
+            var opts = obj as DatePickerOptions;
             if (opts == null)
             {
                 throw new InvalidOperationException("object must be of the DatePickerOptions type");
             }
 
-            IDictionary<string, object> datePickerOptions = new Dictionary<string, object>(24);
-            datePickerOptions.Add("clearText", opts.ClearText);
-            datePickerOptions.Add("clearStatus", opts.ClearStatus);
-            datePickerOptions.Add("closeText", opts.CloseText);
-            datePickerOptions.Add("closeStatus", opts.CloseStatus);
-            datePickerOptions.Add("prevText", opts.PreviousText);
-            datePickerOptions.Add("prevStatus", opts.PreviousStatus);
-            datePickerOptions.Add("nextText", opts.NextText);
-            datePickerOptions.Add("nextStatus", opts.NextStatus);
-            datePickerOptions.Add("currentText", opts.CurrentText);
-            datePickerOptions.Add("currentStatus", opts.CurrentStatus);
-            datePickerOptions.Add("monthNames", opts.GetMonthNames());
-            datePickerOptions.Add("monthNamesShort", opts.GetMonthNamesShort());
-            datePickerOptions.Add("monthStatus", opts.MonthStatus);
-            datePickerOptions.Add("yearStatus", opts.YearStatus);
-            datePickerOptions.Add("weekHeader", opts.WeekHeader);
-            datePickerOptions.Add("weekStatus", opts.WeekStatus);
-            datePickerOptions.Add("dayNames", opts.GetDayNames());
-            datePickerOptions.Add("dayNamesShort", opts.GetDayNamesShort());
-            datePickerOptions.Add("dayNamesMin", opts.GetDayNamesMin());
-            datePickerOptions.Add("dayStatus", opts.DayStatus);
-            datePickerOptions.Add("dateStatus", opts.DateStatus);
-            datePickerOptions.Add("dateFormat", opts.DateFormat);
-            datePickerOptions.Add("firstDay", opts.FirstDay);
-            datePickerOptions.Add("isRTL", opts.IsRightToLeft);
+            IDictionary<string, object> datePickerOptions = new Dictionary<string, object>(24) 
+            {
+                { "clearText", opts.ClearText },
+                { "clearStatus", opts.ClearStatus },
+                { "closeText", opts.CloseText },
+                { "closeStatus", opts.CloseStatus },
+                { "prevText", opts.PreviousText },
+                { "prevStatus", opts.PreviousStatus },
+                { "nextText", opts.NextText },
+                { "nextStatus", opts.NextStatus },
+                { "currentText", opts.CurrentText },
+                { "currentStatus", opts.CurrentStatus },
+                { "monthNames", opts.GetMonthNames() },
+                { "monthNamesShort", opts.GetMonthNamesShort() },
+                { "monthStatus", opts.MonthStatus },
+                { "yearStatus", opts.YearStatus },
+                { "weekHeader", opts.WeekHeader },
+                { "weekStatus", opts.WeekStatus },
+                { "dayNames", opts.GetDayNames() },
+                { "dayNamesShort", opts.GetDayNamesShort() },
+                { "dayNamesMin", opts.GetDayNamesMin() },
+                { "dayStatus", opts.DayStatus },
+                { "dateStatus", opts.DateStatus },
+                { "dateFormat", opts.DateFormat },
+                { "firstDay", opts.FirstDay },
+                { "isRTL", opts.IsRightToLeft }
+            };
 
             return datePickerOptions;
         }

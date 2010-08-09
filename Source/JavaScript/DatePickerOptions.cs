@@ -594,7 +594,7 @@ namespace Engage.Dnn.Employment
         /// <returns>The serialized JSON string</returns>
         public string Serialize()
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var serializer = new JavaScriptSerializer();
             serializer.RegisterConverters(new JavaScriptConverter[] { new DatePickerOptionsConverter() });
             return serializer.Serialize(this);
         }

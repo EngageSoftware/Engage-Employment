@@ -65,7 +65,7 @@ namespace Engage.Dnn.Employment
 
         public static List<Location> LoadLocations(int? jobGroupId, int portalId)
         {
-            List<Location> locations = new List<Location>();
+            var locations = new List<Location>();
             using (IDataReader dr = DataProvider.Instance().GetLocations(jobGroupId, portalId))
             {
                 while (dr.Read())

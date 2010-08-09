@@ -83,7 +83,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>The user ID as a <see cref="string"/>, or <see cref="string.Empty"/> if <paramref name="userId"/> has no value</returns>
         protected static string GetUserId(object userId)
         {
-            int? userIdValue = userId as int?;
+            var userIdValue = userId as int?;
             if (userIdValue.HasValue)
             {
                 return userIdValue.Value.ToString(CultureInfo.InvariantCulture);
@@ -156,8 +156,8 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e != null && (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item))
             {
-                Repeater applicationsRepeater = (Repeater)e.Item.FindControl("ApplicationsRepeater");
-                Job job = (Job)e.Item.DataItem;
+                var applicationsRepeater = (Repeater)e.Item.FindControl("ApplicationsRepeater");
+                var job = (Job)e.Item.DataItem;
 
                 if (job != null)
                 {
@@ -189,11 +189,11 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
-                DropDownList userStatusDropDownList = (DropDownList)e.Item.FindControl("UserStatusDropDownList");
-                DropDownList applicationStatusDropDownList = (DropDownList)e.Item.FindControl("ApplicationStatusDropDownList");
-                Repeater documentsRepeater = e.Item.FindControl("DocumentsRepeater") as Repeater;
-                Repeater propertiesRepeater = e.Item.FindControl("PropertiesRepeater") as Repeater;
-                JobApplication application = (JobApplication)e.Item.DataItem;
+                var userStatusDropDownList = (DropDownList)e.Item.FindControl("UserStatusDropDownList");
+                var applicationStatusDropDownList = (DropDownList)e.Item.FindControl("ApplicationStatusDropDownList");
+                var documentsRepeater = e.Item.FindControl("DocumentsRepeater") as Repeater;
+                var propertiesRepeater = e.Item.FindControl("PropertiesRepeater") as Repeater;
+                var application = (JobApplication)e.Item.DataItem;
 
                 if (application != null)
                 {
@@ -248,8 +248,8 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
-                HyperLink documentLink = (HyperLink)e.Item.FindControl("DocumentLink");
-                DataRowView row = (DataRowView)e.Item.DataItem;
+                var documentLink = (HyperLink)e.Item.FindControl("DocumentLink");
+                var row = (DataRowView)e.Item.DataItem;
 
                 if (row != null)
                 {
@@ -257,11 +257,11 @@ namespace Engage.Dnn.Employment.Admin
                     object documentTypeIdObj = row["DocumentTypeId"];
                     if (documentLink != null && documentIdObj is int && documentTypeIdObj is int)
                     {
-                        int resumeId = (int)documentIdObj;
+                        var resumeId = (int)documentIdObj;
 
                         documentLink.NavigateUrl = Employment.Utility.GetDocumentUrl(this.Request, resumeId);
 
-                        int documentTypeId = (int)documentTypeIdObj;
+                        var documentTypeId = (int)documentTypeIdObj;
                         documentLink.Text = Localization.GetString(DocumentType.GetDocumentType(documentTypeId).Description, this.LocalResourceFile);
                     }
                 }
@@ -278,8 +278,8 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
-                Label applicationPropertyLabel = (Label)e.Item.FindControl("ApplicationPropertyLabel");
-                DataRowView row = (DataRowView)e.Item.DataItem;
+                var applicationPropertyLabel = (Label)e.Item.FindControl("ApplicationPropertyLabel");
+                var row = (DataRowView)e.Item.DataItem;
 
                 if (row != null && row["PropertyValue"] != DBNull.Value)
                 {
@@ -298,10 +298,12 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "StatusId", Justification = "StatusId is understandable."), 
+        SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UserId", Justification = "UserId is understandable.")]
         private void UserStatusDropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList userStatusDropDownList = (DropDownList)sender;
-            HiddenField userIdHiddenField = (HiddenField)Utility.FindParentControl<RepeaterItem>(userStatusDropDownList).FindControl("UserIdHiddenField");
+            var userStatusDropDownList = (DropDownList)sender;
+            var userIdHiddenField = (HiddenField)Utility.FindParentControl<RepeaterItem>(userStatusDropDownList).FindControl("UserIdHiddenField");
 
             int userId;
             if (int.TryParse(userIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out userId))
@@ -334,10 +336,12 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ApplicationId", Justification = "ApplicationId is understandable."), 
+        SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "StatusId", Justification = "StatusId is understandable.")]
         private void ApplicationStatusDropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList applicationStatusDropDownList = (DropDownList)sender;
-            HiddenField applicationIdHiddenField = (HiddenField)Utility.FindParentControl<RepeaterItem>(applicationStatusDropDownList).FindControl("ApplicationIdHiddenField");
+            var applicationStatusDropDownList = (DropDownList)sender;
+            var applicationIdHiddenField = (HiddenField)Utility.FindParentControl<RepeaterItem>(applicationStatusDropDownList).FindControl("ApplicationIdHiddenField");
 
             int applicationId;
             if (int.TryParse(applicationIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out applicationId))
@@ -374,16 +378,9 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void BackButton_Click(object source, EventArgs e)
         {
-            ModuleInfo mi = Employment.Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
+            var mi = Employment.Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
 
-            if (mi != null)
-            {
-                this.Response.Redirect(Globals.NavigateURL(mi.TabID));
-            }
-            else
-            {
-                this.Response.Redirect(Globals.NavigateURL());
-            }
+            this.Response.Redirect(mi != null ? Globals.NavigateURL(mi.TabID) : Globals.NavigateURL());
         }
 
         /// <summary>
