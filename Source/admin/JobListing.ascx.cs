@@ -148,12 +148,12 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>A link to the applications of the given job opening</returns>
         protected string GetApplicationsLink(object row)
         {
-            DataRowView jobRow = (DataRowView)row;
+            var jobRow = (DataRowView)row;
 
             if (jobRow.DataView.Table.Columns.Contains("JobId"))
             {
-                int jobId = (int)jobRow["JobId"];
-                int applicationCount = (int)jobRow["ApplicationCount"];
+                var jobId = (int)jobRow["JobId"];
+                var applicationCount = (int)jobRow["ApplicationCount"];
                 string applicationText = applicationCount != 1
                                   ? Localization.GetString("Applications", this.LocalResourceFile)
                                   : Localization.GetString("Application", this.LocalResourceFile);
@@ -178,7 +178,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>The URL to navigate to in order to edit the given job</returns>
         protected string GetEditUrl(object row)
         {
-            DataRowView jobRow = (DataRowView)row;
+            var jobRow = (DataRowView)row;
             if (jobRow.DataView.Table.Columns.Contains("JobId"))
             {
                 return this.EditUrl("JobId", ((int)jobRow["JobId"]).ToString(CultureInfo.InvariantCulture), ControlKey.EditJob.ToString());
@@ -276,7 +276,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewRowEventArgs"/> instance containing the event data.</param>
         private void BindHeaderButtons(GridViewRowEventArgs e)
         {
-            Button addJobButton = (Button)e.Row.FindControl("AddJobButton");
+            var addJobButton = (Button)e.Row.FindControl("AddJobButton");
             addJobButton.Visible = Job.CanCreateJob(this.PortalId);
             AddRedirectionBehavior(addJobButton, this.EditUrl(ControlKey.EditJob.ToString()));
         }
@@ -288,14 +288,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             ModuleInfo jobListingModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
 
-            if (jobListingModule != null)
-            {
-                AddRedirectionBehavior(this.BackButton, Globals.NavigateURL(jobListingModule.TabID));
-            }
-            else
-            {
-                AddRedirectionBehavior(this.BackButton, Globals.NavigateURL());
-            }
+            AddRedirectionBehavior(this.BackButton, jobListingModule != null ? Globals.NavigateURL(jobListingModule.TabID) : Globals.NavigateURL());
         }
 
         /// <summary>

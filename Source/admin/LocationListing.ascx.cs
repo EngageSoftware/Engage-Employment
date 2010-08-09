@@ -59,7 +59,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!IsPostBack)
                 {
-                    Engage.Dnn.Utility.LocalizeGridView(ref this.LocationsGridView, LocalResourceFile);
+                    Dnn.Utility.LocalizeGridView(ref this.LocationsGridView, LocalResourceFile);
                     SetupLengthValidation();
                     BindStates(this.NewStateDropDownList);
                     LoadLocations();
@@ -125,10 +125,10 @@ namespace Engage.Dnn.Employment.Admin
                 GridViewRow row = e.Row;
                 if (row != null)
                 {
-                    Location location = (Location)e.Row.DataItem;
+                    var location = (Location)e.Row.DataItem;
                     if ((e.Row.RowState & DataControlRowState.Edit) == 0)
                     {
-                        Button btnDelete = (Button)row.FindControl("btnDelete");
+                        var btnDelete = (Button)row.FindControl("btnDelete");
                         if (location.IsUsed())
                         {
                             btnDelete.Enabled = false;
@@ -141,7 +141,7 @@ namespace Engage.Dnn.Employment.Admin
                     }
                     else if ((e.Row.RowState & DataControlRowState.Edit) != 0)
                     {
-                        DropDownList ddlState = (DropDownList)row.FindControl("ddlState");
+                        var ddlState = (DropDownList)row.FindControl("ddlState");
                         BindStates(ddlState, location.StateId);
                     }
                 }
@@ -257,7 +257,7 @@ namespace Engage.Dnn.Employment.Admin
             if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
             {
                 GridViewRow row = this.LocationsGridView.Rows[rowIndex];
-                TextBox txtLocationName = row.FindControl("txtLocationName") as TextBox;
+                var txtLocationName = row.FindControl("txtLocationName") as TextBox;
                 Debug.Assert(txtLocationName != null);
                 return txtLocationName.Text;
             }
@@ -269,7 +269,7 @@ namespace Engage.Dnn.Employment.Admin
             if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
             {
                 GridViewRow row = this.LocationsGridView.Rows[rowIndex];
-                DropDownList ddlState = row.FindControl("ddlState") as DropDownList;
+                var ddlState = row.FindControl("ddlState") as DropDownList;
                 Debug.Assert(ddlState != null);
 
                 int stateId;
@@ -283,7 +283,7 @@ namespace Engage.Dnn.Employment.Admin
 
         private static int? GetLocationId(Control row)
         {
-            HiddenField hdnLocationId = (HiddenField)row.FindControl("hdnLocationId");
+            var hdnLocationId = (HiddenField)row.FindControl("hdnLocationId");
 
             int locationId;
             if (hdnLocationId != null && int.TryParse(hdnLocationId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out locationId))

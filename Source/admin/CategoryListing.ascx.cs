@@ -16,7 +16,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.UI.Utilities;
@@ -60,7 +59,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!IsPostBack)
                 {
-                    Engage.Dnn.Utility.LocalizeGridView(ref this.CategoriesGridView, LocalResourceFile);
+                    Dnn.Utility.LocalizeGridView(ref this.CategoriesGridView, LocalResourceFile);
                     SetupLengthValidation();
                     LoadCategories();
                 }
@@ -123,7 +122,7 @@ namespace Engage.Dnn.Employment.Admin
                 GridViewRow row = e.Row;
                 if (row != null)
                 {
-                    Button btnDelete = (Button)row.FindControl("btnDelete");
+                    var btnDelete = (Button)row.FindControl("btnDelete");
                     if (btnDelete != null)
                     {
                         int? categoryId = GetCategoryId(row);
@@ -229,7 +228,7 @@ namespace Engage.Dnn.Employment.Admin
             if (this.CategoriesGridView != null && this.CategoriesGridView.Rows.Count > rowIndex)
             {
                 GridViewRow row = this.CategoriesGridView.Rows[rowIndex];
-                TextBox txtCategoryName = row.FindControl("txtCategoryName") as TextBox;
+                var txtCategoryName = row.FindControl("txtCategoryName") as TextBox;
                 Debug.Assert(txtCategoryName != null);
                 return txtCategoryName.Text;
             }
@@ -238,7 +237,7 @@ namespace Engage.Dnn.Employment.Admin
 
         private static int? GetCategoryId(Control row)
         {
-            HiddenField hdnCategoryId = (HiddenField)row.FindControl("hdnCategoryId");
+            var hdnCategoryId = (HiddenField)row.FindControl("hdnCategoryId");
 
             int categoryId;
             if (hdnCategoryId != null && int.TryParse(hdnCategoryId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out categoryId))

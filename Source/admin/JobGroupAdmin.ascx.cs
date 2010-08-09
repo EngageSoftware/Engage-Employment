@@ -57,7 +57,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.AuthorizationMultiview.SetActiveView(IsEditable ? vwJobGroups : vwUnauthorized);
                 if (!Page.IsPostBack)
                 {
-                    Engage.Dnn.Utility.LocalizeGridView(ref this.JobGroupsGridView, LocalResourceFile);
+                    Dnn.Utility.LocalizeGridView(ref this.JobGroupsGridView, LocalResourceFile);
 
                     BindJobGroups();
                 }
@@ -101,8 +101,8 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
-                ListControl listJobGroups = (ListControl)e.Item.FindControl("cblJobGroups");
-                DataRowView row = (DataRowView)e.Item.DataItem;
+                var listJobGroups = (ListControl)e.Item.FindControl("cblJobGroups");
+                var row = (DataRowView)e.Item.DataItem;
                 listJobGroups.DataSource = DataProvider.Instance().GetJobGroups(PortalId);
                 listJobGroups.DataTextField = "Name";
                 listJobGroups.DataValueField = "JobGroupId";
@@ -126,13 +126,13 @@ namespace Engage.Dnn.Employment.Admin
             foreach (RepeaterItem row in rpJobs.Items)
             {
                 int jobId;
-                HiddenField hdnJobId = row.FindControl("hdnJobId") as HiddenField;
+                var hdnJobId = row.FindControl("hdnJobId") as HiddenField;
                 if (hdnJobId != null && int.TryParse(hdnJobId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
                 {
-                    ListControl listJobGroups = row.FindControl("cblJobGroups") as ListControl;
+                    var listJobGroups = row.FindControl("cblJobGroups") as ListControl;
                     if (listJobGroups != null)
                     {
-                        List<int> jobGroupIds = new List<int>();
+                        var jobGroupIds = new List<int>();
                         foreach (ListItem li in listJobGroups.Items)
                         {
                             int jobGroupId;
@@ -166,7 +166,7 @@ namespace Engage.Dnn.Employment.Admin
                 GridViewRow row = e.Row;
                 if (row != null)
                 {
-                    Button btnDelete = e.Row.FindControl("btnDelete") as Button;
+                    var btnDelete = e.Row.FindControl("btnDelete") as Button;
                     if (btnDelete != null)
                     {
                         int? jobGroupId = GetJobGroupId(e.Row);
@@ -288,7 +288,7 @@ namespace Engage.Dnn.Employment.Admin
             if (this.JobGroupsGridView != null && this.JobGroupsGridView.Rows.Count > rowIndex)
             {
                 GridViewRow row = this.JobGroupsGridView.Rows[rowIndex];
-                TextBox txtJobGroupName = row.FindControl("txtJobGroupName") as TextBox;
+                var txtJobGroupName = row.FindControl("txtJobGroupName") as TextBox;
 
                 return txtJobGroupName != null ? txtJobGroupName.Text : null;
             }
@@ -297,7 +297,7 @@ namespace Engage.Dnn.Employment.Admin
 
         private static int? GetJobGroupId(Control row)
         {
-            HiddenField hdnJobGroupId = (HiddenField)row.FindControl("hdnJobGroupId");
+            var hdnJobGroupId = (HiddenField)row.FindControl("hdnJobGroupId");
 
             int jobGroupId;
             if (hdnJobGroupId != null && int.TryParse(hdnJobGroupId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobGroupId))
