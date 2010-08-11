@@ -270,4 +270,8 @@
   <data name="ControlTitle_editjob.Text" xml:space="preserve">
     <value>Add/Edit Job Opening</value>
   </data>
+  <data name="Location.Text" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>{0} is replaced by Location name, {1} is replaced by region name, {2} is replaced by region abbreviation</comment>
+  </data>
 </root>

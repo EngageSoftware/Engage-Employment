@@ -37,7 +37,6 @@ namespace Engage.Dnn.Employment
     {
         public const string ApplicationStatusListName = "EngageEmployment:ApplicationStatus";
         public const string DesktopModuleRelativePath = "~/DesktopModules/EngageEmployment/";
-        public const string EnableDnnSearchSetting = "EnableDnnSearch";
         public const string JobGroupIdSetting = "JobGroupId";
         public const string LeadListName = "EngageEmployment:Lead";
         public const string UserStatusPropertyName = "EngageEmployment_UserStatus";
@@ -50,7 +49,7 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of the words in <paramref cref="text"/></returns>
         public static List<string> SplitQuoted(string text)
         {
-            List<string> res = new List<string>();
+            var res = new List<string>();
             // notice that the quoted element is defined by group #2 
             // and the unquoted element is defined by group #3
             foreach (Match m in Regex.Matches(text, @"\s*(""([^""]*)""|([^\s]+))\s*"))
@@ -73,8 +72,8 @@ namespace Engage.Dnn.Employment
 
         public static List<string> RemoveCommonWords(List<string> words)
         {
-            List<string> list = new List<string>(words);
-            List<string> commonWords = GetCommonWords();
+            var list = new List<string>(words);
+            var commonWords = GetCommonWords();
 
             list.RemoveAll(delegate(string word) { return commonWords.Contains(word); });
 
@@ -83,7 +82,7 @@ namespace Engage.Dnn.Employment
 
         private static List<string> GetCommonWords()
         {
-            List<string> commonWords = new List<string>();
+            var commonWords = new List<string>();
 
             using (IDataReader dr = DataProvider.Instance().GetCommonWords())
             {
@@ -106,7 +105,7 @@ namespace Engage.Dnn.Employment
         public static ModuleInfo GetCurrentModuleByDefinition(PortalSettings portalSettings, ModuleDefinition moduleDefinition, int? jobGroupId)
         {
             ModuleInfo bestModule = null;
-            ModuleController modules = new ModuleController();
+            var modules = new ModuleController();
 
             foreach (ModuleInfo module in modules.GetModulesByDefinition(portalSettings.PortalId, moduleDefinition.ToString()))
             {
@@ -117,7 +116,7 @@ namespace Engage.Dnn.Employment
                     {
                         bestModule = bestModule ?? module; //set the value if it is null, otherwise leave it the same
 
-                        int? moduleJobGroupSetting = Dnn.Utility.GetIntSetting(modules.GetTabModuleSettings(module.TabModuleID), JobGroupIdSetting);
+                        int? moduleJobGroupSetting = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
                         if (jobGroupId.Equals(moduleJobGroupSetting))
                         {
                             //if it's the right Job Group, return this one now; otherwise, keep it around, but see if we can find a better match.  BD
@@ -292,7 +291,7 @@ namespace Engage.Dnn.Employment
             }
 
             // Attempt to get the resources from the cache
-            IDictionary<string, string> resources = DataCache.GetCache(cacheKey) as IDictionary<string, string>;
+            var resources = DataCache.GetCache(cacheKey) as IDictionary<string, string>;
             if (resources == null)
             {
                 // resources not in Cache so load from Files
@@ -404,45 +403,47 @@ namespace Engage.Dnn.Employment
                 return resources;
             }
 
-            bool xmlLoaded;
             XPathDocument doc = null;
-            CacheDependency dp = new CacheDependency(filePath);
-            try
+            using (var dp = new CacheDependency(filePath))
             {
-                // ReSharper disable AssignNullToNotNullAttribute
-                doc = new XPathDocument(filePath);
-                // ReSharper restore AssignNullToNotNullAttribute
-                xmlLoaded = true;
-            }
-            catch
-            {
-                xmlLoaded = false;
-            }
-
-            if (xmlLoaded)
-            {
-                foreach (XPathNavigator nav in doc.CreateNavigator().Select("root/data"))
-                {
-                    if (nav.NodeType != XPathNodeType.Comment)
-                    {
-                        resources[nav.GetAttribute("name", string.Empty)] = nav.SelectSingleNode("value").Value;
-                    }
-                }
+                bool xmlLoaded;
                 try
                 {
-                    int cacheMinutes = 3 * Convert.ToInt32(Globals.PerformanceSetting, CultureInfo.InvariantCulture);
-                    if (cacheMinutes > 0)
-                    {
-                        DataCache.SetCache(cacheKey, resources, dp, DateTime.MaxValue, new TimeSpan(0, cacheMinutes, 0));
-                    }
+                    // ReSharper disable AssignNullToNotNullAttribute
+                    doc = new XPathDocument(filePath);
+                    // ReSharper restore AssignNullToNotNullAttribute
+                    xmlLoaded = true;
                 }
-#pragma warning disable 1692
-#pragma warning disable EmptyGeneralCatchClause
                 catch
                 {
+                    xmlLoaded = false;
                 }
+
+                if (xmlLoaded)
+                {
+                    foreach (XPathNavigator nav in doc.CreateNavigator().Select("root/data"))
+                    {
+                        if (nav.NodeType != XPathNodeType.Comment)
+                        {
+                            resources[nav.GetAttribute("name", string.Empty)] = nav.SelectSingleNode("value").Value;
+                        }
+                    }
+                    try
+                    {
+                        int cacheMinutes = 3 * Convert.ToInt32(Globals.PerformanceSetting, CultureInfo.InvariantCulture);
+                        if (cacheMinutes > 0)
+                        {
+                            DataCache.SetCache(cacheKey, resources, dp, DateTime.MaxValue, new TimeSpan(0, cacheMinutes, 0));
+                        }
+                    }
+#pragma warning disable 1692
+#pragma warning disable EmptyGeneralCatchClause
+                    catch
+                    {
+                    }
 #pragma warning restore EmptyGeneralCatchClause
 #pragma warning restore 1692
+                }
             }
             return resources;
         }

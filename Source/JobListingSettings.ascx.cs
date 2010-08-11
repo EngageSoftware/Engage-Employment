@@ -17,14 +17,13 @@ namespace Engage.Dnn.Employment
     using System.Globalization;
     using System.Web.UI.WebControls;
     using Data;
-    using DotNetNuke.Entities.Modules;
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
 
     /// <summary>
     /// Displays settings for the Job Listing module
     /// </summary>
-    public partial class JobListingSettings : EmploymentModuleSettingsBase
+    public partial class JobListingSettings : EmploymentModuleSettingsBase  
     {
         /// <summary>
         /// Called the the settings page loads.
@@ -71,7 +70,7 @@ namespace Engage.Dnn.Employment
         {
             try
             {
-                new ModuleController().UpdateTabModuleSetting(this.TabModuleId, Utility.JobGroupIdSetting, this.JobGroupDropDownList.SelectedValue);
+                Employment.ModuleSettings.JobGroupId.Set(this, this.JobGroupDropDownList.SelectedValue);
                 base.UpdateSettings();
             }
             catch (Exception exc)

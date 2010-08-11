@@ -26,6 +26,7 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Modules.Actions;
+    using DotNetNuke.Entities.Portals;
     using DotNetNuke.Security;
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
@@ -113,58 +114,37 @@ namespace Engage.Dnn.Employment
 
         private string DefaultNotificationEmailAddress
         {
-            get
-            {
-                return Dnn.Utility.GetStringSetting(this.Settings, "ApplicationEmailAddress", this.PortalSettings.Email);
-            }
+            get { return ModuleSettings.JobDetailApplicationEmailAddress.GetValueAsStringFor(this) ?? PortalController.GetCurrentPortalSettings().Email; }
         }
 
         private Visibility DisplayCoverLetter
         {
-            get
-            {
-                return Dnn.Utility.GetEnumSetting(this.Settings, "DisplayCoverLetter", Visibility.Hidden);
-            }
+            get { return ModuleSettings.JobDetailDisplayCoverLetter.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
         private Visibility DisplayLead
         {
-            get
-            {
-                return Dnn.Utility.GetEnumSetting(this.Settings, "DisplayLead", Visibility.Hidden);
-            }
+            get { return ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
         private Visibility DisplayMessage
         {
-            get
-            {
-                return Dnn.Utility.GetEnumSetting(this.Settings, "DisplayMessage", Visibility.Optional);
-            }
+            get { return ModuleSettings.JobDetailDisplayMessage.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
         private Visibility DisplaySalaryRequirement
         {
-            get
-            {
-                return Dnn.Utility.GetEnumSetting(this.Settings, "DisplaySalaryRequirement", Visibility.Optional);
-            }
+            get { return ModuleSettings.JobDetailDisplaySalaryRequirement.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
         private string FriendEmailAddress
         {
-            get
-            {
-                return Dnn.Utility.GetStringSetting(this.Settings, "FriendEmailAddress", this.PortalSettings.Email);
-            }
+            get { return ModuleSettings.JobDetailFriendEmailAddress.GetValueAsStringFor(this) ?? PortalSettings.Email; }
         }
 
         private bool RequireRegistration
         {
-            get
-            {
-                return Dnn.Utility.GetBoolSetting(this.Settings, "RequireRegistration", true);
-            }
+            get { return ModuleSettings.JobDetailRequireRegistration.GetValueAsBooleanFor(this).Value; }
         }
 
         /// <summary>
@@ -316,42 +296,46 @@ namespace Engage.Dnn.Employment
         }
 
         // TODO: This and GetSendToAFriendMessageBody need some serious refactoring (or replacement).  Ugly code, ugly output.
+
         private string GetMessageBody(int? resumeId)
         {
-            using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            using (var textWriter = new HtmlTextWriter(new StringWriter(CultureInfo.InvariantCulture)))
             {
-                using (var textWriter = new HtmlTextWriter(stringWriter))
+                using (var table = new Table())
                 {
-                    var table = new Table();
-
                     var row = new TableRow();
                     table.Rows.Add(row);
 
                     var cell = new TableCell();
                     row.Cells.Add(cell);
 
-                    ModuleInfo jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
+                    var jobDetailModule = Utility.GetCurrentModuleByDefinition(
+                        this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
 
-                    var jobDetailLink = new HyperLink
-                                            {
-                                                    Text = Localization.GetString("ApplicationEmailLink", this.LocalResourceFile),
-                                                    NavigateUrl = this.MakeUrlAbsolute(
-                                                        Globals.NavigateURL(
-                                                            jobDetailModule == null ? -1 : jobDetailModule.TabID,
-                                                            string.Empty,
-                                                            "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)))
-                                            };
+                    // ReSharper disable UseObjectOrCollectionInitializer
+                    var jobDetailLink = new HyperLink();
+                    jobDetailLink.Text = Localization.GetString("ApplicationEmailLink", this.LocalResourceFile);
+                    jobDetailLink.NavigateUrl =
+                        this.MakeUrlAbsolute( 
+                            Globals.NavigateURL(
+                                jobDetailModule == null ? -1 : jobDetailModule.TabID,
+                                string.Empty,
+                                "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)));
 
+                    // ReSharper restore UseObjectOrCollectionInitializer
                     cell.Controls.Add(jobDetailLink);
 
                     if (this.SalaryTextBox.Text.Length > 0)
                     {
                         row = new TableRow();
                         table.Rows.Add(row);
-                        row.Cells.Add(new TableCell
-                                          {
-                                                  Text = Localization.GetString("ApplicationEmailSalaryLabel", this.LocalResourceFile) + this.SalaryTextBox.Text
-                                          });
+                        row.Cells.Add(
+                            new TableCell
+                                {
+                                    Text =
+                                        Localization.GetString("ApplicationEmailSalaryLabel", this.LocalResourceFile) +
+                                        this.SalaryTextBox.Text
+                                });
                     }
 
                     if (resumeId.HasValue)
@@ -361,66 +345,75 @@ namespace Engage.Dnn.Employment
 
                         cell = new TableCell();
                         row.Cells.Add(cell);
-                        var resumeLink = new HyperLink
-                                             {
-                                                     Text = Localization.GetString("ApplicationEmailResumeLink", this.LocalResourceFile),
-                                                     NavigateUrl = Utility.GetDocumentUrl(this.Request, resumeId.Value)
-                                             };
+
+                        // ReSharper disable UseObjectOrCollectionInitializer
+                        var resumeLink = new HyperLink();
+                        resumeLink.Text = Localization.GetString("ApplicationEmailResumeLink", this.LocalResourceFile);
+                        resumeLink.NavigateUrl = Utility.GetDocumentUrl(this.Request, resumeId.Value);
+
+                        // ReSharper restore UseObjectOrCollectionInitializer
                         cell.Controls.Add(resumeLink);
                     }
 
                     row = new TableRow();
                     table.Rows.Add(row);
 
-                    row.Cells.Add(new TableCell
-                                     {
-                                             Text = Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile) + this.ApplicationMessageTextBox.Text
-                                     });
+                    row.Cells.Add(
+                        new TableCell
+                            {
+                                Text =
+                                    Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile) +
+                                    this.ApplicationMessageTextBox.Text
+                            });
 
                     table.RenderControl(textWriter);
-                    return stringWriter.ToString();
                 }
+
+                return textWriter.InnerWriter.ToString();
             }
         }
 
         private string GetSendToAFriendMessageBody()
         {
-            using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            using (var textWriter = new HtmlTextWriter(new StringWriter(CultureInfo.InvariantCulture)))
             {
-                using (var textWriter = new HtmlTextWriter(stringWriter))
+                using (var table = new Table())
                 {
-                    var table = new Table();
-
                     var row = new TableRow();
                     table.Rows.Add(row);
 
                     var cell = new TableCell();
                     row.Cells.Add(cell);
 
-                    ModuleInfo jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
+                    var jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
 
-                    var jobDetailLink = new HyperLink
-                                             {
-                                                     Text = Localization.GetString("FriendEmailLink", this.LocalResourceFile),
-                                                     NavigateUrl = this.MakeUrlAbsolute(
-                                                        Globals.NavigateURL(
-                                                            jobDetailModule == null ? -1 : jobDetailModule.TabID,
-                                                            string.Empty,
-                                                            "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)))
-                                             };
+                    // ReSharper disable UseObjectOrCollectionInitializer
+                    var jobDetailLink = new HyperLink();
+                    jobDetailLink.Text = Localization.GetString("FriendEmailLink", this.LocalResourceFile);
+                    jobDetailLink.NavigateUrl =
+                        this.MakeUrlAbsolute(
+                            Globals.NavigateURL(
+                                jobDetailModule == null ? -1 : jobDetailModule.TabID,
+                                string.Empty,
+                                "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)));
 
+                    // ReSharper restore UseObjectOrCollectionInitializer
                     cell.Controls.Add(jobDetailLink);
+
                     row = new TableRow();
                     table.Rows.Add(row);
 
-                    row.Cells.Add(new TableCell
-                                      {
-                                              Text = Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile) + this.FriendEmailMessageTextBox.Text
-                                      });
+// ReSharper disable UseObjectOrCollectionInitializer
+                    cell = new TableCell();
+                    cell.Text = Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile) + this.FriendEmailMessageTextBox.Text;
+
+// ReSharper restore UseObjectOrCollectionInitializer
+                    row.Cells.Add(cell);
 
                     table.RenderControl(textWriter);
-                    return stringWriter.ToString();
                 }
+
+                return textWriter.InnerWriter.ToString();
             }
         }
 

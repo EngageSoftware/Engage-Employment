@@ -14,9 +14,10 @@ namespace Engage.Dnn.Employment
 #if TRIAL
     using System;
     using System.Web.UI;
-#endif
-    using Engage.Licensing;
 
+    using Engage.Licensing;
+#endif
+    
     /// <summary>
     /// Base class for all controls in this module
     /// </summary>
@@ -28,7 +29,7 @@ namespace Engage.Dnn.Employment
         /// <value>The name of the desktop module.</value>
         public override string DesktopModuleName
         {
-            get { return "Engage: Employment"; }
+            get { return EmploymentController.DesktopModuleName; }
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                return Dnn.Utility.GetIntSetting(this.Settings, Utility.JobGroupIdSetting);
+                return ModuleSettings.JobGroupId.GetValueAsInt32For(this);
             }
         }
 

@@ -12,12 +12,13 @@
 namespace Engage.Dnn.Employment.Admin
 {
     using System;
-    using System.Collections;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using Data;
     using DotNetNuke.Entities.Modules;
+    using DotNetNuke.Entities.Portals;
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
@@ -43,8 +44,7 @@ namespace Engage.Dnn.Employment.Admin
                 ModuleInfo jobDetailsModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
                 if (jobDetailsModule != null)
                 {
-                    Hashtable settings = new ModuleController().GetTabModuleSettings(jobDetailsModule.TabModuleID);
-                    return Dnn.Utility.GetStringSetting(settings, "ApplicationEmailAddress", this.PortalSettings.Email);
+                    return ModuleSettings.JobDetailApplicationEmailAddress.GetValueAsStringFor(this.DesktopModuleName, jobDetailsModule, PortalSettings.Email);
                 }
 
                 return string.Empty;
@@ -144,15 +144,10 @@ namespace Engage.Dnn.Employment.Admin
             }
 
             int jobId;
-            Job newJob;
-            if (int.TryParse(this.Request.QueryString["jobId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
-            {
-                newJob = Job.Load(jobId);
-            }
-            else
-            {
-                newJob = Job.CreateJob();
-            }
+
+            var newJob = int.TryParse(this.Request.QueryString["jobId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId)
+                             ? Job.Load(jobId)
+                             : Job.CreateJob();
 
             newJob.CategoryId = int.Parse(this.CategoryDropDownList.SelectedValue, CultureInfo.InvariantCulture);
             newJob.DesiredQualifications = this.DesiredQualificationsTextEditor.Text;
@@ -277,7 +272,14 @@ namespace Engage.Dnn.Employment.Admin
             foreach (Location location in Location.LoadLocations(null, this.PortalId))
             {
                 this.LocationDropDownList.Items.Add(
-                    new ListItem(location.LocationName + ", " + location.StateName, location.LocationId.Value.ToString(CultureInfo.InvariantCulture)));
+                    new ListItem(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            this.Localize("Location"),
+                            location.LocationName,
+                            location.StateName,
+                            location.StateAbbreviation),
+                    location.LocationId.Value.ToString(CultureInfo.InvariantCulture)));
             }
 
             this.LocationDropDownList.Items.Insert(0, new ListItem(Localization.GetString("SelectALocation", this.LocalResourceFile), "-1"));

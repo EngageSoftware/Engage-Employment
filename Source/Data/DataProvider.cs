@@ -16,7 +16,6 @@ namespace Engage.Dnn.Employment.Data
     using System.Data;
     using System.Diagnostics;
     using DotNetNuke.Common.Utilities;
-    using DotNetNuke.Framework.Providers;
 
     internal abstract class DataProvider
     {
@@ -48,35 +47,13 @@ namespace Engage.Dnn.Employment.Data
             if (provider == null)
             {
                 string assembly = "Engage.Dnn.Employment.Data.SqlDataProvider,EngageEmployment";
-                Type objectType = Type.GetType(assembly, true, true);
+                var objectType = Type.GetType(assembly, true, true);
 
                 provider = (DataProvider)Activator.CreateInstance(objectType);
                 DataCache.SetCache(objectType.FullName, provider);
             }
 
             return provider;
-        }
-
-        public static IDbConnection GetConnection()
-        {
-            const string providerType = "data";
-            ProviderConfiguration _providerConfiguration = ProviderConfiguration.GetProviderConfiguration(providerType);
-
-            Provider objProvider = ((Provider)_providerConfiguration.Providers[_providerConfiguration.DefaultProvider]);
-            string _connectionString;
-            if (!String.IsNullOrEmpty(objProvider.Attributes["connectionStringName"]) && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings[objProvider.Attributes["connectionStringName"]]))
-            {
-                _connectionString = System.Configuration.ConfigurationManager.AppSettings[objProvider.Attributes["connectionStringName"]];
-            }
-            else
-            {
-                _connectionString = objProvider.Attributes["connectionString"];
-            }
-
-            IDbConnection newConnection = new System.Data.SqlClient.SqlConnection();
-            newConnection.ConnectionString = _connectionString.ToString();
-            newConnection.Open();
-            return newConnection;
         }
 
         #endregion

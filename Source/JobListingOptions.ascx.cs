@@ -14,7 +14,6 @@ using System;
 using System.Globalization;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Framework;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Localization;
@@ -50,14 +49,26 @@ namespace Engage.Dnn.Employment
                 {
                     FillDisplayOptionList();
                     FillLimitOptionList();
-                    this.DisplayOptionRadioButtonList.SelectedValue = ShowOnlyHotJobs.ToString(CultureInfo.InvariantCulture);
-                    this.LimitCheckBox.Checked = MaximumNumberOfJobsDisplayed.HasValue;
+
+                    // If the maximum number of jobs is set as no maximum, it is stored as an empty string.  
+                    // Since this isn't an int value, getting it as an int gives us the default, instead of null
+                    // So, if we get the default, we need to doublecheck that it's the default and not the "no maximum" value
+                    int? maximumNumberOfjobs = ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsInt32For(this);
+                    if (maximumNumberOfjobs == ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.DefaultValue 
+                        && string.IsNullOrEmpty(ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsStringFor(this)))
+                    {
+                        maximumNumberOfjobs = null;
+                    }
+
+                    this.DisplayOptionRadioButtonList.SelectedValue = ModuleSettings.JobListingShowOnlyHotJobs.GetValueAsBooleanFor(this).ToString();
+                    this.LimitCheckBox.Checked = maximumNumberOfjobs.HasValue;
                     SetLimitEnabled(this.LimitCheckBox.Checked);
                     if (this.LimitCheckBox.Checked)
                     {
-                        txtLimit.Text = MaximumNumberOfJobsDisplayed.Value.ToString(CultureInfo.CurrentCulture);
+                        txtLimit.Text = maximumNumberOfjobs.Value.ToString(CultureInfo.CurrentCulture);
                     }
-                    this.LimitOptionRadioButtonList.SelectedValue = LimitJobsRandomly.ToString(CultureInfo.InvariantCulture);
+
+                    this.LimitOptionRadioButtonList.SelectedValue = ModuleSettings.JobListingLimitJobsRandomly.GetValueAsStringFor(this);
                 }
             }
             catch (Exception exc)
@@ -73,17 +84,16 @@ namespace Engage.Dnn.Employment
             {
                 if (Page.IsValid)
                 {
-                    ModuleController modules = new ModuleController();
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "ShowOnlyHotJobs", this.DisplayOptionRadioButtonList.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "MaximumNumberOfJobsDisplayed", this.LimitCheckBox.Checked ? Convert.ToInt32(txtLimit.Text, CultureInfo.CurrentCulture).ToString(CultureInfo.InvariantCulture) : string.Empty);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "LimitJobsRandomly", this.LimitOptionRadioButtonList.SelectedValue);
+                    ModuleSettings.JobListingShowOnlyHotJobs.Set(this, this.DisplayOptionRadioButtonList.SelectedValue);
+                    ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.Set(this, this.LimitCheckBox.Checked ? Convert.ToInt32(txtLimit.Text, CultureInfo.CurrentCulture).ToString(CultureInfo.InvariantCulture) : string.Empty);
+                    ModuleSettings.JobListingLimitJobsRandomly.Set(this, this.LimitOptionRadioButtonList.SelectedValue);
 
                     Response.Redirect(Globals.NavigateURL(TabId));
                 }
             }
             catch (Exception exc)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.ProcessModuleLoadException(this, exc);
+                Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
 
@@ -119,39 +129,6 @@ namespace Engage.Dnn.Employment
             this.LimitOptionRadioButtonList.Items.Clear();
             this.LimitOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("Sorted", LocalResourceFile), false.ToString(CultureInfo.InvariantCulture)));
             this.LimitOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("Random", LocalResourceFile), true.ToString(CultureInfo.InvariantCulture)));
-        }
-
-        #endregion
-
-        #region Module Settings
-        private bool ShowOnlyHotJobs
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetBoolSetting(Settings, "ShowOnlyHotJobs", true);
-            }
-        }
-
-        private int? MaximumNumberOfJobsDisplayed
-        {
-            get
-            {
-                int? value = Engage.Dnn.Utility.GetIntSetting(Settings, "MaximumNumberOfJobsDisplayed");
-                if (!value.HasValue)
-                {
-                    //if the settings has never been set, keep the setting from the last version (5), otherwise the settings has been set to null
-                    value = Settings.ContainsKey("MaximumNumberOfJobsDisplayed") ? (int?)null : 5;
-                }
-                return value;
-            }
-        }
-
-        private bool LimitJobsRandomly
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetBoolSetting(Settings, "LimitJobsRandomly", true);
-            }
         }
 
         #endregion

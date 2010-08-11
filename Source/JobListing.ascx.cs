@@ -83,33 +83,30 @@ namespace Engage.Dnn.Employment
 
         private bool LimitJobsRandomly
         {
-            get
-            {
-                return Dnn.Utility.GetBoolSetting(this.Settings, "LimitJobsRandomly", true);
-            }
+            get { return ModuleSettings.JobListingLimitJobsRandomly.GetValueAsBooleanFor(this).Value; }
         }
 
         private int? MaximumNumberOfJobsDisplayed
         {
             get
             {
-                int? value = Dnn.Utility.GetIntSetting(this.Settings, "MaximumNumberOfJobsDisplayed");
-                if (!value.HasValue)
-                {
-                    // if the settings has never been set, keep the setting from the last version (5), otherwise the settings has been set to null
-                    value = this.Settings.ContainsKey("MaximumNumberOfJobsDisplayed") ? (int?)null : 5;
-                }
+                    // If the maximum number of jobs is set as no maximum, it is stored as an empty string.  
+                    // Since this isn't an int value, getting it as an int gives us the default, instead of null
+                    // So, if we get the default, we need to doublecheck that it's the default and not the "no maximum" value
+                    int? maximumNumberOfJobs = ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsInt32For(this);
+                    if (maximumNumberOfJobs == ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.DefaultValue 
+                        && string.IsNullOrEmpty(ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsStringFor(this)))
+                    {
+                        maximumNumberOfJobs = null;
+                    }
 
-                return value;
+                    return maximumNumberOfJobs;
             }
         }
 
         private bool ShowOnlyHotJobs
         {
-            get
-            {
-                return Dnn.Utility.GetBoolSetting(this.Settings, "ShowOnlyHotJobs", true);
-            }
+            get { return ModuleSettings.JobListingShowOnlyHotJobs.GetValueAsBooleanFor(this).Value; }
         }
 
         /// <summary>

@@ -10,7 +10,6 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -24,7 +23,7 @@ namespace Engage.Dnn.Employment
         /// Backing field for <see cref="CategoryId"/>
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int? categoryId;
+        private readonly int? categoryId;
 
         /// <summary>
         /// Backing field for <see cref="CategoryName"/>
@@ -108,7 +107,7 @@ namespace Engage.Dnn.Employment
 
         public static List<Category> LoadCategories(int? jobGroupId, int portalId)
         {
-            List<Category> categories = new List<Category>();
+            var categories = new List<Category>();
             using (IDataReader dr = DataProvider.Instance().GetCategories(jobGroupId, portalId))
             {
                 while (dr.Read())

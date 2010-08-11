@@ -16,7 +16,6 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Common;
 using DotNetNuke.Common.Lists;
 using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Localization;
 using Engage.Dnn.Employment.Data;
@@ -51,39 +50,40 @@ namespace Engage.Dnn.Employment
             {
                 if (!IsPostBack)
                 {
-                    this.ApplicationEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx;
+                    this.ApplicationEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx; 
                     this.FriendEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
 
-                    txtApplicationEmailAddress.Text = ApplicationEmailAddress;
-                    txtFriendEmailAddress.Text = FriendEmailAddress;
-                    this.RequireRegistrationCheckBox.Checked = RequireRegistration;
-                    this.EnableDnnSearchCheckBox.Checked = EnableDnnSearch;
+                    this.txtApplicationEmailAddress.Text = ModuleSettings.JobDetailApplicationEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
+                    this.txtFriendEmailAddress.Text = ModuleSettings.JobDetailFriendEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
+                    this.RequireRegistrationCheckBox.Checked = ModuleSettings.JobDetailRequireRegistration.GetValueAsBooleanFor(this).Value;
+                    this.EnableDnnSearchCheckBox.Checked = ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(this).Value;
 
                     this.DisplayLeadRadioButtonList.DataSource = Enum.GetValues(typeof(Visibility));
                     this.DisplayLeadRadioButtonList.DataBind();
                     //rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
                     //rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
                     //rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    this.DisplayLeadRadioButtonList.SelectedValue = DisplayLead.ToString();
-                    rowLeadItems.Visible = (DisplayLead != Visibility.Hidden);
-                    Engage.Dnn.Utility.LocalizeListControl(this.DisplayLeadRadioButtonList, LocalResourceFile);
+                    var displayLead = ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this);
+                    this.DisplayLeadRadioButtonList.SelectedValue = displayLead.ToString();
+                    rowLeadItems.Visible = (displayLead != Visibility.Hidden);
+                    Dnn.Utility.LocalizeListControl(this.DisplayLeadRadioButtonList, LocalResourceFile);
 
                     this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
                     this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
                     this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    this.DisplaySalaryRadioButtonList.SelectedValue = DisplaySalaryRequirement.ToString();
+                    this.DisplaySalaryRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplaySalaryRequirement.GetValueAsEnumFor<Visibility>(this).ToString();
 
                     this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
                     this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
                     this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    this.DisplayCoverLetterRadioButtonList.SelectedValue = DisplayCoverLetter.ToString();
+                    this.DisplayCoverLetterRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplayCoverLetter.GetValueAsEnumFor<Visibility>(this).ToString();
 
                     this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
                     this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
                     this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
-                    this.DisplayMessageRadioButtonList.SelectedValue = DisplayMessage.ToString();
+                    this.DisplayMessageRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplayMessage.GetValueAsEnumFor<Visibility>(this).ToString();
 
-                    Engage.Dnn.Utility.LocalizeGridView(ref this.LeadItemsGridView, LocalResourceFile);
+                    Dnn.Utility.LocalizeGridView(ref this.LeadItemsGridView, LocalResourceFile);
                     BindLeadItems();
                 }
             }
@@ -100,22 +100,21 @@ namespace Engage.Dnn.Employment
             {
                 if (Page.IsValid)
                 {
-                    ModuleController modules = new ModuleController();
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "ApplicationEmailAddress", txtApplicationEmailAddress.Text);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "FriendEmailAddress", txtFriendEmailAddress.Text);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "RequireRegistration", this.RequireRegistrationCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayLead", this.DisplayLeadRadioButtonList.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplaySalaryRequirement", this.DisplaySalaryRadioButtonList.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayCoverLetter", this.DisplayCoverLetterRadioButtonList.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, "DisplayMessage", this.DisplayMessageRadioButtonList.SelectedValue);
-                    modules.UpdateTabModuleSetting(this.TabModuleId, Utility.EnableDnnSearchSetting, this.EnableDnnSearchCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
+                    ModuleSettings.JobDetailApplicationEmailAddress.Set(this, txtApplicationEmailAddress.Text);
+                    ModuleSettings.JobDetailFriendEmailAddress.Set(this, txtFriendEmailAddress.Text);
+                    ModuleSettings.JobDetailRequireRegistration.Set(this, this.RequireRegistrationCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
+                    ModuleSettings.JobDetailDisplayLead.Set(this, this.DisplayLeadRadioButtonList.SelectedValue);
+                    ModuleSettings.JobDetailDisplaySalaryRequirement.Set(this, this.DisplaySalaryRadioButtonList.SelectedValue);
+                    ModuleSettings.JobDetailDisplayCoverLetter.Set(this, this.DisplayCoverLetterRadioButtonList.SelectedValue);
+                    ModuleSettings.JobDetailDisplayMessage.Set(this, this.DisplayMessageRadioButtonList.SelectedValue);
+                    ModuleSettings.JobDetailEnableDnnSearch.Set(this, this.EnableDnnSearchCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
 
                     Response.Redirect(Globals.NavigateURL(TabId));
                 }
             }
             catch (Exception exc)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.ProcessModuleLoadException(this, exc);
+                Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
 
@@ -129,7 +128,7 @@ namespace Engage.Dnn.Employment
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         protected void DisplayLeadRadioButtonListSelectedIndexChanged(object sender, EventArgs e)
         {
-            Visibility leadVisibility = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true);
+            var leadVisibility = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true);
             rowLeadItems.Visible = (leadVisibility != Visibility.Hidden);
         }
 
@@ -139,7 +138,7 @@ namespace Engage.Dnn.Employment
         {
             if (e != null && e.Row.RowType == DataControlRowType.DataRow)
             {
-                Button btnDelete = e.Row.FindControl("btnDelete") as Button;
+                var btnDelete = e.Row.FindControl("btnDelete") as Button;
                 if (btnDelete != null)
                 {
                     int? leadId = GetLeadItemId(e.Row);
@@ -167,12 +166,13 @@ namespace Engage.Dnn.Employment
         {
             if (Page.IsValid)
             {
-                ListEntryInfo listItem = new ListEntryInfo();
-                listItem.Text = txtNewLeadText.Text;
-                listItem.DefinitionID = Null.NullInteger;
-                listItem.PortalID = PortalId;
-                listItem.ListName = Utility.LeadListName;
-                listItem.Value = string.Empty;
+                var listItem = new ListEntryInfo {
+                                                     Text = this.txtNewLeadText.Text,
+                                                     DefinitionID = Null.NullInteger,
+                                                     PortalID = this.PortalId,
+                                                     ListName = Utility.LeadListName,
+                                                     Value = string.Empty
+                                                 };
 
                 (new ListController()).AddListEntry(listItem);
 
@@ -211,7 +211,7 @@ namespace Engage.Dnn.Employment
                         int? leadId = GetLeadItemId(rowIndex);
                         if (leadId.HasValue)
                         {
-                            ListController lists = new ListController();
+                            var lists = new ListController();
                             ListEntryInfo leadItem = lists.GetListEntryInfo(leadId.Value);
                             string newLeadText = GetLeadItemText(rowIndex);
                             string oldLeadText = leadItem.Text;
@@ -287,8 +287,8 @@ namespace Engage.Dnn.Employment
         {
             if (this.LeadItemsGridView != null && this.LeadItemsGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = this.LeadItemsGridView.Rows[rowIndex];
-                TextBox txtLeadText = row.FindControl("txtLeadText") as TextBox;
+                var row = this.LeadItemsGridView.Rows[rowIndex];
+                var txtLeadText = row.FindControl("txtLeadText") as TextBox;
 
                 return txtLeadText != null ? txtLeadText.Text : null;
             }
@@ -301,7 +301,7 @@ namespace Engage.Dnn.Employment
 #pragma warning restore SuggestBaseTypeForParameter
 #pragma warning restore 1692
         {
-            HiddenField hdnLeadId = row.FindControl("hdnLeadId") as HiddenField;
+            var hdnLeadId = row.FindControl("hdnLeadId") as HiddenField;
 
             int leadId;
             if (hdnLeadId != null && int.TryParse(hdnLeadId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out leadId))
@@ -318,72 +318,6 @@ namespace Engage.Dnn.Employment
                 return GetLeadItemId(this.LeadItemsGridView.Rows[rowIndex]);
             }
             return null;
-        }
-        #endregion
-
-        #region Module Settings
-        private bool EnableDnnSearch
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetBoolSetting(Settings, Utility.EnableDnnSearchSetting, true);
-            }
-        }
-
-        private string ApplicationEmailAddress
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetStringSetting(Settings, "ApplicationEmailAddress", PortalSettings.Email);
-            }
-        }
-
-        private string FriendEmailAddress
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetStringSetting(Settings, "FriendEmailAddress", PortalSettings.Email);
-            }
-        }
-
-        private bool RequireRegistration
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetBoolSetting(Settings, "RequireRegistration", true);
-            }
-        }
-
-        private Visibility DisplayLead
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetEnumSetting(Settings, "DisplayLead", Visibility.Hidden);
-            }
-        }
-
-        private Visibility DisplaySalaryRequirement
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetEnumSetting(Settings, "DisplaySalaryRequirement", Visibility.Optional);
-            }
-        }
-
-        private Visibility DisplayCoverLetter
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetEnumSetting(Settings, "DisplayCoverLetter", Visibility.Hidden);
-            }
-        }
-
-        private Visibility DisplayMessage
-        {
-            get
-            {
-                return Engage.Dnn.Utility.GetEnumSetting(Settings, "DisplayMessage", Visibility.Optional);
-            }
         }
         #endregion
     }

@@ -69,7 +69,7 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of IDs for the job groups that the <paramref name="requestingUser"/> can view documents for.</returns>
         private IList<int?> GetPermissibleJobGroups(UserInfo requestingUser)
         {
-            List<int?> permissibleJobGroups = new List<int?>();
+            var permissibleJobGroups = new List<int?>();
             if (requestingUser.IsSuperUser)
             {
                 permissibleJobGroups.Add(null);
@@ -77,10 +77,10 @@ namespace Engage.Dnn.Employment
             else
             {
                 // TODO: if user is in multiple portals, this might need to account for that
-                ModuleController moduleController = new ModuleController();
+                var moduleController = new ModuleController();
                 foreach (ModuleInfo module in moduleController.GetModulesByDefinition(requestingUser.PortalID, ModuleDefinition.JobListing.ToString()))
                 {
-                    int? jobGroupId = Dnn.Utility.GetIntSetting(moduleController.GetTabModuleSettings(module.TabModuleID), Utility.JobGroupIdSetting);
+                    int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
                     if (!permissibleJobGroups.Contains(jobGroupId))
                     {
                         if (PortalSecurity.HasNecessaryPermission(SecurityAccessLevel.Edit, this.PortalSettings, module, requestingUser))

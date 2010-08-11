@@ -12,7 +12,6 @@
 namespace Engage.Dnn.Employment
 {
     using System;
-    using System.Collections;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -28,6 +27,11 @@ namespace Engage.Dnn.Employment
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called by DNN through reflection")]
     internal class EmploymentController : ISearchable
     {
+        /// <summary>
+        /// The name of this module's desktop module record in DNN
+        /// </summary>
+        public const string DesktopModuleName = "Engage: Employment";
+
         /// <summary>
         /// The file from which to retrieve localized text for this type
         /// </summary>
@@ -51,17 +55,17 @@ namespace Engage.Dnn.Employment
         {
             if (modInfo == null)
             {
-                throw new ArgumentNullException("modInfo", "modInfo must not be null.");
+                throw new ArgumentNullException("modInfo", @"modInfo must not be null.");
             }
 
-            SearchItemInfoCollection searchItems = new SearchItemInfoCollection();
-            Hashtable moduleSettings = (new ModuleController()).GetTabModuleSettings(modInfo.TabModuleID);
+            var searchItems = new SearchItemInfoCollection();
 
             // only index the JobDetail module definition (since most of this information is only viewable there,
             // and because the Guid parameter on the SearchItemInfo ("jobid=" + jobid) gets put on the querystring to make it work all automagically).  BD
-            if (Dnn.Utility.GetBoolSetting(moduleSettings, Utility.EnableDnnSearchSetting, true) && (new ModuleDefinitionController()).GetModuleDefinitionByName(modInfo.DesktopModuleID, ModuleDefinition.JobDetail.ToString()).ModuleDefID == modInfo.ModuleDefID)
+            if (new ModuleDefinitionController().GetModuleDefinitionByName(modInfo.DesktopModuleID, ModuleDefinition.JobDetail.ToString()).ModuleDefID == modInfo.ModuleDefID 
+                && ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(DesktopModuleName, modInfo, ModuleSettings.JobDetailEnableDnnSearch.DefaultValue).Value)
             {
-                int? jobGroupId = Dnn.Utility.GetIntSetting(moduleSettings, Utility.JobGroupIdSetting);
+                int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(DesktopModuleName, modInfo, ModuleSettings.JobGroupId.DefaultValue);
 
                 using (IDataReader jobs = DataProvider.Instance().GetJobs(jobGroupId, modInfo.PortalID))
                 {
@@ -78,11 +82,13 @@ namespace Engage.Dnn.Employment
                                 (string)jobs["LocationName"],
                                 (string)jobs["StateName"]);
 
-                            string searchedContent = HtmlUtils.StripWhiteSpace(
-                                HtmlUtils.Clean(
-                                    (string)jobs["JobTitle"] + " " + (string)jobs["JobDescription"] + " " + (string)jobs["RequiredQualifications"] + " " + (string)jobs["DesiredQualifications"],
-                                    false),
-                                true);
+                            string searchedContent =
+                                HtmlUtils.StripWhiteSpace(
+                                    HtmlUtils.Clean(
+                                        (string)jobs["JobTitle"] + " " + (string)jobs["JobDescription"] + " " + (string)jobs["RequiredQualifications"] +
+                                        " " + (string)jobs["DesiredQualifications"],
+                                        false),
+                                    true);
 
                             searchItems.Add(
                                 new SearchItemInfo(

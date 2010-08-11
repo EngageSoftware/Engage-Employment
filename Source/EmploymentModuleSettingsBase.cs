@@ -41,7 +41,7 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                return Dnn.Utility.GetIntSetting(Settings, Utility.JobGroupIdSetting);
+                return Employment.ModuleSettings.JobGroupId.GetValueAsInt32For(this);
             }
 
             set

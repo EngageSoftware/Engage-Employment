@@ -15,6 +15,7 @@ namespace Engage.Dnn.Employment.Data
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Text;
     using DotNetNuke.Common.Utilities;
@@ -1307,6 +1308,7 @@ namespace Engage.Dnn.Employment.Data
 
         #region JobJobGroup
 
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL does not contain un-paramterized input")]
         public override void AssignJobToJobGroups(int jobId, List<int> jobGroups)
         {
             using (var conn = new SqlConnection(this.ConnectionString))
@@ -1338,7 +1340,7 @@ namespace Engage.Dnn.Employment.Data
                             cmd.Prepare();
                             cmd.ExecuteNonQuery();
 
-                            for (int i = 1; i < jobGroups.Count; i++)
+                            for (var i = 1; i < jobGroups.Count; i++)
                             {
                                 cmd.Parameters["@jobGroupId"].Value = jobGroups[i];
                                 cmd.ExecuteNonQuery();
@@ -1349,7 +1351,6 @@ namespace Engage.Dnn.Employment.Data
                     }
 
                     tran.Commit();
-                    conn.Close();
                 }
             }
         }
@@ -1359,42 +1360,60 @@ namespace Engage.Dnn.Employment.Data
         /// They are collected by a <see cref="DataRelation"/> named "JobJobGroup."
         /// </summary>
         /// <returns>A <see cref="DataSet"/> with all jobs and their assigned groups.</returns>
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL does not contain un-parameterized input")]
         public override DataSet GetAssignedJobGroups(int portalId)
         {
-            var jobsSql = new StringBuilder(1024);
-            jobsSql.Append("select ");
-            jobsSql.Append("JobId, JobTitle, LocationName, StateName, ");
-            jobsSql.Append("RequiredQualifications, DesiredQualifications, CategoryName, ");
-            jobsSql.Append("IsHot, PostedDate, IsFilled ");
-            jobsSql.AppendFormat(CultureInfo.InvariantCulture, "from {0}vwJobs ", this.NamePrefix);
-            jobsSql.Append("where PortalId = @portalId ");
-
-            var jobGroupSql = new StringBuilder(128);
-            jobGroupSql.Append("select ");
-            jobGroupSql.Append("jjg.JobId, jg.JobGroupId, jg.Name ");
-            jobGroupSql.AppendFormat(CultureInfo.InvariantCulture, "from {0}JobGroup jg ", this.NamePrefix);
-            jobGroupSql.AppendFormat(CultureInfo.InvariantCulture, "join {0}JobJobGroup jjg on (jjg.JobGroupId = jg.JobGroupId) ", this.NamePrefix);
-            jobGroupSql.Append("where PortalId = @portalId ");
-
-            using (var conn = new SqlConnection(this.ConnectionString))
+            DataSet ds = null;
+            try
             {
-                var ds = new DataSet { Locale = CultureInfo.InvariantCulture };
-                using (var adapter = new SqlDataAdapter(jobsSql.ToString(), conn))
+                var jobsSql = new StringBuilder(1024);
+                jobsSql.Append("select ");
+                jobsSql.Append("JobId, JobTitle, LocationName, StateName, ");
+                jobsSql.Append("RequiredQualifications, DesiredQualifications, CategoryName, ");
+                jobsSql.Append("IsHot, PostedDate, IsFilled ");
+                jobsSql.AppendFormat(CultureInfo.InvariantCulture, "from {0}vwJobs ", this.NamePrefix);
+                jobsSql.Append("where PortalId = @portalId ");
+
+                var jobGroupSql = new StringBuilder(128);
+                jobGroupSql.Append("select ");
+                jobGroupSql.Append("jjg.JobId, jg.JobGroupId, jg.Name ");
+                jobGroupSql.AppendFormat(CultureInfo.InvariantCulture, "from {0}JobGroup jg ", this.NamePrefix);
+                jobGroupSql.AppendFormat(
+                    CultureInfo.InvariantCulture, "join {0}JobJobGroup jjg on (jjg.JobGroupId = jg.JobGroupId) ", this.NamePrefix);
+                jobGroupSql.Append("where PortalId = @portalId ");
+
+                using (var conn = new SqlConnection(this.ConnectionString))
                 {
-                    conn.Open();
-                    adapter.SelectCommand.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
-                    adapter.Fill(ds, "Jobs");
+                    // ReSharper disable UseObjectOrCollectionInitializer
+                    ds = new DataSet();
+                    ds.Locale = CultureInfo.InvariantCulture;
+
+                    // ReSharper restore UseObjectOrCollectionInitializer
+                    using (var adapter = new SqlDataAdapter(jobsSql.ToString(), conn))
+                    {
+                        conn.Open();
+                        adapter.SelectCommand.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                        adapter.Fill(ds, "Jobs");
+                    }
+
+                    using (var adapter = new SqlDataAdapter(jobGroupSql.ToString(), conn))
+                    {
+                        adapter.SelectCommand.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                        adapter.Fill(ds, "JobGroups");
+                    }
+
+                    ds.Relations.Add("JobJobGroup", ds.Tables["Jobs"].Columns["JobId"], ds.Tables["JobGroups"].Columns["JobId"]);
+                    return ds;
+                }
+            }
+            catch
+            {
+                if (ds != null)
+                {
+                   ds.Dispose(); 
                 }
 
-                using (var adapter = new SqlDataAdapter(jobGroupSql.ToString(), conn))
-                {
-                    adapter.SelectCommand.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
-                    adapter.Fill(ds, "JobGroups");
-                    conn.Close();
-                }
-
-                ds.Relations.Add("JobJobGroup", ds.Tables["Jobs"].Columns["JobId"], ds.Tables["JobGroups"].Columns["JobId"]);
-                return ds;
+                throw;
             }
         }
 
@@ -1559,65 +1578,82 @@ namespace Engage.Dnn.Employment.Data
                 Engage.Utility.CreateDateTimeParam("@now", DateTime.Now)).Tables[0];
         }
 
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL does not contain un-parameterized input")]
         public override DataTable GetKeywordSearchResults(List<string> keywords, int? jobGroupId, int portalId)
         {
             DataTable searchResultsTable = null;
-            var sql = new StringBuilder(1024);
-            if (keywords != null)
+
+            try
             {
-                using (var conn = new SqlConnection(this.ConnectionString))
+                var sql = new StringBuilder(1024);
+                if (keywords != null)
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = conn.CreateCommand())
+                    using (var conn = new SqlConnection(this.ConnectionString))
                     {
-                        sql.Append(" SELECT ");
-                        sql.Append(" j.JobId, j.JobTitle, j.LocationName, j.StateName, j.StateAbbreviation, j.CategoryName, ");
-                        sql.Append(" j.PostedDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
-                        sql.Append(" FROM ");
-                        sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwJobs j ", this.NamePrefix);
-                        if (jobGroupId.HasValue)
+                        conn.Open();
+                        using (SqlCommand cmd = conn.CreateCommand())
                         {
-                            sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}JobJobGroup jjg ON (j.JobId = jjg.JobId) ", this.NamePrefix);
+                            sql.Append(" SELECT ");
+                            sql.Append(" j.JobId, j.JobTitle, j.LocationName, j.StateName, j.StateAbbreviation, j.CategoryName, ");
+                            sql.Append(" j.PostedDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
+                            sql.Append(" FROM ");
+                            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwJobs j ", this.NamePrefix);
+                            if (jobGroupId.HasValue)
+                            {
+                                sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}JobJobGroup jjg ON (j.JobId = jjg.JobId) ", this.NamePrefix);
+                            }
+
+                            sql.Append(" WHERE j.IsFilled = 0 ");
+                            sql.Append(" AND j.PortalId = @portalId ");
+                            sql.Append(" AND j.StartDate < @now ");
+                            sql.Append(" AND (j.ExpireDate IS NULL OR j.ExpireDate > @now) ");
+
+                            for (int i = 0; i < keywords.Count; i++)
+                            {
+                                sql.AppendFormat(CultureInfo.InvariantCulture, " AND (j.RequiredQualifications LIKE @keyword{0} ", i);
+                                sql.AppendFormat(CultureInfo.InvariantCulture, " OR j.DesiredQualifications LIKE @keyword{0} ", i);
+                                sql.AppendFormat(CultureInfo.InvariantCulture, " OR j.JobDescription LIKE @keyword{0} ", i);
+                                sql.AppendFormat(CultureInfo.InvariantCulture, " OR j.JobTitle LIKE @keyword{0}) ", i);
+                            }
+
+                            if (jobGroupId.HasValue)
+                            {
+                                sql.Append(" AND jjg.jobGroupId = @jobGroupId ");
+                                cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
+                            }
+
+                            sql.Append(" ORDER BY ");
+                            sql.Append(" j.PostedDate");
+
+                            cmd.CommandText = sql.ToString();
+                            cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                            cmd.Parameters.Add(Engage.Utility.CreateDateTimeParam("@now", DateTime.Now));
+                            for (int i = 0; i < keywords.Count; i++)
+                            {
+                                cmd.Parameters.Add(
+                                    Engage.Utility.CreateVarcharParam(
+                                        "@keyword" + i.ToString(CultureInfo.InvariantCulture),
+                                        String.Format(CultureInfo.InvariantCulture, "%{0}%", keywords[i])));
+                            }
+
+                            // ReSharper disable UseObjectOrCollectionInitializer
+                            searchResultsTable = new DataTable();
+                            searchResultsTable.Locale = CultureInfo.InvariantCulture;
+
+                            // ReSharper restore UseObjectOrCollectionInitializer
+                            using (var dataAdapter = new SqlDataAdapter(cmd))
+                            {
+                                dataAdapter.Fill(searchResultsTable);
+                            }
                         }
-
-                        sql.Append(" WHERE j.IsFilled = 0 ");
-                        sql.Append(" AND j.PortalId = @portalId ");
-                        sql.Append(" AND j.StartDate < @now ");
-                        sql.Append(" AND (j.ExpireDate IS NULL OR j.ExpireDate > @now) ");
-
-                        for (int i = 0; i < keywords.Count; i++)
-                        {
-                            sql.AppendFormat(CultureInfo.InvariantCulture, " AND (j.RequiredQualifications LIKE @keyword{0} ", i);
-                            sql.AppendFormat(CultureInfo.InvariantCulture, " OR j.DesiredQualifications LIKE @keyword{0} ", i);
-                            sql.AppendFormat(CultureInfo.InvariantCulture, " OR j.JobDescription LIKE @keyword{0} ", i);
-                            sql.AppendFormat(CultureInfo.InvariantCulture, " OR j.JobTitle LIKE @keyword{0}) ", i);
-                        }
-
-                        if (jobGroupId.HasValue)
-                        {
-                            sql.Append(" AND jjg.jobGroupId = @jobGroupId ");
-                            cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
-                        }
-
-                        sql.Append(" ORDER BY ");
-                        sql.Append(" j.PostedDate");
-
-                        cmd.CommandText = sql.ToString();
-                        cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
-                        cmd.Parameters.Add(Engage.Utility.CreateDateTimeParam("@now", DateTime.Now));
-                        for (int i = 0; i < keywords.Count; i++)
-                        {
-                            cmd.Parameters.Add(Engage.Utility.CreateVarcharParam(
-                                "@keyword" + i.ToString(CultureInfo.InvariantCulture),
-                                String.Format(CultureInfo.InvariantCulture, "%{0}%", keywords[i])));
-                        }
-
-                        searchResultsTable = new DataTable { Locale = CultureInfo.InvariantCulture };
-                        var dataAdapter = new SqlDataAdapter(cmd);
-                        dataAdapter.Fill(searchResultsTable);
                     }
-
-                    conn.Close();
+                }
+            }
+            catch
+            {
+                if(searchResultsTable != null)
+                {
+                    searchResultsTable.Dispose();
                 }
             }
 
@@ -1659,7 +1695,7 @@ namespace Engage.Dnn.Employment.Data
                     this.ConnectionString, CommandType.Text, "delete " + this.NamePrefix + "UserJobSearch where UserSearchId = " + jobSearchQueryId);
         }
 
-        #endregion
+        #endregion 
 
         #region Lookup/Lead
 
