@@ -133,7 +133,7 @@
     <value>Click here to view resumé</value>
   </data>
   <data name="ApplicationEmailSalaryLabel.Text" xml:space="preserve">
-    <value>Salary Requirements:</value>
+    <value>Salary Requirements: </value>
   </data>
   <data name="ApplicationSent.Text" xml:space="preserve">
     <value>Your application has been received.  Thank you for your interest.</value>
@@ -295,5 +295,50 @@
   </data>
   <data name="ApplicationUpdateSubject.Text" xml:space="preserve">
     <value>A job application has been updated for '{1}' by {0}</value>
+  </data>
+  <data name="NotificationEmailBody.Format" xml:space="preserve">
+    <value>&lt;table border="0"&gt;
+	&lt;tr&gt;
+		&lt;td&gt;&lt;a href="{0}"&gt;{1}&lt;/a&gt;&lt;/td&gt;
+	&lt;/tr&gt;&lt;tr&gt;
+		&lt;td&gt;{2}{3}&lt;/td&gt;
+	&lt;/tr&gt;&lt;tr&gt;
+		&lt;td&gt;&lt;a href="{4}"&gt;{5}&lt;/a&gt;&lt;/td&gt;
+	&lt;/tr&gt;&lt;tr&gt;
+		&lt;td&gt;{6}{7}&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;</value>
+    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text</comment>
+  </data>
+  <data name="EmailSalaryBlank.Text" xml:space="preserve">
+    <value>[The applicant did not specify any salary requirement]</value>
+  </data>
+  <data name="EmailMessageBlank.Text" xml:space="preserve">
+    <value>[The applicant did not provide a message]</value>
+  </data>
+  <data name="FriendEmailBody.Format" xml:space="preserve">
+    <value>&lt;table border="0"&gt;
+	&lt;tr&gt;
+		&lt;td&gt;&lt;a href="{0}"&gt;{1}&lt;/a&gt;&lt;/td&gt;
+	&lt;/tr&gt;&lt;tr&gt;
+		&lt;td&gt;{2}{3}&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;</value>
+    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Message Label; {3} = Message text</comment>
+  </data>
+  <data name="FriendEmailMessageBlank.Text" xml:space="preserve">
+    <value>[Your friend did not specify a custom message]</value>
+  </data>
+  <data name="ReceiptEmailBody.Format" xml:space="preserve">
+    <value>&lt;table border="0"&gt;
+	&lt;tr&gt;
+		&lt;td&gt;&lt;a href="{0}"&gt;{1}&lt;/a&gt;&lt;/td&gt;
+	&lt;/tr&gt;&lt;tr&gt;
+		&lt;td&gt;{2}{3}&lt;/td&gt;
+	&lt;/tr&gt;&lt;tr&gt;
+		&lt;td&gt;{6}{7}&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;</value>
+    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text</comment>
   </data>
 </root>

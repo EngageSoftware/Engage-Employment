@@ -18,6 +18,7 @@ namespace Engage.Dnn.Employment
     using System.IO;
     using System.Net.Mail;
     using System.Text;
+    using System.Web;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using Data;
@@ -290,131 +291,70 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        private string GetMessageBody()
+        /// <summary>
+        /// Gets the message body.
+        /// </summary>
+        /// <param name="resumeId">The resume id.</param>
+        /// <param name="emailBodyResourceKey"></param>
+        /// <returns>A formatted email message body</returns>
+        private string GetMessageBody(int resumeId, string emailBodyResourceKey)
         {
-            return this.GetMessageBody(null);
-        }
+            var jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
+            var salaryText = this.SalaryTextBox.Text;
+            var messageText = this.ApplicationMessageTextBox.Text;
+            var jobDetailsUrl = Globals.NavigateURL(
+                jobDetailModule == null ? -1 : jobDetailModule.TabID, string.Empty, "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture));
 
-        // TODO: This and GetSendToAFriendMessageBody need some serious refactoring (or replacement).  Ugly code, ugly output.
-
-        private string GetMessageBody(int? resumeId)
-        {
-            using (var textWriter = new HtmlTextWriter(new StringWriter(CultureInfo.InvariantCulture)))
+            if (string.IsNullOrEmpty(salaryText))
             {
-                using (var table = new Table())
-                {
-                    var row = new TableRow();
-                    table.Rows.Add(row);
-
-                    var cell = new TableCell();
-                    row.Cells.Add(cell);
-
-                    var jobDetailModule = Utility.GetCurrentModuleByDefinition(
-                        this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
-
-                    // ReSharper disable UseObjectOrCollectionInitializer
-                    var jobDetailLink = new HyperLink();
-                    jobDetailLink.Text = Localization.GetString("ApplicationEmailLink", this.LocalResourceFile);
-                    jobDetailLink.NavigateUrl =
-                        this.MakeUrlAbsolute( 
-                            Globals.NavigateURL(
-                                jobDetailModule == null ? -1 : jobDetailModule.TabID,
-                                string.Empty,
-                                "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)));
-
-                    // ReSharper restore UseObjectOrCollectionInitializer
-                    cell.Controls.Add(jobDetailLink);
-
-                    if (this.SalaryTextBox.Text.Length > 0)
-                    {
-                        row = new TableRow();
-                        table.Rows.Add(row);
-                        row.Cells.Add(
-                            new TableCell
-                                {
-                                    Text =
-                                        Localization.GetString("ApplicationEmailSalaryLabel", this.LocalResourceFile) +
-                                        this.SalaryTextBox.Text
-                                });
-                    }
-
-                    if (resumeId.HasValue)
-                    {
-                        row = new TableRow();
-                        table.Rows.Add(row);
-
-                        cell = new TableCell();
-                        row.Cells.Add(cell);
-
-                        // ReSharper disable UseObjectOrCollectionInitializer
-                        var resumeLink = new HyperLink();
-                        resumeLink.Text = Localization.GetString("ApplicationEmailResumeLink", this.LocalResourceFile);
-                        resumeLink.NavigateUrl = Utility.GetDocumentUrl(this.Request, resumeId.Value);
-
-                        // ReSharper restore UseObjectOrCollectionInitializer
-                        cell.Controls.Add(resumeLink);
-                    }
-
-                    row = new TableRow();
-                    table.Rows.Add(row);
-
-                    row.Cells.Add(
-                        new TableCell
-                            {
-                                Text =
-                                    Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile) +
-                                    this.ApplicationMessageTextBox.Text
-                            });
-
-                    table.RenderControl(textWriter);
-                }
-
-                return textWriter.InnerWriter.ToString();
+                salaryText = Localization.GetString("EmailSalaryBlank", this.LocalResourceFile);
             }
+
+            if (string.IsNullOrEmpty(messageText))
+            {
+                messageText = Localization.GetString("EmailMessageBlank", this.LocalResourceFile);
+            }
+
+            return string.Format(
+                CultureInfo.CurrentCulture,
+                this.Localize(emailBodyResourceKey),
+                this.MakeUrlAbsolute(jobDetailsUrl),
+                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailLink", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailSalaryLabel", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(salaryText),
+                Utility.GetDocumentUrl(this.Request, resumeId),
+                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailResumeLink", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(messageText));
         }
 
+        /// <summary>
+        /// Gets the send to A friend message body.
+        /// </summary>
+        /// <returns>A formatted email message body</returns>
         private string GetSendToAFriendMessageBody()
         {
-            using (var textWriter = new HtmlTextWriter(new StringWriter(CultureInfo.InvariantCulture)))
+            var jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
+            var jobDetailLink =
+                this.MakeUrlAbsolute(
+                    Globals.NavigateURL(
+                        jobDetailModule == null ? -1 : jobDetailModule.TabID,
+                        string.Empty,
+                        "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)));
+            var messageText = this.FriendEmailMessageTextBox.Text;
+            
+            if (string.IsNullOrEmpty(messageText))
             {
-                using (var table = new Table())
-                {
-                    var row = new TableRow();
-                    table.Rows.Add(row);
-
-                    var cell = new TableCell();
-                    row.Cells.Add(cell);
-
-                    var jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
-
-                    // ReSharper disable UseObjectOrCollectionInitializer
-                    var jobDetailLink = new HyperLink();
-                    jobDetailLink.Text = Localization.GetString("FriendEmailLink", this.LocalResourceFile);
-                    jobDetailLink.NavigateUrl =
-                        this.MakeUrlAbsolute(
-                            Globals.NavigateURL(
-                                jobDetailModule == null ? -1 : jobDetailModule.TabID,
-                                string.Empty,
-                                "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)));
-
-                    // ReSharper restore UseObjectOrCollectionInitializer
-                    cell.Controls.Add(jobDetailLink);
-
-                    row = new TableRow();
-                    table.Rows.Add(row);
-
-// ReSharper disable UseObjectOrCollectionInitializer
-                    cell = new TableCell();
-                    cell.Text = Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile) + this.FriendEmailMessageTextBox.Text;
-
-// ReSharper restore UseObjectOrCollectionInitializer
-                    row.Cells.Add(cell);
-
-                    table.RenderControl(textWriter);
-                }
-
-                return textWriter.InnerWriter.ToString();
+                messageText = Localization.GetString("FriendEmailMessageBlank", this.LocalResourceFile);
             }
+
+            return string.Format(
+                CultureInfo.CurrentCulture,
+                this.Localize("FriendEmailBody.Format"),
+                jobDetailLink,
+                HttpUtility.HtmlEncode(Localization.GetString("FriendEmailLink", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(messageText));
         }
 
         /// <summary>
@@ -480,21 +420,17 @@ namespace Engage.Dnn.Employment
             return new Uri(this.Request.Url, url).AbsoluteUri;
         }
 
-        private void SendNotificationEmail(int resumeId, bool isNewApplication)
+        private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
             try
             {
-                Debug.Assert(this.CurrentJob != null, "this.CurrentJob must not be null when sending notification about a new application");
-                string fromAddress = Engage.Utility.HasValue(this.UserInfo.Email) ? this.UserInfo.Email : this.DefaultNotificationEmailAddress;
-                string toAddress = Engage.Utility.HasValue(this.CurrentJob.NotificationEmailAddress)
-                                           ? this.CurrentJob.NotificationEmailAddress
-                                           : this.DefaultNotificationEmailAddress;
-                string subject = String.Format(
+                string fromAddress = this.DefaultNotificationEmailAddress;
+                string subject = string.Format(
                         CultureInfo.CurrentCulture, 
-                        Localization.GetString(isNewApplication ? "ApplicationSubject" : "ApplicationUpdateSubject", this.LocalResourceFile), 
+                        Localization.GetString(isNewApplication ? newSubjectResourceKey : updateSubjectResourceKey, this.LocalResourceFile), 
                         this.UserInfo.DisplayName, 
                         this.CurrentJob.Title);
-                string message = this.GetMessageBody(resumeId);
+                string message = this.GetMessageBody(resumeId, messageResourceKey);
                 Mail.SendMail(
                         fromAddress, 
                         toAddress, 
@@ -512,29 +448,6 @@ namespace Engage.Dnn.Employment
             {
                 this.EmailErrorLabel.Text = Localization.GetString("SmtpError", this.LocalResourceFile);
                 Exceptions.LogException(exc);
-            }
-        }
-
-        private void SendRecieptEmail(bool isNewApplication)
-        {
-            if (Engage.Utility.IsLoggedIn)
-            {
-                string fromAddress = this.DefaultNotificationEmailAddress;
-                string toAddress = this.UserInfo.Email;
-                string subject = Localization.GetString(isNewApplication ? "ApplicationAutoRespondSubject" : "ApplicationUpdateAutoRespondSubject", this.LocalResourceFile);
-                string message = this.GetMessageBody();
-                Mail.SendMail(
-                        fromAddress, 
-                        toAddress, 
-                        string.Empty, 
-                        subject, 
-                        message, 
-                        string.Empty, 
-                        "HTML", 
-                        string.Empty, 
-                        string.Empty, 
-                        string.Empty, 
-                        string.Empty);
             }
         }
 
@@ -627,42 +540,52 @@ namespace Engage.Dnn.Employment
 
                 int? userId = (this.UserId == -1) ? (int?)null : this.UserId;
                 int resumeId = isNewApplication
-                                       ? JobApplication.Apply(
-                                                 Job.CurrentJobId, 
-                                                 userId, 
-                                                 resumeFile, 
-                                                 resumeContentType, 
-                                                 this.ResumeUpload.FileBytes, 
-                                                 coverLetterFile, 
-                                                 coverLetterContentType, 
-                                                 this.CoverLetterUpload.FileBytes, 
-                                                 this.SalaryTextBox.Text, 
-                                                 this.ApplicationMessageTextBox.Text, 
-                                                 leadId)
-                                       : JobApplication.UpdateApplication(
-                                                 this.ApplicationId.Value, 
-                                                 userId, 
-                                                 resumeFile, 
-                                                 resumeContentType, 
-                                                 this.ResumeUpload.FileBytes, 
-                                                 coverLetterFile, 
-                                                 coverLetterContentType, 
-                                                 this.CoverLetterUpload.FileBytes, 
-                                                 this.SalaryTextBox.Text, 
-                                                 this.ApplicationMessageTextBox.Text, 
-                                                 leadId);
+                                   ? JobApplication.Apply(
+                                       Job.CurrentJobId,
+                                       userId,
+                                       resumeFile,
+                                       resumeContentType,
+                                       this.ResumeUpload.FileBytes,
+                                       coverLetterFile,
+                                       coverLetterContentType,
+                                       this.CoverLetterUpload.FileBytes,
+                                       this.SalaryTextBox.Text,
+                                       this.ApplicationMessageTextBox.Text,
+                                       leadId)
+                                   : JobApplication.UpdateApplication(
+                                       this.ApplicationId.Value,
+                                       userId,
+                                       resumeFile,
+                                       resumeContentType,
+                                       this.ResumeUpload.FileBytes,
+                                       coverLetterFile,
+                                       coverLetterContentType,
+                                       this.CoverLetterUpload.FileBytes,
+                                       this.SalaryTextBox.Text,
+                                       this.ApplicationMessageTextBox.Text,
+                                       leadId);
 
-                this.SendNotificationEmail(resumeId, isNewApplication);
+                Debug.Assert(this.CurrentJob != null, "this.CurrentJob must not be null when sending notification about a new application");
+                string notificationEmailAddress = Engage.Utility.HasValue(this.CurrentJob.NotificationEmailAddress)
+                                                      ? this.CurrentJob.NotificationEmailAddress
+                                                      : this.DefaultNotificationEmailAddress;
+                this.SendNotificationEmail(
+                    resumeId,
+                    isNewApplication,
+                    notificationEmailAddress,
+                    "ApplicationSubject",
+                    "ApplicationUpdateSubject",
+                    "NotificationEmailBody.Format");
 
-                try
+                if (IsLoggedIn)
                 {
-                    this.SendRecieptEmail(isNewApplication);
-                }
-                catch (SmtpException exc)
-                {
-                    this.EmailErrorLabel.Text = Localization.GetString("SmtpError", this.LocalResourceFile);
-                    Exceptions.LogException(exc);
-                    return;
+                    this.SendNotificationEmail(
+                        resumeId,
+                        isNewApplication,
+                        this.UserInfo.Email,
+                        "ApplicationAutoRespondSubject",
+                        "ApplicationUpdateAutoRespondSubject",
+                        "ReceiptEmailBody.Format");
                 }
             }
 
