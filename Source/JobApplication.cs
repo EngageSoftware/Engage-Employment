@@ -11,6 +11,8 @@
 
 namespace Engage.Dnn.Employment
 {
+    #region
+
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -18,39 +20,21 @@ namespace Engage.Dnn.Employment
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using Data;
+
+    using Engage.Dnn.Employment.Data;
+
+    #endregion
 
     /// <summary>
     /// An application for a job opening
     /// </summary>
     internal class JobApplication
     {
-        public int ApplicationId { get; private set; }
-
         /// <summary>
         /// Backing field for <see cref="Job"/>
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Job job;
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
-        public Job Job
-        {
-            get { return this.job ?? (this.job = Job.Load(this.JobId)); }
-        }
-
-        public int JobId { get; private set; }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
-        public DateTime AppliedForDate { get; private set; }
-
-        public string SalaryRequirement { get; private set; }
-
-        public string Message { get; private set; }
-
-        public int? UserId { get; private set; }
-
-        public int? StatusId { get; set; }
 
         /// <summary>
         /// Prevents a default instance of the JobApplication class from being created
@@ -60,13 +44,152 @@ namespace Engage.Dnn.Employment
             this.JobId = -1;
         }
 
-        /// <summary>
-        /// Gets a list of the <see cref="Document"/>s for this application.
-        /// </summary>
-        /// <returns>A list of the <see cref="Document"/>s for this application</returns>
-        public List<Document> GetDocuments()
+        public int ApplicationId { get; private set; }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public DateTime AppliedForDate { get; private set; }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public Job Job
         {
-            return Document.GetDocuments(this.ApplicationId);
+            get { return this.job ?? (this.job = Job.Load(this.JobId)); }
+        }
+
+        public int JobId { get; private set; }
+
+        public string Message { get; private set; }
+
+        public string SalaryRequirement { get; private set; }
+
+        public int? StatusId { get; set; }
+
+        public int? UserId { get; private set; }
+
+        //// public static bool HasJobBeenAppliedFor(int id)
+        //// {
+        ////     return DataProvider.Instance().HasJobBeenAppliedFor(id);
+        //// }
+
+        public static int Apply(
+            int jobId, 
+            int? userId, 
+            string resumeFileName, 
+            string resumeContentType, 
+            byte[] resumeData, 
+            string coverLetterFileName, 
+            string coverLetterContentType, 
+            byte[] coverLetterData, 
+            string salaryRequirement, 
+            string message, 
+            int? leadId)
+        {
+            //// we need to insert the applicaiton before the documents in order to satisfy the foriegn key.  BD
+            int applicationId = DataProvider.Instance().InsertApplication(jobId, userId, salaryRequirement, message);
+
+            //// don't check for an empty resumé here, we'll check inside InsertResume, since resumés can carry over from previous applications. BD
+            int resumeId = InsertResume(applicationId, userId, resumeFileName, resumeContentType, resumeData);
+            if (Engage.Utility.HasValue(coverLetterFileName) && coverLetterData != null && coverLetterData.Length > 0)
+            {
+                DataProvider.Instance().InsertDocument(
+                    applicationId, userId, coverLetterFileName, coverLetterContentType, coverLetterData, DocumentType.CoverLetter.GetId());
+            }
+
+            DataProvider.Instance().InsertApplicationProperty(
+                applicationId, 
+                ApplicationPropertyDefinition.Lead.GetId(), 
+                leadId.HasValue ? leadId.Value.ToString(CultureInfo.InvariantCulture) : null);
+            return resumeId;
+        }
+
+        public static ReadOnlyCollection<JobApplication> GetAppliedFor(int userId, int? jobGroupId, int portalId)
+        {
+            var applications = new List<JobApplication>();
+            using (IDataReader dr = DataProvider.Instance().GetJobs(userId, jobGroupId, portalId))
+            {
+                while (dr.Read())
+                {
+                    applications.Add(FillApplication(dr));
+                }
+            }
+
+            return applications.AsReadOnly();
+        }
+
+        public static IDataReader GetDocument(int documentId)
+        {
+            return DataProvider.Instance().GetDocument(documentId);
+        }
+
+        public static int GetResumeId(int userId)
+        {
+            return DataProvider.Instance().GetResumeId(userId);
+        }
+
+        public static bool HasAppliedForJob(int jobId, int userId)
+        {
+            return DataProvider.Instance().HasUserAppliedForJob(jobId, userId);
+        }
+
+        public static JobApplication Load(int applicationId)
+        {
+            using (var dr = DataProvider.Instance().GetApplication(applicationId))
+            {
+                if (dr.Read())
+                {
+                    return FillApplication(dr);
+                }
+            }
+
+            return null;
+        }
+
+        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId)
+        {
+            var applications = new List<JobApplication>();
+            using (IDataReader dr = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId))
+            {
+                while (dr.Read())
+                {
+                    applications.Add(FillApplication(dr));
+                }
+            }
+
+            return applications.AsReadOnly();
+        }
+
+        public static int UpdateApplication(
+            int applicationId, 
+            int? userId, 
+            string resumeFileName, 
+            string resumeContentType, 
+            byte[] resumeData, 
+            string coverLetterFileName, 
+            string coverLetterContentType, 
+            byte[] coverLetterData, 
+            string salaryRequirement, 
+            string message, 
+            int? leadId)
+        {
+            DataProvider.Instance().UpdateApplication(applicationId, salaryRequirement, message);
+            int? resumeId = null;
+            if (Engage.Utility.HasValue(resumeFileName) && resumeData != null && resumeData.Length > 0)
+            {
+                resumeId = DataProvider.Instance().InsertDocument(
+                    applicationId, userId, resumeFileName, resumeContentType, resumeData, DocumentType.Resume.GetId());
+            }
+
+            if (Engage.Utility.HasValue(coverLetterFileName) && coverLetterData != null && coverLetterData.Length > 0)
+            {
+                DataProvider.Instance().InsertDocument(
+                    applicationId, userId, coverLetterFileName, coverLetterContentType, coverLetterData, DocumentType.CoverLetter.GetId());
+            }
+
+            DataProvider.Instance().UpdateApplicationProperty(
+                applicationId, 
+                ApplicationPropertyDefinition.Lead.GetId(), 
+                leadId.HasValue ? leadId.Value.ToString(CultureInfo.InvariantCulture) : null);
+
+            return resumeId ?? DataProvider.Instance().GetResumeIdForApplication(applicationId);
         }
 
         /// <summary>
@@ -92,110 +215,37 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
+        /// Gets a list of the <see cref="Document"/>s for this application.
+        /// </summary>
+        /// <returns>A list of the <see cref="Document"/>s for this application</returns>
+        public List<Document> GetDocuments()
+        {
+            return Document.GetDocuments(this.ApplicationId);
+        }
+
+        /// <summary>
         /// Saves this instance.  Presently, this only updates <see cref="StatusId"/>, since that is the only settable property.
         /// </summary>
+        /// <param name="revisingUserId">The id of the revising user.</param>
         public void Save(int revisingUserId)
         {
             DataProvider.Instance().UpdateApplication(this.ApplicationId, this.StatusId, revisingUserId);
         }
 
-        #region Static Methods
-
-        public static JobApplication Load(int applicationId)
+        private static JobApplication FillApplication(IDataRecord reader)
         {
-            using (IDataReader dr = DataProvider.Instance().GetApplication(applicationId))
-            {
-                if (dr.Read())
+            var jobApplication = new JobApplication
                 {
-                    return FillApplication(dr);
-                }
-            }
-            return null;
-        }
+                    ApplicationId = (int)reader["ApplicationId"], 
+                    JobId = (int)reader["JobId"], 
+                    UserId = reader["UserId"] as int?, 
+                    AppliedForDate = (DateTime)reader["AppliedDate"], 
+                    SalaryRequirement = reader["SalaryRequirement"] as string, 
+                    Message = reader["Message"] as string, 
+                    StatusId = reader["StatusId"] as int?
+                };
 
-        public static ReadOnlyCollection<JobApplication> GetAppliedFor(int userId, int? jobGroupId, int portalId)
-        {
-            var applications = new List<JobApplication>();
-            using (IDataReader dr = DataProvider.Instance().GetJobs(userId, jobGroupId, portalId))
-            {
-                while (dr.Read())
-                {
-                    applications.Add(FillApplication(dr));
-                }
-            }
-
-            return applications.AsReadOnly();
-        }
-
-        public static bool HasAppliedForJob(int jobId, int userId)
-        {
-            return DataProvider.Instance().HasUserAppliedForJob(jobId, userId);
-        }
-
-        //public static bool HasJobBeenAppliedFor(int id)
-        //{
-        //    return DataProvider.Instance().HasJobBeenAppliedFor(id);
-        //}
-
-        public static int Apply(int jobId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, int? leadId)
-        {
-            //we need to insert the applicaiton before the documents in order to satisfy the foriegn key.  BD
-            int applicationId = DataProvider.Instance().InsertApplication(jobId, userId, salaryRequirement, message);
-
-            //don't check for an empty resumé here, we'll check inside InsertResume, since resumés can carry over from previous applications. BD
-            int resumeId = InsertResume(applicationId, userId, resumeFileName, resumeContentType, resumeData);
-            if (Engage.Utility.HasValue(coverLetterFileName) && coverLetterData != null && coverLetterData.Length > 0)
-            {
-                DataProvider.Instance().InsertDocument(applicationId, userId, coverLetterFileName, coverLetterContentType, coverLetterData, DocumentType.CoverLetter.GetId());
-            }
-            DataProvider.Instance().InsertApplicationProperty(applicationId, ApplicationPropertyDefinition.Lead.GetId(), leadId.HasValue ? leadId.Value.ToString(CultureInfo.InvariantCulture) : null);
-
-            return resumeId;
-        }
-
-        public static int UpdateApplication(int applicationId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, int? leadId)
-        {
-            DataProvider.Instance().UpdateApplication(applicationId, salaryRequirement, message);
-            int? resumeId = null;
-            if (Engage.Utility.HasValue(resumeFileName) && resumeData != null && resumeData.Length > 0)
-            {
-                resumeId = DataProvider.Instance().InsertDocument(applicationId, userId, resumeFileName, resumeContentType, resumeData, DocumentType.Resume.GetId());
-            }
-            if (Engage.Utility.HasValue(coverLetterFileName) && coverLetterData != null && coverLetterData.Length > 0)
-            {
-                DataProvider.Instance().InsertDocument(applicationId, userId, coverLetterFileName, coverLetterContentType, coverLetterData, DocumentType.CoverLetter.GetId());
-            }
-            DataProvider.Instance().UpdateApplicationProperty(applicationId, ApplicationPropertyDefinition.Lead.GetId(), leadId.HasValue ? leadId.Value.ToString(CultureInfo.InvariantCulture) : null);
-
-            return resumeId ?? DataProvider.Instance().GetResumeIdForApplication(applicationId);
-        }
-
-        //public static DataTable LoadApplications(int? jobGroupId)
-        //{
-        //    return DataProvider.Instance().GetApplications(jobGroupId, PortalId);
-        //}
-
-        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId)
-        {
-            var applications =new List<JobApplication>();
-            using (IDataReader dr = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId))
-            {
-                while (dr.Read())
-                {
-                    applications.Add(FillApplication(dr));
-                }
-            }
-            return applications.AsReadOnly();
-        }
-
-        public static IDataReader GetDocument(int documentId)
-        {
-            return DataProvider.Instance().GetDocument(documentId);
-        }
-
-        public static int GetResumeId(int userId)
-        {
-            return DataProvider.Instance().GetResumeId(userId);
+            return jobApplication;
         }
 
         private static int InsertResume(int applicationId, int? userId, string fileName, string resumeType, byte[] resume)
@@ -214,23 +264,5 @@ namespace Engage.Dnn.Employment
 
             return resumeId;
         }
-
-        private static JobApplication FillApplication(IDataRecord reader)
-        {
-            var jobApplication = new JobApplication 
-            {
-                ApplicationId = (int)reader["ApplicationId"],
-                JobId = (int)reader["JobId"],
-                UserId = reader["UserId"] as int?,
-                AppliedForDate = (DateTime)reader["AppliedDate"],
-                SalaryRequirement = reader["SalaryRequirement"] as string,
-                Message = reader["Message"] as string,
-                StatusId = reader["StatusId"] as int?
-            };
-
-            return jobApplication;
-        }
-
-        #endregion
-    } 
+    }
 }

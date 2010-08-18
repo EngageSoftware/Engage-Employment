@@ -10,107 +10,83 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using Engage.Dnn.Employment.Data;
-
 namespace Engage.Dnn.Employment
 {
+    #region
+
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+
+    using Engage.Dnn.Employment.Data;
+
+    #endregion
+
     internal class Document
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _documentId;
+        private int documentId;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private int documentTypeId;
+
+        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ////private DocumentType _documentType;
+        ////public DocumentType DocumentType
+        ////{
+        ////    get
+        ////    {
+        ////        if (_documentType == null)
+        ////        {
+        ////            _documentType = Employment.DocumentType.GetDocumentType(_documentTypeId);
+        ////        }
+        ////        return _documentType;
+        ////    }
+        ////}
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string fileName;
+
         public int DocumentId
         {
             [DebuggerStepThrough]
-            get { return _documentId; }
+            get { return this.documentId; }
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int _documentTypeId;
         public int DocumentTypeId
         {
             [DebuggerStepThrough]
-            get { return _documentTypeId; }
+            get { return this.documentTypeId; }
         }
 
-        //[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        //private DocumentType _documentType;
-        //public DocumentType DocumentType
-        //{
-        //    get
-        //    {
-        //        if (_documentType == null)
-        //        {
-        //            _documentType = Employment.DocumentType.GetDocumentType(_documentTypeId);
-        //        }
-        //        return _documentType;
-        //    }
-        //}
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _fileName;
         public string FileName
         {
             [DebuggerStepThrough]
-            get { return _fileName; }
+            get { return this.fileName; }
         }
 
-        //[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        //private int _contentLength;
-        //public int ContentLength
-        //{
-        //    [DebuggerStepThrough]
-        //    get { return _contentLength; }
-        //}
+        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ////private int _contentLength;
+        ////public int ContentLength
+        ////{
+        ////    [DebuggerStepThrough]
+        ////    get { return _contentLength; }
+        ////}
 
-        //[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        //private string _contentType;
-        //public string ContentType
-        //{
-        //    [DebuggerStepThrough]
-        //    get { return _contentType; }
-        //}
+        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ////private string _contentType;
+        ////public string ContentType
+        ////{
+        ////    [DebuggerStepThrough]
+        ////    get { return _contentType; }
+        ////}
 
-        //[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        //private byte[] _data;
-        //public byte[] Data
-        //{
-        //    [DebuggerStepThrough]
-        //    get { return (byte[])_data.Clone(); }
-        //}
-
-        private static Document FillDocument(DataRow dr)
-        {
-            var document = new Document 
-            {
-                _documentId = (int)dr["DocumentId"],
-                _documentTypeId = (int)dr["DocumentTypeId"],
-                _fileName = (string)dr["FileName"]
-                //document._contentType = (string)dr["ContentType"];
-                //document._contentLength = (int)dr["ContentLength"];
-                //document._data = (byte[])dr["ResumeData"];
-            };
-
-            return document;
-        }
-
-        public static List<Document> GetDocuments(int applicationId)
-        {
-            var documents = new List<Document>();
-            DataTable dt = DataProvider.Instance().GetApplicationDocuments(applicationId);
-            
-            if (dt != null)
-            {
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    documents.Add(FillDocument(dt.Rows[i]));
-                }
-            }
-        
-            return documents;
-        }
+        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ////private byte[] _data;
+        ////public byte[] Data
+        ////{
+        ////    [DebuggerStepThrough]
+        ////    get { return (byte[])_data.Clone(); }
+        ////}
 
         /// <summary>
         /// Gets a list of IDs of the job groups that can view the document with the given ID.
@@ -122,9 +98,9 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of the IDs of the job groups that can view the document with the given ID</returns>
         public static IList<int> GetDocumentJobGroups(int documentId)
         {
-            using (IDataReader jobGroupsReader = DataProvider.Instance().GetDocumentJobGroups(documentId))
+            using (var jobGroupsReader = DataProvider.Instance().GetDocumentJobGroups(documentId))
             {
-                IList<int> jobGroupIds = new List<int>();
+                var jobGroupIds = new List<int>();
                 while (jobGroupsReader.Read())
                 {
                     jobGroupIds.Add((int)jobGroupsReader[0]);
@@ -132,6 +108,37 @@ namespace Engage.Dnn.Employment
 
                 return jobGroupIds;
             }
+        }
+
+        public static List<Document> GetDocuments(int applicationId)
+        {
+            var documents = new List<Document>();
+            var dt = DataProvider.Instance().GetApplicationDocuments(applicationId);
+
+            if (dt != null)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    documents.Add(FillDocument(dt.Rows[i]));
+                }
+            }
+
+            return documents;
+        }
+
+        private static Document FillDocument(DataRow dr)
+        {
+            var document = new Document {
+                                            documentId = (int)dr["DocumentId"], 
+                                            documentTypeId = (int)dr["DocumentTypeId"], 
+                                            fileName = (string)dr["FileName"]
+                                            
+                                            ////document._contentType = (string)dr["ContentType"];
+                                            ////document._contentLength = (int)dr["ContentLength"];
+                                            ////document._data = (byte[])dr["ResumeData"];
+                                        };
+
+            return document;
         }
     }
 }

@@ -10,25 +10,16 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
-using Engage.Dnn.Employment.Data;
-
 namespace Engage.Dnn.Employment
 {
-    
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics.CodeAnalysis;
+
+    using Engage.Dnn.Employment.Data;
+
     internal class State
     {
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called in Eval statements from markup")]
-        public int? StateId { get; private set; }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification="Called in Eval statements from markup")]
-        public string StateName { get; set; }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called in Eval statements from markup")]
-        public string Abbreviation { get; set; }
-
         private State(int? stateId, string stateName, string abbreviation)
         {
             this.StateId = stateId;
@@ -36,10 +27,14 @@ namespace Engage.Dnn.Employment
             this.Abbreviation = abbreviation;
         }
 
-        private static State FillState(IDataRecord dr)
-        {
-            return new State((int)dr["StateId"], dr["StateName"].ToString(), dr["StateAbbreviation"].ToString());
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called in Eval statements from markup")]
+        public int? StateId { get; private set; }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called in Eval statements from markup")]
+        public string StateName { get; set; }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called in Eval statements from markup")]
+        public string Abbreviation { get; set; }
 
         public static List<State> LoadStates(int? jobGroupId, int portalId)
         {
@@ -51,6 +46,7 @@ namespace Engage.Dnn.Employment
                     states.Add(FillState(dr));
                 }
             }
+
             return states;
         }
 
@@ -77,6 +73,11 @@ namespace Engage.Dnn.Employment
         internal static void DeleteState(int stateId)
         {
             DataProvider.Instance().DeleteState(stateId);
+        }
+
+        private static State FillState(IDataRecord dr)
+        {
+            return new State((int)dr["StateId"], dr["StateName"].ToString(), dr["StateAbbreviation"].ToString());
         }
     }
 }

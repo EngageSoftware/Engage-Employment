@@ -295,7 +295,7 @@ namespace Engage.Dnn.Employment
         /// Gets the message body.
         /// </summary>
         /// <param name="resumeId">The resume id.</param>
-        /// <param name="emailBodyResourceKey"></param>
+        /// <param name="emailBodyResourceKey">The resource key of the email body.</param>
         /// <returns>A formatted email message body</returns>
         private string GetMessageBody(int resumeId, string emailBodyResourceKey)
         {

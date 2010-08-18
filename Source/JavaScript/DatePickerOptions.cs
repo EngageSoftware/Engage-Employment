@@ -179,7 +179,7 @@ namespace Engage.Dnn.Employment
         /// <param name="resourceFile">The resource file from which strings should be retrieved.</param>
         public DatePickerOptions(CultureInfo displayCulture, string resourceFile)
         {
-            if(displayCulture == null)
+            if (displayCulture == null)
             {
                 throw new ArgumentNullException("displayCulture", "displayCulture must not be null.");
             }

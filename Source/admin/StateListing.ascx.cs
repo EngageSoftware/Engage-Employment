@@ -10,20 +10,18 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System; 
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
-using DotNetNuke.UI.Utilities;
-
 namespace Engage.Dnn.Employment.Admin
 {
-    partial class StateListing : ModuleBase
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Web.UI;
+    using System.Web.UI.WebControls;
+    using DotNetNuke.Services.Exceptions;
+    using DotNetNuke.Services.Localization;
+    using DotNetNuke.UI.Utilities;
+
+    public partial class StateListing : ModuleBase
     {
         private const int StateNameMaxLength = 255;
         private const int AbbreviationMaxLength = 10;
@@ -33,14 +31,14 @@ namespace Engage.Dnn.Employment.Admin
             get { return Utility.GetMaxLengthValidationExpression(StateNameMaxLength); }
         }
 
-        protected string MaxLengthValidationText
-        {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StateMaxLength", LocalResourceFile), StateNameMaxLength); }
-        }
-
         protected static string MaxAbbreviationLengthValidationExpression
         {
             get { return Utility.GetMaxLengthValidationExpression(AbbreviationMaxLength); }
+        }
+
+        protected string MaxLengthValidationText
+        {
+            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StateMaxLength", LocalResourceFile), StateNameMaxLength); }
         }
 
         protected string MaxAbbreviationLengthValidationText
@@ -50,7 +48,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected override void OnInit(EventArgs e)
         {
-            this.Load += Page_Load;
+            this.Load += this.Page_Load;
             this.AddButton.Click += this.AddButton_Click;
             this.BackButton.Click += this.BackButton_Click;
             this.CancelNewButton.Click += this.CancelNewButton_Click;
@@ -65,18 +63,18 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        protected void Page_Load(Object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
                 if (!Page.IsPostBack)
                 {
-                    Engage.Dnn.Utility.LocalizeGridView(ref this.StatesGridView, LocalResourceFile);
-                    SetupLengthValidation();
-                    LoadStates();
+                    Dnn.Utility.LocalizeGridView(ref this.StatesGridView, LocalResourceFile);
+                    this.SetupLengthValidation();
+                    this.LoadStates();
                 }
             }
-            catch (Exception exc) //Module failed to load
+            catch (Exception exc)
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
@@ -88,11 +86,24 @@ namespace Engage.Dnn.Employment.Admin
             Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
         }
 
+        private static int? GetStateId(Control row)
+        {
+            var hdnStateId = (HiddenField)row.FindControl("hdnStateId");
+
+            int stateId;
+            if (hdnStateId != null && int.TryParse(hdnStateId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId))
+            {
+                return stateId;
+            }
+
+            return null;
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void AddButton_Click(object sender, EventArgs e)
         {
             this.NewPanel.Visible = true;
-            txtNewState.Focus();
+            this.txtNewState.Focus();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
@@ -100,15 +111,15 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (Page.IsValid)
             {
-                if (IsStateNameUnique(null, txtNewState.Text))
+                if (this.IsStateNameUnique(null, this.txtNewState.Text))
                 {
-                    State.InsertState(txtNewState.Text, txtNewAbbreviation.Text, PortalId);
-                    HideAndClearNewStatePanel();
-                    LoadStates();
+                    State.InsertState(this.txtNewState.Text, this.txtNewAbbreviation.Text, this.PortalId);
+                    this.HideAndClearNewStatePanel();
+                    this.LoadStates();
                 }
                 else
                 {
-                    cvDuplicateState.IsValid = false;
+                    this.cvDuplicateState.IsValid = false;
                 }
             }
         }
@@ -116,14 +127,14 @@ namespace Engage.Dnn.Employment.Admin
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CancelNewButton_Click(object sender, EventArgs e)
         {
-            HideAndClearNewStatePanel();
+            this.HideAndClearNewStatePanel();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             this.StatesGridView.EditIndex = -1;
-            LoadStates();
+            this.LoadStates();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
@@ -158,7 +169,7 @@ namespace Engage.Dnn.Employment.Admin
             if (stateId.HasValue)
             {
                 State.DeleteState(stateId.Value);
-                LoadStates();
+                this.LoadStates();
             }
         }
 
@@ -166,9 +177,10 @@ namespace Engage.Dnn.Employment.Admin
         private void StatesGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
             this.StatesGridView.EditIndex = e.NewEditIndex;
-            HideAndClearNewStatePanel();
-            LoadStates();
+            this.HideAndClearNewStatePanel();
+            this.LoadStates();
         }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -182,16 +194,16 @@ namespace Engage.Dnn.Employment.Admin
                         int? stateId = GetStateId(rowIndex);
                         if (stateId.HasValue)
                         {
-                            string newStateName = GetStateName(rowIndex);
-                            if (IsStateNameUnique(stateId, newStateName))
+                            var newStateName = this.GetStateName(rowIndex);
+                            if (this.IsStateNameUnique(stateId, newStateName))
                             {
-                                State.UpdateState(stateId.Value, newStateName, GetStateAbbreviation(rowIndex));
+                                State.UpdateState(stateId.Value, newStateName, this.GetStateAbbreviation(rowIndex));
                                 this.StatesGridView.EditIndex = -1;
-                                LoadStates();
+                                this.LoadStates();
                             }
                             else
                             {
-                                cvDuplicateState.IsValid = false;
+                                this.cvDuplicateState.IsValid = false;
                             }
                         }
                     }
@@ -201,13 +213,13 @@ namespace Engage.Dnn.Employment.Admin
 
         private bool IsStateNameUnique(int? stateId, string newStateName)
         {
-            int? newStateId = State.GetStateId(newStateName, PortalId);
+            var newStateId = State.GetStateId(newStateName, PortalId);
             return !newStateId.HasValue || (stateId.HasValue && newStateId.Value == stateId.Value);
         }
 
         private void LoadStates()
         {
-            List<State> states = State.LoadStates(null, PortalId);
+            var states = State.LoadStates(null, PortalId);
             this.StatesGridView.DataSource = states;
             this.StatesGridView.DataBind();
 
@@ -220,15 +232,15 @@ namespace Engage.Dnn.Employment.Admin
                 this.NewPanel.CssClass = this.StatesGridView.AlternatingRowStyle.CssClass;
             }
 
-            rowNewHeader.Visible = (states == null || states.Count < 1);
+            this.rowNewHeader.Visible = states == null || states.Count < 1;
         }
 
         private void SetupLengthValidation()
         {
-            regexNewState.ValidationExpression = MaxLengthValidationExpression;
-            regexNewState.ErrorMessage = MaxLengthValidationText;
-            regexNewAbbreviation.ValidationExpression = MaxAbbreviationLengthValidationExpression;
-            regexNewAbbreviation.ErrorMessage = MaxAbbreviationLengthValidationText;
+            this.regexNewState.ValidationExpression = MaxLengthValidationExpression;
+            this.regexNewState.ErrorMessage = this.MaxLengthValidationText;
+            this.regexNewAbbreviation.ValidationExpression = MaxAbbreviationLengthValidationExpression;
+            this.regexNewAbbreviation.ErrorMessage = this.MaxAbbreviationLengthValidationText;
         }
 
         private void HideAndClearNewStatePanel()
@@ -242,11 +254,12 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (this.StatesGridView != null && this.StatesGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = this.StatesGridView.Rows[rowIndex];
-                TextBox txtState = row.FindControl("txtState") as TextBox;
+                var row = this.StatesGridView.Rows[rowIndex];
+                var txtState = row.FindControl("txtState") as TextBox;
                 Debug.Assert(txtState != null);
                 return txtState.Text;
             }
+
             return null;
         }
 
@@ -254,23 +267,12 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (this.StatesGridView != null && this.StatesGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = this.StatesGridView.Rows[rowIndex];
-                TextBox txtAbbreviation = row.FindControl("txtAbbreviation") as TextBox;
+                var row = this.StatesGridView.Rows[rowIndex];
+                var txtAbbreviation = row.FindControl("txtAbbreviation") as TextBox;
                 Debug.Assert(txtAbbreviation != null);
                 return txtAbbreviation.Text;
             }
-            return null;
-        }
 
-        private static int? GetStateId(Control row)
-        {
-            HiddenField hdnStateId = (HiddenField)row.FindControl("hdnStateId");
-
-            int stateId;
-            if (hdnStateId != null && int.TryParse(hdnStateId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId))
-            {
-                return stateId;
-            }
             return null;
         }
 
@@ -280,8 +282,8 @@ namespace Engage.Dnn.Employment.Admin
             {
                 return GetStateId(this.StatesGridView.Rows[rowIndex]);
             }
+
             return null;
         }
-
     }
 }

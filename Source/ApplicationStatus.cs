@@ -35,7 +35,18 @@ namespace Engage.Dnn.Employment
         private string statusName;
 
         /// <summary>
-        /// Gets or sets the ID of this status.
+        /// Initializes a new instance of the <see cref="ApplicationStatus"/> class.
+        /// </summary>
+        /// <param name="statusId">The ID of the status.</param>
+        /// <param name="statusName">Name of the status.</param>
+        private ApplicationStatus(int statusId, string statusName)
+        {
+            this.statusId = statusId;
+            this.statusName = statusName;
+        }
+
+        /// <summary>
+        /// Gets the ID of this status.
         /// </summary>
         /// <value>The ID of this status.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
@@ -48,7 +59,7 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Gets or sets the name of this status.
+        /// Gets the name of this status.
         /// </summary>
         /// <value>The name of this status.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
@@ -58,17 +69,6 @@ namespace Engage.Dnn.Employment
             get { return this.statusName; }
             [DebuggerStepThrough]
             private set { this.statusName = value; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationStatus"/> class.
-        /// </summary>
-        /// <param name="statusId">The ID of the status.</param>
-        /// <param name="statusName">Name of the status.</param>
-        private ApplicationStatus(int statusId, string statusName)
-        {
-            this.statusId = statusId;
-            this.statusName = statusName;
         }
 
         /// <summary>

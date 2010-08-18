@@ -11,6 +11,8 @@
 
 namespace Engage.Dnn.Employment.Data
 {
+    #region
+
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -18,16 +20,18 @@ namespace Engage.Dnn.Employment.Data
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Text;
+
     using DotNetNuke.Common.Utilities;
     using DotNetNuke.Framework.Providers;
+
     using Microsoft.ApplicationBlocks.Data;
+
+    using Utility = Engage.Utility;
+
+    #endregion
 
     internal class SqlDataProvider : DataProvider
     {
-        #region Constants
-
-        private const string ProviderType = "data";
-
         /// <summary>
         /// The length of the ApplicationProperty propertyValue column, past this length, use the text column, propertyText
         /// </summary>
@@ -35,22 +39,16 @@ namespace Engage.Dnn.Employment.Data
 
         private const string ModuleQualifier = "EngageEmployment_";
 
-        #endregion
-
-        #region Private Members
-
-        private readonly ProviderConfiguration providerConfiguration = ProviderConfiguration.GetProviderConfiguration(ProviderType);
+        private const string ProviderType = "data";
 
         private readonly string connectionString;
 
         // private string providerPath;
-        private readonly string objectQualifier;
-
         private readonly string databaseOwner;
 
-        #endregion
+        private readonly string objectQualifier;
 
-        #region Constructors
+        private readonly ProviderConfiguration providerConfiguration = ProviderConfiguration.GetProviderConfiguration(ProviderType);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlDataProvider"/> class.
@@ -79,16 +77,9 @@ namespace Engage.Dnn.Employment.Data
             }
         }
 
-        #endregion
-
-        #region Properties
-
         public string ConnectionString
         {
-            get
-            {
-                return this.connectionString;
-            }
+            get { return this.connectionString; }
         }
 
         // public string ProviderPath
@@ -98,144 +89,154 @@ namespace Engage.Dnn.Employment.Data
         // return this.providerPath;
         // }
         // }
-        public string ObjectQualifier
-        {
-            get
-            {
-                return this.objectQualifier;
-            }
-        }
-
         public string DatabaseOwner
         {
-            get
-            {
-                return this.databaseOwner;
-            }
+            get { return this.databaseOwner; }
         }
 
         public string NamePrefix
         {
-            get
+            get { return this.databaseOwner + this.objectQualifier + ModuleQualifier; }
+        }
+
+        public string ObjectQualifier
+        {
+            get { return this.objectQualifier; }
+        }
+
+        public override void AssignDocumentToApplication(int applicationId, int resumeId)
+        {
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "INSERT INTO {0}ApplicationDocument (ApplicationId, ResumeId)", this.NamePrefix);
+            sql.Append("values (@applicationId, @resumeId)");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId), 
+                Utility.CreateIntegerParam("@resumeId", resumeId));
+        }
+
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", 
+            Justification = "SQL does not contain un-paramterized input")]
+        public override void AssignJobToJobGroups(int jobId, List<int> jobGroups)
+        {
+            using (var conn = new SqlConnection(this.ConnectionString))
             {
-                return this.databaseOwner + this.objectQualifier + ModuleQualifier;
+                conn.Open();
+                using (SqlTransaction tran = conn.BeginTransaction())
+                {
+                    // Remove all JobGroup assignments for this job
+                    SqlHelper.ExecuteNonQuery(
+                        tran, 
+                        CommandType.Text, 
+                        String.Format(CultureInfo.InvariantCulture, "DELETE FROM {0}JobJobGroup WHERE JobId = @JobId", this.NamePrefix), 
+                        Utility.CreateIntegerParam("@JobId", jobId));
+
+                    // Add back the selected JobGroup assignments
+                    if (jobGroups != null && jobGroups.Count > 0)
+                    {
+                        var sql = new StringBuilder(114);
+                        sql.AppendFormat(CultureInfo.InvariantCulture, "INSERT {0}JobJobGroup (JobId, JobGroupId) ", this.NamePrefix);
+                        sql.Append("VALUES (@jobId, @jobGroupId) ");
+
+                        using (SqlCommand cmd = conn.CreateCommand())
+                        {
+                            cmd.Parameters.Add(Utility.CreateIntegerParam("@jobId", jobId));
+                            cmd.Parameters.Add(Utility.CreateIntegerParam("@jobGroupId", jobGroups[0]));
+                            cmd.CommandText = sql.ToString();
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Transaction = tran;
+                            cmd.Prepare();
+                            cmd.ExecuteNonQuery();
+
+                            for (var i = 1; i < jobGroups.Count; i++)
+                            {
+                                cmd.Parameters["@jobGroupId"].Value = jobGroups[i];
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // cmd.Transaction.Commit();
+                        }
+                    }
+
+                    tran.Commit();
+                }
             }
         }
 
-        #endregion
-
-        #region Job
-
-        public override DataTable GetAdminData(int? jobGroupId, int portalId)
+        /// <summary>
+        /// Determines whether this portal has been setup to create jobs;
+        /// that is, whether there is at least one <see cref="Location"/>, <see cref="Position"/>, and <see cref="Category"/> defined.
+        /// </summary>
+        /// <param name="portalId">The portal id.</param>
+        /// <returns>
+        /// <c>true</c> if this portal has been setup to create jobs; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool CanCreateJob(int portalId)
         {
-            return
-                    this.ExecuteDataset(
-                            "GetAdminData", 
-                            Engage.Utility.CreateIntegerParam("@JobGroupId", jobGroupId), 
-                            Engage.Utility.CreateIntegerParam("@PortalId", portalId)).Tables[0];
+            var sql = new StringBuilder(256);
+            sql.AppendFormat("select top 1 null from {0}vwLocations l", this.NamePrefix);
+            sql.AppendFormat(" join {0}vwPositions p on (p.PortalId = l.PortalId)", this.NamePrefix);
+            sql.AppendFormat(" join {0}vwCategories c on (c.PortalId = p.PortalId)", this.NamePrefix);
+            sql.Append("where l.portalId = @portalId");
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@portalId", portalId)))
+            {
+                return dr.Read();
+            }
         }
 
-        public override DataSet GetUnusedAdminData(int? jobGroupId, int portalId)
+        public override void DeleteCategory(int categoryId)
         {
-            DataSet adminData = this.ExecuteDataset(
-                    "GetUnusedAdminData", 
-                    Engage.Utility.CreateIntegerParam("@JobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@PortalId", portalId));
-
-            adminData.Tables[0].TableName = "States";
-            adminData.Tables[1].TableName = "Locations";
-            adminData.Tables[2].TableName = "Categories";
-            adminData.Tables[3].TableName = "Positions";
-
-            return adminData;
-        }
-
-        public override int InsertJob(
-            int userId, 
-            int positionId, 
-            int locationId, 
-            int categoryId, 
-            bool isHot, 
-            bool isFilled, 
-            string requiredQualifications, 
-            string desiredQualifications, 
-            int sortOrder, 
-            int portalId, 
-            string notificationEmailAddress, 
-            DateTime startDate, 
-            DateTime? expireDate, 
-            string applicationUrl)
-        {
-            return (int)this.ExecuteScalar(
-                "InsertJob",
-                Engage.Utility.CreateIntegerParam("@positionId", positionId),
-                Engage.Utility.CreateIntegerParam("@locationId", locationId),
-                Engage.Utility.CreateIntegerParam("@categoryId", categoryId),
-                Engage.Utility.CreateBitParam("@isHot", isHot),
-                Engage.Utility.CreateBitParam("@isFilled", isFilled),
-                Engage.Utility.CreateTextParam("@requiredQualifications", requiredQualifications),
-                Engage.Utility.CreateTextParam("@desiredQualifications", desiredQualifications),
-                Engage.Utility.CreateIntegerParam("@revisingUser", userId),
-                Engage.Utility.CreateIntegerParam("@sortOrder", sortOrder),
-                Engage.Utility.CreateIntegerParam("@portalId", portalId),
-                Engage.Utility.CreateTextParam("@notificationEmailAddress", notificationEmailAddress),
-                Engage.Utility.CreateDateTimeParam("@startDate", startDate),
-                Engage.Utility.CreateDateTimeParam("@expireDate", expireDate),
-                Engage.Utility.CreateVarcharParam("@applicationUrl", applicationUrl, MaxUrlLength));
-        }
-
-        public override void UpdateJob(
-            int userId, 
-            int jobId, 
-            int positionId, 
-            int locationId, 
-            int categoryId, 
-            bool isHot, 
-            bool isFilled, 
-            string requiredQualifications, 
-            string desiredQualifications, 
-            int sortOrder, 
-            string notificationEmailAddress, 
-            DateTime startDate, 
-            DateTime? expireDate, 
-            string applicationUrl)
-        {
-            this.ExecuteNonQuery(
-                    "UpdateJob", 
-                    Engage.Utility.CreateIntegerParam("@jobId", jobId), 
-                    Engage.Utility.CreateIntegerParam("@positionId", positionId), 
-                    Engage.Utility.CreateIntegerParam("@locationId", locationId), 
-                    Engage.Utility.CreateIntegerParam("@categoryId", categoryId), 
-                    Engage.Utility.CreateBitParam("@isHot", isHot), 
-                    Engage.Utility.CreateBitParam("@isFilled", isFilled), 
-                    Engage.Utility.CreateTextParam("@desiredQualifications", desiredQualifications), 
-                    Engage.Utility.CreateTextParam("@requiredQualifications", requiredQualifications), 
-                    Engage.Utility.CreateIntegerParam("@revisingUser", userId), 
-                    Engage.Utility.CreateIntegerParam("@sortOrder", sortOrder), 
-                    Engage.Utility.CreateTextParam("@notificationEmailAddress", notificationEmailAddress),
-                    Engage.Utility.CreateDateTimeParam("@startDate", startDate),
-                    Engage.Utility.CreateDateTimeParam("@expireDate", expireDate),
-                    Engage.Utility.CreateVarcharParam("@applicationUrl", applicationUrl, MaxUrlLength));
+            this.ExecuteNonQuery("DeleteCategory", Utility.CreateIntegerParam("@categoryId", categoryId));
         }
 
         public override void DeleteJob(int jobId)
         {
-            this.ExecuteNonQuery("DeleteJob", Engage.Utility.CreateIntegerParam("@JobId", jobId));
+            this.ExecuteNonQuery("DeleteJob", Utility.CreateIntegerParam("@JobId", jobId));
         }
 
-        public override IDataReader GetJob(int jobId)
+        public override void DeleteJobGroup(int jobGroupId)
         {
-            var sql = new StringBuilder(512);
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                string.Format(CultureInfo.InvariantCulture, "DELETE {0}JobGroup WHERE JobGroupId = @jobGroupId", this.NamePrefix), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
+        }
 
-            sql.Append("select ");
-            sql.Append(" JobId, JobTitle, PositionId, LocationName, LocationId, StateName, StateAbbreviation, StateId, ");
-            sql.Append(" PostedDate, RequiredQualifications, DesiredQualifications, NotificationEmailAddress, ApplicationUrl, ");
-            sql.Append(" CategoryName, CategoryId, IsHot, IsFilled, JobDescription, SortOrder, StartDate, ExpireDate ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs ", this.NamePrefix);
-            sql.Append(" where JobId = @jobId ");
+        public override void DeleteJobSearchQuery(int jobSearchQueryId)
+        {
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, CommandType.Text, "delete " + this.NamePrefix + "UserJobSearch where UserSearchId = " + jobSearchQueryId);
+        }
 
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@jobId", jobId));
+        public override void DeleteLocation(int locationId)
+        {
+            this.ExecuteNonQuery("DeleteLocation", Utility.CreateIntegerParam("@locationId", locationId));
+        }
+
+        public override void DeletePosition(int positionId)
+        {
+            this.ExecuteNonQuery("DeletePosition", Utility.CreateIntegerParam("@positionId", positionId));
+        }
+
+        public override void DeleteState(int stateId)
+        {
+            this.ExecuteNonQuery("DeleteState", Utility.CreateIntegerParam("@stateId", stateId));
+        }
+
+        public override void DeleteUserStatus(int statusId)
+        {
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                "delete " + this.NamePrefix + "vwUserStatuses where UserStatusId = @statusId", 
+                Utility.CreateIntegerParam("@statusId", statusId));
         }
 
         public override IDataReader GetActiveJobs(bool onlyHotJobs, int? jobGroupId, int portalId)
@@ -282,150 +283,20 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" j.SortOrder, j.CategoryName, j.JobTitle");
 
             return SqlHelper.ExecuteReader(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId),
-                    Engage.Utility.CreateDateTimeParam("@now", DateTime.Now));
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                Utility.CreateIntegerParam("@portalId", portalId), 
+                Utility.CreateDateTimeParam("@now", DateTime.Now));
         }
 
-        public override IDataReader GetJobs(int? jobGroupId, int portalId)
+        public override DataTable GetAdminData(int? jobGroupId, int portalId)
         {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, ");
-            sql.Append(" j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, j.ApplicationUrl, ");
-            sql.Append(" j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs j", this.NamePrefix);
-            if (jobGroupId.HasValue)
-            {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (j.JobId = jlg.JobId) ", this.NamePrefix);
-            }
-
-            sql.Append(" where j.PortalId = @portalId ");
-            if (jobGroupId.HasValue)
-            {
-                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
-            }
-
-            sql.Append(" order by ");
-            sql.Append(" j.SortOrder, j.CategoryName, j.JobTitle ");
-
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override int? GetJobId(int locationId, int positionId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select top 1 JobId ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" LocationId = @locationId ");
-            sql.Append(" and PositionId = @positionId ");
-
             return
-                    SqlHelper.ExecuteScalar(
-                            this.ConnectionString, 
-                            CommandType.Text, 
-                            sql.ToString(), 
-                            Engage.Utility.CreateIntegerParam("@locationId", locationId), 
-                            Engage.Utility.CreateIntegerParam("@positionId", positionId)) as int?;
+                this.ExecuteDataset(
+                    "GetAdminData", Utility.CreateIntegerParam("@JobGroupId", jobGroupId), Utility.CreateIntegerParam("@PortalId", portalId)).Tables[0];
         }
-
-        /// <summary>
-        /// Determines whether this portal has been setup to create jobs;
-        /// that is, whether there is at least one <see cref="Location"/>, <see cref="Position"/>, and <see cref="Category"/> defined.
-        /// </summary>
-        /// <param name="portalId">The portal id.</param>
-        /// <returns>
-        /// <c>true</c> if this portal has been setup to create jobs; otherwise, <c>false</c>.
-        /// </returns>
-        public override bool CanCreateJob(int portalId)
-        {
-            var sql = new StringBuilder(256);
-            sql.AppendFormat("select top 1 null from {0}vwLocations l", this.NamePrefix);
-            sql.AppendFormat(" join {0}vwPositions p on (p.PortalId = l.PortalId)", this.NamePrefix);
-            sql.AppendFormat(" join {0}vwCategories c on (c.PortalId = p.PortalId)", this.NamePrefix);
-            sql.Append("where l.portalId = @portalId");
-
-            using (IDataReader dr = SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@portalId", portalId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        #endregion
-
-        #region UserJob
-
-        public override IDataReader GetJobs(int? userId, int? jobGroupId, int portalId)
-        {
-            var sql = new StringBuilder(1024);
-
-            sql.Append(" select ");
-            sql.Append(" a.JobId, JobTitle, LocationName, StateName, ");
-            sql.Append(" RequiredQualifications, DesiredQualifications, CategoryName, DisplayName, StatusId, ");
-            sql.Append(" IsHot, PostedDate, AppliedDate, ApplicationId, SortOrder, UserId, SalaryRequirement, Message ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications a ", this.NamePrefix);
-            if (jobGroupId.HasValue)
-            {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (a.JobId = jlg.JobId) ", this.NamePrefix);
-            }
-
-            sql.Append(" where (UserId = @userId OR (userId IS NULL AND @userId IS NULL)) ");
-            sql.Append(" and PortalId = @portalId ");
-            if (jobGroupId.HasValue)
-            {
-                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
-            }
-
-            sql.Append(" order by ");
-            sql.Append(" AppliedDate desc ");
-
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@userId", userId), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override bool HasUserAppliedForJob(int jobId, int userId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select top 1 NULL ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" JobId = @jobId ");
-            sql.Append(" and UserId = @userId");
-
-            using (
-                    IDataReader dr = SqlHelper.ExecuteReader(
-                            this.ConnectionString, 
-                            CommandType.Text, 
-                            sql.ToString(), 
-                            Engage.Utility.CreateIntegerParam("@jobId", jobId), 
-                            Engage.Utility.CreateIntegerParam("@userId", userId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        #endregion
-
-        #region JobApplication
 
         public override IDataReader GetApplication(int applicationId)
         {
@@ -435,59 +306,56 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" where ApplicationId = @applicationId ");
 
             return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@applicationId", applicationId));
+                this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@applicationId", applicationId));
         }
 
-        public override int InsertApplication(int jobId, int? userId, string salaryRequirement, string message)
+        public override DataTable GetApplicationDocuments(int applicationId)
         {
             var sql = new StringBuilder(512);
 
-            sql.AppendFormat(CultureInfo.InvariantCulture, " insert {0}vwApplications ", this.NamePrefix);
-            sql.Append(" (UserId, JobId, AppliedDate, SalaryRequirement, Message) values ");
-            sql.Append(" (@userId, @jobId, getdate(), @salaryRequirement, @message) ");
-            sql.Append(" SELECT SCOPE_IDENTITY() ");
+            sql.Append(" select ");
+            sql.Append(" DocumentId, [UserId], [FileName], [ContentType], [ContentLength], [ResumeData], [RevisionDate], [DocumentTypeId] ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwDocuments ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" ApplicationId = @applicationId");
 
-            return (int)(decimal)SqlHelper.ExecuteScalar(
+            return
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@applicationId", applicationId)).Tables[0];
+        }
+
+        public override DataTable GetApplicationProperties(int applicationId)
+        {
+            var sql = new StringBuilder(128);
+            sql.Append("select ujp.[ApplicationId],ujp.[ApplicationPropertyId],ujp.[Visibility],ap.[PropertyName], ");
+            sql.Append(" CASE WHEN ujp.[PropertyValue] IS NULL THEN ujp.[PropertyText] ELSE ujp.[PropertyValue] END AS PropertyValue ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}UserJobProperty ujp ", this.NamePrefix);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                " join {0}ApplicationProperty ap ON (ujp.ApplicationPropertyId = ap.ApplicationPropertyId) ", 
+                this.NamePrefix);
+            sql.Append(" where ApplicationId = @ApplicationId ");
+
+            return
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@ApplicationId", applicationId)).Tables[0];
+        }
+
+        public override IDataReader GetApplicationProperty(string name, int? portalId)
+        {
+            var sql = new StringBuilder(128);
+            sql.Append("select [ApplicationPropertyId],[DataType],[DefaultValue],[PropertyName],[Required],[ViewOrder],[Visible] ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}ApplicationProperty ", this.NamePrefix);
+            sql.Append(" where PropertyName = @PropertyName ");
+            sql.Append(" and (PortalId = @portalId OR (PortalId IS NULL and @portalId IS NULL)) ");
+
+            return SqlHelper.ExecuteReader(
                 this.ConnectionString, 
                 CommandType.Text, 
                 sql.ToString(), 
-                Engage.Utility.CreateIntegerParam("@userId", userId), 
-                Engage.Utility.CreateIntegerParam("@jobId", jobId), 
-                Engage.Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, VarcharLength), 
-                Engage.Utility.CreateVarcharParam("@message", message, VarcharLength));
-        }
-
-        /// <summary>
-        /// Updates the <see cref="ApplicationStatus"/> of the given <see cref="JobApplication"/>.
-        /// </summary>
-        /// <param name="applicationId">The application id.</param>
-        /// <param name="statusId">The status id.</param>
-        /// <param name="revisingUserId">The ID of the user updating this application.</param>
-        public override void UpdateApplication(int applicationId, int? statusId, int revisingUserId)
-        {
-            this.ExecuteNonQuery(
-                    "UpdateApplication", 
-                    Engage.Utility.CreateIntegerParam("@applicationId", applicationId), 
-                    Engage.Utility.CreateIntegerParam("@statusId", statusId), 
-                    Engage.Utility.CreateIntegerParam("@revisingUserId", revisingUserId));
-        }
-
-        public override void UpdateApplication(int applicationId, string salaryRequirement, string message)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.AppendFormat(CultureInfo.InvariantCulture, " update {0}vwApplications ", this.NamePrefix);
-            sql.Append(" set SalaryRequirement = @salaryRequirement, ");
-            sql.Append(" Message = @message ");
-            sql.Append(" where ApplicationId = @applicationId ");
-
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@applicationId", applicationId), 
-                    Engage.Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, VarcharLength), 
-                    Engage.Utility.CreateVarcharParam("@message", message, VarcharLength));
+                Utility.CreateVarcharParam("@PropertyName", name), 
+                Utility.CreateIntegerParam("@portalId", portalId));
         }
 
         public override DataTable GetApplications(int? jobGroupId, int portalId)
@@ -496,7 +364,7 @@ namespace Engage.Dnn.Employment.Data
 
             sql.Append(" select ");
             sql.Append(
-                    " a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, a.SalaryRequirement, a.Message ");
+                " a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, a.SalaryRequirement, a.Message ");
             sql.Append(" from ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications a ", this.NamePrefix);
             if (jobGroupId.HasValue)
@@ -514,12 +382,12 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" a.AppliedDate desc ");
 
             return
-                    SqlHelper.ExecuteDataset(
-                            this.ConnectionString, 
-                            CommandType.Text, 
-                            sql.ToString(), 
-                            Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                            Engage.Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                    Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
         }
 
         public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId)
@@ -545,822 +413,21 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" AppliedDate desc ");
 
             return SqlHelper.ExecuteReader(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@jobId", jobId), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
-        }
-
-        #endregion
-
-        #region Document
-
-        public override DataTable GetApplicationDocuments(int applicationId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" DocumentId, [UserId], [FileName], [ContentType], [ContentLength], [ResumeData], [RevisionDate], [DocumentTypeId] ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwDocuments ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" ApplicationId = @applicationId");
-
-            return
-                    SqlHelper.ExecuteDataset(
-                            this.ConnectionString, 
-                            CommandType.Text, 
-                            sql.ToString(), 
-                            Engage.Utility.CreateIntegerParam("@applicationId", applicationId)).Tables[0];
-        }
-
-        public override IDataReader GetDocumentType(string documentTypeName, int? portalId)
-        {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select documentTypeId, description from {0}DocumentType ", this.NamePrefix);
-            sql.Append(" where description = @documentTypeName ");
-            sql.Append(" and (PortalId = @portalId OR (PortalId IS NULL and @portalId IS NULL)) ");
-
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@documentTypeName", documentTypeName), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override IDataReader GetDocumentType(int documentTypeId)
-        {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(
-                    CultureInfo.InvariantCulture, 
-                    "select documentTypeId, description from {0}DocumentType where documentTypeId = @documentTypeId", 
-                    this.NamePrefix);
-
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
-        }
-
-        public override int InsertResume(int applicationId, int? userId, string fileName, string resumeType, byte[] resume)
-        {
-            return this.InsertDocument(applicationId, userId, fileName, resumeType, resume, DocumentType.Resume.GetId());
-        }
-
-        public override int InsertDocument(int applicationId, int? userId, string fileName, string contentType, byte[] document, int documentTypeId)
-        {
-            return this.InsertDocument(applicationId, userId, fileName, contentType, document, documentTypeId, true);
-        }
-
-        public override int InsertDocument(int applicationId, int? userId, string fileName, string contentType, byte[] document, int documentTypeId, bool removeOldDocuments)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.AppendFormat(CultureInfo.InvariantCulture, " insert {0}Document ", this.NamePrefix);
-            sql.Append(" (UserId, FileName, ContentType, ContentLength, ResumeData, RevisionDate, DocumentTypeId) values ");
-            sql.Append(" (@userId, @fileName, @contentType, @contentLength, @resumeData, getdate(), @documentTypeId) ");
-            sql.Append(" SELECT SCOPE_IDENTITY() ");
-
-            var resumeId = (int)(decimal)SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
                 sql.ToString(), 
-                Engage.Utility.CreateIntegerParam("@userId", userId), 
-                Engage.Utility.CreateVarcharParam("@fileName", fileName, VarcharLength), 
-                Engage.Utility.CreateVarcharParam("@contentType", contentType), 
-                Engage.Utility.CreateIntegerParam("@contentLength", document.Length), 
-                Engage.Utility.CreateImageParam("@resumeData", document), 
-                Engage.Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
-
-            if (removeOldDocuments)
-            {
-                this.RemoveDocumentAssignments(applicationId, documentTypeId);
-            }
-
-            this.AssignDocumentToApplication(applicationId, resumeId);
-            return resumeId;
-        }
-
-        /// <summary>
-        /// Gets information about the document with the given ID.  Columns include DocumentId/<see cref="int"/>, UserId/<see cref="int"/>, FileName/<see cref="string"/>, ContentType/<see cref="string"/>, ContentLength/<see cref="int"/>, ResumeData/<see cref="byte"/>[], RevisionDate/<see cref="DateTime"/>, DocumentTypeId/<see cref="int"/>
-        /// </summary>
-        /// <param name="documentId">The document ID.</param>
-        /// <returns>
-        /// Information about the document with the given ID
-        /// </returns>
-        public override IDataReader GetDocument(int documentId)
-        {
-            return this.ExecuteReader("GetDocument", Engage.Utility.CreateIntegerParam("@documentId", documentId));
-        }
-
-        public override int GetResumeId(int userId)
-        {
-            return this.GetDocumentId(DocumentType.Resume.GetId(), userId);
-        }
-
-        public override int GetResumeIdForApplication(int applicationId)
-        {
-            int id = Null.NullInteger;
-
-            var sql = new StringBuilder(255);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select d.ResumeId from {0}Document d ", this.NamePrefix);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}ApplicationDocument ad ON (d.ResumeId = d.ResumeId) ", this.NamePrefix);
-            sql.Append(" where ad.ApplicationId = @applicationId ");
-            sql.Append(" and d.DocumentTypeId = @documentTypeId ");
-
-            object resumeId = SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@applicationId", applicationId), 
-                    Engage.Utility.CreateIntegerParam("@documentTypeId", DocumentType.Resume.GetId()));
-
-            if (resumeId is int)
-            {
-                id = (int)resumeId;
-            }
-
-            return id;
-        }
-
-        public override int GetDocumentId(int documentTypeId, int userId)
-        {
-            int id = Null.NullInteger;
-
-            var sql = new StringBuilder(255);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select max(ResumeId) from {0}Document ", this.NamePrefix);
-            sql.Append(" where UserId = @userId ");
-            sql.Append(" and DocumentTypeId = @documentTypeId ");
-
-            object resumeId = SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@userId", userId), 
-                    Engage.Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
-
-            if (resumeId is int)
-            {
-                id = (int)resumeId;
-            }
-
-            return id;
-        }
-
-        public override void AssignDocumentToApplication(int applicationId, int resumeId)
-        {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "INSERT INTO {0}ApplicationDocument (ApplicationId, ResumeId)", this.NamePrefix);
-            sql.Append("values (@applicationId, @resumeId)");
-
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@applicationId", applicationId), 
-                    Engage.Utility.CreateIntegerParam("@resumeId", resumeId));
-        }
-
-        private void RemoveDocumentAssignments(int applicationId, int documentTypeId)
-        {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "DELETE {0}ApplicationDocument ", this.NamePrefix);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " FROM {0}ApplicationDocument ad ", this.NamePrefix);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}Document d ON (ad.ResumeId = d.ResumeId) ", this.NamePrefix);
-            sql.Append(" WHERE ad.ApplicationId = @applicationId ");
-            sql.Append(" AND d.DocumentTypeId = @documentTypeId ");
-
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@applicationId", applicationId), 
-                    Engage.Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
-        }
-
-        /// <summary>
-        /// Gets the IDs of the job groups that can view the document with the given ID.
-        /// </summary>
-        /// <param name="documentId">The document ID.</param>
-        /// <returns>
-        /// A reader representing a list of the IDs of the job groups that can view the document with the given ID
-        /// </returns>
-        public override IDataReader GetDocumentJobGroups(int documentId)
-        {
-            return this.ExecuteReader("GetDocumentJobGroups", Engage.Utility.CreateIntegerParam("@documentId", documentId));
-        }
-
-        #endregion
-
-        #region State
-
-        public override IDataReader GetStates(int? jobGroupId, int portalId)
-        {
-            return this.ExecuteReader(
-                    "GetStates", 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override IDataReader GetState(int stateId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" StateId, StateName , StateAbbreviation ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwStates ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" StateId = @stateId");
-
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@stateId", stateId));
-        }
-
-        public override void UpdateState(int id, string name, string abbreviation)
-        {
-            this.ExecuteNonQuery(
-                    "UpdateState", 
-                    Engage.Utility.CreateIntegerParam("@stateId", id), 
-                    Engage.Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
-                    Engage.Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, AbbreviationLength));
-        }
-
-        public override void InsertState(string name, string abbreviation, int portalId)
-        {
-            this.ExecuteNonQuery(
-                    "InsertState", 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId), 
-                    Engage.Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
-                    Engage.Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, AbbreviationLength));
-        }
-
-        public override int? GetStateId(string name, int portalId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select top 1 StateId ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwStates ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" StateName = @stateName ");
-            sql.Append(" and PortalId = @portalId ");
-
-            object stateId = SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-
-            return ConvertReturnValueToInt(stateId);
-        }
-
-        public override bool IsStateUsed(int stateId)
-        {
-            var sql = new StringBuilder(87);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " select top 1 NULL from {0}vwLocations where StateId = @stateId", this.NamePrefix);
-
-            using (
-                    IDataReader dr = SqlHelper.ExecuteReader(
-                            this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@stateId", stateId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        public override void DeleteState(int stateId)
-        {
-            this.ExecuteNonQuery("DeleteState", Engage.Utility.CreateIntegerParam("@stateId", stateId));
-        }
-
-        #endregion
-
-        #region Location
-
-        public override IDataReader GetLocations(int? jobGroupId, int portalId)
-        {
-            return this.ExecuteReader(
-                    "GetLocations", 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
-        }
-
-        public override IDataReader GetLocation(int locationId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" LocationId, LocationName, StateId, StateName, StateAbbreviation ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwLocations ", this.NamePrefix);
-            sql.Append(" where LocationId = @locationId");
-
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@locationId", locationId));
-        }
-
-        public override void UpdateLocation(int locationId, string description, int stateId)
-        {
-            this.ExecuteNonQuery(
-                    "UpdateLocation", 
-                    Engage.Utility.CreateVarcharParam("@locationName", description, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@stateId", stateId), 
-                    Engage.Utility.CreateIntegerParam("@locationId", locationId));
-        }
-
-        public override void InsertLocation(string locationName, int stateId, int portalId)
-        {
-            this.ExecuteNonQuery(
-                    "InsertLocation", 
-                    Engage.Utility.CreateVarcharParam("@locationName", locationName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@stateId", stateId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override int? GetLocationId(string locationName, int? stateId, int portalId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select top 1 LocationId ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwLocations ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" locationName = @locationName ");
-            sql.Append(" and PortalId = @portalId ");
-            if (stateId.HasValue)
-            {
-                sql.Append(" and StateId = @stateId ");
-            }
-
-            object locationId = SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@locationName", locationName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId), 
-                    Engage.Utility.CreateIntegerParam("@stateId", stateId));
-
-            return ConvertReturnValueToInt(locationId);
-        }
-
-        public override bool IsLocationUsed(int locationId)
-        {
-            var sql = new StringBuilder(90);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " select top 1 LocationId from {0}vwJobs where LocationId = @locationId", this.NamePrefix);
-
-            using (
-                    IDataReader dr = SqlHelper.ExecuteReader(
-                            this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@locationId", locationId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        public override void DeleteLocation(int locationId)
-        {
-            this.ExecuteNonQuery("DeleteLocation", Engage.Utility.CreateIntegerParam("@locationId", locationId));
-        }
-
-        #endregion
-
-        #region Category
-
-        public override IDataReader GetCategories(int? jobGroupId, int portalId)
-        {
-            return this.ExecuteReader(
-                    "GetCategories", 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override IDataReader GetCategory(int categoryId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" CategoryId, CategoryName ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwCategories ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " CategoryId = {0}", categoryId);
-
-            return SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString());
-        }
-
-        public override void UpdateCategory(int categoryId, string description)
-        {
-            this.ExecuteNonQuery(
-                    "UpdateCategory", 
-                    Engage.Utility.CreateVarcharParam("@categoryName", description, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@categoryId", categoryId));
-        }
-
-        public override void InsertCategory(string categoryName, int portalId)
-        {
-            this.ExecuteNonQuery(
-                    "InsertCategory", 
-                    Engage.Utility.CreateVarcharParam("@categoryName", categoryName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override int? GetCategoryId(string categoryName, int portalId)
-        {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(
-                    CultureInfo.InvariantCulture, 
-                    "select top 1 CategoryId from {0}vwCategories where CategoryName = @name and PortalId = @portalId", 
-                    this.NamePrefix);
-
-            object categoryId = SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@name", categoryName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-
-            return ConvertReturnValueToInt(categoryId);
-        }
-
-        public override bool IsCategoryUsed(int categoryId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select top 1 null ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs ", this.NamePrefix);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " where CategoryId = {0}", categoryId);
-
-            using (IDataReader dr = SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString()))
-            {
-                return dr.Read();
-            }
-        }
-
-        public override void DeleteCategory(int categoryId)
-        {
-            this.ExecuteNonQuery("DeleteCategory", Engage.Utility.CreateIntegerParam("@categoryId", categoryId));
-        }
-
-        #endregion
-
-        #region Position
-
-        public override IDataReader GetPositions(int? jobGroupId, int portalId)
-        {
-            return this.ExecuteReader(
-                    "GetPositions", 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override IDataReader GetPosition(int positionId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" PositionId, JobTitle, JobDescription ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwPositions ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" PositionId = @positionId ");
-
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@positionId", positionId));
-        }
-
-        public override void UpdatePosition(int positionId, string jobTitle, string jobDescription)
-        {
-            this.ExecuteNonQuery(
-                    "UpdatePosition", 
-                    Engage.Utility.CreateVarcharParam("@jobTitle", jobTitle, VarcharLength), 
-                    Engage.Utility.CreateTextParam("@jobDescription", jobDescription), 
-                    Engage.Utility.CreateIntegerParam("@positionId", positionId));
-        }
-
-        public override void InsertPosition(string jobTitle, string jobDescription, int portalId)
-        {
-            this.ExecuteNonQuery(
-                    "InsertPosition", 
-                    Engage.Utility.CreateVarcharParam("@jobTitle", jobTitle, VarcharLength), 
-                    Engage.Utility.CreateTextParam("@jobDescription", jobDescription), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override int? GetPositionId(string name, int portalId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select PositionId ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwPositions ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" JobTitle = @jobTitle ");
-            sql.Append(" and PortalId = @portalId ");
-
-            object positionId = SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@jobTitle", name, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-
-            return ConvertReturnValueToInt(positionId);
-        }
-
-        public override bool IsPositionUsed(int positionId)
-        {
-            var sql = new StringBuilder(97);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " SELECT TOP 1 NULL FROM {0}vwJobs WHERE PositionId = @positionId", this.NamePrefix);
-
-            using (
-                    IDataReader dr = SqlHelper.ExecuteReader(
-                            this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@positionId", positionId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        public override void DeletePosition(int positionId)
-        {
-            this.ExecuteNonQuery("DeletePosition", Engage.Utility.CreateIntegerParam("@positionId", positionId));
-        }
-
-        #endregion
-
-        #region UserStatus & ApplicationStatus
-
-        public override DataTable GetUserStatuses(int portalId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" UserStatusId, StatusName ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwUserStatuses ", this.NamePrefix);
-            sql.Append(" where PortalId = @portalId ");
-            sql.Append(" order by ");
-            sql.Append(" StatusName ");
-
-            return SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
-        }
-
-        public override DataTable GetUserStatus(int statusId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" UserStatusId, StatusName ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwUserStatuses ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" UserStatusId = @statusId ");
-
-            return SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@statusId", statusId)).Tables[0];
-        }
-
-        public override void UpdateUserStatus(int statusId, string statusName)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.AppendFormat(CultureInfo.InvariantCulture, " update {0}vwUserStatuses ", this.NamePrefix);
-            sql.Append(" set ");
-            sql.Append(" StatusName = @status ");
-            sql.Append(" where ");
-            sql.Append(" UserStatusId = @statusId ");
-
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@status", statusName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@statusId", statusId));
-        }
-
-        public override void InsertUserStatus(string statusName, int portalId)
-        {
-            var sql = new StringBuilder(512);
-
-            sql.AppendFormat(CultureInfo.InvariantCulture, " insert {0}vwUserStatuses ", this.NamePrefix);
-            sql.Append(" (StatusName, PortalId ) ");
-            sql.Append(" values (@status, @portalId)");
-
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@status", statusName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override void DeleteUserStatus(int statusId)
-        {
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    "delete " + this.NamePrefix + "vwUserStatuses where UserStatusId = @statusId", 
-                    Engage.Utility.CreateIntegerParam("@statusId", statusId));
-        }
-
-        public override int? GetUserStatusId(string status, int portalId)
-        {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(
-                    CultureInfo.InvariantCulture, 
-                    "select top 1 UserStatusId from {0}vwUserStatuses where StatusName = @status and PortalId = @portalId", 
-                    this.NamePrefix);
-
-            object statusId = SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@status", status, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-
-            return ConvertReturnValueToInt(statusId);
-        }
-
-        public override bool IsUserStatusUsed(int statusId)
-        {
-            var sql = new StringBuilder(299);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " declare @propertyId int{0}", Environment.NewLine);
-            sql.AppendFormat(
-                    CultureInfo.InvariantCulture, 
-                    " select @propertyId = PropertyDefinitionId from {0}{1}ProfilePropertyDefinition where PropertyCategory = 'Engage: Employment' and PropertyName = '{2}'{3}", 
-                    this.DatabaseOwner, 
-                    this.ObjectQualifier, 
-                    Utility.UserStatusPropertyName, 
-                    Environment.NewLine);
-            sql.AppendFormat(
-                    CultureInfo.InvariantCulture, 
-                    " select top 1 null as EmptyColumn from {0}{1}UserProfile where PropertyDefinitionID = @propertyId and PropertyValue = @statusId", 
-                    this.DatabaseOwner, 
-                    this.ObjectQualifier);
-            using (
-                    IDataReader dr = SqlHelper.ExecuteReader(
-                            this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@statusId", statusId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the specified status is used by any applications
-        /// </summary>
-        /// <param name="statusId">The status id.</param>
-        /// <returns>
-        /// <c>true</c> if the application status is used by any application; otherwise, <c>false</c>.
-        /// </returns>
-        public override bool IsApplicationStatusUsed(int statusId)
-        {
-            using (IDataReader dr = this.ExecuteReader("GetApplicationsByStatus", Engage.Utility.CreateIntegerParam("@statusId", statusId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        #endregion
-
-        #region JobGroup
-
-        public override DataTable GetJobGroups(int portalId)
-        {
-            return SqlHelper.ExecuteDataset(
-                this.ConnectionString, 
-                CommandType.Text, 
-                string.Format(CultureInfo.InvariantCulture, "SELECT JobGroupId, [Name] FROM {0}JobGroup WHERE PortalId = @portalId ORDER BY [Name]", this.NamePrefix), 
-                Engage.Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
-        }
-
-        public override DataTable GetJobGroup(int jobGroupId)
-        {
-            return SqlHelper.ExecuteDataset(
-                this.ConnectionString, 
-                CommandType.Text, 
-                string.Format(CultureInfo.InvariantCulture, "SELECT JobGroupId, [Name] FROM {0}JobGroup WHERE JobGroupId = @jobGroupId", this.NamePrefix), 
-                Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId)).Tables[0];
-        }
-
-        public override void UpdateJobGroup(int jobGroupId, string jobGroupName)
-        {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "UPDATE {0}JobGroup ", this.NamePrefix);
-            sql.Append(" SET [Name] = @jobGroupName ");
-            sql.Append(" WHERE JobGroupId = @jobGroupId ");
-
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateVarcharParam("@jobGroupName", jobGroupName, 255));
-        }
-
-        public override void InsertJobGroup(string jobGroupName, int portalId)
-        {
-            var sql = new StringBuilder(86);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "INSERT INTO {0}JobGroup ([NAME], [PortalId])", this.NamePrefix);
-            sql.Append("VALUES (@jobGroupName, @portalId)");
-
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@jobGroupName", jobGroupName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
-        }
-
-        public override bool IsJobGroupUsed(int jobGroupId)
-        {
-            var sql = new StringBuilder(97);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select top 1 JobGroupId from {0}JobJobGroup where JobGroupId = @jobGroupId", this.NamePrefix);
-
-            using (IDataReader dr = SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        public override bool IsJobGroupNameUsed(string jobGroupName, int portalId)
-        {
-            var sql = new StringBuilder(97);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select top 1 JobGroupId from {0}JobGroup where Name = @jobGroupName and PortalId = @portalId", this.NamePrefix);
-
-            using (IDataReader dr = SqlHelper.ExecuteReader(
-                            this.ConnectionString, 
-                            CommandType.Text, 
-                            sql.ToString(), 
-                            Engage.Utility.CreateVarcharParam("@jobGroupName", jobGroupName, VarcharLength), 
-                            Engage.Utility.CreateIntegerParam("@portalId", portalId)))
-            {
-                return dr.Read();
-            }
-        }
-
-        public override void DeleteJobGroup(int jobGroupId)
-        {
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    string.Format(CultureInfo.InvariantCulture, "DELETE {0}JobGroup WHERE JobGroupId = @jobGroupId", this.NamePrefix), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
-        }
-
-        #endregion
-
-        #region JobJobGroup
-
-        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL does not contain un-paramterized input")]
-        public override void AssignJobToJobGroups(int jobId, List<int> jobGroups)
-        {
-            using (var conn = new SqlConnection(this.ConnectionString))
-            {
-                conn.Open();
-                using (SqlTransaction tran = conn.BeginTransaction())
-                {
-                    // Remove all JobGroup assignments for this job
-                    SqlHelper.ExecuteNonQuery(
-                            tran, 
-                            CommandType.Text, 
-                            String.Format(CultureInfo.InvariantCulture, "DELETE FROM {0}JobJobGroup WHERE JobId = @JobId", this.NamePrefix), 
-                            Engage.Utility.CreateIntegerParam("@JobId", jobId));
-
-                    // Add back the selected JobGroup assignments
-                    if (jobGroups != null && jobGroups.Count > 0)
-                    {
-                        var sql = new StringBuilder(114);
-                        sql.AppendFormat(CultureInfo.InvariantCulture, "INSERT {0}JobJobGroup (JobId, JobGroupId) ", this.NamePrefix);
-                        sql.Append("VALUES (@jobId, @jobGroupId) ");
-
-                        using (SqlCommand cmd = conn.CreateCommand())
-                        {
-                            cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@jobId", jobId));
-                            cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroups[0]));
-                            cmd.CommandText = sql.ToString();
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Transaction = tran;
-                            cmd.Prepare();
-                            cmd.ExecuteNonQuery();
-
-                            for (var i = 1; i < jobGroups.Count; i++)
-                            {
-                                cmd.Parameters["@jobGroupId"].Value = jobGroups[i];
-                                cmd.ExecuteNonQuery();
-                            }
-
-                            // cmd.Transaction.Commit();
-                        }
-                    }
-
-                    tran.Commit();
-                }
-            }
+                Utility.CreateIntegerParam("@jobId", jobId), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
         }
 
         /// <summary>
         /// Gets a <see cref="DataSet"/> with all jobs in a <see cref="DataTable"/> named "Jobs," and all job groups in a <see cref="DataTable"/> named "JobGroup."
         /// They are collected by a <see cref="DataRelation"/> named "JobJobGroup."
         /// </summary>
+        /// <param name="portalId">The id of the portal.</param>
         /// <returns>A <see cref="DataSet"/> with all jobs and their assigned groups.</returns>
-        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL does not contain un-parameterized input")]
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", 
+            Justification = "SQL does not contain un-parameterized input")]
         public override DataSet GetAssignedJobGroups(int portalId)
         {
             DataSet ds = null;
@@ -1392,13 +459,13 @@ namespace Engage.Dnn.Employment.Data
                     using (var adapter = new SqlDataAdapter(jobsSql.ToString(), conn))
                     {
                         conn.Open();
-                        adapter.SelectCommand.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                        adapter.SelectCommand.Parameters.Add(Utility.CreateIntegerParam("@portalId", portalId));
                         adapter.Fill(ds, "Jobs");
                     }
 
                     using (var adapter = new SqlDataAdapter(jobGroupSql.ToString(), conn))
                     {
-                        adapter.SelectCommand.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                        adapter.SelectCommand.Parameters.Add(Utility.CreateIntegerParam("@portalId", portalId));
                         adapter.Fill(ds, "JobGroups");
                     }
 
@@ -1410,45 +477,182 @@ namespace Engage.Dnn.Employment.Data
             {
                 if (ds != null)
                 {
-                   ds.Dispose(); 
+                    ds.Dispose();
                 }
 
                 throw;
             }
         }
 
-        public override bool IsJobInGroup(int jobId, int jobGroupId)
+        public override IDataReader GetCategories(int? jobGroupId, int portalId)
         {
-            var sql = new StringBuilder(128);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select top 1 jobgroupid from {0}JobJobGroup where jobId = @jobId and jobgroupid = @jobGroupId", this.NamePrefix);
-
-            using (IDataReader dr = SqlHelper.ExecuteReader(
-                this.ConnectionString, 
-                CommandType.Text, 
-                sql.ToString(), 
-                Engage.Utility.CreateIntegerParam("@jobId", jobId), 
-                Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId)))
-            {
-                return dr.Read();
-            }
+            return this.ExecuteReader(
+                "GetCategories", Utility.CreateIntegerParam("@jobGroupId", jobGroupId), Utility.CreateIntegerParam("@portalId", portalId));
         }
 
-        #endregion
-
-        #region JobSearchQuery
-
-        public override IDataReader GetJobSearchQuery(int jobSearchQueryId)
+        public override IDataReader GetCategory(int categoryId)
         {
             var sql = new StringBuilder(512);
 
             sql.Append(" select ");
-            sql.Append(" UserSearchId, SearchName, JobTitle, LocationName, StateName, Keywords, CreationDate, LocationId, StateId, CategoryId, CategoryName, PositionId, JobGroupId ");
+            sql.Append(" CategoryId, CategoryName ");
             sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwSavedSearches ", this.NamePrefix);
-            sql.Append(" where UserSearchId = @searchId ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwCategories ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " CategoryId = {0}", categoryId);
+
+            return SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString());
+        }
+
+        public override int? GetCategoryId(string categoryName, int portalId)
+        {
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                "select top 1 CategoryId from {0}vwCategories where CategoryName = @name and PortalId = @portalId", 
+                this.NamePrefix);
+
+            object categoryId = SqlHelper.ExecuteScalar(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@name", categoryName, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+
+            return ConvertReturnValueToInt(categoryId);
+        }
+
+        public override IDataReader GetCommonWords()
+        {
+            return SqlHelper.ExecuteReader(this.connectionString, CommandType.Text, "select Word from " + this.NamePrefix + "lkpCommonWords");
+        }
+
+        /// <summary>
+        /// Gets information about the document with the given ID.  Columns include DocumentId/<see cref="int"/>, UserId/<see cref="int"/>, FileName/<see cref="string"/>, ContentType/<see cref="string"/>, ContentLength/<see cref="int"/>, ResumeData/<see cref="byte"/>[], RevisionDate/<see cref="DateTime"/>, DocumentTypeId/<see cref="int"/>
+        /// </summary>
+        /// <param name="documentId">The document ID.</param>
+        /// <returns>
+        /// Information about the document with the given ID
+        /// </returns>
+        public override IDataReader GetDocument(int documentId)
+        {
+            return this.ExecuteReader("GetDocument", Utility.CreateIntegerParam("@documentId", documentId));
+        }
+
+        public override int GetDocumentId(int documentTypeId, int userId)
+        {
+            int id = Null.NullInteger;
+
+            var sql = new StringBuilder(255);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "select max(ResumeId) from {0}Document ", this.NamePrefix);
+            sql.Append(" where UserId = @userId ");
+            sql.Append(" and DocumentTypeId = @documentTypeId ");
+
+            object resumeId = SqlHelper.ExecuteScalar(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@userId", userId), 
+                Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
+
+            if (resumeId is int)
+            {
+                id = (int)resumeId;
+            }
+
+            return id;
+        }
+
+        /// <summary>
+        /// Gets the IDs of the job groups that can view the document with the given ID.
+        /// </summary>
+        /// <param name="documentId">The document ID.</param>
+        /// <returns>
+        /// A reader representing a list of the IDs of the job groups that can view the document with the given ID
+        /// </returns>
+        public override IDataReader GetDocumentJobGroups(int documentId)
+        {
+            return this.ExecuteReader("GetDocumentJobGroups", Utility.CreateIntegerParam("@documentId", documentId));
+        }
+
+        public override IDataReader GetDocumentType(string documentTypeName, int? portalId)
+        {
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "select documentTypeId, description from {0}DocumentType ", this.NamePrefix);
+            sql.Append(" where description = @documentTypeName ");
+            sql.Append(" and (PortalId = @portalId OR (PortalId IS NULL and @portalId IS NULL)) ");
 
             return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Engage.Utility.CreateIntegerParam("@searchId", jobSearchQueryId));
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@documentTypeName", documentTypeName), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override IDataReader GetDocumentType(int documentTypeId)
+        {
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                "select documentTypeId, description from {0}DocumentType where documentTypeId = @documentTypeId", 
+                this.NamePrefix);
+
+            return SqlHelper.ExecuteReader(
+                this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
+        }
+
+        public override IDataReader GetJob(int jobId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append("select ");
+            sql.Append(" JobId, JobTitle, PositionId, LocationName, LocationId, StateName, StateAbbreviation, StateId, ");
+            sql.Append(" PostedDate, RequiredQualifications, DesiredQualifications, NotificationEmailAddress, ApplicationUrl, ");
+            sql.Append(" CategoryName, CategoryId, IsHot, IsFilled, JobDescription, SortOrder, StartDate, ExpireDate ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs ", this.NamePrefix);
+            sql.Append(" where JobId = @jobId ");
+
+            return SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@jobId", jobId));
+        }
+
+        public override DataTable GetJobGroup(int jobGroupId)
+        {
+            return
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString,
+                    CommandType.Text,
+                    string.Format(CultureInfo.InvariantCulture, "SELECT JobGroupId, [Name] FROM {0}JobGroup WHERE JobGroupId = @jobGroupId", this.NamePrefix),
+                    Utility.CreateIntegerParam("@jobGroupId", jobGroupId)).Tables[0];
+        }
+
+        public override DataTable GetJobGroups(int portalId)
+        {
+            return
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    string.Format(CultureInfo.InvariantCulture, "SELECT JobGroupId, [Name] FROM {0}JobGroup WHERE PortalId = @portalId ORDER BY [Name]", this.NamePrefix), 
+                    Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
+        }
+
+        public override int? GetJobId(int locationId, int positionId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select top 1 JobId ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" LocationId = @locationId ");
+            sql.Append(" and PositionId = @positionId ");
+
+            return
+                SqlHelper.ExecuteScalar(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateIntegerParam("@locationId", locationId), 
+                    Utility.CreateIntegerParam("@positionId", positionId)) as int?;
         }
 
         public override IDataReader GetJobSearchQueries(int userId, int? jobGroupId, int portalId)
@@ -1471,12 +675,27 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" CreationDate desc ");
 
             return SqlHelper.ExecuteReader(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@userId", userId), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@userId", userId), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override IDataReader GetJobSearchQuery(int jobSearchQueryId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(
+                " UserSearchId, SearchName, JobTitle, LocationName, StateName, Keywords, CreationDate, LocationId, StateId, CategoryId, CategoryName, PositionId, JobGroupId ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwSavedSearches ", this.NamePrefix);
+            sql.Append(" where UserSearchId = @searchId ");
+
+            return SqlHelper.ExecuteReader(
+                this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@searchId", jobSearchQueryId));
         }
 
         public override DataTable GetJobSearchResults(int? positionId, int? categoryId, int? locationId, int? stateId, int? jobGroupId, int portalId)
@@ -1526,17 +745,85 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" ORDER BY ");
             sql.Append(" j.PostedDate DESC");
 
-            return SqlHelper.ExecuteDataset(
+            return
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateIntegerParam("@positionId", positionId), 
+                    Utility.CreateIntegerParam("@locationId", locationId), 
+                    Utility.CreateIntegerParam("@stateId", stateId), 
+                    Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                    Utility.CreateIntegerParam("@portalId", portalId), 
+                    Utility.CreateIntegerParam("@categoryId", categoryId), 
+                    Utility.CreateDateTimeParam("@now", DateTime.Now)).Tables[0];
+        }
+
+        public override IDataReader GetJobs(int? jobGroupId, int portalId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(" j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, ");
+            sql.Append(
+                " j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, j.ApplicationUrl, ");
+            sql.Append(
+                " j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs j", this.NamePrefix);
+            if (jobGroupId.HasValue)
+            {
+                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (j.JobId = jlg.JobId) ", this.NamePrefix);
+            }
+
+            sql.Append(" where j.PortalId = @portalId ");
+            if (jobGroupId.HasValue)
+            {
+                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
+            }
+
+            sql.Append(" order by ");
+            sql.Append(" j.SortOrder, j.CategoryName, j.JobTitle ");
+
+            return SqlHelper.ExecuteReader(
                 this.ConnectionString, 
                 CommandType.Text, 
                 sql.ToString(), 
-                Engage.Utility.CreateIntegerParam("@positionId", positionId), 
-                Engage.Utility.CreateIntegerParam("@locationId", locationId), 
-                Engage.Utility.CreateIntegerParam("@stateId", stateId), 
-                Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                Engage.Utility.CreateIntegerParam("@portalId", portalId), 
-                Engage.Utility.CreateIntegerParam("@categoryId", categoryId),
-                Engage.Utility.CreateDateTimeParam("@now", DateTime.Now)).Tables[0];
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override IDataReader GetJobs(int? userId, int? jobGroupId, int portalId)
+        {
+            var sql = new StringBuilder(1024);
+
+            sql.Append(" select ");
+            sql.Append(" a.JobId, JobTitle, LocationName, StateName, ");
+            sql.Append(" RequiredQualifications, DesiredQualifications, CategoryName, DisplayName, StatusId, ");
+            sql.Append(" IsHot, PostedDate, AppliedDate, ApplicationId, SortOrder, UserId, SalaryRequirement, Message ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications a ", this.NamePrefix);
+            if (jobGroupId.HasValue)
+            {
+                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (a.JobId = jlg.JobId) ", this.NamePrefix);
+            }
+
+            sql.Append(" where (UserId = @userId OR (userId IS NULL AND @userId IS NULL)) ");
+            sql.Append(" and PortalId = @portalId ");
+            if (jobGroupId.HasValue)
+            {
+                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
+            }
+
+            sql.Append(" order by ");
+            sql.Append(" AppliedDate desc ");
+
+            return SqlHelper.ExecuteReader(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@userId", userId), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                Utility.CreateIntegerParam("@portalId", portalId));
         }
 
         public override DataTable GetKeywordSearchResults(string keyword, int? jobGroupId, int portalId)
@@ -1568,17 +855,19 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" ORDER BY ");
             sql.Append(" j.PostedDate DESC");
 
-            return SqlHelper.ExecuteDataset(
-                this.ConnectionString, 
-                CommandType.Text, 
-                sql.ToString(), 
-                Engage.Utility.CreateVarcharParam("@keyword", String.Format(CultureInfo.CurrentCulture, "%{0}%", keyword)), 
-                Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
-                Engage.Utility.CreateIntegerParam("@portalId", portalId),
-                Engage.Utility.CreateDateTimeParam("@now", DateTime.Now)).Tables[0];
+            return
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateVarcharParam("@keyword", String.Format(CultureInfo.CurrentCulture, "%{0}%", keyword)), 
+                    Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                    Utility.CreateIntegerParam("@portalId", portalId), 
+                    Utility.CreateDateTimeParam("@now", DateTime.Now)).Tables[0];
         }
 
-        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL does not contain un-parameterized input")]
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", 
+            Justification = "SQL does not contain un-parameterized input")]
         public override DataTable GetKeywordSearchResults(List<string> keywords, int? jobGroupId, int portalId)
         {
             DataTable searchResultsTable = null;
@@ -1619,20 +908,20 @@ namespace Engage.Dnn.Employment.Data
                             if (jobGroupId.HasValue)
                             {
                                 sql.Append(" AND jjg.jobGroupId = @jobGroupId ");
-                                cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
+                                cmd.Parameters.Add(Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
                             }
 
                             sql.Append(" ORDER BY ");
                             sql.Append(" j.PostedDate");
 
                             cmd.CommandText = sql.ToString();
-                            cmd.Parameters.Add(Engage.Utility.CreateIntegerParam("@portalId", portalId));
-                            cmd.Parameters.Add(Engage.Utility.CreateDateTimeParam("@now", DateTime.Now));
+                            cmd.Parameters.Add(Utility.CreateIntegerParam("@portalId", portalId));
+                            cmd.Parameters.Add(Utility.CreateDateTimeParam("@now", DateTime.Now));
                             for (int i = 0; i < keywords.Count; i++)
                             {
                                 cmd.Parameters.Add(
-                                    Engage.Utility.CreateVarcharParam(
-                                        "@keyword" + i.ToString(CultureInfo.InvariantCulture),
+                                    Utility.CreateVarcharParam(
+                                        "@keyword" + i.ToString(CultureInfo.InvariantCulture), 
                                         String.Format(CultureInfo.InvariantCulture, "%{0}%", keywords[i])));
                             }
 
@@ -1651,7 +940,7 @@ namespace Engage.Dnn.Employment.Data
             }
             catch
             {
-                if(searchResultsTable != null)
+                if (searchResultsTable != null)
                 {
                     searchResultsTable.Dispose();
                 }
@@ -1660,90 +949,271 @@ namespace Engage.Dnn.Employment.Data
             return searchResultsTable;
         }
 
-        public override void SaveJobSearchQuery(
-                int userId, 
-                string searchName, 
-                int? positionId, 
-                int? categoryId, 
-                int? stateId, 
-                int? locationId, 
-                string keywords, 
-                int? jobGroupId, 
-                int portalId)
+        public override IDataReader GetLocation(int locationId)
         {
-            if (!Engage.Utility.HasValue(keywords))
-            {
-                keywords = null;
-            }
+            var sql = new StringBuilder(512);
 
-            this.ExecuteNonQuery(
-                    "SaveJobSearchQuery", 
-                    Engage.Utility.CreateIntegerParam("@userId", userId), 
-                    Engage.Utility.CreateVarcharParam("@name", searchName, VarcharLength), 
-                    Engage.Utility.CreateIntegerParam("@positionId", positionId), 
-                    Engage.Utility.CreateIntegerParam("@stateId", stateId), 
-                    Engage.Utility.CreateIntegerParam("@locationId", locationId), 
-                    Engage.Utility.CreateVarcharParam("@keywords", keywords), 
-                    Engage.Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId), 
-                    Engage.Utility.CreateIntegerParam("@categoryId", categoryId));
-        }
-
-        public override void DeleteJobSearchQuery(int jobSearchQueryId)
-        {
-            SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, CommandType.Text, "delete " + this.NamePrefix + "UserJobSearch where UserSearchId = " + jobSearchQueryId);
-        }
-
-        #endregion 
-
-        #region Lookup/Lead
-
-        public override bool IsPropertyValueUsed(int propertyId, string value)
-        {
-            var sql = new StringBuilder(228);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select top 1 ApplicationPropertyId from {0}UserJobProperty ", this.NamePrefix);
-            sql.Append(" where ApplicationPropertyId = @ApplicationPropertyId and (propertyValue = @propertyValue or (propertyValue is null and propertyText like @propertyText))");
+            sql.Append(" select ");
+            sql.Append(" LocationId, LocationName, StateId, StateName, StateAbbreviation ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwLocations ", this.NamePrefix);
+            sql.Append(" where LocationId = @locationId");
 
             return SqlHelper.ExecuteReader(
+                this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@locationId", locationId));
+        }
+
+        public override int? GetLocationId(string locationName, int? stateId, int portalId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select top 1 LocationId ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwLocations ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" locationName = @locationName ");
+            sql.Append(" and PortalId = @portalId ");
+            if (stateId.HasValue)
+            {
+                sql.Append(" and StateId = @stateId ");
+            }
+
+            object locationId = SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
                 sql.ToString(), 
-                Engage.Utility.CreateIntegerParam("@ApplicationPropertyId", propertyId), 
-                Engage.Utility.CreateVarcharParam("@propertyValue", value, ApplicationPropertyValueLength), 
-                Engage.Utility.CreateTextParam("@propertyText", value)).Read();
+                Utility.CreateVarcharParam("@locationName", locationName, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId), 
+                Utility.CreateIntegerParam("@stateId", stateId));
+
+            return ConvertReturnValueToInt(locationId);
         }
 
-        public override IDataReader GetApplicationProperty(string name, int? portalId)
+        public override IDataReader GetLocations(int? jobGroupId, int portalId)
         {
-            var sql = new StringBuilder(128);
-            sql.Append("select [ApplicationPropertyId],[DataType],[DefaultValue],[PropertyName],[Required],[ViewOrder],[Visible] ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}ApplicationProperty ", this.NamePrefix);
-            sql.Append(" where PropertyName = @PropertyName ");
-            sql.Append(" and (PortalId = @portalId OR (PortalId IS NULL and @portalId IS NULL)) ");
+            return this.ExecuteReader(
+                "GetLocations", Utility.CreateIntegerParam("@portalId", portalId), Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
+        }
+
+        public override IDataReader GetPosition(int positionId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(" PositionId, JobTitle, JobDescription ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwPositions ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" PositionId = @positionId ");
 
             return SqlHelper.ExecuteReader(
+                this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@positionId", positionId));
+        }
+
+        public override int? GetPositionId(string name, int portalId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select PositionId ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwPositions ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" JobTitle = @jobTitle ");
+            sql.Append(" and PortalId = @portalId ");
+
+            object positionId = SqlHelper.ExecuteScalar(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@jobTitle", name, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+
+            return ConvertReturnValueToInt(positionId);
+        }
+
+        public override IDataReader GetPositions(int? jobGroupId, int portalId)
+        {
+            return this.ExecuteReader(
+                "GetPositions", Utility.CreateIntegerParam("@jobGroupId", jobGroupId), Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override int GetResumeId(int userId)
+        {
+            return this.GetDocumentId(DocumentType.Resume.GetId(), userId);
+        }
+
+        public override int GetResumeIdForApplication(int applicationId)
+        {
+            int id = Null.NullInteger;
+
+            var sql = new StringBuilder(255);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "select d.ResumeId from {0}Document d ", this.NamePrefix);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}ApplicationDocument ad ON (d.ResumeId = d.ResumeId) ", this.NamePrefix);
+            sql.Append(" where ad.ApplicationId = @applicationId ");
+            sql.Append(" and d.DocumentTypeId = @documentTypeId ");
+
+            object resumeId = SqlHelper.ExecuteScalar(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId), 
+                Utility.CreateIntegerParam("@documentTypeId", DocumentType.Resume.GetId()));
+
+            if (resumeId is int)
+            {
+                id = (int)resumeId;
+            }
+
+            return id;
+        }
+
+        public override IDataReader GetState(int stateId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(" StateId, StateName , StateAbbreviation ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwStates ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" StateId = @stateId");
+
+            return SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@stateId", stateId));
+        }
+
+        public override int? GetStateId(string name, int portalId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select top 1 StateId ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwStates ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" StateName = @stateName ");
+            sql.Append(" and PortalId = @portalId ");
+
+            object stateId = SqlHelper.ExecuteScalar(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+
+            return ConvertReturnValueToInt(stateId);
+        }
+
+        public override IDataReader GetStates(int? jobGroupId, int portalId)
+        {
+            return this.ExecuteReader(
+                "GetStates", Utility.CreateIntegerParam("@jobGroupId", jobGroupId), Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override DataSet GetUnusedAdminData(int? jobGroupId, int portalId)
+        {
+            DataSet adminData = this.ExecuteDataset(
+                "GetUnusedAdminData", Utility.CreateIntegerParam("@JobGroupId", jobGroupId), Utility.CreateIntegerParam("@PortalId", portalId));
+
+            adminData.Tables[0].TableName = "States";
+            adminData.Tables[1].TableName = "Locations";
+            adminData.Tables[2].TableName = "Categories";
+            adminData.Tables[3].TableName = "Positions";
+
+            return adminData;
+        }
+
+        public override DataTable GetUserStatus(int statusId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(" UserStatusId, StatusName ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwUserStatuses ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" UserStatusId = @statusId ");
+
+            return
+                SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@statusId", statusId)).
+                    Tables[0];
+        }
+
+        public override int? GetUserStatusId(string status, int portalId)
+        {
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                "select top 1 UserStatusId from {0}vwUserStatuses where StatusName = @status and PortalId = @portalId", 
+                this.NamePrefix);
+
+            object statusId = SqlHelper.ExecuteScalar(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@status", status, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+
+            return ConvertReturnValueToInt(statusId);
+        }
+
+        public override DataTable GetUserStatuses(int portalId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(" UserStatusId, StatusName ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwUserStatuses ", this.NamePrefix);
+            sql.Append(" where PortalId = @portalId ");
+            sql.Append(" order by ");
+            sql.Append(" StatusName ");
+
+            return
+                SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@portalId", portalId)).
+                    Tables[0];
+        }
+
+        public override bool HasUserAppliedForJob(int jobId, int userId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select top 1 NULL ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications ", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" JobId = @jobId ");
+            sql.Append(" and UserId = @userId");
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
                     this.ConnectionString, 
                     CommandType.Text, 
                     sql.ToString(), 
-                    Engage.Utility.CreateVarcharParam("@PropertyName", name), 
-                    Engage.Utility.CreateIntegerParam("@portalId", portalId));
+                    Utility.CreateIntegerParam("@jobId", jobId), 
+                    Utility.CreateIntegerParam("@userId", userId)))
+            {
+                return dr.Read();
+            }
         }
 
-        public override DataTable GetApplicationProperties(int applicationId)
+        public override int InsertApplication(int jobId, int? userId, string salaryRequirement, string message)
         {
-            var sql = new StringBuilder(128);
-            sql.Append("select ujp.[ApplicationId],ujp.[ApplicationPropertyId],ujp.[Visibility],ap.[PropertyName], ");
-            sql.Append(" CASE WHEN ujp.[PropertyValue] IS NULL THEN ujp.[PropertyText] ELSE ujp.[PropertyValue] END AS PropertyValue ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}UserJobProperty ujp ", this.NamePrefix);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}ApplicationProperty ap ON (ujp.ApplicationPropertyId = ap.ApplicationPropertyId) ", this.NamePrefix);
-            sql.Append(" where ApplicationId = @ApplicationId ");
+            var sql = new StringBuilder(512);
 
-            return SqlHelper.ExecuteDataset(
-                this.ConnectionString, 
-                CommandType.Text, 
-                sql.ToString(), 
-                Engage.Utility.CreateIntegerParam("@ApplicationId", applicationId)).Tables[0];
+            sql.AppendFormat(CultureInfo.InvariantCulture, " insert {0}vwApplications ", this.NamePrefix);
+            sql.Append(" (UserId, JobId, AppliedDate, SalaryRequirement, Message) values ");
+            sql.Append(" (@userId, @jobId, getdate(), @salaryRequirement, @message) ");
+            sql.Append(" SELECT SCOPE_IDENTITY() ");
+
+            return
+                (int)
+                (decimal)
+                SqlHelper.ExecuteScalar(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateIntegerParam("@userId", userId), 
+                    Utility.CreateIntegerParam("@jobId", jobId), 
+                    Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, VarcharLength), 
+                    Utility.CreateVarcharParam("@message", message, VarcharLength));
         }
 
         public override void InsertApplicationProperty(int applicationId, int propertyId, string value)
@@ -1756,25 +1226,394 @@ namespace Engage.Dnn.Employment.Data
             SqlParameter propertyValue, propertyText;
             if (value != null && value.Length > ApplicationPropertyValueLength)
             {
-                propertyText = Engage.Utility.CreateTextParam("@propertyText", value);
+                propertyText = Utility.CreateTextParam("@propertyText", value);
                 propertyValue = new SqlParameter("@propertyValue", DBNull.Value);
             }
             else
             {
-                propertyValue = Engage.Utility.CreateVarcharParam("@propertyValue", value, ApplicationPropertyValueLength);
+                propertyValue = Utility.CreateVarcharParam("@propertyValue", value, ApplicationPropertyValueLength);
                 propertyText = new SqlParameter("@propertyText", DBNull.Value);
             }
 
             SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId), 
+                Utility.CreateIntegerParam("@applicationPropertyId", propertyId), 
+                propertyValue, 
+                propertyText, 
+                Utility.CreateBitParam("@Visibility", true), 
+                Utility.CreateDateTimeParam("@LastUpdatedDate", DateTime.Now));
+        }
+
+        public override void InsertCategory(string categoryName, int portalId)
+        {
+            this.ExecuteNonQuery(
+                "InsertCategory", 
+                Utility.CreateVarcharParam("@categoryName", categoryName, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override int InsertDocument(int applicationId, int? userId, string fileName, string contentType, byte[] document, int documentTypeId)
+        {
+            return this.InsertDocument(applicationId, userId, fileName, contentType, document, documentTypeId, true);
+        }
+
+        public override int InsertDocument(
+            int applicationId, int? userId, string fileName, string contentType, byte[] document, int documentTypeId, bool removeOldDocuments)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.AppendFormat(CultureInfo.InvariantCulture, " insert {0}Document ", this.NamePrefix);
+            sql.Append(" (UserId, FileName, ContentType, ContentLength, ResumeData, RevisionDate, DocumentTypeId) values ");
+            sql.Append(" (@userId, @fileName, @contentType, @contentLength, @resumeData, getdate(), @documentTypeId) ");
+            sql.Append(" SELECT SCOPE_IDENTITY() ");
+
+            var resumeId =
+                (int)
+                (decimal)
+                SqlHelper.ExecuteScalar(
                     this.ConnectionString, 
                     CommandType.Text, 
                     sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@applicationId", applicationId), 
-                    Engage.Utility.CreateIntegerParam("@applicationPropertyId", propertyId), 
-                    propertyValue, 
-                    propertyText, 
-                    Engage.Utility.CreateBitParam("@Visibility", true), 
-                    Engage.Utility.CreateDateTimeParam("@LastUpdatedDate", DateTime.Now));
+                    Utility.CreateIntegerParam("@userId", userId), 
+                    Utility.CreateVarcharParam("@fileName", fileName, VarcharLength), 
+                    Utility.CreateVarcharParam("@contentType", contentType), 
+                    Utility.CreateIntegerParam("@contentLength", document.Length), 
+                    Utility.CreateImageParam("@resumeData", document), 
+                    Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
+
+            if (removeOldDocuments)
+            {
+                this.RemoveDocumentAssignments(applicationId, documentTypeId);
+            }
+
+            this.AssignDocumentToApplication(applicationId, resumeId);
+            return resumeId;
+        }
+
+        public override int InsertJob(
+            int userId, 
+            int positionId, 
+            int locationId, 
+            int categoryId, 
+            bool isHot, 
+            bool isFilled, 
+            string requiredQualifications, 
+            string desiredQualifications, 
+            int sortOrder, 
+            int portalId, 
+            string notificationEmailAddress, 
+            DateTime startDate, 
+            DateTime? expireDate, 
+            string applicationUrl)
+        {
+            return
+                (int)
+                this.ExecuteScalar(
+                    "InsertJob", 
+                    Utility.CreateIntegerParam("@positionId", positionId), 
+                    Utility.CreateIntegerParam("@locationId", locationId), 
+                    Utility.CreateIntegerParam("@categoryId", categoryId), 
+                    Utility.CreateBitParam("@isHot", isHot), 
+                    Utility.CreateBitParam("@isFilled", isFilled), 
+                    Utility.CreateTextParam("@requiredQualifications", requiredQualifications), 
+                    Utility.CreateTextParam("@desiredQualifications", desiredQualifications), 
+                    Utility.CreateIntegerParam("@revisingUser", userId), 
+                    Utility.CreateIntegerParam("@sortOrder", sortOrder), 
+                    Utility.CreateIntegerParam("@portalId", portalId), 
+                    Utility.CreateTextParam("@notificationEmailAddress", notificationEmailAddress), 
+                    Utility.CreateDateTimeParam("@startDate", startDate), 
+                    Utility.CreateDateTimeParam("@expireDate", expireDate), 
+                    Utility.CreateVarcharParam("@applicationUrl", applicationUrl, MaxUrlLength));
+        }
+
+        public override void InsertJobGroup(string jobGroupName, int portalId)
+        {
+            var sql = new StringBuilder(86);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "INSERT INTO {0}JobGroup ([NAME], [PortalId])", this.NamePrefix);
+            sql.Append("VALUES (@jobGroupName, @portalId)");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@jobGroupName", jobGroupName, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override void InsertLocation(string locationName, int stateId, int portalId)
+        {
+            this.ExecuteNonQuery(
+                "InsertLocation", 
+                Utility.CreateVarcharParam("@locationName", locationName, VarcharLength), 
+                Utility.CreateIntegerParam("@stateId", stateId), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override void InsertPosition(string jobTitle, string jobDescription, int portalId)
+        {
+            this.ExecuteNonQuery(
+                "InsertPosition", 
+                Utility.CreateVarcharParam("@jobTitle", jobTitle, VarcharLength), 
+                Utility.CreateTextParam("@jobDescription", jobDescription), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override int InsertResume(int applicationId, int? userId, string fileName, string resumeType, byte[] resume)
+        {
+            return this.InsertDocument(applicationId, userId, fileName, resumeType, resume, DocumentType.Resume.GetId());
+        }
+
+        public override void InsertState(string name, string abbreviation, int portalId)
+        {
+            this.ExecuteNonQuery(
+                "InsertState", 
+                Utility.CreateIntegerParam("@portalId", portalId), 
+                Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
+                Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, AbbreviationLength));
+        }
+
+        public override void InsertUserStatus(string statusName, int portalId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.AppendFormat(CultureInfo.InvariantCulture, " insert {0}vwUserStatuses ", this.NamePrefix);
+            sql.Append(" (StatusName, PortalId ) ");
+            sql.Append(" values (@status, @portalId)");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@status", statusName, VarcharLength), 
+                Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        /// <summary>
+        /// Determines whether the specified status is used by any applications
+        /// </summary>
+        /// <param name="statusId">The status id.</param>
+        /// <returns>
+        /// <c>true</c> if the application status is used by any application; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool IsApplicationStatusUsed(int statusId)
+        {
+            using (IDataReader dr = this.ExecuteReader("GetApplicationsByStatus", Utility.CreateIntegerParam("@statusId", statusId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsCategoryUsed(int categoryId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select top 1 null ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs ", this.NamePrefix);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " where CategoryId = {0}", categoryId);
+
+            using (IDataReader dr = SqlHelper.ExecuteReader(this.ConnectionString, CommandType.Text, sql.ToString()))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsJobGroupNameUsed(string jobGroupName, int portalId)
+        {
+            var sql = new StringBuilder(97);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                "select top 1 JobGroupId from {0}JobGroup where Name = @jobGroupName and PortalId = @portalId", 
+                this.NamePrefix);
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateVarcharParam("@jobGroupName", jobGroupName, VarcharLength), 
+                    Utility.CreateIntegerParam("@portalId", portalId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsJobGroupUsed(int jobGroupId)
+        {
+            var sql = new StringBuilder(97);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, "select top 1 JobGroupId from {0}JobJobGroup where JobGroupId = @jobGroupId", this.NamePrefix);
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@jobGroupId", jobGroupId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsJobInGroup(int jobId, int jobGroupId)
+        {
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                "select top 1 jobgroupid from {0}JobJobGroup where jobId = @jobId and jobgroupid = @jobGroupId", 
+                this.NamePrefix);
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateIntegerParam("@jobId", jobId), 
+                    Utility.CreateIntegerParam("@jobGroupId", jobGroupId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsLocationUsed(int locationId)
+        {
+            var sql = new StringBuilder(90);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " select top 1 LocationId from {0}vwJobs where LocationId = @locationId", this.NamePrefix);
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@locationId", locationId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsPositionUsed(int positionId)
+        {
+            var sql = new StringBuilder(97);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " SELECT TOP 1 NULL FROM {0}vwJobs WHERE PositionId = @positionId", this.NamePrefix);
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@positionId", positionId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsPropertyValueUsed(int propertyId, string value)
+        {
+            var sql = new StringBuilder(228);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "select top 1 ApplicationPropertyId from {0}UserJobProperty ", this.NamePrefix);
+            sql.Append(
+                " where ApplicationPropertyId = @ApplicationPropertyId and (propertyValue = @propertyValue or (propertyValue is null and propertyText like @propertyText))");
+
+            return
+                SqlHelper.ExecuteReader(
+                    this.ConnectionString, 
+                    CommandType.Text, 
+                    sql.ToString(), 
+                    Utility.CreateIntegerParam("@ApplicationPropertyId", propertyId), 
+                    Utility.CreateVarcharParam("@propertyValue", value, ApplicationPropertyValueLength), 
+                    Utility.CreateTextParam("@propertyText", value)).Read();
+        }
+
+        public override bool IsStateUsed(int stateId)
+        {
+            var sql = new StringBuilder(87);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " select top 1 NULL from {0}vwLocations where StateId = @stateId", this.NamePrefix);
+
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@stateId", stateId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override bool IsUserStatusUsed(int statusId)
+        {
+            var sql = new StringBuilder(299);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " declare @propertyId int{0}", Environment.NewLine);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                " select @propertyId = PropertyDefinitionId from {0}{1}ProfilePropertyDefinition where PropertyCategory = 'Engage: Employment' and PropertyName = '{2}'{3}", 
+                this.DatabaseOwner, 
+                this.ObjectQualifier, 
+                Employment.Utility.UserStatusPropertyName, 
+                Environment.NewLine);
+            sql.AppendFormat(
+                CultureInfo.InvariantCulture, 
+                " select top 1 null as EmptyColumn from {0}{1}UserProfile where PropertyDefinitionID = @propertyId and PropertyValue = @statusId", 
+                this.DatabaseOwner, 
+                this.ObjectQualifier);
+            using (
+                IDataReader dr = SqlHelper.ExecuteReader(
+                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@statusId", statusId)))
+            {
+                return dr.Read();
+            }
+        }
+
+        public override void SaveJobSearchQuery(
+            int userId, 
+            string searchName, 
+            int? positionId, 
+            int? categoryId, 
+            int? stateId, 
+            int? locationId, 
+            string keywords, 
+            int? jobGroupId, 
+            int portalId)
+        {
+            if (!Utility.HasValue(keywords))
+            {
+                keywords = null;
+            }
+
+            this.ExecuteNonQuery(
+                "SaveJobSearchQuery", 
+                Utility.CreateIntegerParam("@userId", userId), 
+                Utility.CreateVarcharParam("@name", searchName, VarcharLength), 
+                Utility.CreateIntegerParam("@positionId", positionId), 
+                Utility.CreateIntegerParam("@stateId", stateId), 
+                Utility.CreateIntegerParam("@locationId", locationId), 
+                Utility.CreateVarcharParam("@keywords", keywords), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                Utility.CreateIntegerParam("@portalId", portalId), 
+                Utility.CreateIntegerParam("@categoryId", categoryId));
+        }
+
+        /// <summary>
+        /// Updates the <see cref="ApplicationStatus"/> of the given <see cref="JobApplication"/>.
+        /// </summary>
+        /// <param name="applicationId">The application id.</param>
+        /// <param name="statusId">The status id.</param>
+        /// <param name="revisingUserId">The ID of the user updating this application.</param>
+        public override void UpdateApplication(int applicationId, int? statusId, int revisingUserId)
+        {
+            this.ExecuteNonQuery(
+                "UpdateApplication", 
+                Utility.CreateIntegerParam("@applicationId", applicationId), 
+                Utility.CreateIntegerParam("@statusId", statusId), 
+                Utility.CreateIntegerParam("@revisingUserId", revisingUserId));
+        }
+
+        public override void UpdateApplication(int applicationId, string salaryRequirement, string message)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.AppendFormat(CultureInfo.InvariantCulture, " update {0}vwApplications ", this.NamePrefix);
+            sql.Append(" set SalaryRequirement = @salaryRequirement, ");
+            sql.Append(" Message = @message ");
+            sql.Append(" where ApplicationId = @applicationId ");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId), 
+                Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, VarcharLength), 
+                Utility.CreateVarcharParam("@message", message, VarcharLength));
         }
 
         public override void UpdateApplicationProperty(int applicationId, int propertyId, string value)
@@ -1790,79 +1629,126 @@ namespace Engage.Dnn.Employment.Data
             SqlParameter propertyValue, propertyText;
             if (value != null && value.Length > ApplicationPropertyValueLength)
             {
-                propertyText = Engage.Utility.CreateTextParam("@propertyText", value);
+                propertyText = Utility.CreateTextParam("@propertyText", value);
                 propertyValue = new SqlParameter("@propertyValue", DBNull.Value);
             }
             else
             {
-                propertyValue = Engage.Utility.CreateVarcharParam("@propertyValue", value, ApplicationPropertyValueLength);
+                propertyValue = Utility.CreateVarcharParam("@propertyValue", value, ApplicationPropertyValueLength);
                 propertyText = new SqlParameter("@propertyText", DBNull.Value);
             }
 
             SqlHelper.ExecuteNonQuery(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Engage.Utility.CreateIntegerParam("@applicationId", applicationId), 
-                    Engage.Utility.CreateIntegerParam("@applicationPropertyId", propertyId), 
-                    propertyValue, 
-                    propertyText, 
-                    Engage.Utility.CreateDateTimeParam("@LastUpdatedDate", DateTime.Now));
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId), 
+                Utility.CreateIntegerParam("@applicationPropertyId", propertyId), 
+                propertyValue, 
+                propertyText, 
+                Utility.CreateDateTimeParam("@LastUpdatedDate", DateTime.Now));
         }
 
-        #endregion
-
-        #region Utility
-
-        /// <summary>
-        /// Executes a SQL stored procedure without returning any value.
-        /// </summary>
-        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>InsertJob</c> is translated to <c>dnn_EngageEmployment_spInsertJob</c>.</param>
-        /// <param name="parameters">The parameters for this query.</param>
-        private void ExecuteNonQuery(string storedProcedureName, params SqlParameter[] parameters)
+        public override void UpdateCategory(int categoryId, string description)
         {
-            SqlHelper.ExecuteNonQuery(this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+            this.ExecuteNonQuery(
+                "UpdateCategory", 
+                Utility.CreateVarcharParam("@categoryName", description, VarcharLength), 
+                Utility.CreateIntegerParam("@categoryId", categoryId));
         }
 
-        /// <summary>
-        /// Executes a SQL stored procedure, returning the results as a <see cref="DataSet"/>.
-        /// </summary>
-        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>GetJobs</c> is translated to <c>dnn_EngageEmployment_spGetJobs</c>.</param>
-        /// <param name="parameters">The parameters for this query.</param>
-        /// <returns>The results of the stored procedure as a <see cref="DataSet"/></returns>
-        private DataSet ExecuteDataset(string storedProcedureName, params SqlParameter[] parameters)
+        public override void UpdateJob(
+            int userId, 
+            int jobId, 
+            int positionId, 
+            int locationId, 
+            int categoryId, 
+            bool isHot, 
+            bool isFilled, 
+            string requiredQualifications, 
+            string desiredQualifications, 
+            int sortOrder, 
+            string notificationEmailAddress, 
+            DateTime startDate, 
+            DateTime? expireDate, 
+            string applicationUrl)
         {
-            return SqlHelper.ExecuteDataset(
-                    this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+            this.ExecuteNonQuery(
+                "UpdateJob", 
+                Utility.CreateIntegerParam("@jobId", jobId), 
+                Utility.CreateIntegerParam("@positionId", positionId), 
+                Utility.CreateIntegerParam("@locationId", locationId), 
+                Utility.CreateIntegerParam("@categoryId", categoryId), 
+                Utility.CreateBitParam("@isHot", isHot), 
+                Utility.CreateBitParam("@isFilled", isFilled), 
+                Utility.CreateTextParam("@desiredQualifications", desiredQualifications), 
+                Utility.CreateTextParam("@requiredQualifications", requiredQualifications), 
+                Utility.CreateIntegerParam("@revisingUser", userId), 
+                Utility.CreateIntegerParam("@sortOrder", sortOrder), 
+                Utility.CreateTextParam("@notificationEmailAddress", notificationEmailAddress), 
+                Utility.CreateDateTimeParam("@startDate", startDate), 
+                Utility.CreateDateTimeParam("@expireDate", expireDate), 
+                Utility.CreateVarcharParam("@applicationUrl", applicationUrl, MaxUrlLength));
         }
 
-        /// <summary>
-        /// Executes a SQL stored procedure, returning the results as a <see cref="SqlDataReader"/>.
-        /// </summary>
-        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>GetJobs</c> is translated to <c>dnn_EngageEmployment_spGetJobs</c>.</param>
-        /// <param name="parameters">The parameters for this query.</param>
-        /// <returns>The results of the stored procedure as a <see cref="SqlDataReader"/></returns>
-        private SqlDataReader ExecuteReader(string storedProcedureName, params SqlParameter[] parameters)
+        public override void UpdateJobGroup(int jobGroupId, string jobGroupName)
         {
-            return SqlHelper.ExecuteReader(
-                    this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "UPDATE {0}JobGroup ", this.NamePrefix);
+            sql.Append(" SET [Name] = @jobGroupName ");
+            sql.Append(" WHERE JobGroupId = @jobGroupId ");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                Utility.CreateVarcharParam("@jobGroupName", jobGroupName, 255));
         }
 
-        /// <summary>
-        /// Executes a SQL stored procedure, returning a single value.
-        /// </summary>
-        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>InsertJob</c> is translated to <c>dnn_EngageEmployment_spInsertJob</c>.</param>
-        /// <param name="parameters">The parameters for this query.</param>
-        /// <returns>The (single) result of the stored procedure</returns>
-        private object ExecuteScalar(string storedProcedureName, params SqlParameter[] parameters)
+        public override void UpdateLocation(int locationId, string description, int stateId)
         {
-            return SqlHelper.ExecuteScalar(
-                    this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+            this.ExecuteNonQuery(
+                "UpdateLocation", 
+                Utility.CreateVarcharParam("@locationName", description, VarcharLength), 
+                Utility.CreateIntegerParam("@stateId", stateId), 
+                Utility.CreateIntegerParam("@locationId", locationId));
         }
 
-        public override IDataReader GetCommonWords()
+        public override void UpdatePosition(int positionId, string jobTitle, string jobDescription)
         {
-            return SqlHelper.ExecuteReader(this.connectionString, CommandType.Text, "select Word from " + this.NamePrefix + "lkpCommonWords");
+            this.ExecuteNonQuery(
+                "UpdatePosition", 
+                Utility.CreateVarcharParam("@jobTitle", jobTitle, VarcharLength), 
+                Utility.CreateTextParam("@jobDescription", jobDescription), 
+                Utility.CreateIntegerParam("@positionId", positionId));
+        }
+
+        public override void UpdateState(int id, string name, string abbreviation)
+        {
+            this.ExecuteNonQuery(
+                "UpdateState", 
+                Utility.CreateIntegerParam("@stateId", id), 
+                Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
+                Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, AbbreviationLength));
+        }
+
+        public override void UpdateUserStatus(int statusId, string statusName)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.AppendFormat(CultureInfo.InvariantCulture, " update {0}vwUserStatuses ", this.NamePrefix);
+            sql.Append(" set ");
+            sql.Append(" StatusName = @status ");
+            sql.Append(" where ");
+            sql.Append(" UserStatusId = @statusId ");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateVarcharParam("@status", statusName, VarcharLength), 
+                Utility.CreateIntegerParam("@statusId", statusId));
         }
 
         private static int? ConvertReturnValueToInt(object value)
@@ -1880,6 +1766,67 @@ namespace Engage.Dnn.Employment.Data
             return returnValue;
         }
 
-        #endregion
+        /// <summary>
+        /// Executes a SQL stored procedure, returning the results as a <see cref="DataSet"/>.
+        /// </summary>
+        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>GetJobs</c> is translated to <c>dnn_EngageEmployment_spGetJobs</c>.</param>
+        /// <param name="parameters">The parameters for this query.</param>
+        /// <returns>The results of the stored procedure as a <see cref="DataSet"/></returns>
+        private DataSet ExecuteDataset(string storedProcedureName, params SqlParameter[] parameters)
+        {
+            return SqlHelper.ExecuteDataset(
+                this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+        }
+
+        /// <summary>
+        /// Executes a SQL stored procedure without returning any value.
+        /// </summary>
+        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>InsertJob</c> is translated to <c>dnn_EngageEmployment_spInsertJob</c>.</param>
+        /// <param name="parameters">The parameters for this query.</param>
+        private void ExecuteNonQuery(string storedProcedureName, params SqlParameter[] parameters)
+        {
+            SqlHelper.ExecuteNonQuery(this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+        }
+
+        /// <summary>
+        /// Executes a SQL stored procedure, returning the results as a <see cref="SqlDataReader"/>.
+        /// </summary>
+        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>GetJobs</c> is translated to <c>dnn_EngageEmployment_spGetJobs</c>.</param>
+        /// <param name="parameters">The parameters for this query.</param>
+        /// <returns>The results of the stored procedure as a <see cref="SqlDataReader"/></returns>
+        private SqlDataReader ExecuteReader(string storedProcedureName, params SqlParameter[] parameters)
+        {
+            return SqlHelper.ExecuteReader(
+                this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+        }
+
+        /// <summary>
+        /// Executes a SQL stored procedure, returning a single value.
+        /// </summary>
+        /// <param name="storedProcedureName">Name of the stored procedure.  Does not include any prefix, for example <c>InsertJob</c> is translated to <c>dnn_EngageEmployment_spInsertJob</c>.</param>
+        /// <param name="parameters">The parameters for this query.</param>
+        /// <returns>The (single) result of the stored procedure</returns>
+        private object ExecuteScalar(string storedProcedureName, params SqlParameter[] parameters)
+        {
+            return SqlHelper.ExecuteScalar(
+                this.ConnectionString, CommandType.StoredProcedure, this.NamePrefix + "sp" + storedProcedureName, parameters);
+        }
+
+        private void RemoveDocumentAssignments(int applicationId, int documentTypeId)
+        {
+            var sql = new StringBuilder(128);
+            sql.AppendFormat(CultureInfo.InvariantCulture, "DELETE {0}ApplicationDocument ", this.NamePrefix);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " FROM {0}ApplicationDocument ad ", this.NamePrefix);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}Document d ON (ad.ResumeId = d.ResumeId) ", this.NamePrefix);
+            sql.Append(" WHERE ad.ApplicationId = @applicationId ");
+            sql.Append(" AND d.DocumentTypeId = @documentTypeId ");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId), 
+                Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
+        }
     }
 }

@@ -10,20 +10,20 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Globalization;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
-using Engage.Dnn.Employment.Data;
-
 namespace Engage.Dnn.Employment.Admin
 {
-    partial class JobGroupAdmin : ModuleBase
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Web.UI;
+    using System.Web.UI.WebControls;
+    using DotNetNuke.Services.Exceptions;
+    using DotNetNuke.Services.Localization;
+    using Engage.Dnn.Employment.Data;
+
+    public partial class JobGroupAdmin : ModuleBase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected void Page_Init(object sender, EventArgs e)
@@ -35,13 +35,13 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobGroupsGridView.RowEditing += this.JobGroupsGridView_RowEditing;
                 this.JobGroupsGridView.RowCommand += this.JobGroupsGridView_RowCommand;
                 this.JobGroupsGridView.RowDeleting += this.JobGroupsGridView_RowDeleting;
-                rpJobs.ItemDataBound += rpJobs_ItemDataBound;
+                this.rpJobs.ItemDataBound += this.RpJobsItemDataBound;
                 this.SaveAssignmentsButton.Click += this.SaveAssignmentsButton_Click;
                 this.NewJobGroupButton.Click += this.NewJobGroupButton_Click;
-                EditAssignmentsButton.Click += EditAssignmentsButton_Click;
+                this.EditAssignmentsButton.Click += this.EditAssignmentsButton_Click;
                 this.SaveNewJobGroupButton.Click += this.SaveNewJobGroupButton_Click;
                 this.EditJobGroupsButton.Click += this.EditJobGroupsButton_Click;
-                cvNewJobGroup.ServerValidate += cvNewJobGroup_ServerValidate;
+                this.cvNewJobGroup.ServerValidate += this.CvNewJobGroupServerValidate;
             }
             catch (Exception exc)
             {
@@ -54,23 +54,36 @@ namespace Engage.Dnn.Employment.Admin
         {
             try
             {
-                this.AuthorizationMultiview.SetActiveView(IsEditable ? vwJobGroups : vwUnauthorized);
+                this.AuthorizationMultiview.SetActiveView(this.IsEditable ? this.vwJobGroups : this.vwUnauthorized);
                 if (!Page.IsPostBack)
                 {
                     Dnn.Utility.LocalizeGridView(ref this.JobGroupsGridView, LocalResourceFile);
 
-                    BindJobGroups();
+                    this.BindJobGroups();
                 }
             }
-            catch (Exception exc) //Module failed to load
+            catch (Exception exc) 
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
 
+        private static int? GetJobGroupId(Control row)
+        {
+            var hdnJobGroupId = (HiddenField)row.FindControl("hdnJobGroupId");
+
+            int jobGroupId;
+            if (hdnJobGroupId != null && int.TryParse(hdnJobGroupId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobGroupId))
+            {
+                return jobGroupId;
+            }
+
+            return null;
+        }
+
         private void BindJobGroups()
         {
-            DataTable jobGroups = DataProvider.Instance().GetJobGroups(PortalId);
+            var jobGroups = DataProvider.Instance().GetJobGroups(PortalId);
 
             this.JobGroupsGridView.DataSource = jobGroups;
             this.JobGroupsGridView.DataBind();
@@ -84,20 +97,20 @@ namespace Engage.Dnn.Employment.Admin
                 this.NewJobGroupPanel.CssClass = this.JobGroupsGridView.AlternatingRowStyle.CssClass;
             }
 
-            rowNewJobGroupHeader.Visible = (jobGroups == null || jobGroups.Rows.Count < 1);
-            this.EditAssignmentsButton.Visible = (jobGroups != null && jobGroups.Rows.Count > 0);
+            this.rowNewJobGroupHeader.Visible = jobGroups == null || jobGroups.Rows.Count < 1;
+            this.EditAssignmentsButton.Visible = jobGroups != null && jobGroups.Rows.Count > 0;
         }
 
         private void BindJobGroupAssignments()
         {
             DataSet ds = DataProvider.Instance().GetAssignedJobGroups(PortalId);
-            rpJobs.DataSource = ds.Tables["Jobs"];
-            rpJobs.DataBind();
+            this.rpJobs.DataSource = ds.Tables["Jobs"];
+            this.rpJobs.DataBind();
         }
 
         #region vwAssignment Events
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void rpJobs_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        private void RpJobsItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
@@ -123,7 +136,7 @@ namespace Engage.Dnn.Employment.Admin
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void SaveAssignmentsButton_Click(object sender, EventArgs e)
         {
-            foreach (RepeaterItem row in rpJobs.Items)
+            foreach (RepeaterItem row in this.rpJobs.Items)
             {
                 int jobId;
                 var hdnJobId = row.FindControl("hdnJobId") as HiddenField;
@@ -141,13 +154,14 @@ namespace Engage.Dnn.Employment.Admin
                                 jobGroupIds.Add(jobGroupId);
                             }
                         }
+
                         DataProvider.Instance().AssignJobToJobGroups(jobId, jobGroupIds);
                     }
                 }
             }
 
-            this.AuthorizationMultiview.SetActiveView(vwJobGroups);
-            BindJobGroups();
+            this.AuthorizationMultiview.SetActiveView(this.vwJobGroups);
+            this.BindJobGroups();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
@@ -186,15 +200,15 @@ namespace Engage.Dnn.Employment.Admin
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void EditAssignmentsButton_Click(object sender, EventArgs e)
         {
-            this.AuthorizationMultiview.SetActiveView(vwAssignment);
-            BindJobGroupAssignments();
+            this.AuthorizationMultiview.SetActiveView(this.vwAssignment);
+            this.BindJobGroupAssignments();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void NewJobGroupButton_Click(object sender, EventArgs e)
         {
             this.NewJobGroupPanel.Visible = true;
-            txtNewJobGroupName.Focus();
+            this.txtNewJobGroupName.Focus();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
@@ -202,15 +216,15 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (Page.IsValid)
             {
-                DataProvider.Instance().InsertJobGroup(txtNewJobGroupName.Text, PortalId);
+                DataProvider.Instance().InsertJobGroup(this.txtNewJobGroupName.Text, this.PortalId);
                 this.NewJobGroupPanel.Visible = false;
-                txtNewJobGroupName.Text = string.Empty;
-                BindJobGroups();
+                this.txtNewJobGroupName.Text = string.Empty;
+                this.BindJobGroups();
             }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void cvNewJobGroup_ServerValidate(object sender, ServerValidateEventArgs e)
+        private void CvNewJobGroupServerValidate(object sender, ServerValidateEventArgs e)
         {
             if (e != null && Engage.Utility.HasValue(e.Value))
             {
@@ -231,23 +245,24 @@ namespace Engage.Dnn.Employment.Admin
                         int? jobGroupId = GetJobGroupId(rowIndex);
                         if (jobGroupId.HasValue)
                         {
-                            string newJobGroupName = GetJobGroupName(rowIndex);
-                            string oldJobGroupName = string.Empty;
-                            DataTable jobGroup = DataProvider.Instance().GetJobGroup(jobGroupId.Value);
+                            var newJobGroupName = this.GetJobGroupName(rowIndex);
+                            var oldJobGroupName = string.Empty;
+                            var jobGroup = DataProvider.Instance().GetJobGroup(jobGroupId.Value);
                             Debug.Assert(jobGroup.Rows.Count > 0);
                             if (jobGroup.Rows.Count > 0)
                             {
                                 oldJobGroupName = jobGroup.Rows[0]["Name"] as string;
                             }
+
                             if (string.Equals(newJobGroupName, oldJobGroupName, StringComparison.CurrentCultureIgnoreCase) || !DataProvider.Instance().IsJobGroupNameUsed(newJobGroupName, PortalId))
                             {
                                 DataProvider.Instance().UpdateJobGroup(jobGroupId.Value, newJobGroupName);
                                 this.JobGroupsGridView.EditIndex = -1;
-                                BindJobGroups();
+                                this.BindJobGroups();
                             }
                             else
                             {
-                                cvJobGroupEdit.IsValid = false;
+                                this.cvJobGroupEdit.IsValid = false;
                             }
                         }
                     }
@@ -262,7 +277,7 @@ namespace Engage.Dnn.Employment.Admin
             if (jobGroupId.HasValue)
             {
                 DataProvider.Instance().DeleteJobGroup(jobGroupId.Value);
-                BindJobGroups();
+                this.BindJobGroups();
             }
         }
 
@@ -272,7 +287,7 @@ namespace Engage.Dnn.Employment.Admin
             if (e != null)
             {
                 this.JobGroupsGridView.EditIndex = e.NewEditIndex;
-                BindJobGroups();
+                this.BindJobGroups();
             }
         }
 
@@ -280,30 +295,19 @@ namespace Engage.Dnn.Employment.Admin
         private void JobGroupsGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             this.JobGroupsGridView.EditIndex = -1;
-            BindJobGroups();
+            this.BindJobGroups();
         }
 
         private string GetJobGroupName(int rowIndex)
         {
             if (this.JobGroupsGridView != null && this.JobGroupsGridView.Rows.Count > rowIndex)
             {
-                GridViewRow row = this.JobGroupsGridView.Rows[rowIndex];
+                var row = this.JobGroupsGridView.Rows[rowIndex];
                 var txtJobGroupName = row.FindControl("txtJobGroupName") as TextBox;
 
                 return txtJobGroupName != null ? txtJobGroupName.Text : null;
             }
-            return null;
-        }
 
-        private static int? GetJobGroupId(Control row)
-        {
-            var hdnJobGroupId = (HiddenField)row.FindControl("hdnJobGroupId");
-
-            int jobGroupId;
-            if (hdnJobGroupId != null && int.TryParse(hdnJobGroupId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobGroupId))
-            {
-                return jobGroupId;
-            }
             return null;
         }
 
@@ -313,6 +317,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 return GetJobGroupId(this.JobGroupsGridView.Rows[rowIndex]);
             }
+
             return null;
         }
         #endregion

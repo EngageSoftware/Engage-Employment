@@ -107,7 +107,7 @@ namespace Engage.Dnn.Employment
         /// <param name="documentUserId">The ID of the user who submitted the requested document.</param>
         /// <param name="requestingUser">The user making this request.</param>
         /// <returns>
-        /// 	<c>true</c> if the current user has permission to view the requested document; otherwise <c>false</c>.
+        /// <c>true</c> if the current user has permission to view the requested document; otherwise <c>false</c>.
         /// </returns>
         private bool UserHasPermissionToViewDocument(int documentId, int? documentUserId, UserInfo requestingUser)
         {

@@ -19,16 +19,6 @@ namespace Engage.Dnn.Employment
 
     internal class Location
     {
-        public int? LocationId { get; private set; }
-
-        public string LocationName { get; set; }
-
-        public int StateId { get; set; }
-
-        public string StateName { get; private set; }
-
-        public string StateAbbreviation { get; private set; }
-
         private Location(int? locationId, string locationName, int stateId, string stateName, string stateAbbreviation)
         {
             this.LocationId = locationId;
@@ -38,30 +28,15 @@ namespace Engage.Dnn.Employment
             this.StateAbbreviation = stateAbbreviation;
         }
 
-        /// <summary>
-        /// Determines whether this instance is used by any jobs.
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is used by any jobs; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsUsed()
-        {
-            ValidateLocationId();
-            return IsLocationUsed(this.LocationId.Value);
-        }
+        public int? LocationId { get; private set; }
 
-        private static Location FillLocation(IDataRecord dr)
-        {
-            return new Location((int)dr["LocationId"], dr["LocationName"].ToString(), (int)dr["StateId"], dr["StateName"].ToString(), dr["StateAbbreviation"].ToString());
-        }
+        public string LocationName { get; set; }
 
-        private void ValidateLocationId()
-        {
-            if (!this.LocationId.HasValue)
-            {
-                throw new InvalidOperationException("This method is only valid for Locations that have been retrieved from the database");
-            }
-        }
+        public int StateId { get; set; }
+
+        public string StateName { get; private set; }
+
+        public string StateAbbreviation { get; private set; }
 
         public static List<Location> LoadLocations(int? jobGroupId, int portalId)
         {
@@ -73,6 +48,7 @@ namespace Engage.Dnn.Employment
                     locations.Add(FillLocation(dr));
                 }
             }
+
             return locations;
         }
 
@@ -91,16 +67,6 @@ namespace Engage.Dnn.Employment
             return DataProvider.Instance().GetLocationId(name, stateId, portalId);
         }
 
-        internal static bool IsLocationUsed(int locationId)
-        {
-            return DataProvider.Instance().IsLocationUsed(locationId);
-        }
-
-        internal static void DeleteLocation(int locationId)
-        {
-            DataProvider.Instance().DeleteLocation(locationId);
-        }
-
         /// <summary>
         /// Determines whether a location can be created in the portal with the specified ID.
         /// </summary>
@@ -111,6 +77,41 @@ namespace Engage.Dnn.Employment
         public static bool CanCreateLocation(int portalId)
         {
             return State.LoadStates(null, portalId).Count > 0;
+        }
+
+        /// <summary>
+        /// Determines whether this instance is used by any jobs.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if this instance is used by any jobs; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsUsed()
+        {
+            this.ValidateLocationId();
+            return IsLocationUsed(this.LocationId.Value);
+        }
+
+        internal static bool IsLocationUsed(int locationId)
+        {
+            return DataProvider.Instance().IsLocationUsed(locationId);
+        }
+
+        internal static void DeleteLocation(int locationId)
+        {
+            DataProvider.Instance().DeleteLocation(locationId);
+        }
+
+        private static Location FillLocation(IDataRecord dr)
+        {
+            return new Location((int)dr["LocationId"], dr["LocationName"].ToString(), (int)dr["StateId"], dr["StateName"].ToString(), dr["StateAbbreviation"].ToString());
+        }
+
+        private void ValidateLocationId()
+        {
+            if (!this.LocationId.HasValue)
+            {
+                throw new InvalidOperationException("This method is only valid for Locations that have been retrieved from the database");
+            }
         }
     }
 }

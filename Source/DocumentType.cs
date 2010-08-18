@@ -26,46 +26,47 @@ namespace Engage.Dnn.Employment
         public static readonly DocumentType CoverLetter = new DocumentType("Cover Letter");
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private readonly string _description = string.Empty;
-		private int? _id = null;
+        private readonly string description = string.Empty;
+
+        private int? id = null;
 
         private DocumentType(string description)
-		{
-			this._description = description;
-		}
+        {
+            this.description = description;
+        }
 
         public string Description
         {
             [DebuggerStepThrough()]
-            get { return this._description; }
+            get { return this.description; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public int GetId()
-		{
-			if (!_id.HasValue)
-			{
-                using (IDataReader dr = DataProvider.Instance().GetDocumentType(this.Description, null))
+        {
+            if (!this.id.HasValue)
+            {
+                using (var dr = DataProvider.Instance().GetDocumentType(this.Description, null))
                 {
                     if (dr.Read())
                     {
-                        _id = Convert.ToInt32(dr["DocumentTypeID"], CultureInfo.InvariantCulture);
+                        this.id = Convert.ToInt32(dr["DocumentTypeID"], CultureInfo.InvariantCulture);
                     }
                 }
-			}
+            }
 
-			return _id ?? -1;
-		}
+            return this.id ?? -1;
+        }
 
         internal static DocumentType GetDocumentType(int documentTypeId)
         {
-            using (IDataReader dr = DataProvider.Instance().GetDocumentType(documentTypeId))
+            using (var dr = DataProvider.Instance().GetDocumentType(documentTypeId))
             {
                 if (dr.Read())
                 {
                     return new DocumentType((string)dr["Description"])
                         {
-                            _id = documentTypeId
+                            id = documentTypeId
                         };
                 }
             }

@@ -10,13 +10,15 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using Engage.Dnn.Employment.Data;
-
 namespace Engage.Dnn.Employment
 {
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+
+    using Engage.Dnn.Employment.Data;
+
     internal class Category
     {
         /// <summary>
@@ -31,32 +33,6 @@ namespace Engage.Dnn.Employment
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string categoryName;
 
-        /// <summary>
-        /// Gets the category ID.
-        /// </summary>
-        /// <value>The category ID.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
-        public int? CategoryId
-        {
-            [DebuggerStepThrough]
-            get { return this.categoryId; }
-            //[DebuggerStepThrough]
-            //set { categoryId = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the name of this category.
-        /// </summary>
-        /// <value>The name of this category.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
-        public string CategoryName
-        {
-            [DebuggerStepThrough]
-            get { return this.categoryName; }
-            [DebuggerStepThrough]
-            set { this.categoryName = value; }
-        }
-
         ////public Category(string categoryName)
         ////    : this(null, categoryName)
         ////{
@@ -67,10 +43,38 @@ namespace Engage.Dnn.Employment
         /// </summary>
         /// <param name="categoryId">The category ID.</param>
         /// <param name="categoryName">Name of the category.</param>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "There is no constructor.")]
         private Category(int? categoryId, string categoryName)
         {
             this.categoryId = categoryId;
             this.categoryName = categoryName;
+        }
+
+        /// <summary>
+        /// Gets the category ID.
+        /// </summary>
+        /// <value>The category ID.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Called from data binding on ApplicationStatusListing.ascx")]
+        public int? CategoryId
+        {
+            [DebuggerStepThrough]
+            get { return this.categoryId; } //// [DebuggerStepThrough]
+            //// set { categoryId = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of this category.
+        /// </summary>
+        /// <value>The name of this category.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Called from data binding on ApplicationStatusListing.ascx")]
+        public string CategoryName
+        {
+            [DebuggerStepThrough]
+            get { return this.categoryName; }
+            [DebuggerStepThrough]
+            set { this.categoryName = value; }
         }
 
         ////public void Save(int portalId)
@@ -108,13 +112,14 @@ namespace Engage.Dnn.Employment
         public static List<Category> LoadCategories(int? jobGroupId, int portalId)
         {
             var categories = new List<Category>();
-            using (IDataReader dr = DataProvider.Instance().GetCategories(jobGroupId, portalId))
+            using (var dr = DataProvider.Instance().GetCategories(jobGroupId, portalId))
             {
                 while (dr.Read())
                 {
                     categories.Add(FillCategory(dr));
                 }
             }
+
             return categories;
         }
 

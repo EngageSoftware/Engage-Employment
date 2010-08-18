@@ -27,7 +27,8 @@ namespace Engage.Dnn.Employment.Admin
     using DotNetNuke.Security;
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
-    using Utility=Engage.Utility;
+
+    using Utility = Engage.Utility;
 
     /// <summary>
     /// Lists applications for the available jobs in the portal.
@@ -106,7 +107,7 @@ namespace Engage.Dnn.Employment.Admin
         /// Gets the name of the user, formatted based on the "UserName" localization key.
         /// </summary>
         /// <param name="userId">The user id.</param>
-        /// <returns></returns>
+        /// <returns>A user name</returns>
         protected string GetUserName(int? userId)
         {
             if (userId.HasValue)
@@ -144,6 +145,31 @@ namespace Engage.Dnn.Employment.Admin
             catch (Exception exc)
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
+            }
+        }
+
+        /// <summary>
+        /// Handles the ItemDataBound event of the PropertiesRepeater control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Web.UI.WebControls.RepeaterItemEventArgs"/> instance containing the event data.</param>
+        [SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Compiler doesn't see validation")]
+        private static void PropertiesRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
+            {
+                var applicationPropertyLabel = (Label)e.Item.FindControl("ApplicationPropertyLabel");
+                var row = (DataRowView)e.Item.DataItem;
+
+                if (row != null && row["PropertyValue"] != DBNull.Value)
+                {
+                    int leadId = Convert.ToInt32(row["PropertyValue"], CultureInfo.InvariantCulture);
+                    if (applicationPropertyLabel != null)
+                    {
+                        ListEntryInfo leadListEntry = (new ListController()).GetListEntryInfo(leadId);
+                        applicationPropertyLabel.Text = leadListEntry.Text;
+                    }
+                }
             }
         }
 
@@ -263,31 +289,6 @@ namespace Engage.Dnn.Employment.Admin
 
                         var documentTypeId = (int)documentTypeIdObj;
                         documentLink.Text = Localization.GetString(DocumentType.GetDocumentType(documentTypeId).Description, this.LocalResourceFile);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles the ItemDataBound event of the PropertiesRepeater control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Web.UI.WebControls.RepeaterItemEventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Compiler doesn't see validation")]
-        private static void PropertiesRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
-            if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
-            {
-                var applicationPropertyLabel = (Label)e.Item.FindControl("ApplicationPropertyLabel");
-                var row = (DataRowView)e.Item.DataItem;
-
-                if (row != null && row["PropertyValue"] != DBNull.Value)
-                {
-                    int leadId = Convert.ToInt32(row["PropertyValue"], CultureInfo.InvariantCulture);
-                    if (applicationPropertyLabel != null)
-                    {
-                        ListEntryInfo leadListEntry = (new ListController()).GetListEntryInfo(leadId);
-                        applicationPropertyLabel.Text = leadListEntry.Text;
                     }
                 }
             }

@@ -26,21 +26,12 @@ namespace Engage.Dnn.Employment.Admin
     /// <summary>
     /// Displays and edits the list of application statuses
     /// </summary>
-    partial class ApplicationStatusListing : ModuleBase
+    public partial class ApplicationStatusListing : ModuleBase
     {
         /// <summary>
         /// The maximum length for a status name
         /// </summary>
         private const int StatusMaxLength = 255;
-
-        /// <summary>
-        /// Gets the error message to use when the status name is longer than the maximum
-        /// </summary>
-        /// <value>The max length validation text.</value>
-        protected string MaxLengthValidationText
-        {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StatusMaxLength", this.LocalResourceFile), StatusMaxLength); }
-        }
 
         /// <summary>
         /// Gets the regular expression to limit the length of the status name.
@@ -49,6 +40,15 @@ namespace Engage.Dnn.Employment.Admin
         protected static string MaxLengthValidationExpression
         {
             get { return Employment.Utility.GetMaxLengthValidationExpression(StatusMaxLength); }
+        }
+
+        /// <summary>
+        /// Gets the error message to use when the status name is longer than the maximum
+        /// </summary>
+        /// <value>The max length validation text.</value>
+        protected string MaxLengthValidationText
+        {
+            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StatusMaxLength", this.LocalResourceFile), StatusMaxLength); }
         }
 
         /// <summary>
@@ -72,12 +72,30 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
+        /// Gets the ID of the status represented in the given row.
+        /// </summary>
+        /// <param name="row">The row representing a status.</param>
+        /// <returns>The ID of the status represented in the given row</returns>
+        private static int? GetStatusId(Control row)
+        {
+            var statusIdHiddenField = (HiddenField)row.FindControl("StatusIdHiddenField");
+
+            int statusId;
+            if (statusIdHiddenField != null && int.TryParse(statusIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
+            {
+                return statusId;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Handles the Load event of the Page control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void Page_Load(Object sender, EventArgs e)
+        private void Page_Load(object sender, EventArgs e)
         {
             try
             {
@@ -88,7 +106,7 @@ namespace Engage.Dnn.Employment.Admin
                     this.BindData();
                 }
             }
-            catch (Exception exc) //Module failed to load
+            catch (Exception exc)
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
@@ -279,7 +297,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.NewPanel.CssClass = this.StatusesGrid.AlternatingRowStyle.CssClass;
             }
 
-            this.rowNewHeader.Visible = (statuses == null || statuses.Count < 1);
+            this.rowNewHeader.Visible = statuses == null || statuses.Count < 1;
         }
 
         /// <summary>
@@ -288,7 +306,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="statusId">The status ID.</param>
         /// <param name="newStatusName">New name for the status.</param>
         /// <returns>
-        /// 	<c>true</c> if the given status name is valid for the status with the given ID; otherwise, <c>false</c>.
+        /// <c>true</c> if the given status name is valid for the status with the given ID; otherwise, <c>false</c>.
         /// </returns>
         private bool IsStatusNameUnique(int? statusId, string newStatusName)
         {
@@ -327,24 +345,6 @@ namespace Engage.Dnn.Employment.Admin
                 var statusTextBox = row.FindControl("StatusTextBox") as TextBox;
                 Debug.Assert(statusTextBox != null);
                 return statusTextBox.Text;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the ID of the status represented in the given row.
-        /// </summary>
-        /// <param name="row">The row representing a status.</param>
-        /// <returns>The ID of the status represented in the given row</returns>
-        private static int? GetStatusId(Control row)
-        {
-            var statusIdHiddenField = (HiddenField)row.FindControl("StatusIdHiddenField");
-
-            int statusId;
-            if (statusIdHiddenField != null && int.TryParse(statusIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
-            {
-                return statusId;
             }
 
             return null;

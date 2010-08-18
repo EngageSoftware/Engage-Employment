@@ -10,16 +10,16 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Globalization;
-using System.Web.UI.WebControls;
-using DotNetNuke.Common;
-using DotNetNuke.Framework;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
-
 namespace Engage.Dnn.Employment
 {
+    using System;
+    using System.Globalization;
+    using System.Web.UI.WebControls;
+    using DotNetNuke.Common;
+    using DotNetNuke.Framework;
+    using DotNetNuke.Services.Exceptions;
+    using DotNetNuke.Services.Localization;
+
     public partial class JobListingOptions : ModuleBase
     {
         #region Event Handlers
@@ -27,14 +27,15 @@ namespace Engage.Dnn.Employment
         {
             if (AJAX.IsInstalled())
             {
-                //AJAX.AddScriptManager(Page);
-                AJAX.WrapUpdatePanelControl(phLimitOption, false);
+                // AJAX.AddScriptManager(Page);
+                AJAX.WrapUpdatePanelControl(this.phLimitOption, false);
                 this.LimitCheckBox.CheckedChanged += this.LimitCheckBox_CheckedChanged;
                 this.LimitCheckBox.AutoPostBack = true;
             }
+
             rvLimit.MaximumValue = int.MaxValue.ToString(CultureInfo.InvariantCulture);
 
-            this.Load += Page_Load;
+            this.Load += this.Page_Load;
             this.UpdateButton.Click += this.UpdateButton_Click;
             this.CancelButton.Click += this.CancelButton_Click;
             base.OnInit(e);
@@ -47,12 +48,12 @@ namespace Engage.Dnn.Employment
             {
                 if (!IsPostBack)
                 {
-                    FillDisplayOptionList();
-                    FillLimitOptionList();
+                    this.FillDisplayOptionList();
+                    this.FillLimitOptionList();
 
-                    // If the maximum number of jobs is set as no maximum, it is stored as an empty string.  
-                    // Since this isn't an int value, getting it as an int gives us the default, instead of null
-                    // So, if we get the default, we need to doublecheck that it's the default and not the "no maximum" value
+                    //// If the maximum number of jobs is set as no maximum, it is stored as an empty string.  
+                    //// Since this isn't an int value, getting it as an int gives us the default, instead of null
+                    //// So, if we get the default, we need to doublecheck that it's the default and not the "no maximum" value
                     int? maximumNumberOfjobs = ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsInt32For(this);
                     if (maximumNumberOfjobs == ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.DefaultValue 
                         && string.IsNullOrEmpty(ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsStringFor(this)))
@@ -62,7 +63,7 @@ namespace Engage.Dnn.Employment
 
                     this.DisplayOptionRadioButtonList.SelectedValue = ModuleSettings.JobListingShowOnlyHotJobs.GetValueAsBooleanFor(this).ToString();
                     this.LimitCheckBox.Checked = maximumNumberOfjobs.HasValue;
-                    SetLimitEnabled(this.LimitCheckBox.Checked);
+                    this.SetLimitEnabled(this.LimitCheckBox.Checked);
                     if (this.LimitCheckBox.Checked)
                     {
                         txtLimit.Text = maximumNumberOfjobs.Value.ToString(CultureInfo.CurrentCulture);
@@ -100,20 +101,21 @@ namespace Engage.Dnn.Employment
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         protected void CancelButton_Click(object sender, EventArgs e)
         {
-            //return to the main page view
+            // return to the main page view
             Response.Redirect(Globals.NavigateURL(TabId), false);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         protected void LimitCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            SetLimitEnabled(this.LimitCheckBox.Checked);
+            this.SetLimitEnabled(this.LimitCheckBox.Checked);
         }
         #endregion
 
         #region Helper Methods
 
-        private void SetLimitEnabled(bool enabled) {
+        private void SetLimitEnabled(bool enabled) 
+        {
             this.txtLimit.Enabled = this.LimitOptionRadioButtonList.Enabled = this.LimitRequiredFieldValidator.Enabled = this.rvLimit.Enabled = enabled;
         }
 

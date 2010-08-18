@@ -10,39 +10,40 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
-using DotNetNuke.UI.Utilities;
-
 namespace Engage.Dnn.Employment.Admin
 {
-    partial class CategoryListing : ModuleBase
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Web.UI;
+    using System.Web.UI.WebControls;
+    using DotNetNuke.Services.Exceptions;
+    using DotNetNuke.Services.Localization;
+    using DotNetNuke.UI.Utilities;
+
+    public partial class CategoryListing : ModuleBase
     {
         private const int CategoryMaxLength = 255;
-
-        protected string MaxLengthValidationText
-        {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("CategoryMaxLength", LocalResourceFile), CategoryMaxLength); }
-        }
 
         protected static string MaxLengthValidationExpression
         {
             get { return Utility.GetMaxLengthValidationExpression(CategoryMaxLength); }
         }
 
+        protected string MaxLengthValidationText
+        {
+            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("CategoryMaxLength", LocalResourceFile), CategoryMaxLength); }
+        }
+
+
         protected override void OnInit(EventArgs e)
         {
-            this.Load += Page_Load;
-            AddButton.Click += AddButton_Click;
-            BackButton.Click += BackButton_Click;
-            CancelNewButton.Click += CancelNewButton_Click;
-            SaveNewButton.Click += SaveNewButton_Click;
+            this.Load += this.Page_Load;
+            this.AddButton.Click += this.AddButton_Click;
+            this.BackButton.Click += this.BackButton_Click;
+            this.CancelNewButton.Click += this.CancelNewButton_Click;
+            this.SaveNewButton.Click += this.SaveNewButton_Click;
             this.CategoriesGridView.RowCancelingEdit += this.CategoriesGridView_RowCancelingEdit;
             this.CategoriesGridView.RowCommand += this.CategoriesGridView_RowCommand;
             this.CategoriesGridView.RowDataBound += this.CategoriesGridView_RowDataBound;
@@ -53,19 +54,20 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        protected void Page_Load(Object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
                 if (!IsPostBack)
                 {
                     Dnn.Utility.LocalizeGridView(ref this.CategoriesGridView, LocalResourceFile);
-                    SetupLengthValidation();
-                    LoadCategories();
+                    this.SetupLengthValidation();
+                    this.LoadCategories();
                 }
             }
-            catch (Exception exc) //Module failed to load
+            catch (Exception exc)
             {
+                // Module failed to load
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
@@ -76,11 +78,24 @@ namespace Engage.Dnn.Employment.Admin
             Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
         }
 
+        private static int? GetCategoryId(Control row)
+        {
+            var hdnCategoryId = (HiddenField)row.FindControl("hdnCategoryId");
+
+            int categoryId;
+            if (hdnCategoryId != null && int.TryParse(hdnCategoryId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out categoryId))
+            {
+                return categoryId;
+            }
+
+            return null;
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void AddButton_Click(object sender, EventArgs e)
         {
             this.PanelNew.Visible = true;
-            txtNewCategoryName.Focus();
+            this.txtNewCategoryName.Focus();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
@@ -88,15 +103,15 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (Page.IsValid)
             {
-                if (IsCategoryNameUnique(null, txtNewCategoryName.Text))
+                if (this.IsCategoryNameUnique(null, this.txtNewCategoryName.Text))
                 {
-                    Category.InsertCategory(txtNewCategoryName.Text, PortalId);
-                    HideAndClearNewCategoryPanel();
-                    LoadCategories();
+                    Category.InsertCategory(this.txtNewCategoryName.Text, this.PortalId);
+                    this.HideAndClearNewCategoryPanel();
+                    this.LoadCategories();
                 }
                 else
                 {
-                    cvDuplicateCategory.IsValid = false;
+                    this.cvDuplicateCategory.IsValid = false;
                 }
             }
         }
@@ -104,14 +119,14 @@ namespace Engage.Dnn.Employment.Admin
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CancelNewButton_Click(object sender, EventArgs e)
         {
-            HideAndClearNewCategoryPanel();
+            this.HideAndClearNewCategoryPanel();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             this.CategoriesGridView.EditIndex = -1;
-            LoadCategories();
+            this.LoadCategories();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
@@ -119,7 +134,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                GridViewRow row = e.Row;
+                var row = e.Row;
                 if (row != null)
                 {
                     var btnDelete = (Button)row.FindControl("btnDelete");
@@ -142,11 +157,11 @@ namespace Engage.Dnn.Employment.Admin
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int? categoryId = GetCategoryId(e.RowIndex);
+            var categoryId = GetCategoryId(e.RowIndex);
             if (categoryId.HasValue)
             {
                 Category.DeleteCategory(categoryId.Value);
-                LoadCategories();
+                this.LoadCategories();
             }
         }
 
@@ -154,9 +169,10 @@ namespace Engage.Dnn.Employment.Admin
         private void CategoriesGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
             this.CategoriesGridView.EditIndex = e.NewEditIndex;
-            HideAndClearNewCategoryPanel();
-            LoadCategories();
+            this.HideAndClearNewCategoryPanel();
+            this.LoadCategories();
         }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -170,16 +186,16 @@ namespace Engage.Dnn.Employment.Admin
                         int? categoryId = GetCategoryId(rowIndex);
                         if (categoryId.HasValue)
                         {
-                            string newCategoryName = GetCategoryName(rowIndex);
-                            if (IsCategoryNameUnique(categoryId, newCategoryName))
+                            var newCategoryName = this.GetCategoryName(rowIndex);
+                            if (this.IsCategoryNameUnique(categoryId, newCategoryName))
                             {
                                 Category.UpdateCategory(categoryId.Value, newCategoryName);
                                 this.CategoriesGridView.EditIndex = -1;
-                                LoadCategories();
+                                this.LoadCategories();
                             }
                             else
                             {
-                                cvDuplicateCategory.IsValid = false;
+                                this.cvDuplicateCategory.IsValid = false;
                             }
                         }
                     }
@@ -202,7 +218,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.PanelNew.CssClass = this.CategoriesGridView.AlternatingRowStyle.CssClass;
             }
 
-            rowNewHeader.Visible = (categories == null || categories.Count < 1);
+            this.rowNewHeader.Visible = categories == null || categories.Count < 1;
         }
 
         private bool IsCategoryNameUnique(int? categoryId, string newCategoryName)
@@ -214,7 +230,7 @@ namespace Engage.Dnn.Employment.Admin
         private void SetupLengthValidation()
         {
             this.regexNewCategoryName.ValidationExpression = MaxLengthValidationExpression;
-            this.regexNewCategoryName.ErrorMessage = MaxLengthValidationText;
+            this.regexNewCategoryName.ErrorMessage = this.MaxLengthValidationText;
         }
 
         private void HideAndClearNewCategoryPanel()
@@ -232,18 +248,7 @@ namespace Engage.Dnn.Employment.Admin
                 Debug.Assert(txtCategoryName != null);
                 return txtCategoryName.Text;
             }
-            return null;
-        }
 
-        private static int? GetCategoryId(Control row)
-        {
-            var hdnCategoryId = (HiddenField)row.FindControl("hdnCategoryId");
-
-            int categoryId;
-            if (hdnCategoryId != null && int.TryParse(hdnCategoryId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out categoryId))
-            {
-                return categoryId;
-            }
             return null;
         }
 
@@ -253,6 +258,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 return GetCategoryId(this.CategoriesGridView.Rows[rowIndex]);
             }
+
             return null;
         }
     }

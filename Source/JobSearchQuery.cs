@@ -95,7 +95,8 @@ namespace Engage.Dnn.Employment
 
         public List<string> KeywordList
         {
-            get {
+            get 
+            {
                 return this.keywordList ??
                        (this.keywordList = Engage.Utility.HasValue(this.keywords) ? Utility.SplitQuoted(this.keywords) : new List<string>(0));
             }

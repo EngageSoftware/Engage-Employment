@@ -10,100 +10,99 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using Engage.Dnn.Employment.Data;
-
 namespace Engage.Dnn.Employment
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using Engage.Dnn.Employment.Data;
+
     public class ApplicationPropertyDefinition
     {
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification="It actually is immutable")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "It actually is immutable")]
         public static readonly ApplicationPropertyDefinition Lead = new ApplicationPropertyDefinition("Lead");
 
-        private int? _id;// = null;
-        private int _dataType;
-        private string _defaultValue;
-		private string _name;
-        private bool _required;
-        private int _viewOrder;
-        private bool _visible;
+        private int? id; //// = null;
+        private int dataType;
+        private string defaultValue;
+        private string name;
+        private bool required;
+        private int viewOrder;
+        private bool visible;
 
         private ApplicationPropertyDefinition(string name)
-		{
-            this._name = name;
-		}
+        {
+            this.name = name;
+        }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public int GetId()
         {
-            InitializeObject();
-            return _id ?? -1;
+            this.InitializeObject();
+            return this.id ?? -1;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public int GetDataType()
         {
-            InitializeObject();
-            return _dataType;
+            this.InitializeObject();
+            return this.dataType;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public string GetDefaultValue()
         {
-            InitializeObject();
-            return _defaultValue;
+            this.InitializeObject();
+            return this.defaultValue;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public string GetName()
         {
-            InitializeObject();
-            return _name;
+            this.InitializeObject();
+            return this.name;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public bool GetRequired()
         {
-            InitializeObject();
-            return _required;
+            this.InitializeObject();
+            return this.required;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public int GetViewOrder()
         {
-            InitializeObject();
-            return _viewOrder;
+            this.InitializeObject();
+            return this.viewOrder;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Not a simple/cheap operation")]
         public bool GetVisible()
         {
-            InitializeObject();
-            return _visible;
+            this.InitializeObject();
+            return this.visible;
         }
 
         private void InitializeObject()
         {
-            if (!_id.HasValue)
+            if (!this.id.HasValue)
             {
-                using (IDataReader dr = DataProvider.Instance().GetApplicationProperty(this._name, null))
+                using (var dr = DataProvider.Instance().GetApplicationProperty(this.name, null))
                 {
                     if (dr.Read())
                     {
-                        _id = Convert.ToInt32(dr["ApplicationPropertyId"], CultureInfo.InvariantCulture);
-                        _dataType = Convert.ToInt32(dr["DataType"], CultureInfo.InvariantCulture);
-                        _defaultValue = Convert.ToString(dr["DefaultValue"], CultureInfo.InvariantCulture);
-                        _name = Convert.ToString(dr["PropertyName"], CultureInfo.InvariantCulture);
-                        _required = Convert.ToBoolean(dr["Required"], CultureInfo.InvariantCulture);
-                        _viewOrder = Convert.ToInt32(dr["ViewOrder"], CultureInfo.InvariantCulture);
-                        _visible = Convert.ToBoolean(dr["Visible"], CultureInfo.InvariantCulture);
+                        this.id = Convert.ToInt32(dr["ApplicationPropertyId"], CultureInfo.InvariantCulture);
+                        this.dataType = Convert.ToInt32(dr["DataType"], CultureInfo.InvariantCulture);
+                        this.defaultValue = Convert.ToString(dr["DefaultValue"], CultureInfo.InvariantCulture);
+                        this.name = Convert.ToString(dr["PropertyName"], CultureInfo.InvariantCulture);
+                        this.required = Convert.ToBoolean(dr["Required"], CultureInfo.InvariantCulture);
+                        this.viewOrder = Convert.ToInt32(dr["ViewOrder"], CultureInfo.InvariantCulture);
+                        this.visible = Convert.ToBoolean(dr["Visible"], CultureInfo.InvariantCulture);
                     }
                 }
             }
         }
-	}
+    }
 }
 
