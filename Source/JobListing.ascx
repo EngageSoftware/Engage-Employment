@@ -25,10 +25,10 @@
 	</HeaderTemplate>
     <ItemTemplate>
                 <tr>
-                    <td><%# Eval("CategoryName") %></td>
-                    <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# Eval("Title") %></a></td>
-                    <td><%#string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location.Text", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation")) %></td>
-                    <td><%# String.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("PostedDate"))) %></td>
+                    <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
+                    <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></a></td>
+                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location.Text", this.LocalResourceFile), this.Eval("LocationName"), this.Eval("StateName"), this.Eval("StateAbbreviation"))) %></td>
+                    <td><%# HttpUtility.HtmlEncode(string.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("PostedDate")))) %></td>
                 </tr>
     </ItemTemplate>
 	<FooterTemplate>
@@ -59,12 +59,12 @@
             <ItemTemplate>
                         <tr>
                             <td><asp:Button ID="DeleteButton" runat="server" resourcekey="btnDelete" CommandName="Delete" OnCommand="DeleteButton_Command"/></td>
-                            <td><asp:HyperLink ID="SearchLink" runat="server"><%#Eval("Description") %></asp:HyperLink></td>
-                            <td><%#Eval("Category") %></td>
-                            <td><%#Eval("JobPosition") %></td>
-                            <td><%#Eval("LocationName") %></td>
-                            <td><%#Eval("StateName")%></td>
-                            <td><%#Eval("CreationDate", "{0:d}")%></td>
+                            <td><asp:HyperLink ID="SearchLink" runat="server"><%#HttpUtility.HtmlEncode((string)Eval("Description")) %></asp:HyperLink></td>
+                            <td><%#HttpUtility.HtmlEncode((string)Eval("Category")) %></td>
+                            <td><%#HttpUtility.HtmlEncode((string)Eval("JobPosition")) %></td>
+                            <td><%#HttpUtility.HtmlEncode((string)Eval("LocationName")) %></td>
+                            <td><%#HttpUtility.HtmlEncode((string)Eval("StateName"))%></td>
+                            <td><%#HttpUtility.HtmlEncode(Eval("CreationDate", "{0:d}"))%></td>
                         </tr>
             </ItemTemplate>
             <FooterTemplate>
@@ -91,10 +91,10 @@
     </HeaderTemplate>
     <ItemTemplate>
                 <tr>
-                    <td><%# Eval("Job.CategoryName") %></td>
-                    <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# Eval("Job.Title") %></a></td>
-                    <td><%#string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location.Text", LocalResourceFile), Eval("Job.LocationName"), Eval("Job.StateName"), Eval("Job.StateAbbreviation")) %></td>
-                    <td><%# String.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("AppliedForDate"))) %></td>
+                    <td><%# HttpUtility.HtmlEncode((string)Eval("Job.CategoryName")) %></td>
+                    <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("Job.Title")) %></a></td>
+                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location.Text", this.LocalResourceFile), this.Eval("Job.LocationName"), this.Eval("Job.StateName"), this.Eval("Job.StateAbbreviation"))) %></td>
+                    <td><%# HttpUtility.HtmlEncode(string.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("AppliedForDate")))) %></td>
                     <td><asp:Button ID="EditApplicationButton" runat="server" resourcekey="btnEditApplication"/></td>
                 </tr>
     </ItemTemplate>

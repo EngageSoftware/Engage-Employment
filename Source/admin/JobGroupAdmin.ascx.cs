@@ -17,6 +17,7 @@ namespace Engage.Dnn.Employment.Admin
     using System.Data;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Web;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using DotNetNuke.Services.Exceptions;
@@ -116,9 +117,16 @@ namespace Engage.Dnn.Employment.Admin
             {
                 var listJobGroups = (ListControl)e.Item.FindControl("cblJobGroups");
                 var row = (DataRowView)e.Item.DataItem;
-                listJobGroups.DataSource = DataProvider.Instance().GetJobGroups(PortalId);
-                listJobGroups.DataTextField = "Name";
-                listJobGroups.DataValueField = "JobGroupId";
+                var jobGroupsTable = DataProvider.Instance().GetJobGroups(this.PortalId);
+                var jobGroupsList = new Dictionary<int, string>(jobGroupsTable.Rows.Count);
+                foreach (DataRow jobGroupRow in jobGroupsTable.Rows)
+                {
+                    jobGroupsList.Add((int)jobGroupRow["JobGroupId"], HttpUtility.HtmlEncode((string)jobGroupRow["Name"]));
+                }
+
+                listJobGroups.DataSource = jobGroupsList;
+                listJobGroups.DataTextField = "Value";
+                listJobGroups.DataValueField = "Key";
                 listJobGroups.DataBind();
 
                 ListItem li;

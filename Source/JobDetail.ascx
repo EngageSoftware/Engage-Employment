@@ -6,7 +6,7 @@
                 <asp:Label runat="server" resourcekey="lblTitleHeader" EnableViewState="false" />
             </td>
             <td class="Head em-value">
-                <%= CurrentJob.Title %>
+                <%= HttpUtility.HtmlEncode(this.CurrentJob.Title) %>
             </td>
         </tr>
         <tr class="jd-location">
@@ -14,21 +14,21 @@
                 <asp:Label runat="server" resourcekey="lblLocationHeader" EnableViewState="false" />
             </td>
             <td class="em-value">
-                <%= CurrentJob.LocationName %></td>
+                <%= HttpUtility.HtmlEncode(CurrentJob.LocationName) %></td>
         </tr>
         <tr class="jd-region">
             <td class="SubHead em-label">
                 <asp:Label runat="server" resourcekey="lblStateHeader" EnableViewState="false" />
             </td>
             <td class="em-value">
-                <%= CurrentJob.StateName %></td>
+                <%= HttpUtility.HtmlEncode(CurrentJob.StateName) %></td>
         </tr>
         <tr class="jd-post-date">
             <td class="SubHead em-label">
                 <asp:Label runat="server" resourcekey="lblDatePostedHeader" EnableViewState="false" />
             </td>
             <td class="em-value">
-                <%= CurrentJob.PostedDate %></td>
+                <%= HttpUtility.HtmlEncode(CurrentJob.PostedDate) %></td>
         </tr>
         <tr class="jd-position-desc">
             <td class="SubHead em-label">

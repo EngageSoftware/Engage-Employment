@@ -17,6 +17,7 @@ namespace Engage.Dnn.Employment.Admin
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Web;
     using System.Web.UI.WebControls;
     using Data;
     using DotNetNuke.Common;
@@ -167,7 +168,7 @@ namespace Engage.Dnn.Employment.Admin
                     if (applicationPropertyLabel != null)
                     {
                         ListEntryInfo leadListEntry = (new ListController()).GetListEntryInfo(leadId);
-                        applicationPropertyLabel.Text = leadListEntry.Text;
+                        applicationPropertyLabel.Text = HttpUtility.HtmlEncode(leadListEntry.Text);
                     }
                 }
             }

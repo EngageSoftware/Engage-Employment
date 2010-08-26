@@ -255,7 +255,7 @@ namespace Engage.Dnn.Employment.Admin
                             string newJobTitle = this.GetJobTitle(rowIndex);
                             if (this.IsJobTitleUnique(positionId, newJobTitle))
                             {
-                                Position.UpdatePosition(positionId.Value, newJobTitle, this.GetJobDescription(rowIndex));
+                                Position.UpdatePosition(positionId.Value, newJobTitle, this.FilterHtml(this.GetJobDescription(rowIndex)));
                                 this.PositionsGrid.EditIndex = -1;
                                 this.LoadPositions();
                             }
@@ -339,7 +339,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (this.IsJobTitleUnique(null, this.NewJobTitleTextBox.Text))
                 {
-                    Position.InsertPosition(this.NewJobTitleTextBox.Text, this.NewJobDescriptionTextEditor.Text, this.PortalId);
+                    Position.InsertPosition(this.NewJobTitleTextBox.Text, this.FilterHtml(this.NewJobDescriptionTextEditor.Text), this.PortalId);
                     this.HideAndClearNewPositionPanel();
                     this.LoadPositions();
                 }

@@ -81,7 +81,7 @@
                         <asp:TemplateField HeaderText="Name">
                             <ItemStyle CssClass="contentColumn" />
                             <ItemTemplate>
-                                <span class="Normal"><%# Eval("Text") %></span>
+                                <span class="Normal"><%# HttpUtility.HtmlEncode((string)Eval("Text")) %></span>
                                 <asp:HiddenField id="hdnLeadId" runat="server" Value='<%#Eval("EntryID") %>'/>
                             </ItemTemplate>
                             <EditItemTemplate>

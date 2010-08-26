@@ -18,7 +18,7 @@
     <Columns>
         <asp:TemplateField HeaderText="LocationName">
             <ItemTemplate>
-                <span class="Normal"><%#Eval("LocationName") %></span>
+                <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("LocationName")) %></span>
                 <asp:HiddenField ID="hdnLocationId" runat="server" Value='<%#((int)Eval("LocationId")).ToString(CultureInfo.InvariantCulture) %>' />
             </ItemTemplate>
             <EditItemTemplate>
@@ -30,7 +30,7 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="ParentState">
             <ItemTemplate>
-                <span class="Normal"><%#Eval("StateName") %></span>
+                <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("StateName")) %></span>
             </ItemTemplate>
             <EditItemTemplate>
                 <asp:DropDownList ID="ddlState" runat="server" />

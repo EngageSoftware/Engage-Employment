@@ -12,13 +12,11 @@
 namespace Engage.Dnn.Employment.Admin
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using Data;
     using DotNetNuke.Entities.Modules;
-    using DotNetNuke.Entities.Portals;
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
@@ -149,17 +147,17 @@ namespace Engage.Dnn.Employment.Admin
                              ? Job.Load(jobId)
                              : Job.CreateJob();
 
-            newJob.CategoryId = int.Parse(this.CategoryDropDownList.SelectedValue, CultureInfo.InvariantCulture);
-            newJob.DesiredQualifications = this.DesiredQualificationsTextEditor.Text;
-            newJob.IsFilled = this.IsFilledCheckBox.Checked;
-            newJob.IsHot = this.IsHotCheckBox.Checked;
-            newJob.LocationId = int.Parse(this.LocationDropDownList.SelectedValue, CultureInfo.InvariantCulture);
-            newJob.RequiredQualifications = this.RequiredQualificationsTextEditor.Text;
             newJob.PositionId = int.Parse(this.PositionDropDownList.SelectedValue, CultureInfo.InvariantCulture);
+            newJob.CategoryId = int.Parse(this.CategoryDropDownList.SelectedValue, CultureInfo.InvariantCulture);
+            newJob.LocationId = int.Parse(this.LocationDropDownList.SelectedValue, CultureInfo.InvariantCulture);
             newJob.SortOrder = Convert.ToInt32(this.SortOrderTextBox.Text, CultureInfo.CurrentCulture);
-            newJob.NotificationEmailAddress = this.EmailAddressTextBox.Text;
+            newJob.IsHot = this.IsHotCheckBox.Checked;
+            newJob.IsFilled = this.IsFilledCheckBox.Checked;
             newJob.StartDate = DateTime.Parse(this.StartDateTextBox.Text, CultureInfo.CurrentCulture);
             newJob.ExpireDate = Engage.Utility.ParseNullableDateTime(this.ExpireDateTextBox.Text, CultureInfo.CurrentCulture);
+            newJob.RequiredQualifications = this.FilterHtml(this.RequiredQualificationsTextEditor.Text);
+            newJob.DesiredQualifications = this.FilterHtml(this.DesiredQualificationsTextEditor.Text);
+            newJob.NotificationEmailAddress = this.EmailAddressTextBox.Text;
             newJob.ApplicationUrl = this.ApplicationUrlTextBox.Text.Trim();
             newJob.Save(this.UserId, this.JobGroupId, this.PortalId);
 

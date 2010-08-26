@@ -11,6 +11,8 @@
 
 namespace Engage.Dnn.Employment
 {
+    using DotNetNuke.Security;
+
 #if TRIAL
     using System;
     using System.Web.UI;
@@ -56,5 +58,20 @@ namespace Engage.Dnn.Employment
             base.OnInit(e);
         }
 #endif
+
+        /// <summary>
+        /// Filters the given HTML to remove any scripting if the user is not an administrator.
+        /// </summary>
+        /// <param name="value">The HTML value.</param>
+        /// <returns><paramref name="value"/> filtered of script contents</returns>
+        protected string FilterHtml(string value)
+        {
+            if (PortalSecurity.IsInRole(this.PortalSettings.AdministratorRoleName))
+            {
+                return value;
+            }
+            
+            return new PortalSecurity().InputFilter(value, PortalSecurity.FilterFlag.NoScripting);
+        }
     }
 }

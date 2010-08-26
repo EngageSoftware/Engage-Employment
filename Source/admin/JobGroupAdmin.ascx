@@ -29,7 +29,7 @@
             <Columns>
                 <asp:TemplateField HeaderText="Name">
                     <ItemTemplate>
-                        <span class="Normal"><%# Eval("Name") %></span>
+                        <span class="Normal"><%# HttpUtility.HtmlEncode((string)Eval("Name")) %></span>
                         <asp:HiddenField id="hdnJobGroupId" runat="server" Value='<%#Eval("JobGroupId") %>'/>
                     </ItemTemplate>
                     <EditItemTemplate>
@@ -97,7 +97,7 @@
             <ItemTemplate>
                 <tr class='<%# Container.ItemIndex % 2 == 0 ? "DataGrid_Item" : "DataGrid_AlternatingItem" %>'>
                     <td class="jobLabelCell">
-                        <%# string.Format(CultureInfo.CurrentCulture, Localization.GetString("lbJobInLocation", LocalResourceFile), Eval("JobTitle"), Eval("LocationName"), Eval("StateName")) %>
+                        <%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("lbJobInLocation", this.LocalResourceFile), this.Eval("JobTitle"), this.Eval("LocationName"), this.Eval("StateName"))) %>
                         <asp:HiddenField ID="hdnJobId" runat="server" Value='<%# Eval("JobId") %>' />
                     </td>
                     <td>

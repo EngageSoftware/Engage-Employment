@@ -15,7 +15,7 @@
                 <asp:HyperLink runat="server" resourcekey="lnkLocationHeader" NavigateUrl='<%#EditUrl("ManageLocations") %>' /><%=Localization.GetString("LocationSeparator.Text", LocalResourceFile) %><asp:HyperLink runat="server" resourcekey="lnkStateHeader" NavigateUrl='<%#EditUrl("ManageStates") %>' />
             </HeaderTemplate>
             <ItemTemplate>
-                <span><%#GetLocationName(Eval("LocationId"), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))%></span>
+                <span><%#HttpUtility.HtmlEncode(GetLocationName(Eval("LocationId"), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation")))%></span>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField>
@@ -25,7 +25,7 @@
                 <asp:HyperLink runat="server" resourcekey="lnkCategoryHeader" NavigateUrl='<%#EditUrl("ManageCategories") %>' />
             </HeaderTemplate>
             <ItemTemplate>
-                <span><%#Eval("CategoryName")%></span>
+                <span><%#HttpUtility.HtmlEncode((string)Eval("CategoryName"))%></span>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField>
@@ -35,7 +35,7 @@
                 <asp:HyperLink runat="server" resourcekey="lnkPositionHeader" NavigateUrl='<%#EditUrl("ManagePositions") %>' />
             </HeaderTemplate>
             <ItemTemplate>
-                <span><%#Eval("JobTitle")%></span>
+                <span><%#HttpUtility.HtmlEncode((string)Eval("JobTitle"))%></span>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:BoundField HeaderText="DatePosted" DataField="PostedDate">
@@ -81,7 +81,7 @@
         <ItemTemplate>
                 <tr class='listingRow stateRow <%#Container.ItemIndex % 2 == 0 ? string.Empty : "alternateListingRow alternateStateRow"%>'>
                     <td class="stateListing">
-                        <span><%#Eval("StateName")%></span>
+                        <span><%#HttpUtility.HtmlEncode((string)Eval("StateName"))%></span>
                     </td>
                 </tr>
         </ItemTemplate>
@@ -101,7 +101,7 @@
         <ItemTemplate>
                 <tr class='listingRow locationRow <%#Container.ItemIndex % 2 == 0 ? string.Empty : "alternateListingRow alternateLocationRow"%>'>
                     <td class="locationListing">
-                        <span><%#string.Format(Localization.GetString("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))%></span>
+                        <span><%#HttpUtility.HtmlEncode(string.Format(Localization.GetString("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation")))%></span>
                     </td>
                 </tr>
         </ItemTemplate>
@@ -121,7 +121,7 @@
         <ItemTemplate>
                 <tr class='listingRow categoryRow <%#Container.ItemIndex % 2 == 0 ? string.Empty : "alternateListingRow alternateCategoryRow"%>'>
                     <td class="categoryListing">
-                        <span><%#Eval("CategoryName")%></span>
+                        <span><%#HttpUtility.HtmlEncode((string)Eval("CategoryName"))%></span>
                     </td>
                 </tr>
         </ItemTemplate>
@@ -141,7 +141,7 @@
         <ItemTemplate>
                 <tr class='listingRow positionRow <%#Container.ItemIndex % 2 == 0 ? string.Empty : "alternateListingRow alternatePositionRow"%>'>
                     <td class="positionListing">
-                        <span><%#Eval("JobTitle")%></span>
+                        <span><%#HttpUtility.HtmlEncode((string)Eval("JobTitle"))%></span>
                     </td>
                 </tr>
         </ItemTemplate>

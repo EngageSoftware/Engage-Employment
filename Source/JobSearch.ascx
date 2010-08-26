@@ -51,10 +51,10 @@
     </HeaderTemplate>
     <ItemTemplate>
         <tr>
-            <td><%#Eval("CategoryName") %></td>
-            <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# Eval("JobTitle") %></a></td>
-            <td><%# string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation")) %></td>
-            <td><%# Convert.ToDateTime(Eval("PostedDate")).ToString("d MMM yyyy", CultureInfo.CurrentCulture)%></td>
+            <td><%#HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
+            <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("JobTitle")) %></a></td>
+            <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))) %></td>
+            <td><%# HttpUtility.HtmlEncode(Convert.ToDateTime(this.Eval("PostedDate")).ToString("d MMM yyyy", CultureInfo.CurrentCulture))%></td>
         </tr>
         <tr>
             <td colspan="4">

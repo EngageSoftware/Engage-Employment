@@ -16,7 +16,7 @@
     <Columns>
         <asp:TemplateField HeaderText="StatusName">
             <ItemTemplate>
-                <span class="Normal"><%#Eval("StatusName") %></span>
+                <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("StatusName")) %></span>
                 <asp:HiddenField ID="StatusIdHiddenField" runat="server" Value='<%#((int)Eval("StatusId")).ToString(CultureInfo.InvariantCulture) %>' />
             </ItemTemplate>
             <EditItemTemplate>

@@ -16,7 +16,7 @@
     <Columns>
         <asp:TemplateField HeaderText="StateName">
             <ItemTemplate>
-                <span class="Normal"><%#Eval("StateName") %></span>
+                <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("StateName")) %></span>
                 <asp:HiddenField ID="hdnStateId" runat="server" Value='<%#((int)Eval("StateId")).ToString(CultureInfo.InvariantCulture) %>' />
             </ItemTemplate>
             <EditItemTemplate>
@@ -28,7 +28,7 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Abbreviation">
             <ItemTemplate>
-                <span class="Normal"><%#Eval("Abbreviation") %></span>
+                <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("Abbreviation")) %></span>
             </ItemTemplate>
             <EditItemTemplate>
                 <asp:TextBox ID="txtAbbreviation" runat="server" Text='<%#Eval("Abbreviation") %>' CssClass="NormalTextBox" />

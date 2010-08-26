@@ -20,7 +20,7 @@
         <caption>
             <a rel="Bookmark" href='<%#GetJobDetailUrl(Eval("JobId"))%>' id='<%#((int)Eval("JobId")).ToString(CultureInfo.InvariantCulture)%>' name='<%#((int)Eval("JobId")).ToString(CultureInfo.InvariantCulture)%>'>
                 <span class="SubHead">
-                    <%# string.Format(CultureInfo.CurrentCulture, Localization.GetString("JobInLocation", LocalResourceFile), Eval("Title"), Eval("LocationName"), Eval("StateName")) %>
+                    <%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("JobInLocation", LocalResourceFile), Eval("Title"), Eval("LocationName"), Eval("StateName"))) %>
                 </span>
             </a>
         </caption>
@@ -44,8 +44,8 @@
                         <asp:DropDownList ID="UserStatusDropDownList" runat="server" CssClass="NormalTextBox" AutoPostBack="true" />
                         <asp:HiddenField ID="UserIdHiddenField" runat="server" Value='<%#GetUserId(Eval("UserId")) %>' />
                     </td>
-                    <td class="nowrap"><%# Eval("AppliedForDate", "{0:d}")%></td>
-                    <td><%# Eval("SalaryRequirement") %></td>
+                    <td class="nowrap"><%# HttpUtility.HtmlEncode(this.Eval("AppliedForDate", "{0:d}"))%></td>
+                    <td><%# HttpUtility.HtmlEncode((string)Eval("SalaryRequirement")) %></td>
                     <td>
                         <asp:DropDownList ID="ApplicationStatusDropDownList" runat="server" CssClass="NormalTextBox" AutoPostBack="true" />
                         <asp:HiddenField ID="ApplicationIdHiddenField" runat="server" Value='<%#((int)Eval("ApplicationId")).ToString(CultureInfo.InvariantCulture) %>' />
@@ -68,7 +68,7 @@
                 <tr class='<%# (int)DataBinder.Eval(Container, "ItemIndex") % 2 == 0 ? "applicationRow" : "alternatingApplicationRow" %> alignLeft'>
                     <td colspan="4" class="messageCell">
                         <asp:Label runat="server" ID="MessageHeaderLabel" CssClass="NormalBold" resourcekey="MessageHeaderLabel" />
-                        <%# Eval("Message") %>
+                        <%# HttpUtility.HtmlEncode((string)Eval("Message")) %>
                     </td>
                 </tr>
             </ItemTemplate>
