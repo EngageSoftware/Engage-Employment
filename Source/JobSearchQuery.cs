@@ -16,6 +16,7 @@ namespace Engage.Dnn.Employment
     using System.Collections.ObjectModel;
     using System.Data;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -55,8 +56,47 @@ namespace Engage.Dnn.Employment
         /// </summary>
         public JobSearchQuery()
         {
+            this.Category = string.Empty;
+            this.JobPosition = string.Empty;
+            this.LocationName = string.Empty;
+            this.StateName = string.Empty;
             this.Id = -1;
         }
+
+        /// <summary>
+        /// Gets the category name.
+        /// </summary>
+        /// <value>The category name.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public string Category { get; private set; }
+
+        /// <summary>
+        /// Gets the creation date of this query.
+        /// </summary>
+        /// <value>The creation date.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public DateTime CreationDate { get; private set; }
+
+        /// <summary>
+        /// Gets the title of the position.
+        /// </summary>
+        /// <value>The job position's title.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public string JobPosition { get; private set; }
+
+        /// <summary>
+        /// Gets the name of the location.
+        /// </summary>
+        /// <value>The name of the location.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public string LocationName { get; private set; }
+
+        /// <summary>
+        /// Gets the name of the region.
+        /// </summary>
+        /// <value>The name of the region.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
+        public string StateName { get; private set; }
 
         public int? CategoryId
         {
@@ -308,11 +348,16 @@ namespace Engage.Dnn.Employment
                        {
                                Id = (int)dr["UserSearchId"],
                                Description = dr["SearchName"].ToString(),
+                               JobPosition = dr["JobTitle"].ToString(),
                                JobPositionId = dr["PositionId"] as int?,
                                CategoryId = dr["CategoryId"] as int?,
+                               Category = dr["CategoryName"].ToString(),
+                               LocationName = dr["LocationName"].ToString(),
                                LocationId = dr["LocationId"] as int?,
+                               StateName = dr["StateName"].ToString(),
                                StateId = dr["StateId"] as int?,
                                keywords = dr["Keywords"].ToString(),
+                               CreationDate = (DateTime)dr["CreationDate"],
                                JobGroupId = dr["JobGroupId"] as int?
                        };
         }
