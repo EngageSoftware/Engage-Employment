@@ -27,7 +27,7 @@ using System.Web.UI;
 [assembly: Guid("3d5900ae-111a-45be-96b3-d9e4606ca793")]
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyVersion("1.7.0.*")]
-[assembly: AssemblyFileVersion("1.7.0.0")]
+[assembly: AssemblyVersion("1.8.0.*")]
+[assembly: AssemblyFileVersion("1.8.0.0")]
 
 [assembly: WebResource("Engage.Dnn.Employment.JavaScript.jquery-ui.js", "text/javascript")]
