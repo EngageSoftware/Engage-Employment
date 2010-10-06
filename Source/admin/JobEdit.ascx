@@ -62,7 +62,7 @@
         </td>
         <td valign="top">
             <asp:TextBox ID="StartDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateTypeValidator ValidationGroup="JobEdit"" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateTypeValidator" ValidationGroup="JobEdit" />
             <asp:RequiredFieldValidator runat="server" InitialValue="" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateRequiredValidator" ValidationGroup="JobEdit" />
             <asp:CompareValidator runat="server" Type="Date" Operator="LessThan" ControlToValidate="StartDateTextBox" ControlToCompare="ExpireDateTextBox" Display="None" resourcekey="StartExpireDateCompareValidator" ValidationGroup="JobEdit" />
         </td>
