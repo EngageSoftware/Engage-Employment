@@ -161,14 +161,12 @@ namespace Engage.Dnn.Employment.Admin
                 return string.Format(
                     CultureInfo.CurrentCulture,
                     "<a href=\"{0}\">{1} {2}</a>",
-                    this.EditUrl(ControlKey.ManageApplications.ToString()) + "#" + jobId.ToString(CultureInfo.InvariantCulture),
+                    this.EditUrl("jobId", jobId.ToString(CultureInfo.InvariantCulture), ControlKey.ManageApplications.ToString()),
                     applicationCount,
                     applicationText);
             }
-            else
-            {
-                return string.Empty;
-            }
+            
+            return string.Empty;
         }
 
         /// <summary>

@@ -78,4 +78,7 @@
     <FooterTemplate>
     </FooterTemplate>
 </asp:Repeater>
-<asp:LinkButton ID="BackButton" runat="server" CssClass="Normal" resourcekey="btnBack" />
+<ul class="eng-action-btns">
+    <li id="AllLinkWrapper" runat="server" Visible="false"><asp:HyperLink ID="AllLink" runat="server" CssClass="CommandButton" resourcekey="btnAll" /></li>
+    <li><asp:HyperLink ID="BackLink" runat="server" CssClass="CommandButton" resourcekey="btnBack" /></li>
+</ul>

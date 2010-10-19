@@ -36,6 +36,33 @@ namespace Engage.Dnn.Employment.Admin
     /// </summary>
     public partial class ApplicationListing : ModuleBase, IActionable
     {
+        /// <summary>
+        /// Backing field for <see cref="JobId"/>
+        /// </summary>
+        private int? jobId;
+
+        /// <summary>
+        /// Gets the ID of the job for which to display applications (or <c>null</c> to display all jobs).
+        /// </summary>
+        /// <value>The Id of the job to display.</value>
+        protected int? JobId
+        {
+            get 
+            {
+                if (!this.jobId.HasValue)
+                {
+                    int jobIdResult;
+                    if (!string.IsNullOrEmpty(this.Request.QueryString["jobId"]) &&
+                        int.TryParse(this.Request.QueryString["jobId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobIdResult))
+                    {
+                        this.jobId = jobIdResult;
+                    }
+                }
+
+                return this.jobId;
+            }
+        }
+
         #region IActionable Members
 
         /// <summary>
@@ -137,11 +164,11 @@ namespace Engage.Dnn.Employment.Admin
         {
             base.OnInit(e);
             this.JobsRepeater.ItemDataBound += this.JobsRepeater_ItemDataBound;
-            this.BackButton.Click += this.BackButton_Click;
 
             try
             {
                 this.LoadApplications();
+                this.SetLinks();
             }
             catch (Exception exc)
             {
@@ -374,24 +401,32 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the Click event of the BackButton control.
-        /// </summary>
-        /// <param name="source">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void BackButton_Click(object source, EventArgs e)
-        {
-            var mi = Employment.Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
-
-            this.Response.Redirect(mi != null ? Globals.NavigateURL(mi.TabID) : Globals.NavigateURL());
-        }
-
-        /// <summary>
         /// Loads the applications.
         /// </summary>
         private void LoadApplications()
         {
-            this.JobsRepeater.DataSource = Job.LoadAll(this.JobGroupId, this.PortalId);
+            if (this.JobId.HasValue)
+            {
+                this.JobsRepeater.DataSource = new[] { Job.Load(this.JobId.Value) };
+                this.AllLinkWrapper.Visible = true;
+            }
+            else
+            {
+                this.JobsRepeater.DataSource = Job.LoadAll(this.JobGroupId, this.PortalId);
+            }
+
             this.JobsRepeater.DataBind();
+        }
+
+        /// <summary>
+        /// Sets the URL for the <see cref="BackLink"/> and <see cref="AllLink"/> controls.
+        /// </summary>
+        private void SetLinks()
+        {
+            var mi = Employment.Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
+            this.BackLink.NavigateUrl = mi != null ? Globals.NavigateURL(mi.TabID) : Globals.NavigateURL();
+
+            this.AllLink.NavigateUrl = this.EditUrl(ControlKey.ManageApplications.ToString());
         }
 
         /// <summary>

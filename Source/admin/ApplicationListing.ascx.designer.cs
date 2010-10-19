@@ -22,12 +22,30 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.Repeater JobsRepeater;
         
         /// <summary>
-        /// BackButton control.
+        /// AllLinkWrapper control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton BackButton;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl AllLinkWrapper;
+        
+        /// <summary>
+        /// AllLink control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink AllLink;
+        
+        /// <summary>
+        /// BackLink control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink BackLink;
     }
 }

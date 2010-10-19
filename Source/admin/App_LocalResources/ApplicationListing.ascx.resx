@@ -187,4 +187,7 @@
   <data name="ControlTitle_manageapplications.Text" xml:space="preserve">
     <value>Manage Applications</value>
   </data>
+  <data name="btnAll.Text" xml:space="preserve">
+    <value>View All</value>
+  </data>
 </root>

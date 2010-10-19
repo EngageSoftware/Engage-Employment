@@ -181,7 +181,7 @@
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
-				<Property Name="NumRows" Value="2500" />
+				<Property Name="NumRows" Value="500" />
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
@@ -492,8 +492,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+\.bmp" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -900,12 +904,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="1033" />
-							<Property Name="InputName" Value="Locale" />
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -925,16 +929,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="1080" />
-							<Property Name="InputName" Value="Locale" />
-						</Annotation>
-						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="6" />
-							<Property Name="InputName" Value="Seed" />
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -1168,7 +1168,7 @@
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
-				<Property Name="NumRows" Value="50" />
+				<Property Name="NumRows" Value="20" />
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
@@ -1214,8 +1214,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -1440,8 +1444,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -1524,8 +1532,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -1545,8 +1557,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -1629,8 +1645,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -1862,8 +1882,16 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="45" />
+							<Property Name="InputName" Value="MaximumLength" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -2022,8 +2050,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -2044,8 +2076,12 @@
 						<Annotation Type="ColumnConfigAnnotation">
 							<Property Name="Selected" Value="True" />
 							<Property Name="Seed" Value="5" />
-							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.StringGenerator&quot; /&gt;" />
+							<Property Name="GeneratorExtensionHandleXml" Value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ExtensionHandle AssemblyName=&quot;Microsoft.Data.Schema.Generators.Sql, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot; TypeName=&quot;Microsoft.Data.Schema.Generators.Sql.RegexString&quot; /&gt;" />
 							<Property Name="OutputKey" Value="Result" />
+						</Annotation>
+						<Annotation Type="InputDescriptorAnnotation">
+							<Property Name="Value" Value="([a-zA-Z0-9]{2,20} )+" />
+							<Property Name="InputName" Value="Expression" />
 						</Annotation>
 					</Element>
 				</Entry>
@@ -2114,13 +2150,13 @@
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
-				<Property Name="NumRows" Value="2500" />
+				<Property Name="NumRows" Value="500" />
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
 				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_Job]" />
 				<Property Name="PrimaryCardinality" Value="1" />
-				<Property Name="ForeignCardinality" Value="50" />
+				<Property Name="ForeignCardinality" Value="25" />
 			</Annotation>
 		</Element>
 		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_UserJobProperty]">
@@ -2316,7 +2352,7 @@
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
-				<Property Name="NumRows" Value="2500" />
+				<Property Name="NumRows" Value="500" />
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
