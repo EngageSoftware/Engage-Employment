@@ -1,0 +1,3 @@
+﻿ALTER TABLE [dbo].[engage_EngageEmployment_UserJob]
+    ADD CONSTRAINT [engage_PK_EngageEmployment_UserJob] PRIMARY KEY CLUSTERED ([ApplicationId] ASC) WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON, PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF);
+
