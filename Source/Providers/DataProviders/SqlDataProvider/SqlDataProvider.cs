@@ -390,34 +390,21 @@ namespace Engage.Dnn.Employment.Data
                     Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
         }
 
-        public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId)
+        public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int pageIndex, int? pageSize, out int totalCount)
         {
-            var sql = new StringBuilder(512);
-
-            sql.Append(" select ");
-            sql.Append(" AppliedDate, DisplayName, a.JobId, JobTitle, LocationName, ApplicationId, UserId, SalaryRequirement, Message, StatusId ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications a ", this.NamePrefix);
-            if (jobGroupId.HasValue)
-            {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (a.JobId = jlg.JobId) ", this.NamePrefix);
-            }
-
-            sql.Append(" where a.jobId = @jobId ");
-            if (jobGroupId.HasValue)
-            {
-                sql.Append(" and jobGroupId = @jobGroupId ");
-            }
-
-            sql.Append(" order by ");
-            sql.Append(" AppliedDate desc ");
-
-            return SqlHelper.ExecuteReader(
-                this.ConnectionString, 
-                CommandType.Text, 
-                sql.ToString(), 
+            var applicationsReader = this.ExecuteReader(
+                "GetApplicationsForJob", 
                 Utility.CreateIntegerParam("@jobId", jobId), 
-                Utility.CreateIntegerParam("@jobGroupId", jobGroupId));
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
+                Utility.CreateIntegerParam("@index", pageIndex),
+                Utility.CreateIntegerParam("@pageSize", pageSize));
+
+            applicationsReader.Read();
+            totalCount = applicationsReader.GetInt32(0);
+
+            applicationsReader.NextResult();
+
+            return applicationsReader;
         }
 
         /// <summary>
@@ -761,35 +748,24 @@ namespace Engage.Dnn.Employment.Data
 
         public override IDataReader GetJobs(int? jobGroupId, int portalId)
         {
-            var sql = new StringBuilder(512);
+            int totalCount;
+            return this.GetJobs(jobGroupId, portalId, 0, null, out totalCount);
+        }
 
-            sql.Append(" select ");
-            sql.Append(" j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, ");
-            sql.Append(
-                " j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, j.ApplicationUrl, ");
-            sql.Append(
-                " j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}vwJobs j", this.NamePrefix);
-            if (jobGroupId.HasValue)
-            {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (j.JobId = jlg.JobId) ", this.NamePrefix);
-            }
+        public override IDataReader GetJobs(int? jobGroupId, int portalId, int pageIndex, int? pageSize, out int totalCount)
+        {
+            var jobsReader = this.ExecuteReader(
+                "GetJobs",
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
+                Utility.CreateIntegerParam("@portalId", portalId),
+                Utility.CreateIntegerParam("@index", pageIndex),
+                Utility.CreateIntegerParam("@pageSize", pageSize));
 
-            sql.Append(" where j.PortalId = @portalId ");
-            if (jobGroupId.HasValue)
-            {
-                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
-            }
-
-            sql.Append(" order by ");
-            sql.Append(" j.SortOrder, j.CategoryName, j.JobTitle ");
-
-            return SqlHelper.ExecuteReader(
-                this.ConnectionString, 
-                CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                Utility.CreateIntegerParam("@portalId", portalId));
+            jobsReader.Read();
+            totalCount = jobsReader.GetInt32(0);
+            
+            jobsReader.NextResult();
+            return jobsReader;
         }
 
         public override IDataReader GetJobs(int? userId, int? jobGroupId, int portalId)

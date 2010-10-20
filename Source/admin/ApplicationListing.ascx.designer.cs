@@ -13,13 +13,13 @@ namespace Engage.Dnn.Employment.Admin {
     public partial class ApplicationListing {
         
         /// <summary>
-        /// JobsRepeater control.
+        /// JobsGrid control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater JobsRepeater;
+        protected global::Telerik.Web.UI.RadGrid JobsGrid;
         
         /// <summary>
         /// AllLinkWrapper control.

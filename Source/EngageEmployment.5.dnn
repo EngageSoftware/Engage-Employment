@@ -63,6 +63,10 @@
               <name>1.5.1.SqlDataProvider</name>
               <version>1.5.1</version>
             </script>
+            <script type="Install">
+              <name>1.8.5.SqlDataProvider</name>
+              <version>1.8.5</version>
+            </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>
               <version latestVersion="latestVersion">1.6.0</version>
@@ -138,6 +142,7 @@
                     <controlSrc>DesktopModules/EngageEmployment/admin/ApplicationListing.ascx</controlSrc>
                     <controlType>Edit</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
+                    <supportsPartialRendering>True</supportsPartialRendering>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManageCategories</controlKey>

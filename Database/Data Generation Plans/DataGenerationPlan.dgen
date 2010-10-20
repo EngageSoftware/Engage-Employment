@@ -8,12 +8,12 @@
 	<Model>
 		<Unattached>
 			<Annotation Type="CardinalityConfigAnnotation">
-				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_DocumentType]" />
+				<Property Name="PrimaryTableName" Value="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType]" />
 				<Property Name="PrimaryCardinality" Value="1" />
 				<Property Name="ForeignCardinality" Value="1" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
-				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_lkpState]" />
+				<Property Name="PrimaryTableName" Value="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState]" />
 				<Property Name="PrimaryCardinality" Value="1" />
 				<Property Name="ForeignCardinality" Value="3" />
 			</Annotation>
@@ -37,101 +37,102 @@
 			<Property Name="IsFullTextEnabled" Value="True" />
 			<Property Name="PageVerifyMode" Value="3" />
 		</Element>
-		<Element Type="ISql90DefaultConstraint" Name="[dbo].[DF_engage_Users_DisplayName]">
+		<Element Type="ISql90Schema" Name="[dotnetnuke_dukes]" />
+		<Element Type="ISql90DefaultConstraint" Name="[dotnetnuke_dukes].[DF_dnn_Users_DisplayName]">
 			<Property Name="DefaultExpressionScript">
 				<Value><![CDATA[('')]]></Value>
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_Users]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[engage_Users].[DisplayName]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users].[DisplayName]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90DefaultConstraint" Name="[dbo].[DF_engage_Users_IsDeleted]">
+		<Element Type="ISql90DefaultConstraint" Name="[dotnetnuke_dukes].[DF_dnn_Users_IsDeleted]">
 			<Property Name="DefaultExpressionScript">
 				<Value><![CDATA[((0))]]></Value>
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_Users]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[engage_Users].[IsDeleted]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users].[IsDeleted]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90DefaultConstraint" Name="[dbo].[DF_engage_Users_IsSuperUser]">
+		<Element Type="ISql90DefaultConstraint" Name="[dotnetnuke_dukes].[DF_dnn_Users_IsSuperUser]">
 			<Property Name="DefaultExpressionScript">
 				<Value><![CDATA[((0))]]></Value>
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_Users]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[engage_Users].[IsSuperUser]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users].[IsSuperUser]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90DefaultConstraint" Name="[dbo].[DF_engage_Users_UpdatePassword]">
+		<Element Type="ISql90DefaultConstraint" Name="[dotnetnuke_dukes].[DF_dnn_Users_UpdatePassword]">
 			<Property Name="DefaultExpressionScript">
 				<Value><![CDATA[((0))]]></Value>
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_Users]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[engage_Users].[UpdatePassword]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users].[UpdatePassword]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90DefaultConstraint" Name="[dbo].[engage_DF_EngageEmployment_Job_SortOrder]">
+		<Element Type="ISql90DefaultConstraint" Name="[dotnetnuke_dukes].[dnn_DF_EngageEmployment_Job_SortOrder]">
 			<Property Name="DefaultExpressionScript">
 				<Value><![CDATA[((5))]]></Value>
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job].[SortOrder]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[SortOrder]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90DefaultConstraint" Name="[dbo].[engage_DF_EngageEmployment_UserJobProperty_Visibility]">
+		<Element Type="ISql90DefaultConstraint" Name="[dotnetnuke_dukes].[dnn_DF_EngageEmployment_UserJobProperty_Visibility]">
 			<Property Name="DefaultExpressionScript">
 				<Value><![CDATA[((0))]]></Value>
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty].[Visibility]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[Visibility]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_ApplicationDocument]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationDocument].[ApplicationId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument].[ApplicationId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -153,7 +154,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationDocument].[ResumeId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument].[ResumeId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -177,7 +178,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -185,16 +186,16 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
-				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_UserJob]" />
+				<Property Name="PrimaryTableName" Value="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]" />
 				<Property Name="PrimaryCardinality" Value="1" />
 				<Property Name="ForeignCardinality" Value="1" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_ApplicationProperty]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[ApplicationPropertyId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[ApplicationPropertyId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -215,7 +216,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[Deleted]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[Deleted]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -237,7 +238,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[DataType]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[DataType]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -259,7 +260,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[DefaultValue]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[DefaultValue]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -280,7 +281,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[PropertyName]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[PropertyName]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -303,7 +304,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[Required]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[Required]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -325,7 +326,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[ViewOrder]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[ViewOrder]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -347,7 +348,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[Visible]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[Visible]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -369,7 +370,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[PortalId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -396,20 +397,20 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
 				<Property Name="Implied" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Index" Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[engage_IX_EngageEmployment_ApplicationProperty_PropertyName]">
+		<Element Type="ISql100Index" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[dnn_IX_EngageEmployment_ApplicationProperty_PropertyName]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[PropertyName]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[PropertyName]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -417,15 +418,15 @@
 			</Relationship>
 			<Relationship Name="IndexedObject">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_Document]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[ResumeId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[ResumeId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -446,7 +447,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[UserId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[UserId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -465,17 +466,17 @@
 							<Property Name="OutputKey" Value="1.UserId" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT UserId from engage_Users" />
+							<Property Name="Value" Value="SELECT UserId from dotnetnuke_dukes.dnn_Users" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[FileName]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[FileName]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -502,7 +503,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[ContentType]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[ContentType]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -529,7 +530,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[ContentLength]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[ContentLength]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -551,7 +552,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[ResumeData]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[ResumeData]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -573,7 +574,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[RevisionDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[RevisionDate]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -603,7 +604,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Document].[DocumentTypeId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[DocumentTypeId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -623,11 +624,11 @@
 							<Property Name="OutputKey" Value="1.DocumentTypeId" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT [t0].[DocumentTypeId]&#xD;&#xA;&#xD;&#xA;FROM [engage_EngageEmployment_DocumentType] AS [t0]&#xD;&#xA;" />
+							<Property Name="Value" Value="SELECT [t0].[DocumentTypeId]&#xD;&#xA;&#xD;&#xA;FROM dotnetnuke_dukes.[dnn_EngageEmployment_DocumentType] AS [t0]&#xD;&#xA;" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 					</Element>
@@ -635,7 +636,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -643,11 +644,11 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_DocumentType]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_DocumentType].[DocumentTypeId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType].[DocumentTypeId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -668,7 +669,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_DocumentType].[Description]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType].[Description]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -690,7 +691,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_DocumentType].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType].[PortalId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -717,18 +718,18 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
 				<Property Name="Implied" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_Job]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[JobId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -749,7 +750,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[JobPositionId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobPositionId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -771,7 +772,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[LocationId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[LocationId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -793,7 +794,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[JobCategoryId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobCategoryId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -815,7 +816,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[PostedDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[PostedDate]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -845,7 +846,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[IsHot]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[IsHot]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -867,7 +868,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[IsFilled]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[IsFilled]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -889,7 +890,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[RequiredQualifications]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[RequiredQualifications]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -914,7 +915,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[DesiredQualifications]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[DesiredQualifications]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -939,7 +940,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[RevisingUser]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[RevisingUser]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -959,17 +960,17 @@
 							<Property Name="OutputKey" Value="1.UserID" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT UserID FROM engage_Users" />
+							<Property Name="Value" Value="SELECT UserID FROM dotnetnuke_dukes.dnn_Users" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[RevisionDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[RevisionDate]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -999,7 +1000,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[SortOrder]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[SortOrder]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1025,7 +1026,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1051,7 +1052,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[NotificationEmailAddress]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[NotificationEmailAddress]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -1077,7 +1078,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[StartDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[StartDate]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1103,7 +1104,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[ExpireDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[ExpireDate]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -1132,7 +1133,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_Job].[ApplicationUrl]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[ApplicationUrl]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -1164,7 +1165,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1172,11 +1173,11 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_JobGroup]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_JobGroup].[JobGroupId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup].[JobGroupId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1197,7 +1198,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_JobGroup].[Name]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup].[Name]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1224,7 +1225,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_JobGroup].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1252,7 +1253,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1260,11 +1261,11 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_JobJobGroup]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_JobJobGroup].[JobGroupId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup].[JobGroupId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1286,7 +1287,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_JobJobGroup].[JobId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup].[JobId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1310,7 +1311,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1318,16 +1319,16 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
-				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_JobGroup]" />
+				<Property Name="PrimaryTableName" Value="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup]" />
 				<Property Name="PrimaryCardinality" Value="1" />
 				<Property Name="ForeignCardinality" Value="1" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_lkpCommonWords]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpCommonWords]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpCommonWords].[CommonWordID]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpCommonWords].[CommonWordID]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1348,7 +1349,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpCommonWords].[Word]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpCommonWords].[Word]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1371,7 +1372,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpCommonWords].[Locale]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpCommonWords].[Locale]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -1395,18 +1396,18 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
 				<Property Name="NumRows" Value="50" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_lkpJobCategory]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpJobCategory].[JobCategoryId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory].[JobCategoryId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1427,7 +1428,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpJobCategory].[Description]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory].[Description]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1454,7 +1455,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpJobCategory].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1482,7 +1483,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1490,11 +1491,11 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_lkpJobPosition]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpJobPosition].[JobPositionId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition].[JobPositionId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1515,7 +1516,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpJobPosition].[JobTitle]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition].[JobTitle]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1542,7 +1543,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpJobPosition].[Description]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition].[Description]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -1567,7 +1568,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpJobPosition].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1595,7 +1596,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1603,11 +1604,11 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_lkpLocation]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpLocation].[LocationId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[LocationId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1628,7 +1629,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpLocation].[Description]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[Description]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1655,7 +1656,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpLocation].[StateId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[StateId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1677,7 +1678,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpLocation].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1705,7 +1706,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1713,16 +1714,16 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
-				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_lkpState]" />
+				<Property Name="PrimaryTableName" Value="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState]" />
 				<Property Name="PrimaryCardinality" Value="1" />
 				<Property Name="ForeignCardinality" Value="3" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_lkpState]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpState].[StateId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState].[StateId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1743,7 +1744,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpState].[Name]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState].[Name]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1764,17 +1765,17 @@
 							<Property Name="OutputKey" Value="1.Text" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT [t0].[Text]&#xD;&#xA;FROM [engage_Lists] AS [t0]&#xD;&#xA;WHERE ([t0].[ParentID] = 221) OR ([t0].[ParentID] = 36)" />
+							<Property Name="Value" Value="SELECT [t0].[Text] &#xD;&#xA;FROM dotnetnuke_dukes.[dnn_Lists] AS [t0]&#xD;&#xA;WHERE ([t0].[ParentID] = 221) OR ([t0].[ParentID] = 36)" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpState].[Abbreviation]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState].[Abbreviation]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -1794,17 +1795,17 @@
 							<Property Name="OutputKey" Value="1.Value" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT [t0].[Value]&#xD;&#xA;FROM [engage_Lists] AS [t0]&#xD;&#xA;WHERE ([t0].[ParentID] = 221) OR ([t0].[ParentID] = 36)" />
+							<Property Name="Value" Value="SELECT [t0].[Value]&#xD;&#xA;FROM dotnetnuke_dukes.[dnn_Lists] AS [t0]&#xD;&#xA;WHERE ([t0].[ParentID] = 221) OR ([t0].[ParentID] = 36)" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpState].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1832,7 +1833,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1840,11 +1841,11 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_lkpUserStatus]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpUserStatus]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpUserStatus].[UserStatusId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpUserStatus].[UserStatusId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1865,7 +1866,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpUserStatus].[Status]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpUserStatus].[Status]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1896,7 +1897,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_lkpUserStatus].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpUserStatus].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -1916,11 +1917,11 @@
 							<Property Name="OutputKey" Value="1.PortalID" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT PortalID FROM engage_Portals" />
+							<Property Name="Value" Value="SELECT PortalID FROM dotnetnuke_dukes.dnn_Portals" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 					</Element>
@@ -1928,7 +1929,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -1936,11 +1937,11 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_UserJob]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[ApplicationId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[ApplicationId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -1961,7 +1962,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[UserId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[UserId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -1980,17 +1981,13 @@
 							<Property Name="OutputKey" Value="1.UserId" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT UserId from engage_Users" />
-							<Property Name="InputName" Value="SelectStatement" />
-						</Annotation>
-						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
-							<Property Name="InputName" Value="ConnectionInfo" />
+							<Property Name="Value" Value="96" />
+							<Property Name="InputName" Value="PercentageNull" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[JobId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[JobId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2012,7 +2009,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[AppliedDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[AppliedDate]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2034,7 +2031,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[SalaryRequirement]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[SalaryRequirement]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2060,7 +2057,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[Message]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[Message]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2086,7 +2083,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[StatusId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[StatusId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2105,17 +2102,17 @@
 							<Property Name="OutputKey" Value="1.UserStatusId" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT UserStatusId&#xD;&#xA;FROM [engage_EngageEmployment_lkpUserStatus]" />
+							<Property Name="Value" Value="SELECT UserStatusId&#xD;&#xA;FROM dotnetnuke_dukes.[dnn_EngageEmployment_lkpUserStatus]" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJob].[RevisingUserId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[RevisingUserId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2134,11 +2131,11 @@
 							<Property Name="OutputKey" Value="1.UserID" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT UserID FROM engage_Users" />
+							<Property Name="Value" Value="SELECT UserID FROM dotnetnuke_dukes.dnn_Users" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 					</Element>
@@ -2146,7 +2143,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -2154,16 +2151,16 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
-				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_Job]" />
+				<Property Name="PrimaryTableName" Value="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				<Property Name="PrimaryCardinality" Value="1" />
 				<Property Name="ForeignCardinality" Value="25" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_UserJobProperty]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[UserJobPropertyId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[UserJobPropertyId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -2184,7 +2181,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[ApplicationId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[ApplicationId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2206,7 +2203,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[ApplicationPropertyId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[ApplicationPropertyId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2226,17 +2223,17 @@
 							<Property Name="OutputKey" Value="1.ApplicationPropertyId" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT [t0].[ApplicationPropertyId]&#xD;&#xA;FROM [engage_EngageEmployment_ApplicationProperty] AS [t0]" />
+							<Property Name="Value" Value="SELECT [t0].[ApplicationPropertyId]&#xD;&#xA;&#xD;&#xA; FROM dotnetnuke_dukes.[dnn_EngageEmployment_ApplicationProperty] AS [t0]" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[PropertyValue]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[PropertyValue]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2256,17 +2253,17 @@
 							<Property Name="OutputKey" Value="1.EntryID" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="Data Source=.\SQLEXPRESS;Initial Catalog=DotNetNuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
+							<Property Name="Value" Value="Data Source=etg44;Initial Catalog=dukes_dotnetnuke.dev;Integrated Security=True;Pooling=False&#x10;System.Data.SqlClient&#x10;False" />
 							<Property Name="InputName" Value="ConnectionInfo" />
 						</Annotation>
 						<Annotation Type="InputDescriptorAnnotation">
-							<Property Name="Value" Value="SELECT [t0].[EntryID]&#xD;&#xA;FROM [engage_Lists] AS [t0]&#xD;&#xA;WHERE [t0].[ListName] = 'EngageEmployment:Lead'" />
+							<Property Name="Value" Value="SELECT [t0].[EntryID]&#xD;&#xA;FROM dotnetnuke_dukes.[dnn_Lists] AS [t0]&#xD;&#xA;WHERE [t0].[ListName] = 'EngageEmployment:Lead'" />
 							<Property Name="InputName" Value="SelectStatement" />
 						</Annotation>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[PropertyText]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[PropertyText]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2286,7 +2283,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[Visibility]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[Visibility]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2316,7 +2313,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[LastUpdatedDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[LastUpdatedDate]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2348,7 +2345,7 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
@@ -2356,18 +2353,18 @@
 				<Property Name="Selected" Value="True" />
 			</Annotation>
 			<Annotation Type="CardinalityConfigAnnotation">
-				<Property Name="PrimaryTableName" Value="[dbo].[engage_EngageEmployment_UserJob]" />
+				<Property Name="PrimaryTableName" Value="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]" />
 				<Property Name="PrimaryCardinality" Value="1" />
 				<Property Name="ForeignCardinality" Value="1" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100Index" Name="[dbo].[engage_EngageEmployment_UserJobProperty].[engage_IX_EngageEmployment_UserJobProperty]">
+		<Element Type="ISql100Index" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[dnn_IX_EngageEmployment_UserJobProperty]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_UserJobProperty].[ApplicationId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[ApplicationId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -2375,15 +2372,15 @@
 			</Relationship>
 			<Relationship Name="IndexedObject">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_EngageEmployment_UserJobSearch]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[UserSearchId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[UserSearchId]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -2404,7 +2401,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[UserId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[UserId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2426,7 +2423,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[JobGroupId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[JobGroupId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2447,7 +2444,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[Description]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[Description]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2470,7 +2467,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[JobPositionId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[JobPositionId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2491,7 +2488,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[StateId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[StateId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2512,7 +2509,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[Keywords]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[Keywords]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2533,7 +2530,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[CreationDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[CreationDate]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2555,7 +2552,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[LocationId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[LocationId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2576,7 +2573,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[SearchSql]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[SearchSql]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2597,7 +2594,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[PortalId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[PortalId]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -2619,7 +2616,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_EngageEmployment_UserJobSearch].[CategoryId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[CategoryId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -2642,374 +2639,374 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
 				<Property Name="NumRows" Value="50" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_ApplicationDocument_EngageEmployment_Document]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_ApplicationDocument_EngageEmployment_Document]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationDocument].[ResumeId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument].[ResumeId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationDocument]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Document].[ResumeId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[ResumeId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Document]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_ApplicationDocument_EngageEmployment_UserJob]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_ApplicationDocument_EngageEmployment_UserJob]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationDocument].[ApplicationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument].[ApplicationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationDocument]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJob].[ApplicationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[ApplicationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJob]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_Document_EngageEmployment_DocumentType]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_Document_EngageEmployment_DocumentType]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Document].[DocumentTypeId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[DocumentTypeId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Document]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_DocumentType].[DocumentTypeId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType].[DocumentTypeId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_DocumentType]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_Job_EngageEmployment_JobPosition]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_Job_EngageEmployment_JobPosition]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job].[JobPositionId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobPositionId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobPosition].[JobPositionId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition].[JobPositionId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobPosition]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_Job_EngageEmployment_lkpJobCategory]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_Job_EngageEmployment_lkpJobCategory]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job].[JobCategoryId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobCategoryId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobCategory].[JobCategoryId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory].[JobCategoryId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobCategory]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_Job_EngageEmployment_lkpLocation]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_Job_EngageEmployment_lkpLocation]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job].[LocationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[LocationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpLocation].[LocationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[LocationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpLocation]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_JobJobGroup_EngageEmployment_Job]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_JobJobGroup_EngageEmployment_Job]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobJobGroup].[JobId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup].[JobId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobJobGroup]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job].[JobId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_JobJobGroup_EngageEmployment_JobGroup]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_JobJobGroup_EngageEmployment_JobGroup]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobJobGroup].[JobGroupId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup].[JobGroupId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobJobGroup]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobGroup].[JobGroupId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup].[JobGroupId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobGroup]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_lkpLocation_EngageEmployment_lkpState]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_lkpLocation_EngageEmployment_lkpState]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpLocation].[StateId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[StateId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpLocation]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpState].[StateId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState].[StateId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpState]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_UserJob_EngageEmployment_Job]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_UserJob_EngageEmployment_Job]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJob].[JobId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[JobId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJob]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job].[JobId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_UserJobProperty_EngageEmployment_ApplicationProperty]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_UserJobProperty_EngageEmployment_ApplicationProperty]">
 			<Property Name="OnDeleteAction" Value="1" />
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty].[ApplicationPropertyId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[ApplicationPropertyId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[ApplicationPropertyId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[ApplicationPropertyId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_UserJobProperty_EngageEmployment_UserJob]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_UserJobProperty_EngageEmployment_UserJob]">
 			<Property Name="OnDeleteAction" Value="1" />
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty].[ApplicationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[ApplicationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJob].[ApplicationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[ApplicationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJob]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_UserJobSearch_EngageEmployment_JobGroup]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_UserJobSearch_EngageEmployment_JobGroup]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch].[JobGroupId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[JobGroupId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobGroup].[JobGroupId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup].[JobGroupId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobGroup]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_UserSearch_EngageEmployment_JobPosition]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_UserSearch_EngageEmployment_JobPosition]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch].[JobPositionId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[JobPositionId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobPosition].[JobPositionId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition].[JobPositionId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobPosition]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_UserSearch_EngageEmployment_lkpLocation]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_UserSearch_EngageEmployment_lkpLocation]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch].[LocationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[LocationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpLocation].[LocationId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[LocationId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpLocation]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql90ForeignKeyConstraint" Name="[dbo].[engage_FK_EngageEmployment_UserSearch_EngageEmployment_lkpState]">
+		<Element Type="ISql90ForeignKeyConstraint" Name="[dotnetnuke_dukes].[dnn_FK_EngageEmployment_UserSearch_EngageEmployment_lkpState]">
 			<Relationship Name="Columns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch].[StateId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[StateId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignColumns">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpState].[StateId]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState].[StateId]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForeignTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpState]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_ApplicationProperty]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_ApplicationProperty]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_ApplicationProperty].[ApplicationPropertyId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty].[ApplicationPropertyId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3017,17 +3014,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationProperty]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_DocumentType]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_DocumentType]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_DocumentType].[DocumentTypeId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType].[DocumentTypeId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3035,17 +3032,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_DocumentType]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_DocumentType]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_Job]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_Job]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_Job].[JobId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job].[JobId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3053,17 +3050,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Job]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Job]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_JobGroup]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_JobGroup]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_JobGroup].[JobGroupId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup].[JobGroupId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3071,17 +3068,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_JobGroup]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_lkpCommonWords]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_lkpCommonWords]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_lkpCommonWords].[CommonWordID]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpCommonWords].[CommonWordID]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3089,17 +3086,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpCommonWords]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpCommonWords]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_lkpPosition]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_lkpPosition]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_lkpJobPosition].[JobPositionId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition].[JobPositionId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3107,17 +3104,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobPosition]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_lkpPositionType]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_lkpPositionType]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_lkpJobCategory].[JobCategoryId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory].[JobCategoryId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3125,17 +3122,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpJobCategory]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_lkpState]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_lkpState]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_lkpState].[StateId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState].[StateId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3143,17 +3140,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpState]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpState]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_Location]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_Location]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_lkpLocation].[LocationId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation].[LocationId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3161,17 +3158,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpLocation]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_UserJob]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_UserJob]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_UserJob].[ApplicationId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob].[ApplicationId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3179,18 +3176,18 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJob]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_UserJobProperty]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_UserJobProperty]">
 			<Property Name="IsClustered" Value="False" />
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_UserJobProperty].[UserJobPropertyId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty].[UserJobPropertyId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3198,17 +3195,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobProperty]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobProperty]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[engage_PK_EngageEmployment_UserSearch]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[dnn_PK_EngageEmployment_UserSearch]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_UserJobSearch].[UserSearchId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch].[UserSearchId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3216,15 +3213,15 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_UserJobSearch]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100Table" Name="[dbo].[engage_Users]">
+		<Element Type="ISql100Table" Name="[dotnetnuke_dukes].[dnn_Users]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="Columns">
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[UserID]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[UserID]">
 						<Property Name="IsNullable" Value="False" />
 						<Property Name="IsIdentity" Value="True" />
 						<Relationship Name="TypeSpecifier">
@@ -3245,7 +3242,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[Username]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[Username]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -3268,7 +3265,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[FirstName]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[FirstName]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -3291,7 +3288,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[LastName]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[LastName]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -3314,7 +3311,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[IsSuperUser]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[IsSuperUser]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -3336,7 +3333,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[AffiliateId]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[AffiliateId]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -3357,7 +3354,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[Email]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[Email]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -3379,7 +3376,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[DisplayName]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[DisplayName]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -3402,7 +3399,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[UpdatePassword]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[UpdatePassword]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -3424,7 +3421,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[LastIPAddress]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[LastIPAddress]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -3446,7 +3443,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[IsDeleted]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[IsDeleted]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
 							<Entry>
@@ -3468,7 +3465,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[CreatedByUserID]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[CreatedByUserID]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -3489,7 +3486,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[CreatedOnDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[CreatedOnDate]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -3510,7 +3507,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[LastModifiedByUserID]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[LastModifiedByUserID]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -3531,7 +3528,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="ISql100SimpleColumn" Name="[dbo].[engage_Users].[LastModifiedOnDate]">
+					<Element Type="ISql100SimpleColumn" Name="[dotnetnuke_dukes].[dnn_Users].[LastModifiedOnDate]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="ISql90TypeSpecifier">
@@ -3554,20 +3551,20 @@
 			</Relationship>
 			<Relationship Name="Owner">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References Name="[dotnetnuke_dukes]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="TableConfigAnnotation">
 				<Property Name="NumRows" Value="50" />
 			</Annotation>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[PK_engage_EngageEmployment_ApplicationDocument]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[PK_dnn_EngageEmployment_ApplicationDocument]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_ApplicationDocument].[ApplicationId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument].[ApplicationId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3576,7 +3573,7 @@
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_ApplicationDocument].[ResumeId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument].[ResumeId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3584,17 +3581,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_ApplicationDocument]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[PK_engage_EngageEmployment_Document]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[PK_dnn_EngageEmployment_Document]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_Document].[ResumeId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document].[ResumeId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3602,17 +3599,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_Document]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_Document]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[PK_engage_EngageEmployment_lkpUserStatus]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[PK_dnn_EngageEmployment_lkpUserStatus]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_EngageEmployment_lkpUserStatus].[UserStatusId]" />
+								<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpUserStatus].[UserStatusId]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3620,17 +3617,17 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_EngageEmployment_lkpUserStatus]" />
+					<References Name="[dotnetnuke_dukes].[dnn_EngageEmployment_lkpUserStatus]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="ISql100PrimaryKeyConstraint" Name="[dbo].[PK_engage_Users]">
+		<Element Type="ISql100PrimaryKeyConstraint" Name="[dotnetnuke_dukes].[PK_dnn_Users]">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
 					<Element Type="ISqlIndexedColumnSpecification">
 						<Relationship Name="Column">
 							<Entry>
-								<References Name="[dbo].[engage_Users].[UserID]" />
+								<References Name="[dotnetnuke_dukes].[dnn_Users].[UserID]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -3638,7 +3635,7 @@
 			</Relationship>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[engage_Users]" />
+					<References Name="[dotnetnuke_dukes].[dnn_Users]" />
 				</Entry>
 			</Relationship>
 		</Element>

@@ -3,82 +3,114 @@
 <%@ Import namespace="DotNetNuke.Common.Utilities"%>
 <%@ Import namespace="DotNetNuke.Services.Localization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.ApplicationListing" Codebehind="ApplicationListing.ascx.cs" AutoEventWireup="false" %>
+<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
-<asp:Repeater ID="JobsRepeater" runat="server">
-    <HeaderTemplate>
-    </HeaderTemplate>                
-    <ItemTemplate>
-        <table class="applicationsTable Normal">
-        <colgroup>
-            <col class="applicantColumn" />
-            <col class="dateColumn" />
-            <col class="salaryColumn" />
-            <col class="statusColumn" />
-            <col class="leadColumn" />
-            <col class="documentsColumn" />
-        </colgroup>
-        <caption>
-            <a rel="Bookmark" href='<%#GetJobDetailUrl(Eval("JobId"))%>' id='<%#((int)Eval("JobId")).ToString(CultureInfo.InvariantCulture)%>' name='<%#((int)Eval("JobId")).ToString(CultureInfo.InvariantCulture)%>'>
-                <span class="SubHead">
-                    <%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("JobInLocation", LocalResourceFile), Eval("Title"), Eval("LocationName"), Eval("StateName"))) %>
-                </span>
-            </a>
-        </caption>
-        <asp:Repeater ID="ApplicationsRepeater" runat="server">
-            <HeaderTemplate>
-                <tr>
-                    <th class="nowrap" scope="col"><asp:Label runat="server" resourcekey="ApplicantHeaderLabel" /></th>
-                    <th class="nowrap" scope="col"><asp:Label runat="server" resourcekey="DateAppliedHeaderLabel" /></th>
-                    <th class="nowrap" scope="col"><asp:Label runat="server" resourcekey="SalaryHeaderLabel" /></th>
-                    <th class="nowrap" scope="col"><asp:Label runat="server" resourcekey="StatusHeaderLabel" /></th>
-                    <th class="nowrap" scope="col"><asp:Label runat="server" resourcekey="LeadHeaderLabel" /></th>
-                    <th class="nowrap" scope="col"><asp:Label runat="server" resourcekey="ViewHeaderLabel" /></th>
-               </tr>
-            </HeaderTemplate>
-            <ItemTemplate>
-                <tr class='<%# (int)DataBinder.Eval(Container, "ItemIndex") % 2 == 0 ? "applicationRow" : "alternatingApplicationRow" %>'>
-                    <td>
-                        <asp:Label ID="UserNameLabel" runat="server" CssClass="Subhead">
-                            <%# GetUserName(Eval("UserId") as int?)%>
-                        </asp:Label><br />
-                        <asp:DropDownList ID="UserStatusDropDownList" runat="server" CssClass="NormalTextBox" AutoPostBack="true" />
-                        <asp:HiddenField ID="UserIdHiddenField" runat="server" Value='<%#GetUserId(Eval("UserId")) %>' />
-                    </td>
-                    <td class="nowrap"><%# HttpUtility.HtmlEncode(this.Eval("AppliedForDate", "{0:d}"))%></td>
-                    <td><%# HttpUtility.HtmlEncode((string)Eval("SalaryRequirement")) %></td>
-                    <td>
-                        <asp:DropDownList ID="ApplicationStatusDropDownList" runat="server" CssClass="NormalTextBox" AutoPostBack="true" />
-                        <asp:HiddenField ID="ApplicationIdHiddenField" runat="server" Value='<%#((int)Eval("ApplicationId")).ToString(CultureInfo.InvariantCulture) %>' />
-                    </td>
-                    <td class="nowrap" rowspan="2">
-                        <asp:Repeater ID="PropertiesRepeater" runat="server">
+<div class="manageApplications">
+    <telerik:RadGrid ID="JobsGrid" runat="server" 
+        AllowPaging="true" AllowCustomPaging="true" PageSize="10" 
+        AutoGenerateColumns="false" 
+        CssClass="Normal Engage_RadGrid" Skin="Simple"
+        ExportSettings-IgnorePaging="true" ExportSettings-ExportOnlyData="true" ExportSettings-HideStructureColumns="true"
+        ClientSettings-ClientEvents-OnGridCreated="ApplicationListing_GridCreated">
+        <MasterTableView DataKeyNames="JobId" CommandItemDisplay="TopAndBottom">
+            <CommandItemSettings ShowExportToExcelButton="true" ShowExportToCsvButton="true" />
+            <Columns>
+                <telerik:GridBoundColumn Display="false" DataField="JobId" UniqueName="JobId" ItemStyle-CssClass="jobIdColumn" />
+                <telerik:GridTemplateColumn SortExpression="Title" HeaderText="JobTitleHeaderLabel" UniqueName="Title" ItemStyle-CssClass="jobTitleColumn">
+                    <ItemTemplate>
+                        <a href='<%#GetJobDetailUrl(Eval("JobId"))%>' id='job-<%#((int)Eval("JobId")).ToString(CultureInfo.InvariantCulture)%>'>
+                            <%# HttpUtility.HtmlEncode((string)Eval("Title")) %>
+                        </a>
+                    </ItemTemplate>
+                </telerik:GridTemplateColumn>
+                <telerik:GridTemplateColumn SortExpression="LocationName" UniqueName="Location" HeaderText="LocationHeaderLabel" ItemStyle-CssClass="jobLocationColumn">
+                    <ItemTemplate>
+                        <%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, this.Localize("Location", this.LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))) %>
+                    </ItemTemplate>
+                </telerik:GridTemplateColumn>
+                <telerik:GridBoundColumn DataField="PostedDate" UniqueName="PostedDate" HeaderText="PostedDateHeaderLabel" DataFormatString="{0:d}" ItemStyle-CssClass="postedDateColumn" />
+            </Columns>
+            <DetailTables>
+                <telerik:GridTableView runat="server" 
+                    DataKeyNames="UserId,ApplicationId"
+                    HierarchyDefaultExpanded="true">
+                    <Columns>
+                        <telerik:GridBoundColumn Display="false" DataField="UserId" UniqueName="UserId" ItemStyle-CssClass="userIdColumn" />
+                        <telerik:GridTemplateColumn SortExpression="DisplayName" HeaderText="ApplicantHeaderLabel" ItemStyle-CssClass="applicantColumn">
                             <ItemTemplate>
-                                <asp:Label runat="server" ID="ApplicationPropertyLabel" /><br />
+                                <%# HttpUtility.HtmlEncode(GetUserName(Eval("UserId") as int?)) %>
+                                <asp:DropDownList runat="server" 
+                                    CssClass="NormalTextBox" 
+                                    Visible='<%# this.ShowUserStatuses(Eval("UserId") as int?) %>'
+                                    AutoPostBack="true" OnSelectedIndexChanged="UserStatusDropDownList_SelectedIndexChanged" 
+                                    DataSource="<%# this.UserStatuses %>"
+                                    DataTextField="Text"
+                                    DataValueField="Value"
+                                    SelectedValue='<%# this.GetUserStatus(Eval("UserId") as int?) %>'
+                                    AppendDataBoundItems="true" />
                             </ItemTemplate>
-                        </asp:Repeater>
-                    </td>
-                    <td class="nowrap" rowspan="2">
-                        <asp:Repeater ID="DocumentsRepeater" runat="server">
+                        </telerik:GridTemplateColumn>
+                        <telerik:GridBoundColumn DataField="AppliedDate" DataFormatString="{0:d}" HeaderText="DateAppliedHeaderLabel" ItemStyle-CssClass="dateAppliedColumn" />
+                        <telerik:GridBoundColumn DataField="SalaryRequirement" HeaderText="SalaryHeaderLabel" ItemStyle-CssClass="salaryColumn" />
+                        <telerik:GridTemplateColumn HeaderText="LeadHeaderLabel" ItemStyle-CssClass="leadColumn">
                             <ItemTemplate>
-                                <asp:HyperLink runat="server" ID="DocumentLink" Target="_blank" /><br />
+                                <asp:Repeater runat="server" DataSource='<%# GetApplicationProperties((int)Eval("ApplicationId")) %>'>
+                                    <HeaderTemplate><ul></HeaderTemplate>
+                                    <ItemTemplate>
+                                        <li><%# HttpUtility.HtmlEncode(GetLeadText((string)Eval("PropertyValue"))) %></li>
+                                    </ItemTemplate>
+                                    <FooterTemplate></ul></FooterTemplate>
+                                </asp:Repeater>
                             </ItemTemplate>
-                        </asp:Repeater>
-                    </td>
-                </tr>
-                <tr class='<%# (int)DataBinder.Eval(Container, "ItemIndex") % 2 == 0 ? "applicationRow" : "alternatingApplicationRow" %> alignLeft'>
-                    <td colspan="4" class="messageCell">
+                        </telerik:GridTemplateColumn>
+                        <telerik:GridTemplateColumn HeaderText="ViewHeaderLabel" ItemStyle-CssClass="documentsColumn">
+                            <ItemTemplate>
+                                <asp:Repeater runat="server" DataSource='<%# GetApplicationDocuments((int)Eval("ApplicationId")) %>'>
+                                    <HeaderTemplate><ul></HeaderTemplate>
+                                    <ItemTemplate>
+                                        <li>
+                                            <asp:HyperLink runat="server" Target="_blank" NavigateUrl='<%#GetDocumentUrl((int)this.Eval("DocumentId")) %>'>
+                                                <%# HttpUtility.HtmlEncode(GetDocumentTypeText((int)this.Eval("DocumentTypeId"))) %>
+                                            </asp:HyperLink>
+                                        </li>
+                                    </ItemTemplate>
+                                    <FooterTemplate></ul></FooterTemplate>
+                                </asp:Repeater>
+                            </ItemTemplate>
+                        </telerik:GridTemplateColumn>
+                        <telerik:GridTemplateColumn HeaderText="StatusHeaderLabel" ItemStyle-CssClass="statusColumn">
+                            <ItemTemplate>
+                                <asp:DropDownList runat="server" 
+                                    CssClass="NormalTextBox" 
+                                    Visible='<%# this.ShowApplicationStatuses() %>'
+                                    AutoPostBack="true" OnSelectedIndexChanged="ApplicationStatusDropDownList_SelectedIndexChanged" 
+                                    DataSource="<%# this.ApplicationStatuses %>"
+                                    DataTextField="Text"
+                                    DataValueField="Value"
+                                    SelectedValue='<%# Eval("StatusId") %>'
+                                    AppendDataBoundItems="true"/>
+                            </ItemTemplate>
+                        </telerik:GridTemplateColumn>
+                    </Columns>
+                    <NestedViewTemplate>
                         <asp:Label runat="server" ID="MessageHeaderLabel" CssClass="NormalBold" resourcekey="MessageHeaderLabel" />
                         <%# HttpUtility.HtmlEncode((string)Eval("Message")) %>
-                    </td>
-                </tr>
-            </ItemTemplate>
-        </asp:Repeater>
-        </table>
-    </ItemTemplate>
-    <FooterTemplate>
-    </FooterTemplate>
-</asp:Repeater>
-<ul class="eng-action-btns">
-    <li id="AllLinkWrapper" runat="server" Visible="false"><asp:HyperLink ID="AllLink" runat="server" CssClass="CommandButton" resourcekey="btnAll" /></li>
-    <li><asp:HyperLink ID="BackLink" runat="server" CssClass="CommandButton" resourcekey="btnBack" /></li>
-</ul>
+                    </NestedViewTemplate>
+                </telerik:GridTableView>
+            </DetailTables>
+        </MasterTableView>
+    </telerik:RadGrid>
+
+    <ul class="eng-action-btns">
+        <li id="AllLinkWrapper" runat="server" Visible="false"><asp:HyperLink ID="AllLink" runat="server" CssClass="CommandButton" resourcekey="btnAll" /></li>
+        <li><asp:HyperLink ID="BackLink" runat="server" CssClass="CommandButton" resourcekey="btnBack" /></li>
+    </ul>
+</div>
+
+<%--script type="text/javascript">
+    (function ($) {
+        window.ApplicationListing_GridCreated = function (grid) {
+            $.gridSelect(grid);
+        };
+    }(jQuery));
+</script--%>

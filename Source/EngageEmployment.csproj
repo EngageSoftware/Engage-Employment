@@ -98,6 +98,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Telerik.Web.UI, Version=2009.3.1103.35, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="admin\ApplicationListing.ascx.cs">
@@ -271,9 +275,18 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Content Include="ReleaseNotes_1.8.5.htm" />
+    <Content Include="images\plus-minus-icn.png" />
+    <Content Include="images\small-grey-bg.jpg" />
+    <Content Include="images\sortable-white.png" />
+    <Content Include="images\sprite.gif" />
+    <EmbeddedResource Include="JavaScript\jquery.grid.js" />
     <Content Include="References\Framework\Engage.Dnn.Framework.dll" />
     <Content Include="References\Framework\Engage.Events.dll" />
     <Content Include="References\Framework\Engage.Framework.dll" />
+    <Content Include="References\Telerik.Web.Design.dll" />
+    <Content Include="References\Telerik.Web.UI.dll" />
+    <Content Include="References\Telerik.Web.UI.xml" />
     <Content Include="ReleaseNotes_1.8.1.htm" />
     <Content Include="ReleaseNotes_1.8.0.htm" />
     <Content Include="ReleaseNotes_1.7.0.htm" />
@@ -298,6 +311,7 @@
     <None Include="Providers\DataProviders\SqlDataProvider\01.01.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.02.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\1.7.0.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\1.8.5.SqlDataProvider" />
     <None Include="Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>

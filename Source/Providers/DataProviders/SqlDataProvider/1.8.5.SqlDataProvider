@@ -1,0 +1,99 @@
+﻿IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetJobs', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetJobs
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetJobs (
+    @jobGroupId int,
+    @portalId int,
+    @index int, 
+    @pageSize int
+)
+AS
+BEGIN
+ 
+ 
+CREATE TABLE #results (
+[Id] int NOT NULL IDENTITY(1,1),
+[JobId] int
+)
+ 
+INSERT INTO #results ([JobId]) 
+SELECT A.JobId FROM
+    (SELECT DISTINCT j.JobId, j.SortOrder, j.CategoryName, j.JobTitle
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j
+    LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId) 
+    WHERE j.PortalId = @portalId
+    AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)) AS A
+ORDER BY A.SortOrder, A.CategoryName, A.JobTitle
+ 
+SELECT @@RowCount AS TotalRecords
+ 
+IF (@pageSize = 0 OR @pageSize IS NULL)
+    BEGIN
+        SELECT j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, 
+               j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, j.ApplicationUrl, 
+               j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate 
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j ON (r.JobId = j.JobId)
+        ORDER BY r.Id
+    END
+ELSE
+    BEGIN
+        SELECT j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, 
+               j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, j.ApplicationUrl, 
+               j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate 
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j ON (r.JobId = j.JobId)
+        WHERE (id >= @index * @pageSize + 1) AND id < (@index * @pageSize) + @pageSize + 1
+        ORDER BY r.Id
+    END
+END 
+GO
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetApplicationsForJob', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetApplicationsForJob
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetApplicationsForJob (
+    @jobId int,
+    @jobGroupId int,
+    @index int, 
+    @pageSize int
+)
+AS
+BEGIN
+ 
+ 
+CREATE TABLE #results (
+[Id] int NOT NULL IDENTITY(1,1),
+[ApplicationId] int
+)
+ 
+INSERT INTO #results ([ApplicationId]) 
+SELECT B.ApplicationId FROM
+    (SELECT DISTINCT a.ApplicationId, a.AppliedDate
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
+    LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (a.JobId = jjg.JobId) 
+    WHERE a.JobId = @jobId
+    AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)) AS B
+ORDER BY B.AppliedDate DESC
+ 
+SELECT @@RowCount AS TotalRecordsS
+ 
+IF (@pageSize = 0 OR @pageSize IS NULL)
+    BEGIN
+        SELECT a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, a.SalaryRequirement, a.Message, a.StatusId
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a ON (r.ApplicationId = a.ApplicationId)
+        ORDER BY r.Id
+    END
+ELSE
+    BEGIN
+        SELECT a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, a.SalaryRequirement, a.Message, a.StatusId
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a ON (r.ApplicationId = a.ApplicationId)
+        WHERE (id >= @index * @pageSize + 1) AND id < (@index * @pageSize) + @pageSize + 1
+        ORDER BY r.Id
+    END
+END 
+GO

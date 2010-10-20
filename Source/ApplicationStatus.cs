@@ -20,7 +20,7 @@ namespace Engage.Dnn.Employment
     /// <summary>
     /// The status of a <see cref="JobApplication"/>.
     /// </summary>
-    internal class ApplicationStatus
+    public class ApplicationStatus
     {
         /// <summary>
         /// Backing field for <see cref="StatusId"/>.

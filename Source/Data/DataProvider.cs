@@ -102,6 +102,8 @@ namespace Engage.Dnn.Employment.Data
 
         public abstract IDataReader GetJobs(int? jobGroupId, int portalId);
 
+        public abstract IDataReader GetJobs(int? jobGroupId, int portalId, int pageIndex, int? pageSize, out int totalCount);
+
         public abstract IDataReader GetActiveJobs(bool onlyHotJobs, int? jobGroupId, int portalId);
 
         public abstract IDataReader GetActiveJobs(bool onlyHotJobs, int? maximumNumberOfJobs, int? jobGroupId, int portalId);
@@ -140,7 +142,7 @@ namespace Engage.Dnn.Employment.Data
 
         public abstract DataTable GetApplications(int? jobGroupId, int portalId);
 
-        public abstract IDataReader GetApplicationsForJob(int jobId, int? jobGroupId);
+        public abstract IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int pageIndex, int? pageSize, out int totalCount);
 
         #endregion
 

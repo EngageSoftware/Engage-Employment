@@ -64,6 +64,7 @@
               <key>ManageApplications</key>
               <src>DesktopModules/EngageEmployment/admin/ApplicationListing.ascx</src>
               <type>Edit</type>
+              <supportspartialrendering>true</supportspartialrendering>
             </control>
             <control>
               <key>ManageCategories</key>
@@ -176,6 +177,10 @@
         <file>
           <path>Providers\DataProviders\SqlDataProvider</path>
           <name>1.5.1.SqlDataProvider</name>
+        </file>
+        <file>
+          <path>Providers\DataProviders\SqlDataProvider</path>
+          <name>1.8.5.SqlDataProvider</name>
         </file>
         <file>
           <name>Uninstall.SqlDataProvider</name>

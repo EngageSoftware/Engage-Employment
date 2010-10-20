@@ -22,7 +22,7 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Entities.Profile;
     using DotNetNuke.Entities.Users;
 
-    internal class UserStatus
+    public class UserStatus
     {
         public UserStatus(string status, int statusId)
         {

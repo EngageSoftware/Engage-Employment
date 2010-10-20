@@ -2,38 +2,38 @@
 -- Run this script before running the data generation plan
 -- =============================================
 
-DELETE [dbo].[engage_EngageEmployment_JobJobGroup]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_JobJobGroup]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_ApplicationDocument]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_ApplicationDocument]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_Document]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_Document]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_UserJob]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_UserJob]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_Job]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_Job]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_UserJobSearch]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_UserJobSearch]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_lkpJobPosition]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobPosition]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_lkpJobCategory]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_lkpJobCategory]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_lkpLocation]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_lkpLocation]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_JobGroup]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_JobGroup]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_lkpState]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_lkpState]
 GO
 
-DELETE [dbo].[engage_EngageEmployment_lkpUserStatus]
+DELETE [dotnetnuke_dukes].[dnn_EngageEmployment_lkpUserStatus]
 GO

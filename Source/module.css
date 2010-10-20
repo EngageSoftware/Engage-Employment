@@ -314,6 +314,43 @@ clear:both;
 overflow:hidden;
 }
 
+/*
+ * Telerik Grid
+ * Overrides from Simple skin
+ */
+.manageApplications .Engage_RadGrid .rgMasterTable{background: transparent url(images/small-grey-bg.jpg) repeat-x bottom;}
+.manageApplications .Engage_RadGrid .rgFilter, .manageApplications .Engage_RadGrid .rgPagePrev, .manageApplications .Engage_RadGrid .rgPageNext, .manageApplications .Engage_RadGrid .rgPageFirst, .manageApplications .Engage_RadGrid .rgPageLast{background-image: url(images/sprite.gif);}
+/*Font Setting*/
+.manageApplications .Engage_RadGrid, .manageApplications .Engage_RadGrid .rgMasterTable, .manageApplications .Engage_RadGrid .rgDetailTable, .manageApplications .Engage_RadGrid .rgGroupPanel table, .manageApplications .Engage_RadGrid .rgCommandRow table, .manageApplications .Engage_RadGrid .rgEditForm table, .manageApplications .Engage_RadGrid .rgPager table, .ModRustClassMemberListC .GridToolTip_Simple, .manageApplications .Engage_RadGrid .rgActiveRow, .manageApplications .Engage_RadGrid .rgHoveredRow, .manageApplications .Engage_RadGrid .rgSelectedRow, .manageApplications .Engage_RadGrid tfoot, .manageApplications .Engage_RadGrid thead{color: #585858; font: 12px/16px Arial, Helvetica, sans-serif }
+/*Header Cleanup*/
+.manageApplications .Engage_RadGrid .rgHeader, .manageApplications .Engage_RadGrid th.rgResizeCol{border: none;}
+/*Sorting*/
+.manageApplications .Engage_RadGrid .rgHeader a{text-decoration: underline;}
+.manageApplications .Engage_RadGrid .rgHeader .rgSortDesc{background: url(images/sortable-white.png) no-repeat top; height: 16px;}
+.manageApplications .Engage_RadGrid .rgHeader .rgSortAsc{background: url(images/sortable-white.png) no-repeat bottom; height: 16px;}
+.manageApplications .Engage_RadGrid .rgRow .rgSorted{background: #e9eaee; }
+.manageApplications .Engage_RadGrid .rgAltRow .rgSorted {background: #dedee2; }
+/*Column Cleanup*/
+.manageApplications .Engage_RadGrid .rgMasterTable td.rgGroupCol, .manageApplications .Engage_RadGrid .rgMasterTable td.rgExpandCol {background: none;}
+.manageApplications .Engage_RadGrid .rgExpand{background: url(images/plus-minus-icn.png) no-repeat top;}
+.manageApplications .Engage_RadGrid .rgCollapse{background: url(images/plus-minus-icn.png) no-repeat bottom;}
+/*Row Cleanup*/
+.manageApplications .Engage_RadGrid .rgRow td, .manageApplications .Engage_RadGrid .rgAltRow td, .manageApplications .Engage_RadGrid .rgEditRow td, .manageApplications .Engage_RadGrid .rgFooter td, .manageApplications .Engage_RadGrid .rgRow .rgSorted,  .manageApplications .Engage_RadGrid .rgAltRow .rgSorted {border: none; border-top: 1px solid #C9C9C9;}
+.manageApplications .Engage_RadGrid .rgAltRow{background: #f2f2f2;}
+.manageApplications .Engage_RadGrid .rgActiveRow, .manageApplications .Engage_RadGrid .rgHoveredRow, .manageApplications .Engage_RadGrid .rgSelectedRow {background: #f6fcfe;}
+/*Paging*/
+.manageApplications .Engage_RadGrid .rgPager{background: none;}
+.manageApplications .Engage_RadGrid td.rgPagerCell{border:none; padding: 10px 0;}
+.ModRustClassMemberListC .RadGrid .rgPageFirst, .ModRustClassMemberListC .RadGrid .rgPagePrev, .ModRustClassMemberListC .RadGrid .rgWrap, .ModRustClassMemberListC .RadGrid .rgPageNext, .ModRustClassMemberListC .RadGrid .rgPageLast {margin: 0 1px;}
+.manageApplications .Engage_RadGrid .rgNumPart a {background: #fff; border: 1px solid #999; }
+    /*All this mess is to clean up the default orange hover states - lot of overrides*/
+   .manageApplications .Engage_RadGrid .rgNumPart a.rgCurrentPage, .manageApplications .Engage_RadGrid .rgNumPart a.rgCurrentPage:hover, .manageApplications .Engage_RadGrid .rgNumPart a:hover, .ModRustClassMemberListC .RadComboBox_Simple .rcbHovered .rcbInputCell .rcbInput, .ModRustClassMemberListC .RadComboBox_Simple .rcbFocused .rcbInputCell .rcbInput, .ModRustClassMemberListC .RadComboBox_Simple .rcbHovered .rcbArrowCell, .ModRustClassMemberListC .RadComboBox_Simple .rcbHovered .rcbReadOnly .rcbInputCell, .ModRustClassMemberListC .RadComboBox_Simple .rcbHovered .rcbReadOnly .rcbArrowCellHidden, .ModRustClassMemberListC .RadComboBox_Simple .rcbFocused .rcbArrowCell, .ModRustClassMemberListC .RadComboBox_Simple .rcbFocused .rcbReadOnly .rcbInputCell, .ModRustClassMemberListC .RadComboBox_Simple .rcbFocused .rcbReadOnly .rcbArrowCellHidden, .rcbSlide div.RadComboBoxDropDown_Simple .rcbHovered {color: #582a34;background-color: #e9eaee; border: 1px solid #999; }
+.manageApplications .Engage_RadGrid .rgNumPart a {margin: 0 2px 0 0;}
+
+.manageApplications .Engage_RadGrid .rgDetailTable .rgExpandCol {display:none;}
+
+.manageApplications .Engage_RadGrid .leadColumn ul, .manageApplications .Engage_RadGrid .documentsColumn ul {padding:0;}
+.manageApplications .Engage_RadGrid .leadColumn li, .manageApplications .Engage_RadGrid .documentsColumn li {list-style-type:none;}
 
 /*
 * jQuery UI CSS Framework
