@@ -253,6 +253,10 @@
               <name>Engage.Dnn.Framework.dll</name>
               <version>3.1.2</version>
             </assembly>
+            <assembly>
+              <name>Telerik.Web.UI.dll</name>
+              <version>2009.3.1103</version>
+            </assembly>
           </assemblies>
         </component>
       </components>

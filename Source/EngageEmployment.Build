@@ -3,7 +3,7 @@
   <property name="projectName" value="Employment"/>
   <property name="createTrialPackage" value="true"/>
   <property name="trialPackageLicenseName" value="Trial"/>
-  <property name="versions" value="4,5"/>
+  <property name="versions" value="4,5,5.2+"/>
   <property name="licenses" value="Standard,Professional,Enterprise"/>
   <property name="packageFileNameTemplate" value="${projectName}_${packageLicense}_${projectVersion}_${packageType}_DNN${dnnVersion}" dynamic="true"/>
   <property name="dependencySourcePackageFileNameTemplate" value="${projectName}_${packageLicense}_${projectVersion}_DependencySource" dynamic="true"/>
@@ -131,7 +131,8 @@
         <exclude name="${referencesDirectory}/Microsoft.ApplicationBlocks.Data.dll"/>
         <exclude name="${referencesDirectory}/System.Web.Extensions.dll"/>
         <exclude name="${referencesDirectory}/*.Design.dll"/>
-        <exclude name="${referencesDirectory}/Telerik.Web.UI.dll"/>
+        <exclude name="${referencesDirectory}/Engage.Events.dll"/>
+        <!--<exclude name="${referencesDirectory}/Telerik.Web.UI.dll"/>-->
       </fileset>
     </copy>
 
@@ -150,6 +151,9 @@
         <call target="set-assemblyVersion"/>
         <xmlpoke file="${packageDirectory}/temp/package/Engage${projectName}.5.dnn" value="${assemblyVersion}" xpath="dotnetnuke/packages/package/components/component[@type='Assembly']/assemblies/assembly[name='${path::get-file-name(assemblyFile)}']/version"/>
       </foreach>
+      
+      <copy file="${packageDirectory}/temp/package/Engage${projectName}.5.dnn" tofile="${packageDirectory}/temp/package/Engage${projectName}.5.2+.dnn"/>
+      <xmlstrip file="${packageDirectory}/temp/package/Engage${projectName}.5.2+.dnn" xpath="dotnetnuke/packages/package/components/component[@type='Assembly']/assemblies/assembly[name='Telerik.Web.UI.dll']"/>
     </if>
     <if test="${file::exists(packageDirectory + '/temp/package/Engage' + projectName + '.4.dnn')}">
       <xmlpoke file="${packageDirectory}/temp/package/Engage${projectName}.4.dnn" value="${projectVersion}" xpath="//*[@latestVersion='latestVersion']"/>
@@ -192,6 +196,10 @@
     <if test="${file::exists(packageDirectory + '/temp/package/Engage' + projectName + '.5.dnn')}">
       <xmlpoke file="${packageDirectory}/temp/package/Engage${projectName}.5.dnn" value="${licenseFile}.htm" xpath="dotnetnuke/packages/package/license/@src"/>
     </if>
+
+    <if test="${file::exists(packageDirectory + '/temp/package/Engage' + projectName + '.5.2+.dnn')}">
+      <xmlpoke file="${packageDirectory}/temp/package/Engage${projectName}.5.2+.dnn" value="${licenseFile}.htm" xpath="dotnetnuke/packages/package/license/@src"/>
+    </if>
   </target>
   <target name="zip-package" description="Zips up the files in the temp/package directory, getting the correct manifest file and using the correct naming convention">
     <property name="packageType" value="Install"/>
@@ -201,6 +209,8 @@
         <include name="**/*"/>
         <exclude name="**/*.4.dnn" if="${dnnVersion!='4'}"/>
         <exclude name="**/*.5.dnn" if="${dnnVersion!='5'}"/>
+        <exclude name="**/*.5.2+.dnn" if="${dnnVersion!='5.2+'}"/>
+        <exclude name="**/Telerik.Web.UI.dll" if="${dnnVersion=='5.2+'}"/>
       </fileset>
     </zip>
   </target>
@@ -267,6 +277,77 @@
     <delete file="${packageDirectory}\${packageName}" failonerror="false"/>
     <delete dir="${packageDirectory}\temp" failonerror="false"/>
   </target>
+  <script language="C#" prefix="xml">
+    <!-- Based on http://stackoverflow.com/questions/537988/how-can-i-use-nants-xmlpoke-target-to-remove-a-node -->
+    <references>
+      <include name="System.Xml.dll" />
+    </references>
+    <imports>
+      <import namespace="System"/>
+      <import namespace="System.IO"/>
+      <import namespace="System.Xml"/>
+    </imports>
+    <code>
+      <![CDATA[
+              [TaskName("xmlstrip")]
+              public class XmlStrip : Task
+              {
+                  private string xPath;
+                  
+                  private FileInfo xmlFile;
+              
+                  [TaskAttribute("xpath", Required = true), StringValidator(AllowEmpty = false)]
+                  public string XPath 
+                  { 
+                      get
+                      {
+                          return this.xPath;
+                      }
+                      
+                      set
+                      {
+                          this.xPath = value;
+                      }
+                  }
+
+                  [TaskAttribute("file", Required = true)]
+                  public FileInfo XmlFile 
+                  { 
+                      get
+                      {
+                          return this.xmlFile;
+                      }
+                      
+                      set
+                      {
+                          this.xmlFile = value;
+                      }
+                  }
+
+                  protected override void ExecuteTask()
+                  {
+                      string filename = XmlFile.FullName;
+                      Log(Level.Info, "Attempting to load XML document in file '{0}'.", filename );
+                      XmlDocument document = new XmlDocument();
+                      document.Load(filename);
+                      Log(Level.Info, "XML document in file '{0}' loaded successfully.", filename );
+
+                      XmlNode node = document.SelectSingleNode(XPath);
+                      if(null == node)
+                      {
+                          throw new BuildException(String.Format("Node not found by XPath '{0}'", XPath));
+                      }
+
+                      node.ParentNode.RemoveChild(node);
+
+                      Log(Level.Info, "Attempting to save XML document to '{0}'.", filename );
+                      document.Save(filename);
+                      Log(Level.Info, "XML document successfully saved to '{0}'.", filename );
+                  }
+              }
+      ]]>
+    </code>
+  </script>
   <script language="C#" prefix="build-directory" >
     <references>
       <include name="System.dll" />
