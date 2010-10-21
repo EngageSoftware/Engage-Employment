@@ -269,7 +269,16 @@
   <data name="Sorted Descending.ToolTip" xml:space="preserve">
     <value>Sorted desc</value>
   </data>
+  <data name="No Applications After Filter.Text" xml:space="preserve">
+    <value>No applications have been received for this job matching your search criteria</value>
+  </data>
   <data name="No Applications.Text" xml:space="preserve">
     <value>No applications have been received for this job</value>
+  </data>
+  <data name="No Jobs After Filter.Text" xml:space="preserve">
+    <value>There are no jobs matching your search criteria</value>
+  </data>
+  <data name="No Jobs.Text" xml:space="preserve">
+    <value>No job openings have been created.  Go to the Manage Jobs page to create job openings.</value>
   </data>
 </root>

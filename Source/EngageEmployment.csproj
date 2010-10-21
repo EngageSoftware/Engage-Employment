@@ -281,7 +281,6 @@
     <Content Include="images\small-grey-bg.jpg" />
     <Content Include="images\sortable-white.png" />
     <Content Include="images\sprite.gif" />
-    <EmbeddedResource Include="JavaScript\jquery.grid.js" />
     <Content Include="References\Framework\Engage.Dnn.Framework.dll" />
     <Content Include="References\Framework\Engage.Events.dll" />
     <Content Include="References\Framework\Engage.Framework.dll" />

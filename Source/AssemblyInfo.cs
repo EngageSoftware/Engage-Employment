@@ -31,4 +31,3 @@ using System.Web.UI;
 [assembly: AssemblyFileVersion("1.8.5.0")]
 
 [assembly: WebResource("Engage.Dnn.Employment.JavaScript.jquery-ui.js", "text/javascript")]
-[assembly: WebResource("Engage.Dnn.Employment.JavaScript.jquery.grid.js", "text/javascript")]

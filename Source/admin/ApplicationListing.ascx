@@ -10,9 +10,8 @@
         AllowPaging="true" AllowCustomPaging="true" PageSize="10" 
         AutoGenerateColumns="false" 
         CssClass="Normal Engage_RadGrid" Skin="Simple"
-        ExportSettings-IgnorePaging="true" ExportSettings-ExportOnlyData="true" ExportSettings-HideStructureColumns="true"
-        ClientSettings-ClientEvents-OnGridCreated="ApplicationListing_GridCreated">
-        <MasterTableView DataKeyNames="JobId" CommandItemDisplay="TopAndBottom">
+        ExportSettings-IgnorePaging="true" ExportSettings-ExportOnlyData="true" ExportSettings-HideStructureColumns="true" ExportSettings-OpenInNewWindow="true">
+        <MasterTableView DataKeyNames="JobId" CommandItemDisplay="None">
             <CommandItemSettings ShowExportToExcelButton="true" ShowExportToCsvButton="true" />
             <Columns>
                 <telerik:GridBoundColumn Display="false" DataField="JobId" UniqueName="JobId" ItemStyle-CssClass="jobIdColumn" />
@@ -95,10 +94,13 @@
                         <%# HttpUtility.HtmlEncode((string)Eval("Message")) %>
                     </NestedViewTemplate>
                     <NoRecordsTemplate>
-                        <%= Localize("No Applications.Text")%>
+                        <%= AreApplicationsFiltered ? Localize("No Applications After Filter.Text") : Localize("No Applications.Text") %>
                     </NoRecordsTemplate>
                 </telerik:GridTableView>
             </DetailTables>
+            <NoRecordsTemplate>
+                <%= AreJobsFiltered ? Localize("No Jobs After Filter.Text") : Localize("No Jobs.Text") %>
+            </NoRecordsTemplate>
         </MasterTableView>
     </telerik:RadGrid>
 
@@ -107,11 +109,3 @@
         <li><asp:HyperLink ID="BackLink" runat="server" CssClass="CommandButton" resourcekey="btnBack" /></li>
     </ul>
 </div>
-
-<%--script type="text/javascript">
-    (function ($) {
-        window.ApplicationListing_GridCreated = function (grid) {
-            $.gridSelect(grid);
-        };
-    }(jQuery));
-</script--%>

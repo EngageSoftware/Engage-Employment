@@ -104,6 +104,28 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
+        /// Gets a value indicating whether the application listings are filtered.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the application lists are filtered; otherwise, <c>false</c>.
+        /// </value>
+        protected bool AreApplicationsFiltered
+        {
+            get { return this.ApplicationStatusId.HasValue; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the jobs listing is filtered.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the jobs list is filtered; otherwise, <c>false</c>.
+        /// </value>
+        protected bool AreJobsFiltered
+        {
+            get { return this.JobId.HasValue; }
+        }
+
+        /// <summary>
         /// Gets the list of application statuses to display to the user.
         /// </summary>
         /// <value>This portal's application statuses.</value>
@@ -441,6 +463,7 @@ namespace Engage.Dnn.Employment.Admin
             if (this.JobId.HasValue)
             {
                 this.JobsGrid.DataSource = new[] { Job.Load(this.JobId.Value) };
+                this.JobsGrid.VirtualItemCount = 1;
 
                 // TODO: Hide search
                 this.AllLinkWrapper.Visible = true;
@@ -452,7 +475,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobsGrid.VirtualItemCount = totalJobCount;
             }
 
-            this.JobsGrid.MasterTableView.HierarchyDefaultExpanded = ((IEnumerable<Job>)this.JobsGrid.DataSource).IsSingle();
+            this.JobsGrid.MasterTableView.HierarchyDefaultExpanded = this.JobsGrid.VirtualItemCount == 1;
         }
 
         /// <summary>
