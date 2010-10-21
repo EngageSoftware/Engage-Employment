@@ -11,6 +11,7 @@
 
 namespace Engage.Dnn.Employment
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using Data;
@@ -108,6 +109,16 @@ namespace Engage.Dnn.Employment
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the name of the status with the given ID.
+        /// </summary>
+        /// <param name="statusId">The ID of the status.</param>
+        /// <returns>The name of the status</returns>
+        public static string GetStatusName(int statusId)
+        {
+            return new ListController().GetListEntryInfo(statusId).Text;
         }
 
         /// <summary>

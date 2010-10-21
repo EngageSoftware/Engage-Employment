@@ -24,6 +24,7 @@ namespace Engage.Dnn.Employment.Admin
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Modules.Actions;
     using DotNetNuke.Entities.Users;
+    using DotNetNuke.Framework;
     using DotNetNuke.Security;
     using DotNetNuke.Services.Exceptions;
 
@@ -257,6 +258,21 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
+        /// Gets the name of the status with the given ID.
+        /// </summary>
+        /// <param name="statusId">The ID of the status.</param>
+        /// <returns>The name of the status</returns>
+        protected static string GetApplicationStatusName(int? statusId)
+        {
+            if (statusId.HasValue)
+            {
+                return ApplicationStatus.GetStatusName(statusId.Value);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the text for the lead entry with the given ID.
         /// </summary>
         /// <param name="leadIdValue">The ID of the list entry for the lead to display.</param>
@@ -371,6 +387,32 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
+        /// Gets the name of the user's status.
+        /// </summary>
+        /// <param name="userId">The user ID, or <c>null</c> for an anonymous user.</param>
+        /// <returns>The name of the status, or <c>null</c> for an anonymous user or user without a status</returns>
+        protected string GetUserStatusName(int? userId)
+        {
+            try
+            {
+                if (userId.HasValue)
+                {
+                    var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId.Value);
+                    if (statusId.HasValue)
+                    {
+                        return UserStatus.LoadStatus(statusId.Value).Status;
+                    }
+                }
+            }
+            catch (NullReferenceException)
+            {
+                // thrown from LoadUserStatus if user doesn't exist (has been deleted after applying).  BD
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Whether to show the user status drop down for the given user
         /// </summary>
         /// <param name="userId">The ID of the user, or <c>null</c> for an anonymous user.</param>
@@ -408,6 +450,7 @@ namespace Engage.Dnn.Employment.Admin
             base.OnInit(e);
             this.JobsGrid.NeedDataSource += this.JobsGrid_NeedDataSource;
             this.JobsGrid.ItemCreated += this.JobsGrid_ItemCreated;
+            this.JobsGrid.ItemCommand += this.JobsGrid_ItemCommand;
             this.JobsGrid.DetailTableDataBind += this.JobsGrid_DetailTableDataBind;
 
             try
@@ -520,6 +563,10 @@ namespace Engage.Dnn.Employment.Admin
                 commandItem.FindControl("InitInsertButton").Visible = false;
                 commandItem.FindControl("RefreshButton").Visible = false;
                 commandItem.FindControl("RebindGridButton").Visible = false;
+
+                // from http://www.telerik.com/help/aspnet-ajax/grdexportwithajax.html
+                AJAX.RegisterPostBackControl(commandItem.FindControl("ExportToExcelButton"));
+                AJAX.RegisterPostBackControl(commandItem.FindControl("ExportToCsvButton"));
             }
             else
             {
@@ -529,6 +576,48 @@ namespace Engage.Dnn.Employment.Admin
                 {
                     ((Label)pagerItem.FindControl("ChangePageSizeLabel")).Text = this.Localize("Change Page Size Label.Text");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Handles the <see cref="RadGrid.ItemCommand"/> event of the <see cref="JobsGrid"/> control.
+        /// </summary>
+        /// <param name="source">The source of the event.</param>
+        /// <param name="e">The <see cref="GridCommandEventArgs"/> instance containing the event data.</param>
+        private void JobsGrid_ItemCommand(object source, GridCommandEventArgs e)
+        {
+            if (e.CommandName != RadGrid.ExportToCsvCommandName && e.CommandName != RadGrid.ExportToExcelCommandName)
+            {
+                return;
+            }
+
+            var exportingTable = e.Item.OwnerTableView;
+            exportingTable.PageSize = exportingTable.VirtualItemCount;
+            if (exportingTable == this.JobsGrid.MasterTableView)
+            {
+                exportingTable.Columns.FindByUniqueName("Export-Title").Visible = true;
+                exportingTable.Columns.FindByUniqueName("Title").Visible = false;
+
+                this.JobsGrid.ExportSettings.FileName = string.Format(CultureInfo.CurrentCulture, this.Localize("Jobs Export FileName.Format"), DateTime.Now);
+            }
+            else
+            {
+                exportingTable.Columns.FindByUniqueName("Export-UserStatus").Visible = true;
+                exportingTable.Columns.FindByUniqueName("Export-ApplicationStatus").Visible = true;
+                exportingTable.Columns.FindByUniqueName("Export-Message").Visible = true;
+                exportingTable.Columns.FindByUniqueName("Properties").Visible = false;
+                exportingTable.Columns.FindByUniqueName("Documents").Visible = false;
+                exportingTable.Columns.FindByUniqueName("ApplicationStatus").Visible = false;
+
+                var job = Job.Load((int)exportingTable.ParentItem.GetDataKeyValue("JobId"));
+                this.JobsGrid.ExportSettings.FileName = string.Format(
+                    CultureInfo.CurrentCulture,
+                    this.Localize("Applications Export FileName.Format"),
+                    DateTime.Now,
+                    job.Title,
+                    job.LocationName,
+                    job.StateName,
+                    job.StateAbbreviation);
             }
         }
 
@@ -589,7 +678,6 @@ namespace Engage.Dnn.Employment.Admin
             this.JobsGrid.SortingSettings.SortToolTip = this.Localize("Sort.ToolTip");
             this.JobsGrid.HierarchySettings.ExpandTooltip = this.Localize("Expand.ToolTip");
             this.JobsGrid.HierarchySettings.CollapseTooltip = this.Localize("Collapse.ToolTip");
-            this.JobsGrid.ExportSettings.FileName = string.Format(CultureInfo.CurrentCulture, this.Localize("Jobs Export FileName.Format"), DateTime.Now);
 
             this.LocalizeGridTable(this.JobsGrid.MasterTableView);
             this.LocalizeGridTable(this.JobsGrid.MasterTableView.DetailTables[0]);

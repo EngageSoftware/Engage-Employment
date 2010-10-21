@@ -281,4 +281,15 @@
   <data name="No Jobs.Text" xml:space="preserve">
     <value>No job openings have been created.  Go to the Manage Jobs page to create job openings.</value>
   </data>
+  <data name="ApplicantStatusLabel-Export.Text" xml:space="preserve">
+    <value>Applicant Status</value>
+  </data>
+  <data name="Applications Export FileName.Format" xml:space="preserve">
+    <value>Applications for {1} as of {0:yyyy'-'MM'-'dd' 'HH'-'mm}</value>
+    <comment>{0} is replaced by current date/time
+{1} is replaced by job title
+{2} is replaced by location name, 
+{3} is replaced by region name, 
+{4} is replaced by region abbreviation</comment>
+  </data>
 </root>

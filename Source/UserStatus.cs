@@ -50,6 +50,17 @@ namespace Engage.Dnn.Employment
             return statuses;
         }
 
+        public static UserStatus LoadStatus(int statusId)
+        {
+            DataTable statusTable = DataProvider.Instance().GetUserStatus(statusId);
+            if (statusTable.Rows.Count > 0)
+            { 
+                return FillUserStatus(statusTable.Rows[0]);
+            }
+
+            return null;
+        }
+
         public static void UpdateStatus(int statusId, string status)
         {
             DataProvider.Instance().UpdateUserStatus(statusId, status);
