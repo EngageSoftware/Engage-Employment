@@ -57,6 +57,11 @@ namespace Engage.Dnn.Employment.Admin
         private int? applicationStatusId;
 
         /// <summary>
+        /// Backing field for <see cref="UserStatusId"/>
+        /// </summary>
+        private int? userStatusId;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationListing"/> class.
         /// </summary>
         public ApplicationListing()
@@ -206,6 +211,28 @@ namespace Engage.Dnn.Employment.Admin
                 }
 
                 return this.applicationStatusId;
+            }
+        }
+
+        /// <summary>
+        /// Gets the ID of the user status by which to filter applications (or <c>null</c> to display all jobs).
+        /// </summary>
+        /// <value>The ID of the user status by which to filter applications.</value>
+        private int? UserStatusId
+        {
+            get 
+            {
+                if (!this.userStatusId.HasValue)
+                {
+                    int statusId;
+                    if (!string.IsNullOrEmpty(this.Request.QueryString["userStatusId"]) &&
+                        int.TryParse(this.Request.QueryString["userStatusId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
+                    {
+                        this.userStatusId = statusId;
+                    }
+                }
+
+                return this.userStatusId;
             }
         }
 
@@ -516,12 +543,17 @@ namespace Engage.Dnn.Employment.Admin
             var parentJobId = (int)parentRow.GetDataKeyValue("JobId");
 
             e.DetailTableView.ExpandCollapseColumn.Display = false;
-            
+
+            var userIds = this.UserStatusId.HasValue
+                              ? UserStatus.GetUsersWithStatus(this.PortalSettings, this.UserStatusId.Value).Select(user => user.UserID)
+                              : Enumerable.Empty<int>();
+
             int unpagedApplicationCount;
             e.DetailTableView.DataSource = JobApplication.LoadApplicationsForJob(
-                parentJobId, 
-                this.JobGroupId, 
-                this.ApplicationStatusId, 
+                parentJobId,
+                this.JobGroupId,
+                this.ApplicationStatusId,
+                userIds,
                 e.DetailTableView.CurrentPageIndex, 
                 e.DetailTableView.PageSize, 
                 out unpagedApplicationCount);

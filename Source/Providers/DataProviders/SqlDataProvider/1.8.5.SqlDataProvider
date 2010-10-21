@@ -1,4 +1,37 @@
-﻿IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetJobs', N'P') IS NOT NULL
+﻿IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_fnParseCsvString', N'TF') IS NOT NULL
+    DROP FUNCTION {databaseOwner}{objectQualifier}EngageEmployment_fnParseCsvString
+GO
+
+CREATE FUNCTION {databaseOwner}{objectQualifier}EngageEmployment_fnParseCsvString
+(
+    @CSVString nvarchar(4000),
+    @Delimiter nvarchar(10)
+)
+RETURNS @tbl table ([Value] nvarchar(1000))
+AS
+/*
+    from http://www.mindsdoor.net/SQLTsql/ParseCSVString.html
+    Author Nigel Rivett
+*/
+BEGIN
+DECLARE @i int,
+	@j int
+	SELECT 	@i = 1
+	WHILE @i <= LEN(@CSVString)
+	BEGIN
+		SELECT	@j = CHARINDEX(@Delimiter, @CSVString, @i)
+		IF @j = 0
+		BEGIN
+			SELECT	@j = LEN(@CSVString) + 1
+		END
+		INSERT	@tbl SELECT SUBSTRING(@CSVString, @i, @j - @i)
+		SELECT	@i = @j + LEN(@Delimiter)
+	END
+	RETURN
+END
+GO
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetJobs', N'P') IS NOT NULL
     DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetJobs
 GO
 
@@ -58,12 +91,12 @@ CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetApplicati
     @jobId int,
     @jobGroupId int,
     @applicationStatusId int,
+    @userIds nvarchar(4000),
     @index int, 
     @pageSize int
 )
 AS
 BEGIN
- 
  
 CREATE TABLE #results (
 [Id] int NOT NULL IDENTITY(1,1),
@@ -77,7 +110,8 @@ SELECT B.ApplicationId FROM
     LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (a.JobId = jjg.JobId) 
     WHERE a.JobId = @jobId
     AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)
-    AND (@applicationStatusId IS NULL OR a.StatusId = @applicationStatusId)) AS B
+    AND (@applicationStatusId IS NULL OR a.StatusId = @applicationStatusId)
+    AND (@userIds IS NULL OR a.UserId IN (SELECT [Value] FROM {objectQualifier}EngageEmployment_fnParseCsvString(@userIds, ',')))) AS B
 ORDER BY B.AppliedDate DESC
  
 SELECT @@RowCount AS TotalRecordsS

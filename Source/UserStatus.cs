@@ -16,6 +16,8 @@ namespace Engage.Dnn.Employment
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
+
     using Data;
     using DotNetNuke.Common.Lists;
     using DotNetNuke.Entities.Portals;
@@ -74,16 +76,38 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
+        /// Gets the list of users who have a given status.
+        /// </summary>
+        /// <param name="portalSettings">The settings of the portal in which the module is currently operating.</param>
+        /// <param name="statusId">The ID of the status we're looking for.</param>
+        /// <returns>A sequence of all users in the given portal.</returns>
+        public static IEnumerable<UserInfo> GetUsersWithStatus(PortalSettings portalSettings, int statusId)
+        {
+            return UserController.GetUsers(portalSettings.PortalId).Cast<UserInfo>().Where(user => GetStatusForUser(portalSettings, user) == statusId);
+        }
+
+        /// <summary>
         /// Loads the status ID of a user.
         /// </summary>
-        /// <param name="portalSettings">The ID of the portal in which the module is currently operating.</param>
+        /// <param name="portalSettings">The settings of the portal in which the module is currently operating.</param>
         /// <param name="userId">The ID of the user whom we are looking up.</param>
         /// <returns>The ID of the current status of the given user, or <c>null</c> if the user has no status.</returns>
         /// <exception cref="NullReferenceException">If the user does not exist</exception>
         public static int? LoadUserStatus(PortalSettings portalSettings, int userId)
         {
-            CheckUserStatusPropertyExists(portalSettings);
             var user = (new UserController()).GetUser(portalSettings.PortalId, userId);
+            return GetStatusForUser(portalSettings, user);
+        }
+
+        /// <summary>
+        /// Gets the ID of the status for the given user.
+        /// </summary>
+        /// <param name="portalSettings">The settings of the portal in which the module is currently operating.</param>
+        /// <param name="user">The user for whom to get the status.</param>
+        /// <returns>The ID of the user's status, or <c>null</c> if the user doesn't have a status set</returns>
+        private static int? GetStatusForUser(PortalSettings portalSettings, UserInfo user)
+        {
+            CheckUserStatusPropertyExists(portalSettings);
             ProfileController.GetUserProfile(ref user);
             var status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
 

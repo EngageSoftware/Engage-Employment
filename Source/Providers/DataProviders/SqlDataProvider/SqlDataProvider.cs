@@ -19,6 +19,7 @@ namespace Engage.Dnn.Employment.Data
     using System.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
 
     using DotNetNuke.Common.Utilities;
@@ -390,13 +391,16 @@ namespace Engage.Dnn.Employment.Data
                     Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
         }
 
-        public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, int pageIndex, int? pageSize, out int unpagedCount)
+        public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount)
         {
+            var userIdsList = userIds != null && userIds.Any() ? string.Join(",", userIds.Select(id => id.ToString(CultureInfo.InvariantCulture)).ToArray()) : null;
+
             var applicationsReader = this.ExecuteReader(
                 "GetApplicationsForJob", 
                 Utility.CreateIntegerParam("@jobId", jobId), 
                 Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
                 Utility.CreateIntegerParam("@applicationStatusId", applicationStatusId),
+                Utility.CreateVarcharParam("@userIds", userIdsList),
                 Utility.CreateIntegerParam("@index", pageIndex),
                 Utility.CreateIntegerParam("@pageSize", pageSize));
 
