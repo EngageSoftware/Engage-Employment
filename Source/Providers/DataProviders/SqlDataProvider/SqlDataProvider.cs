@@ -292,11 +292,15 @@ namespace Engage.Dnn.Employment.Data
                 Utility.CreateDateTimeParam("@now", DateTime.Now));
         }
 
-        public override DataTable GetAdminData(int? jobGroupId, int portalId)
+        public override DataSet GetAdminData(int? jobGroupId, int portalId)
         {
-            return
-                this.ExecuteDataset(
-                    "GetAdminData", Utility.CreateIntegerParam("@JobGroupId", jobGroupId), Utility.CreateIntegerParam("@PortalId", portalId)).Tables[0];
+            DataSet adminData = this.ExecuteDataset("GetAdminData", Utility.CreateIntegerParam("@JobGroupId", jobGroupId), Utility.CreateIntegerParam("@PortalId", portalId));
+
+            adminData.Tables[0].TableName = "Jobs";
+            adminData.Tables[1].TableName = "ApplicationStatuses";
+            adminData.Tables[2].TableName = "Users";
+
+            return adminData;
         }
 
         public override IDataReader GetApplication(int applicationId)

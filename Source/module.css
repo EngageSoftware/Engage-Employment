@@ -314,6 +314,13 @@ clear:both;
 overflow:hidden;
 }
 
+.applicationsListing ul {
+padding: 0;
+}
+.applicationsListing li {
+list-style-type:none;
+}
+
 /*
  * Telerik Grid
  * Overrides from Simple skin

@@ -114,7 +114,7 @@ SELECT B.ApplicationId FROM
     AND (@userIds IS NULL OR a.UserId IN (SELECT [Value] FROM {objectQualifier}EngageEmployment_fnParseCsvString(@userIds, ',')))) AS B
 ORDER BY B.AppliedDate DESC
  
-SELECT @@RowCount AS TotalRecordsS
+SELECT @@RowCount AS TotalRecords
  
 IF (@pageSize = 0 OR @pageSize IS NULL)
     BEGIN
@@ -132,4 +132,39 @@ ELSE
         ORDER BY r.Id
     END
 END 
+GO
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
+DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
+@JobGroupId int,
+@PortalId int
+AS
+	SELECT DISTINCT j.JobId
+	 INTO #jobs
+	 FROM {objectQualifier}EngageEmployment_vwJobs j
+	 LEFT JOIN {objectQualifier}EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId)
+	 WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
+	  AND PortalId = @PortalId
+	 
+	SELECT	JobId, PostedDate, SortOrder, LocationId, LocationName, 
+			StateId, StateName, StateAbbreviation, CategoryId, 
+			CategoryName, PositionId, JobTitle, JobDescription,
+			(SELECT count(*) FROM {objectQualifier}EngageEmployment_UserJob uj WHERE uj.JobId = j.JobId) AS ApplicationCount
+	 FROM {objectQualifier}EngageEmployment_vwJobs j
+	 WHERE JobId IN (SELECT JobId FROM #jobs)
+	 ORDER BY SortOrder, PostedDate
+
+    SELECT COUNT(*) AS Count, a.JobId, a.StatusId
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
+    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+      AND a.StatusId IS NOT NULL
+    GROUP BY a.JobId, a.StatusId
+
+    SELECT a.JobId, a.UserId
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
+    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+      AND a.UserId IS NOT NULL
+    GROUP BY a.JobId, a.UserId
 GO

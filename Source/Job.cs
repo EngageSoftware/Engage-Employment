@@ -355,7 +355,7 @@ namespace Engage.Dnn.Employment
             DataProvider.Instance().DeleteJob(jobId);
         }
 
-        public static DataTable GetAdminData(int? jobGroupId, int portalId)
+        public static DataSet GetAdminData(int? jobGroupId, int portalId)
         {
             return DataProvider.Instance().GetAdminData(jobGroupId, portalId);
         }

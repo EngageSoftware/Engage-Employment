@@ -62,6 +62,17 @@
             </HeaderTemplate>
             <ItemTemplate>
                 <span><%#GetApplicationsLink(Container.DataItem)%></span>
+                <asp:Repeater runat="server" DataSource='<%# GetApplicationStatusLinks((int)Eval("JobId")) %>'>
+                    <HeaderTemplate><ul></HeaderTemplate>
+                    <ItemTemplate>
+                        <li class='<%# (bool)Eval("IsUserStatus") ? "user-status" : "application-status" %>'>
+                            <asp:HyperLink runat="server" NavigateUrl='<%#Eval("Url") %>'>
+                                <strong><%#Eval("Count") %></strong> <%# HttpUtility.HtmlEncode((string)Eval("Status")) %>
+                            </asp:HyperLink>
+                        </li>
+                    </ItemTemplate>
+                    <FooterTemplate></ul></FooterTemplate>
+                </asp:Repeater>
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>

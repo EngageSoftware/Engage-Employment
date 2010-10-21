@@ -60,7 +60,7 @@ namespace Engage.Dnn.Employment.Data
 
         #region Job
 
-        public abstract DataTable GetAdminData(int? jobGroupId, int portalId);
+        public abstract DataSet GetAdminData(int? jobGroupId, int portalId);
 
         public abstract DataSet GetUnusedAdminData(int? jobGroupId, int portalId);
 

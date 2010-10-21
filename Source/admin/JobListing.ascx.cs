@@ -12,14 +12,15 @@
 namespace Engage.Dnn.Employment.Admin
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Globalization;
+    using System.Linq;
     using System.Web.UI.WebControls;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Modules.Actions;
     using DotNetNuke.Security;
     using DotNetNuke.Services.Exceptions;
-    using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
     using Globals = DotNetNuke.Common.Globals;
 
@@ -33,7 +34,17 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private const string RedirectionJavaScript = "location.href='{0}';return false;";
 
-        #region IActionable Members
+        /// <summary>
+        /// A table with the number of applications with each status for each job.
+        /// Has the columns Count, JobId, and StatusId
+        /// </summary>
+        private DataTable applicationStatusTable;
+
+        /// <summary>
+        /// A table mapping users to jobs.  Used to calculate the number of applications with each user status for each job.
+        /// Has the columns JobId, UserId
+        /// </summary>
+        private DataTable applicationUsersTable;
 
         /// <summary>
         /// Gets the list of <see cref="ModuleAction"/>s to be displayed for this control.
@@ -43,11 +54,11 @@ namespace Engage.Dnn.Employment.Admin
         {
             get
             {
-                return new ModuleActionCollection(new ModuleAction[]
+                return new ModuleActionCollection(new[]
                 {
                     new ModuleAction(
                         this.GetNextActionID(),
-                        Localization.GetString("ManageStates.Text", this.LocalResourceFile),
+                        this.Localize("ManageStates.Text"),
                         string.Empty,
                         string.Empty,
                         string.Empty,
@@ -59,7 +70,7 @@ namespace Engage.Dnn.Employment.Admin
                         false),
                     new ModuleAction(
                         this.GetNextActionID(),
-                        Localization.GetString("ManageLocations.Text", this.LocalResourceFile),
+                        this.Localize("ManageLocations.Text"),
                         string.Empty,
                         string.Empty,
                         string.Empty,
@@ -71,7 +82,7 @@ namespace Engage.Dnn.Employment.Admin
                         false),
                     new ModuleAction(
                         this.GetNextActionID(),
-                        Localization.GetString("ManageCategories.Text", this.LocalResourceFile),
+                        this.Localize("ManageCategories.Text"),
                         string.Empty,
                         string.Empty,
                         string.Empty,
@@ -83,7 +94,7 @@ namespace Engage.Dnn.Employment.Admin
                         false),
                     new ModuleAction(
                         this.GetNextActionID(),
-                        Localization.GetString("ManagePositions.Text", this.LocalResourceFile),
+                        this.Localize("ManagePositions.Text"),
                         string.Empty,
                         string.Empty,
                         string.Empty,
@@ -95,7 +106,7 @@ namespace Engage.Dnn.Employment.Admin
                         false),
                     new ModuleAction(
                         this.GetNextActionID(),
-                        Localization.GetString("AddNewJob.Text", this.LocalResourceFile),
+                        this.Localize("AddNewJob.Text"),
                         string.Empty,
                         string.Empty,
                         string.Empty,
@@ -108,8 +119,6 @@ namespace Engage.Dnn.Employment.Admin
                 });
             }
         }
-
-        #endregion
 
         /// <summary>
         /// Gets the name of the location, including the state name and/or abbreviation (depending on the "Location" resource key).
@@ -124,21 +133,10 @@ namespace Engage.Dnn.Employment.Admin
             if (locationId is DBNull)
             {
                 // empty row for categories or positions not assigned to a job
-                if (locationName is DBNull)
-                {
-                    // position row has a non-null LocationName
-                    return Localization.GetString("UnassignedCategories", this.LocalResourceFile);
-                }
-                else
-                {
-                    return Localization.GetString("UnassignedPositions", this.LocalResourceFile);
-                }
+                return locationName is DBNull ? this.Localize("UnassignedCategories") : this.Localize("UnassignedPositions");
             }
-            else
-            {
-                return string.Format(
-                    CultureInfo.CurrentCulture, Localization.GetString("Location", this.LocalResourceFile), locationName, stateName, stateAbbreviation);
-            }
+            
+            return string.Format(CultureInfo.CurrentCulture, this.Localize("Location"), locationName, stateName, stateAbbreviation);
         }
 
         /// <summary>
@@ -155,8 +153,8 @@ namespace Engage.Dnn.Employment.Admin
                 var jobId = (int)jobRow["JobId"];
                 var applicationCount = (int)jobRow["ApplicationCount"];
                 string applicationText = applicationCount != 1
-                                  ? Localization.GetString("Applications", this.LocalResourceFile)
-                                  : Localization.GetString("Application", this.LocalResourceFile);
+                                  ? this.Localize("Applications")
+                                  : this.Localize("Application");
 
                 return string.Format(
                     CultureInfo.CurrentCulture,
@@ -167,6 +165,85 @@ namespace Engage.Dnn.Employment.Admin
             }
             
             return string.Empty;
+        }
+
+        protected IEnumerable<object> GetApplicationStatusLinks(int jobId)
+        {
+            var applicationStatusMap = ApplicationStatus.GetStatuses(this.PortalId).ToDictionary(status => status.StatusId);
+            foreach (var statusRow in from DataRow row in this.applicationStatusTable.Rows
+                                      where (int)row["JobId"] == jobId
+                                      select new
+                                          {
+                                              Count = (int)row["Count"],
+                                              JobId = (int)row["JobId"],
+                                              StatusId = (int)row["StatusId"]
+                                          })
+            {
+                ApplicationStatus status;
+                if (!applicationStatusMap.TryGetValue(statusRow.StatusId, out status))
+                {
+                    continue;
+                }
+
+                yield return new
+                    {
+                        IsUserStatus = false,
+                        Url = this.EditUrl(
+                                "jobId",
+                                jobId.ToString(CultureInfo.InvariantCulture),
+                                ControlKey.ManageApplications.ToString(),
+                                "statusId=" + statusRow.StatusId.ToString(CultureInfo.InvariantCulture)),
+                        Count = statusRow.Count,
+                        Status = status.StatusName
+                    };
+            }
+
+            var statusMap = UserStatus.LoadStatuses(this.PortalId).ToDictionary(status => status.StatusId);
+            var userStatusMap = this.applicationUsersTable.Rows.Cast<DataRow>()
+                                    .Select(row => (int)row["UserId"])
+                                    .Distinct()
+                                    .ToDictionary(
+                                        userId => userId,
+                                        userId =>
+                                            {
+                                                UserStatus status;
+                                                var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId);
+                                                if (statusId.HasValue && statusMap.TryGetValue(statusId.Value, out status))
+                                                {
+                                                    return status;
+                                                }
+
+                                                return null;
+                                            });
+
+            foreach (var statusGrouping in this.applicationUsersTable.Rows.Cast<DataRow>()
+                                            .Where(row => (int)row["JobId"] == jobId)
+                                            .Select(row =>
+                                                {
+                                                    UserStatus status;
+                                                    if (userStatusMap.TryGetValue((int)row["UserId"], out status))
+                                                    {
+                                                        return status;
+                                                    }
+
+                                                    return null;
+                                                })
+                                            .Where(status => status != null)
+                                            .GroupBy(status => status))
+            {
+                yield return new
+                    {
+                        IsUserStatus = true,
+                        Url =
+                            this.EditUrl(
+                                "jobId",
+                                jobId.ToString(CultureInfo.InvariantCulture),
+                                ControlKey.ManageApplications.ToString(),
+                                "userStatusId=" + statusGrouping.Key.StatusId.ToString(CultureInfo.InvariantCulture)),
+                        Count = statusGrouping.Count(),
+                        Status = statusGrouping.Key.Status
+                    };
+            }
         }
 
         /// <summary>
@@ -181,10 +258,8 @@ namespace Engage.Dnn.Employment.Admin
             {
                 return this.EditUrl("JobId", ((int)jobRow["JobId"]).ToString(CultureInfo.InvariantCulture), ControlKey.EditJob.ToString());
             }
-            else
-            {
-                return string.Empty;
-            }
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -249,7 +324,11 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private void BindData()
         {
-            this.JobsGrid.DataSource = Job.GetAdminData(this.JobGroupId, this.PortalId);
+            var adminData = Job.GetAdminData(this.JobGroupId, this.PortalId);
+            this.applicationStatusTable = adminData.Tables["ApplicationStatuses"];
+            this.applicationUsersTable = adminData.Tables["Users"];
+
+            this.JobsGrid.DataSource = adminData.Tables["Jobs"];
             this.JobsGrid.DataBind();
 
             DataSet unusedData = Job.GetUnusedAdminData(this.JobGroupId, this.PortalId);
