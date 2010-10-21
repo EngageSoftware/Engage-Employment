@@ -390,17 +390,18 @@ namespace Engage.Dnn.Employment.Data
                     Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
         }
 
-        public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int pageIndex, int? pageSize, out int totalCount)
+        public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, int pageIndex, int? pageSize, out int unpagedCount)
         {
             var applicationsReader = this.ExecuteReader(
                 "GetApplicationsForJob", 
                 Utility.CreateIntegerParam("@jobId", jobId), 
                 Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
+                Utility.CreateIntegerParam("@applicationStatusId", applicationStatusId),
                 Utility.CreateIntegerParam("@index", pageIndex),
                 Utility.CreateIntegerParam("@pageSize", pageSize));
 
             applicationsReader.Read();
-            totalCount = applicationsReader.GetInt32(0);
+            unpagedCount = applicationsReader.GetInt32(0);
 
             applicationsReader.NextResult();
 

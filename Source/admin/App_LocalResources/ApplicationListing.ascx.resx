@@ -269,4 +269,7 @@
   <data name="Sorted Descending.ToolTip" xml:space="preserve">
     <value>Sorted desc</value>
   </data>
+  <data name="No Applications.Text" xml:space="preserve">
+    <value>No applications have been received for this job</value>
+  </data>
 </root>

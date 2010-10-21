@@ -46,8 +46,7 @@
                                     DataSource="<%# this.UserStatuses %>"
                                     DataTextField="Text"
                                     DataValueField="Value"
-                                    SelectedValue='<%# this.GetUserStatus(Eval("UserId") as int?) %>'
-                                    AppendDataBoundItems="true" />
+                                    SelectedValue='<%# this.GetUserStatus(Eval("UserId") as int?) %>' />
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                         <telerik:GridBoundColumn DataField="AppliedDate" DataFormatString="{0:d}" HeaderText="DateAppliedHeaderLabel" ItemStyle-CssClass="dateAppliedColumn" />
@@ -87,8 +86,7 @@
                                     DataSource="<%# this.ApplicationStatuses %>"
                                     DataTextField="Text"
                                     DataValueField="Value"
-                                    SelectedValue='<%# Eval("StatusId") %>'
-                                    AppendDataBoundItems="true"/>
+                                    SelectedValue='<%# Eval("StatusId") %>' />
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                     </Columns>
@@ -96,6 +94,9 @@
                         <asp:Label runat="server" ID="MessageHeaderLabel" CssClass="NormalBold" resourcekey="MessageHeaderLabel" />
                         <%# HttpUtility.HtmlEncode((string)Eval("Message")) %>
                     </NestedViewTemplate>
+                    <NoRecordsTemplate>
+                        <%= Localize("No Applications.Text")%>
+                    </NoRecordsTemplate>
                 </telerik:GridTableView>
             </DetailTables>
         </MasterTableView>

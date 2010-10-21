@@ -143,10 +143,10 @@ namespace Engage.Dnn.Employment
             return null;
         }
 
-        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId, int pageIndex, int? pageSize, out int totalCount)
+        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, int pageIndex, int? pageSize, out int unpagedCount)
         {
             var applications = new List<JobApplication>();
-            using (IDataReader dr = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, pageIndex, pageSize, out totalCount))
+            using (IDataReader dr = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, applicationStatusId, pageIndex, pageSize, out unpagedCount))
             {
                 while (dr.Read())
                 {

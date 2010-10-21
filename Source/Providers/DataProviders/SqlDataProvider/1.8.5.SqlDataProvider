@@ -57,6 +57,7 @@ GO
 CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetApplicationsForJob (
     @jobId int,
     @jobGroupId int,
+    @applicationStatusId int,
     @index int, 
     @pageSize int
 )
@@ -75,7 +76,8 @@ SELECT B.ApplicationId FROM
     FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
     LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (a.JobId = jjg.JobId) 
     WHERE a.JobId = @jobId
-    AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)) AS B
+    AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)
+    AND (@applicationStatusId IS NULL OR a.StatusId = @applicationStatusId)) AS B
 ORDER BY B.AppliedDate DESC
  
 SELECT @@RowCount AS TotalRecordsS

@@ -52,6 +52,11 @@ namespace Engage.Dnn.Employment.Admin
         private int? jobId;
 
         /// <summary>
+        /// Backing field for <see cref="ApplicationStatusId"/>
+        /// </summary>
+        private int? applicationStatusId;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationListing"/> class.
         /// </summary>
         public ApplicationListing()
@@ -106,14 +111,14 @@ namespace Engage.Dnn.Employment.Admin
         {
             get 
             {
-                foreach (var applicationStatus in this.applicationStatuses)
-                {
-                    yield return new ListItem(applicationStatus.StatusName, applicationStatus.StatusId.ToString(CultureInfo.InvariantCulture));
-                }
-
                 if (this.applicationStatuses.Any())
                 {
                     yield return new ListItem(this.Localize("NoApplicationStatus"), string.Empty);
+                }
+
+                foreach (var applicationStatus in this.applicationStatuses)
+                {
+                    yield return new ListItem(applicationStatus.StatusName, applicationStatus.StatusId.ToString(CultureInfo.InvariantCulture));
                 }
             }
         }
@@ -126,14 +131,14 @@ namespace Engage.Dnn.Employment.Admin
         {
             get
             {
-                foreach (var userStatus in this.userStatuses)
-                {
-                    yield return new ListItem(userStatus.Status, userStatus.StatusId.ToString(CultureInfo.InvariantCulture));
-                }
-
                 if (this.userStatuses.Any())
                 {
                     yield return new ListItem(this.Localize("NoStatus.Text"), string.Empty);
+                }
+
+                foreach (var userStatus in this.userStatuses)
+                {
+                    yield return new ListItem(userStatus.Status, userStatus.StatusId.ToString(CultureInfo.InvariantCulture));
                 }
             }
         }
@@ -157,6 +162,28 @@ namespace Engage.Dnn.Employment.Admin
                 }
 
                 return this.jobId;
+            }
+        }
+
+        /// <summary>
+        /// Gets the ID of the application status by which to filter applications (or <c>null</c> to display all jobs).
+        /// </summary>
+        /// <value>The ID of the status by which to filter applications.</value>
+        private int? ApplicationStatusId
+        {
+            get 
+            {
+                if (!this.applicationStatusId.HasValue)
+                {
+                    int statusId;
+                    if (!string.IsNullOrEmpty(this.Request.QueryString["statusId"]) &&
+                        int.TryParse(this.Request.QueryString["statusId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
+                    {
+                        this.applicationStatusId = statusId;
+                    }
+                }
+
+                return this.applicationStatusId;
             }
         }
 
@@ -467,10 +494,15 @@ namespace Engage.Dnn.Employment.Admin
 
             e.DetailTableView.ExpandCollapseColumn.Display = false;
             
-            int totalApplicationCount;
+            int unpagedApplicationCount;
             e.DetailTableView.DataSource = JobApplication.LoadApplicationsForJob(
-                parentJobId, this.JobGroupId, e.DetailTableView.CurrentPageIndex, e.DetailTableView.PageSize, out totalApplicationCount);
-            e.DetailTableView.VirtualItemCount = totalApplicationCount;
+                parentJobId, 
+                this.JobGroupId, 
+                this.ApplicationStatusId, 
+                e.DetailTableView.CurrentPageIndex, 
+                e.DetailTableView.PageSize, 
+                out unpagedApplicationCount);
+            e.DetailTableView.VirtualItemCount = unpagedApplicationCount;
         }
 
         /// <summary>
