@@ -424,6 +424,8 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobsGrid.DataSource = Job.LoadAll(this.JobGroupId, this.PortalId, this.JobsGrid.CurrentPageIndex, this.JobsGrid.PageSize, out totalJobCount);
                 this.JobsGrid.VirtualItemCount = totalJobCount;
             }
+
+            this.JobsGrid.MasterTableView.HierarchyDefaultExpanded = ((IEnumerable<Job>)this.JobsGrid.DataSource).IsSingle();
         }
 
         /// <summary>

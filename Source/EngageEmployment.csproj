@@ -178,6 +178,7 @@
     <Compile Include="ApplicationStatus.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="Document.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="JavaScript\DatePickerOptions.cs" />
     <Compile Include="JavaScript\DatePickerOptionsConverter.cs" />
     <Compile Include="JobApplication.cs" />
