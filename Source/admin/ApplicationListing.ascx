@@ -42,7 +42,7 @@
                                 <%# HttpUtility.HtmlEncode(GetUserName(Eval("UserId") as int?)) %>
                                 <asp:DropDownList runat="server" 
                                     CssClass="NormalTextBox" 
-                                    Visible='<%# this.ShowUserStatuses(Eval("UserId") as int?) %>'
+                                    Visible='<%# !this.IsExport && this.ShowUserStatuses(this.Eval("UserId") as int?) %>'
                                     AutoPostBack="true" OnSelectedIndexChanged="UserStatusDropDownList_SelectedIndexChanged" 
                                     DataSource="<%# this.UserStatuses %>"
                                     DataTextField="Text"
@@ -79,11 +79,13 @@
                         <telerik:GridBoundColumn HeaderText="MessageHeaderLabel" UniqueName="Export-Message" DataField="Message" Visible="false" />
                     </Columns>
                     <NestedViewTemplate>
-                        <asp:Label runat="server" ID="MessageHeaderLabel" CssClass="NormalBold" resourcekey="MessageHeaderLabel" />
-                        <%# HttpUtility.HtmlEncode((string)Eval("Message")) %>
+                        <asp:PlaceHolder runat="server" Visible="<%# !IsExport %>">
+                            <asp:Label runat="server" ID="MessageHeaderLabel" CssClass="NormalBold" resourcekey="MessageHeaderLabel" />
+                            <%# HttpUtility.HtmlEncode((string)Eval("Message")) %>
+                        </asp:PlaceHolder>
                     </NestedViewTemplate>
                     <NoRecordsTemplate>
-                        <%= AreApplicationsFiltered ? Localize("No Applications After Filter.Text") : Localize("No Applications.Text") %>
+                            <%= AreApplicationsFiltered ? Localize("No Applications After Filter.Text") : Localize("No Applications.Text") %>
                     </NoRecordsTemplate>
                 </telerik:GridTableView>
             </DetailTables>
