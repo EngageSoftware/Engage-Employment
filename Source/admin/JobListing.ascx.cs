@@ -167,6 +167,11 @@ namespace Engage.Dnn.Employment.Admin
             return string.Empty;
         }
 
+        /// <summary>
+        /// Gets a sequence of objects with information about applications grouped by both application and user status.
+        /// </summary>
+        /// <param name="jobId">The job ID.</param>
+        /// <returns>A sequence of anonymous objects with four properies (<c>IsUserStatus</c>, <c>Url</c>, <c>Count</c>, and <c>Status</c>)</returns>
         protected IEnumerable<object> GetApplicationStatusLinks(int jobId)
         {
             var applicationStatusMap = ApplicationStatus.GetStatuses(this.PortalId).ToDictionary(status => status.StatusId);
