@@ -11,7 +11,7 @@
         AutoGenerateColumns="false" 
         CssClass="Normal Engage_RadGrid" Skin="Simple"
         ExportSettings-IgnorePaging="true" ExportSettings-HideStructureColumns="true" ExportSettings-OpenInNewWindow="true">
-        <MasterTableView DataKeyNames="JobId" CommandItemDisplay="TopAndBottom">
+        <MasterTableView DataKeyNames="JobId" CommandItemDisplay="Top">
             <CommandItemSettings ShowExportToExcelButton="true" ShowExportToCsvButton="true" />
             <Columns>
                 <telerik:GridBoundColumn Display="false" DataField="JobId" UniqueName="JobId" ItemStyle-CssClass="jobIdColumn" />

@@ -614,6 +614,19 @@ namespace Engage.Dnn.Employment.Admin
                 commandItem.FindControl("RefreshButton").Visible = false;
                 commandItem.FindControl("RebindGridButton").Visible = false;
 
+                string tableHeaderResourceKey;
+                if (commandItem.OwnerTableView == this.JobsGrid.MasterTableView)
+                {
+                    tableHeaderResourceKey = "JobsTableHeader";
+                }
+                else
+                {
+                    tableHeaderResourceKey = "ApplicationsTableHeader";
+                }
+
+                var leftColumn = commandItem.FindControl("AddNewRecordButton").Parent;
+                leftColumn.Controls.Add(new Literal { Text = this.Localize(tableHeaderResourceKey) });
+
                 // from http://www.telerik.com/help/aspnet-ajax/grdexportwithajax.html
                 AJAX.RegisterPostBackControl(commandItem.FindControl("ExportToExcelButton"));
                 AJAX.RegisterPostBackControl(commandItem.FindControl("ExportToCsvButton"));

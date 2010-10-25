@@ -292,4 +292,10 @@
 {3} is replaced by region name, 
 {4} is replaced by region abbreviation</comment>
   </data>
+  <data name="ApplicationsTableHeader.Text" xml:space="preserve">
+    <value>&lt;h5&gt;Applications&lt;/h5&gt;</value>
+  </data>
+  <data name="JobsTableHeader.Text" xml:space="preserve">
+    <value>&lt;h5&gt;Jobs&lt;/h5&gt;</value>
+  </data>
 </root>
