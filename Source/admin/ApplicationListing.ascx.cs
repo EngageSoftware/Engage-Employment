@@ -17,6 +17,8 @@ namespace Engage.Dnn.Employment.Admin
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
+    using System.Web;
     using System.Web.UI.WebControls;
     using Data;
     using DotNetNuke.Common;
@@ -61,6 +63,12 @@ namespace Engage.Dnn.Employment.Admin
         /// Backing field for <see cref="UserStatusId"/>
         /// </summary>
         private int? userStatusId;
+
+        /// <summary>
+        /// The type of export (one of <see cref="RadGrid.ExportToCsvCommandName"/> or <see cref="RadGrid.ExportToExcelCommandName"/>), 
+        /// or <c>null</c> if no export is occurring
+        /// </summary>
+        private string exportType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationListing"/> class.
@@ -576,6 +584,70 @@ namespace Engage.Dnn.Employment.Admin
                 {
                     ((Label)pagerItem.FindControl("ChangePageSizeLabel")).Text = this.Localize("Change Page Size Label.Text");
                 }
+                else
+                {
+                    var dataItem = e.Item as GridDataItem;
+                    if (dataItem != null)
+                    {
+                        if (e.Item.OwnerTableView != this.JobsGrid.MasterTableView)
+                        {
+                            var isHtmlFormat = this.exportType != RadGrid.ExportToCsvCommandName;
+                            var applicationId = (int)dataItem.GetDataKeyValue("ApplicationId");
+
+                            var documentsTextBuilder = new StringBuilder();
+                            if (isHtmlFormat)
+                            {
+                                documentsTextBuilder.Append("<ul>");
+                            }
+
+                            var documentsTable = GetApplicationDocuments(applicationId);
+                            foreach (DataRow documentRow in documentsTable.Rows)
+                            {
+                                var documentType = this.GetDocumentTypeText((int)documentRow["DocumentTypeId"]);
+                                var documentUrl = this.GetDocumentUrl((int)documentRow["DocumentId"]);
+                                documentsTextBuilder.AppendFormat(
+                                    CultureInfo.CurrentCulture,
+                                    isHtmlFormat ? "<li><a href=\"{1}\" target=\"_blank\">{0}</a></li>" : "{0}: {1}{2}",
+                                    isHtmlFormat ? HttpUtility.HtmlEncode(documentType) : documentType,
+                                    isHtmlFormat ? HttpUtility.HtmlEncode(documentUrl) : documentUrl,
+                                    Environment.NewLine);
+                            }
+
+                            if (isHtmlFormat)
+                            {
+                                documentsTextBuilder.Append("</ul>");
+                            }
+
+                            var documentsCell = dataItem["Documents"];
+                            documentsCell.Text = documentsTextBuilder.ToString();
+
+                            var propertiesTextBuilder = new StringBuilder();
+                            if (isHtmlFormat)
+                            {
+                                propertiesTextBuilder.Append("<ul>");
+                            }
+
+                            var propertiesTable = GetApplicationProperties(applicationId);
+                            foreach (DataRow propertyRow in propertiesTable.Rows)
+                            {
+                                var leadText = GetLeadText(propertyRow["PropertyValue"] as string);
+                                propertiesTextBuilder.AppendFormat(
+                                    CultureInfo.CurrentCulture,
+                                    isHtmlFormat ? "<li>{0}</li>" : "{0}{1}",
+                                    isHtmlFormat ? HttpUtility.HtmlEncode(leadText) : leadText,
+                                    Environment.NewLine);
+                            }
+
+                            if (isHtmlFormat)
+                            {
+                                propertiesTextBuilder.Append("</ul>");
+                            }
+
+                            var propertiesCell = dataItem["Properties"];
+                            propertiesCell.Text = propertiesTextBuilder.ToString();
+                        }
+                    }
+                }
             }
         }
 
@@ -591,6 +663,9 @@ namespace Engage.Dnn.Employment.Admin
                 return;
             }
 
+            this.exportType = e.CommandName;
+            this.JobsGrid.ExportSettings.ExportOnlyData = e.CommandName == RadGrid.ExportToExcelCommandName;
+
             var exportingTable = e.Item.OwnerTableView;
             exportingTable.PageSize = exportingTable.VirtualItemCount;
             if (exportingTable == this.JobsGrid.MasterTableView)
@@ -605,8 +680,6 @@ namespace Engage.Dnn.Employment.Admin
                 exportingTable.Columns.FindByUniqueName("Export-UserStatus").Visible = true;
                 exportingTable.Columns.FindByUniqueName("Export-ApplicationStatus").Visible = true;
                 exportingTable.Columns.FindByUniqueName("Export-Message").Visible = true;
-                exportingTable.Columns.FindByUniqueName("Properties").Visible = false;
-                exportingTable.Columns.FindByUniqueName("Documents").Visible = false;
                 exportingTable.Columns.FindByUniqueName("ApplicationStatus").Visible = false;
 
                 var job = Job.Load((int)exportingTable.ParentItem.GetDataKeyValue("JobId"));

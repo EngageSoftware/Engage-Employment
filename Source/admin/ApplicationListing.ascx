@@ -10,7 +10,7 @@
         AllowPaging="true" AllowCustomPaging="true" PageSize="10" 
         AutoGenerateColumns="false" 
         CssClass="Normal Engage_RadGrid" Skin="Simple"
-        ExportSettings-IgnorePaging="true" ExportSettings-ExportOnlyData="false" ExportSettings-HideStructureColumns="true" ExportSettings-OpenInNewWindow="true">
+        ExportSettings-IgnorePaging="true" ExportSettings-HideStructureColumns="true" ExportSettings-OpenInNewWindow="true">
         <MasterTableView DataKeyNames="JobId" CommandItemDisplay="TopAndBottom">
             <CommandItemSettings ShowExportToExcelButton="true" ShowExportToCsvButton="true" />
             <Columns>
@@ -57,32 +57,8 @@
                         </telerik:GridTemplateColumn>
                         <telerik:GridBoundColumn DataField="AppliedForDate" DataFormatString="{0:d}" HeaderText="DateAppliedHeaderLabel" ItemStyle-CssClass="dateAppliedColumn" />
                         <telerik:GridBoundColumn DataField="SalaryRequirement" HeaderText="SalaryHeaderLabel" ItemStyle-CssClass="salaryColumn" />
-                        <telerik:GridTemplateColumn UniqueName="Properties" HeaderText="LeadHeaderLabel" ItemStyle-CssClass="leadColumn">
-                            <ItemTemplate>
-                                <asp:Repeater runat="server" DataSource='<%# GetApplicationProperties((int)Eval("ApplicationId")) %>'>
-                                    <HeaderTemplate><ul></HeaderTemplate>
-                                    <ItemTemplate>
-                                        <li><%# HttpUtility.HtmlEncode(GetLeadText(Eval("PropertyValue") as string)) %></li>
-                                    </ItemTemplate>
-                                    <FooterTemplate></ul></FooterTemplate>
-                                </asp:Repeater>
-                            </ItemTemplate>
-                        </telerik:GridTemplateColumn>
-                        <telerik:GridTemplateColumn UniqueName="Documents" HeaderText="ViewHeaderLabel" ItemStyle-CssClass="documentsColumn">
-                            <ItemTemplate>
-                                <asp:Repeater runat="server" DataSource='<%# GetApplicationDocuments((int)Eval("ApplicationId")) %>'>
-                                    <HeaderTemplate><ul></HeaderTemplate>
-                                    <ItemTemplate>
-                                        <li>
-                                            <asp:HyperLink runat="server" Target="_blank" NavigateUrl='<%#GetDocumentUrl((int)this.Eval("DocumentId")) %>'>
-                                                <%# HttpUtility.HtmlEncode(GetDocumentTypeText((int)this.Eval("DocumentTypeId"))) %>
-                                            </asp:HyperLink>
-                                        </li>
-                                    </ItemTemplate>
-                                    <FooterTemplate></ul></FooterTemplate>
-                                </asp:Repeater>
-                            </ItemTemplate>
-                        </telerik:GridTemplateColumn>
+                        <telerik:GridTemplateColumn UniqueName="Properties" HeaderText="LeadHeaderLabel" ItemStyle-CssClass="leadColumn" />
+                        <telerik:GridTemplateColumn UniqueName="Documents" HeaderText="ViewHeaderLabel" ItemStyle-CssClass="documentsColumn" />
                         <telerik:GridTemplateColumn UniqueName="ApplicationStatus" HeaderText="StatusHeaderLabel" ItemStyle-CssClass="statusColumn">
                             <ItemTemplate>
                                 <asp:DropDownList runat="server" 
