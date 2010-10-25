@@ -40,7 +40,7 @@
                         <telerik:GridTemplateColumn SortExpression="DisplayName" HeaderText="ApplicantHeaderLabel" ItemStyle-CssClass="applicantColumn">
                             <ItemTemplate>
                                 <%# HttpUtility.HtmlEncode(GetUserName(Eval("UserId") as int?)) %>
-                                <asp:DropDownList runat="server" 
+                                <asp:DropDownList runat="server"
                                     CssClass="NormalTextBox" 
                                     Visible='<%# !this.IsExport && this.ShowUserStatuses(this.Eval("UserId") as int?) %>'
                                     AutoPostBack="true" OnSelectedIndexChanged="UserStatusDropDownList_SelectedIndexChanged" 
@@ -61,14 +61,14 @@
                         <telerik:GridTemplateColumn UniqueName="Documents" HeaderText="ViewHeaderLabel" ItemStyle-CssClass="documentsColumn" />
                         <telerik:GridTemplateColumn UniqueName="ApplicationStatus" HeaderText="StatusHeaderLabel" ItemStyle-CssClass="statusColumn">
                             <ItemTemplate>
-                                <asp:DropDownList runat="server" 
+                                <asp:DropDownList runat="server"
                                     CssClass="NormalTextBox" 
                                     Visible='<%# this.ShowApplicationStatuses() %>'
                                     AutoPostBack="true" OnSelectedIndexChanged="ApplicationStatusDropDownList_SelectedIndexChanged" 
                                     DataSource="<%# this.ApplicationStatuses %>"
                                     DataTextField="Text"
                                     DataValueField="Value"
-                                    SelectedValue='<%# Eval("StatusId") %>' />
+                                    SelectedValue='<%# Eval("StatusId") ?? string.Empty %>' />
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                         <telerik:GridTemplateColumn HeaderText="StatusHeaderLabel" UniqueName="Export-ApplicationStatus" Visible="false">

@@ -156,10 +156,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             get 
             {
-                if (this.applicationStatuses.Any())
-                {
-                    yield return new ListItem(this.Localize("NoApplicationStatus"), string.Empty);
-                }
+                yield return new ListItem(this.Localize("NoApplicationStatus"), string.Empty);
 
                 foreach (var applicationStatus in this.applicationStatuses)
                 {
@@ -176,10 +173,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             get
             {
-                if (this.userStatuses.Any())
-                {
-                    yield return new ListItem(this.Localize("NoStatus.Text"), string.Empty);
-                }
+                yield return new ListItem(this.Localize("NoStatus.Text"), string.Empty);
 
                 foreach (var userStatus in this.userStatuses)
                 {
@@ -703,6 +697,7 @@ namespace Engage.Dnn.Employment.Admin
             var parentJobId = (int)parentRow.GetDataKeyValue("JobId");
 
             e.DetailTableView.ExpandCollapseColumn.Display = false;
+            e.DetailTableView.Columns.FindByUniqueName("ApplicationStatus").Visible = this.ShowApplicationStatuses();
 
             var userIds = this.UserStatusId.HasValue
                               ? UserStatus.GetUsersWithStatus(this.PortalSettings, this.UserStatusId.Value).Select(user => user.UserID)

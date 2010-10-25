@@ -130,7 +130,7 @@
     <value>Job Title</value>
   </data>
   <data name="DateAppliedHeaderLabel.Text" xml:space="preserve">
-    <value>Date Applied</value>
+    <value>Date</value>
   </data>
   <data name="ApplicantHeaderLabel.Text" xml:space="preserve">
     <value>Applicant</value>

@@ -345,7 +345,7 @@ list-style-type:none;
 .manageApplications .Engage_RadGrid .rgCollapse{background: url(images/plus-minus-icn.png) no-repeat bottom;}
 /*Row Cleanup*/
 .manageApplications .Engage_RadGrid .rgRow td, .manageApplications .Engage_RadGrid .rgAltRow td, .manageApplications .Engage_RadGrid .rgEditRow td, .manageApplications .Engage_RadGrid .rgFooter td, .manageApplications .Engage_RadGrid .rgRow .rgSorted,  .manageApplications .Engage_RadGrid .rgAltRow .rgSorted {border: none; border-top: 1px solid #C9C9C9;}
-.manageApplications .Engage_RadGrid .rgAltRow{background: #f2f2f2;}
+.manageApplications .Engage_RadGrid .rgAltRow, .manageApplications .Engage_RadGrid .rgDetailTable .rgAltRow+tr{background: #f2f2f2;}
 .manageApplications .Engage_RadGrid .rgActiveRow, .manageApplications .Engage_RadGrid .rgHoveredRow, .manageApplications .Engage_RadGrid .rgSelectedRow {background: #f6fcfe;}
 /*Paging*/
 .manageApplications .Engage_RadGrid .rgPager{background: none;}
