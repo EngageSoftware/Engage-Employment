@@ -79,10 +79,10 @@
                         <telerik:GridBoundColumn HeaderText="MessageHeaderLabel" UniqueName="Export-Message" DataField="Message" Visible="false" />
                     </Columns>
                     <NestedViewTemplate>
-                        <asp:PlaceHolder runat="server" Visible="<%# !IsExport %>">
+                        <asp:Panel runat="server" CssClass="applicationMessage" Visible="<%# !IsExport %>">
                             <asp:Label runat="server" ID="MessageHeaderLabel" CssClass="NormalBold" resourcekey="MessageHeaderLabel" />
                             <%# HttpUtility.HtmlEncode((string)Eval("Message")) %>
-                        </asp:PlaceHolder>
+                        </asp:Panel>
                     </NestedViewTemplate>
                     <NoRecordsTemplate>
                             <%= AreApplicationsFiltered ? Localize("No Applications After Filter.Text") : Localize("No Applications.Text") %>
