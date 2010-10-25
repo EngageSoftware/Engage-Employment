@@ -423,7 +423,7 @@ namespace Engage.Dnn.Employment
             return jobs.AsReadOnly();
         }
 
-        public static ReadOnlyCollection<Job> LoadAll(int? jobGroupId, int portalId, int pageIndex, int pageSize, out int totalCount)
+        public static ReadOnlyCollection<Job> LoadAll(int? jobGroupId, int portalId, int pageIndex, int? pageSize, out int totalCount)
         {
             var jobs = new List<Job>();
             using (IDataReader dr = DataProvider.Instance().GetJobs(jobGroupId, portalId, pageIndex, pageSize, out totalCount))

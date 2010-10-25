@@ -592,7 +592,12 @@ namespace Engage.Dnn.Employment.Admin
             else
             {
                 int totalJobCount;
-                this.JobsGrid.DataSource = Job.LoadAll(this.JobGroupId, this.PortalId, this.JobsGrid.CurrentPageIndex, this.JobsGrid.PageSize, out totalJobCount);
+                this.JobsGrid.DataSource = Job.LoadAll(
+                    this.JobGroupId,
+                    this.PortalId,
+                    this.JobsGrid.CurrentPageIndex,
+                    this.IsExport ? (int?)null : this.JobsGrid.PageSize,
+                    out totalJobCount);
                 this.JobsGrid.VirtualItemCount = totalJobCount;
             }
 
@@ -661,7 +666,6 @@ namespace Engage.Dnn.Employment.Admin
             this.JobsGrid.ExportSettings.ExportOnlyData = e.CommandName == RadGrid.ExportToExcelCommandName;
 
             var exportingTable = e.Item.OwnerTableView;
-            exportingTable.PageSize = exportingTable.VirtualItemCount;
             if (exportingTable == this.JobsGrid.MasterTableView)
             {
                 exportingTable.Columns.FindByUniqueName("Export-Title").Visible = true;
@@ -711,7 +715,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.ApplicationStatusId,
                 userIds,
                 e.DetailTableView.CurrentPageIndex, 
-                e.DetailTableView.PageSize, 
+                this.IsExport ? (int?)null : e.DetailTableView.PageSize, 
                 out unpagedApplicationCount);
             e.DetailTableView.VirtualItemCount = unpagedApplicationCount;
         }
