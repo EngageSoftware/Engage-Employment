@@ -34,7 +34,7 @@
                 <telerik:GridTableView runat="server" 
                     DataKeyNames="UserId,ApplicationId"
                     HierarchyDefaultExpanded="true"
-                    CommandItemDisplay="TopAndBottom" CommandItemSettings-ShowExportToCsvButton="true" CommandItemSettings-ShowExportToExcelButton="true">
+                    CommandItemDisplay="Top" CommandItemSettings-ShowExportToCsvButton="true" CommandItemSettings-ShowExportToExcelButton="true">
                     <Columns>
                         <telerik:GridBoundColumn Display="false" DataField="UserId" UniqueName="UserId" ItemStyle-CssClass="userIdColumn" />
                         <telerik:GridTemplateColumn SortExpression="DisplayName" HeaderText="ApplicantHeaderLabel" ItemStyle-CssClass="applicantColumn">

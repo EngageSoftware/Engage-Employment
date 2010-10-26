@@ -428,12 +428,12 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="userId">The ID of the user, or <c>null</c> for an anonymous user.</param>
         /// <returns>
-        /// <c>true</c> if the user status drop down should be shown; otherwise, <c>false</c>
+        /// <c>true</c> if the user status drop down should be shown for the user; otherwise, <c>false</c>
         /// </returns>
         protected bool ShowUserStatuses(int? userId)
         {
             // not anonymous, we are using user statuses on this portal
-            if (!userId.HasValue || !this.userStatuses.Any())
+            if (!userId.HasValue || !this.ShowUserStatuses())
             {
                 return false;
             }
@@ -678,24 +678,25 @@ namespace Engage.Dnn.Employment.Admin
                 exportingTable.Columns.FindByUniqueName("Export-Title").Visible = true;
                 exportingTable.Columns.FindByUniqueName("Title").Visible = false;
 
-                this.JobsGrid.ExportSettings.FileName = string.Format(CultureInfo.CurrentCulture, this.Localize("Jobs Export FileName.Format"), DateTime.Now);
+                this.SetExportFileName(string.Format(CultureInfo.CurrentCulture, this.Localize("Jobs Export FileName.Format"), DateTime.Now));
             }
             else
             {
-                exportingTable.Columns.FindByUniqueName("Export-UserStatus").Visible = true;
-                exportingTable.Columns.FindByUniqueName("Export-ApplicationStatus").Visible = true;
+                exportingTable.Columns.FindByUniqueName("Export-UserStatus").Visible = this.ShowUserStatuses();
+                exportingTable.Columns.FindByUniqueName("Export-ApplicationStatus").Visible = this.ShowApplicationStatuses();
                 exportingTable.Columns.FindByUniqueName("Export-Message").Visible = true;
                 exportingTable.Columns.FindByUniqueName("ApplicationStatus").Visible = false;
 
                 var job = Job.Load((int)exportingTable.ParentItem.GetDataKeyValue("JobId"));
-                this.JobsGrid.ExportSettings.FileName = string.Format(
-                    CultureInfo.CurrentCulture,
-                    this.Localize("Applications Export FileName.Format"),
-                    DateTime.Now,
-                    job.Title,
-                    job.LocationName,
-                    job.StateName,
-                    job.StateAbbreviation);
+                this.SetExportFileName(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        this.Localize("Applications Export FileName.Format"),
+                        DateTime.Now,
+                        job.Title,
+                        job.LocationName,
+                        job.StateName,
+                        job.StateAbbreviation));
             }
         }
 
@@ -820,6 +821,32 @@ namespace Engage.Dnn.Employment.Admin
             {
                 column.HeaderText = this.Localize(column.HeaderText);
             }
+        }
+
+        /// <summary>
+        /// Whether to show the user status drop down for any user
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the user status drop down should be shown; otherwise, <c>false</c>
+        /// </returns>
+        private bool ShowUserStatuses()
+        {
+            return this.userStatuses.Any();
+        }
+
+        /// <summary>
+        /// Sets the filename of the exported file.
+        /// </summary>
+        /// <param name="fileName">The name of the file.</param>
+        private void SetExportFileName(string fileName)
+        {
+            const int MaxFileNameLength = 150;
+            if (fileName.Length > MaxFileNameLength)
+            {
+                fileName = fileName.Substring(0, MaxFileNameLength);
+            }
+
+            this.JobsGrid.ExportSettings.FileName = fileName;
         }
     }
 }
