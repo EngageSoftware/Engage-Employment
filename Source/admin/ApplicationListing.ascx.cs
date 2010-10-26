@@ -697,6 +697,8 @@ namespace Engage.Dnn.Employment.Admin
                         job.LocationName,
                         job.StateName,
                         job.StateAbbreviation));
+
+                exportingTable.Rebind();
             }
         }
 
