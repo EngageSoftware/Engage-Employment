@@ -590,7 +590,7 @@ namespace Engage.Dnn.Employment.Admin
                     this.JobGroupId,
                     this.PortalId,
                     this.JobsGrid.CurrentPageIndex,
-                    this.IsExport ? (int?)null : this.JobsGrid.PageSize,
+                    this.IsExport ? (int?)null : this.JobsGrid.MasterTableView.PageSize,
                     out totalJobCount);
                 this.JobsGrid.VirtualItemCount = totalJobCount;
             }
