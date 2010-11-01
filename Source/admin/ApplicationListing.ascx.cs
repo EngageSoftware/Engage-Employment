@@ -50,6 +50,11 @@ namespace Engage.Dnn.Employment.Admin
         private readonly List<UserStatus> userStatuses;
 
         /// <summary>
+        /// The list of leads
+        /// </summary>
+        private readonly Dictionary<int, ListEntryInfo> leadsList;
+
+        /// <summary>
         /// Backing field for <see cref="JobId"/>
         /// </summary>
         private int? jobId;
@@ -77,6 +82,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             this.userStatuses = UserStatus.LoadStatuses(this.PortalId);
             this.applicationStatuses = ApplicationStatus.GetStatuses(this.PortalId);
+            this.leadsList = (new ListController()).GetListEntryInfoCollection(Employment.Utility.LeadListName).Cast<ListEntryInfo>().ToDictionary(entry => entry.EntryID);
         }
 
         /// <summary>
@@ -284,23 +290,6 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Gets the text for the lead entry with the given ID.
-        /// </summary>
-        /// <param name="leadIdValue">The ID of the list entry for the lead to display.</param>
-        /// <returns>The display text for the lead</returns>
-        protected static string GetLeadText(string leadIdValue)
-        {
-            int leadId;
-            if (!int.TryParse(leadIdValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out leadId))
-            {
-                return string.Empty;
-            }
-
-            var leadListEntry = (new ListController()).GetListEntryInfo(leadId);
-            return leadListEntry.Text;
-        }
-
-        /// <summary>
         /// Gets the ID of the user who submitted this application, or <see cref="string.Empty"/> if the user is anonymous.
         /// </summary>
         /// <param name="userId">The user ID.</param>
@@ -314,6 +303,23 @@ namespace Engage.Dnn.Employment.Admin
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the text for the lead entry with the given ID.
+        /// </summary>
+        /// <param name="leadIdValue">The ID of the list entry for the lead to display.</param>
+        /// <returns>The display text for the lead</returns>
+        protected string GetLeadText(string leadIdValue)
+        {
+            int leadId;
+            if (!int.TryParse(leadIdValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out leadId))
+            {
+                return string.Empty;
+            }
+
+            var leadListEntry = this.leadsList[leadId];
+            return leadListEntry.Text;
         }
 
         /// <summary>
@@ -540,7 +546,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="gridRow">The data item for the row in the grid being renderd.</param>
         /// <param name="isHtmlFormat">if set to <c>true</c> renders HTML; otherwise, renders plain text.</param>
         /// <param name="applicationId">The ID of the application.</param>
-        private static void RenderPropertiesCell(GridDataItem gridRow, bool isHtmlFormat, int applicationId)
+        private void RenderPropertiesCell(GridDataItem gridRow, bool isHtmlFormat, int applicationId)
         {
             var propertiesTextBuilder = new StringBuilder();
             if (isHtmlFormat)
@@ -551,7 +557,7 @@ namespace Engage.Dnn.Employment.Admin
             var propertiesTable = GetApplicationProperties(applicationId);
             foreach (DataRow propertyRow in propertiesTable.Rows)
             {
-                var leadText = GetLeadText(propertyRow["PropertyValue"] as string);
+                var leadText = this.GetLeadText(propertyRow["PropertyValue"] as string);
                 propertiesTextBuilder.AppendFormat(
                     CultureInfo.CurrentCulture,
                     isHtmlFormat ? "<li>{0}</li>" : "{0}{1}",
@@ -650,7 +656,7 @@ namespace Engage.Dnn.Employment.Admin
                             var applicationId = (int)dataItem.GetDataKeyValue("ApplicationId");
 
                             this.RenderDocumentsCell(dataItem, isHtmlFormat, applicationId);
-                            RenderPropertiesCell(dataItem, isHtmlFormat, applicationId);
+                            this.RenderPropertiesCell(dataItem, isHtmlFormat, applicationId);
                         }
                     }
                 }
