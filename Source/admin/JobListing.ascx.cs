@@ -46,6 +46,10 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private DataTable applicationUsersTable;
 
+        private Dictionary<int, ApplicationStatus> applicationStatusMap;
+        private Dictionary<int, UserStatus> userStatusMap;
+
+
         /// <summary>
         /// Gets the list of <see cref="ModuleAction"/>s to be displayed for this control.
         /// </summary>
@@ -174,7 +178,6 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>A sequence of anonymous objects with four properies (<c>IsUserStatus</c>, <c>Url</c>, <c>Count</c>, and <c>Status</c>)</returns>
         protected IEnumerable<object> GetApplicationStatusLinks(int jobId)
         {
-            var applicationStatusMap = ApplicationStatus.GetStatuses(this.PortalId).ToDictionary(status => status.StatusId);
             foreach (var statusRow in from DataRow row in this.applicationStatusTable.Rows
                                       where (int)row["JobId"] == jobId
                                       select new
@@ -185,7 +188,7 @@ namespace Engage.Dnn.Employment.Admin
                                           })
             {
                 ApplicationStatus status;
-                if (!applicationStatusMap.TryGetValue(statusRow.StatusId, out status))
+                if (!this.applicationStatusMap.TryGetValue(statusRow.StatusId, out status))
                 {
                     continue;
                 }
@@ -202,31 +205,13 @@ namespace Engage.Dnn.Employment.Admin
                         Status = status.StatusName
                     };
             }
-
-            var statusMap = UserStatus.LoadStatuses(this.PortalId).ToDictionary(status => status.StatusId);
-            var userStatusMap = this.applicationUsersTable.Rows.Cast<DataRow>()
-                                    .Select(row => (int)row["UserId"])
-                                    .Distinct()
-                                    .ToDictionary(
-                                        userId => userId,
-                                        userId =>
-                                            {
-                                                UserStatus status;
-                                                var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId);
-                                                if (statusId.HasValue && statusMap.TryGetValue(statusId.Value, out status))
-                                                {
-                                                    return status;
-                                                }
-
-                                                return null;
-                                            });
-
+            
             foreach (var statusGrouping in this.applicationUsersTable.Rows.Cast<DataRow>()
                                             .Where(row => (int)row["JobId"] == jobId)
                                             .Select(row =>
                                                 {
                                                     UserStatus status;
-                                                    if (userStatusMap.TryGetValue((int)row["UserId"], out status))
+                                                    if (this.userStatusMap.TryGetValue((int)row["UserId"], out status))
                                                     {
                                                         return status;
                                                     }
@@ -249,6 +234,7 @@ namespace Engage.Dnn.Employment.Admin
                         Status = statusGrouping.Key.Status
                     };
             }
+            
         }
 
         /// <summary>
@@ -333,6 +319,8 @@ namespace Engage.Dnn.Employment.Admin
             this.applicationStatusTable = adminData.Tables["ApplicationStatuses"];
             this.applicationUsersTable = adminData.Tables["Users"];
 
+            this.InitializeStatusMaps();
+
             this.JobsGrid.DataSource = adminData.Tables["Jobs"];
             this.JobsGrid.DataBind();
 
@@ -350,6 +338,32 @@ namespace Engage.Dnn.Employment.Admin
                 this.EmptyLocationRepeater.DataSource = unusedData.Tables["Locations"];
                 this.EmptyLocationRepeater.DataBind();
             }
+        }
+
+        /// <summary>
+        /// Creates the <see cref="applicationStatusMap"/> and <see cref="userStatusMap"/>.
+        /// </summary>
+        private void InitializeStatusMaps()
+        {
+            this.applicationStatusMap = ApplicationStatus.GetStatuses(this.PortalId).ToDictionary(status => status.StatusId);
+            
+            var statusMap = UserStatus.LoadStatuses(this.PortalId).ToDictionary(status => status.StatusId);
+            this.userStatusMap = this.applicationUsersTable.Rows.Cast<DataRow>()
+                .Select(row => (int)row["UserId"])
+                .Distinct()
+                .ToDictionary(
+                    userId => userId,
+                    userId =>
+                        {
+                            UserStatus status;
+                            var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId);
+                            if (statusId.HasValue && statusMap.TryGetValue(statusId.Value, out status))
+                            {
+                                return status;
+                            }
+
+                            return null;
+                        });
         }
 
         /// <summary>
