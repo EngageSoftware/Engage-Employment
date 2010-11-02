@@ -12,8 +12,10 @@
 
 namespace Engage.Dnn.Employment
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
 
     using Engage.Dnn.Employment.Data;
 
@@ -49,18 +51,13 @@ namespace Engage.Dnn.Employment
 
         public static List<Document> GetDocuments(int applicationId)
         {
-            var documents = new List<Document>();
             var dt = DataProvider.Instance().GetApplicationDocuments(applicationId);
+            return FillDocuments(dt.Rows.Cast<DataRow>());
+        }
 
-            if (dt != null)
-            {
-                for (var i = 0; i < dt.Rows.Count; i++)
-                {
-                    documents.Add(FillDocument(dt.Rows[i]));
-                }
-            }
-
-            return documents;
+        public static List<Document> FillDocuments(IEnumerable<DataRow> documentRows)
+        {
+            return documentRows.Select(row => FillDocument(row)).ToList();
         }
 
         private static Document FillDocument(DataRow dr)

@@ -11,8 +11,6 @@
 
 namespace Engage.Dnn.Employment
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -20,10 +18,9 @@ namespace Engage.Dnn.Employment
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
 
     using Engage.Dnn.Employment.Data;
-
-    #endregion
 
     /// <summary>
     /// An application for a job opening
@@ -35,6 +32,18 @@ namespace Engage.Dnn.Employment
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Job job;
+
+        /// <summary>
+        /// Backing field for <see cref="GetDocuments"/>
+        /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private List<Document> documents;
+
+        /// <summary>
+        /// Backing field for <see cref="GetApplicationProperties"/>
+        /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Dictionary<string, string> applicationProperties;
 
         /// <summary>
         /// Prevents a default instance of the JobApplication class from being created
@@ -52,7 +61,15 @@ namespace Engage.Dnn.Employment
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called only via Eval()")]
         public Job Job
         {
-            get { return this.job ?? (this.job = Job.Load(this.JobId)); }
+            get
+            {
+                if (this.job == null)
+                {
+                    this.job = Job.Load(this.JobId);
+                }
+
+                return this.job;
+            }
         }
 
         public int JobId { get; private set; }
@@ -143,18 +160,24 @@ namespace Engage.Dnn.Employment
             return null;
         }
 
-        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount)
+        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
         {
-            var applications = new List<JobApplication>();
-            using (IDataReader dr = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, applicationStatusId, userIds, pageIndex, pageSize, out unpagedCount))
+            using (var applicationsDataSet = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, applicationStatusId, userIds, pageIndex, pageSize, out unpagedCount, fillDocumentsAndProperties))
             {
-                while (dr.Read())
-                {
-                    applications.Add(FillApplication(dr));
-                }
-            }
+                var documentsRelation = applicationsDataSet.Relations.Add(
+                    applicationsDataSet.Tables["Applications"].Columns["ApplicationId"],
+                    applicationsDataSet.Tables["Documents"].Columns["ApplicationId"]);
+                var propertiesRelation = applicationsDataSet.Relations.Add(
+                    applicationsDataSet.Tables["Applications"].Columns["ApplicationId"],
+                    applicationsDataSet.Tables["Properties"].Columns["ApplicationId"]);
 
-            return applications.AsReadOnly();
+                return (from DataRow applicationRow in applicationsDataSet.Tables["Applications"].Rows
+                        select
+                            FillApplication(
+                                applicationRow,
+                                fillDocumentsAndProperties ? applicationRow.GetChildRows(documentsRelation) : null,
+                                fillDocumentsAndProperties ? applicationRow.GetChildRows(propertiesRelation) : null)).ToList().AsReadOnly();
+            }
         }
 
         public static int UpdateApplication(
@@ -198,20 +221,13 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of the properties for this application</returns>
         public Dictionary<string, string> GetApplicationProperties()
         {
-            var properties = new Dictionary<string, string>();
-            DataTable dt = DataProvider.Instance().GetApplicationProperties(this.ApplicationId);
-
-            if (dt != null)
+            if (this.applicationProperties == null)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    DataRow row = dt.Rows[i];
-                    string propertyValue = row["PropertyValue"] is DBNull ? string.Empty : (string)row["PropertyValue"];
-                    properties.Add((string)row["PropertyName"], propertyValue);
-                }
+                var applicationPropertiesTable = DataProvider.Instance().GetApplicationProperties(this.ApplicationId);
+                this.SetApplicationProperties(applicationPropertiesTable.Rows.Cast<DataRow>());
             }
 
-            return properties;
+            return this.applicationProperties;
         }
 
         /// <summary>
@@ -220,7 +236,12 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of the <see cref="Document"/>s for this application</returns>
         public List<Document> GetDocuments()
         {
-            return Document.GetDocuments(this.ApplicationId);
+            if (this.documents == null)
+            {
+                this.documents = Document.GetDocuments(this.ApplicationId);
+            }
+
+            return this.documents;
         }
 
         /// <summary>
@@ -248,6 +269,28 @@ namespace Engage.Dnn.Employment
             return jobApplication;
         }
 
+        private static JobApplication FillApplication(DataRow applicationRow, DataRow[] documentRows, DataRow[] propertyRows)
+        {
+            var jobApplication = new JobApplication
+                {
+                    ApplicationId = (int)applicationRow["ApplicationId"],
+                    JobId = (int)applicationRow["JobId"],
+                    UserId = applicationRow["UserId"] as int?,
+                    AppliedForDate = (DateTime)applicationRow["AppliedDate"],
+                    SalaryRequirement = applicationRow["SalaryRequirement"] as string,
+                    Message = applicationRow["Message"] as string,
+                    StatusId = applicationRow["StatusId"] as int?
+                };
+
+            if (documentRows != null && propertyRows != null)
+            {
+                jobApplication.SetDocuments(documentRows);
+                jobApplication.SetApplicationProperties(propertyRows);
+            }
+
+            return jobApplication;
+        }
+
         private static int InsertResume(int applicationId, int? userId, string fileName, string resumeType, byte[] resume)
         {
             int resumeId;
@@ -263,6 +306,26 @@ namespace Engage.Dnn.Employment
             }
 
             return resumeId;
+        }
+
+        /// <summary>
+        /// Sets the list of the <see cref="applicationProperties"/> for this application.  Presently, this should only be Lead.
+        /// </summary>
+        /// <param name="propertyRows">The rows for each application property for this application.</param>
+        private void SetApplicationProperties(IEnumerable<DataRow> propertyRows)
+        {
+            this.applicationProperties = propertyRows.ToDictionary(
+                row => (string)row["PropertyName"], 
+                row => row["PropertyValue"] is DBNull ? string.Empty : (string)row["PropertyValue"]);
+        }
+
+        /// <summary>
+        /// Sets the list of <see cref="documents"/> for this application (i.e. the application's resume and [optional] cover letter).
+        /// </summary>
+        /// <param name="documentRows">The rows for each document related to this application.</param>
+        private void SetDocuments(IEnumerable<DataRow> documentRows)
+        {
+            this.documents = Document.FillDocuments(documentRows);
         }
     }
 }

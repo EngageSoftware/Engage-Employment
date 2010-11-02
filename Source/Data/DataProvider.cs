@@ -142,7 +142,7 @@ namespace Engage.Dnn.Employment.Data
 
         public abstract DataTable GetApplications(int? jobGroupId, int portalId);
 
-        public abstract IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount);
+        public abstract DataSet GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties);
 
         #endregion
 

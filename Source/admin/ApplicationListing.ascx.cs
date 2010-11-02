@@ -468,6 +468,7 @@ namespace Engage.Dnn.Employment.Admin
             this.JobsGrid.NeedDataSource += this.JobsGrid_NeedDataSource;
             this.JobsGrid.ItemCreated += this.JobsGrid_ItemCreated;
             this.JobsGrid.ItemCommand += this.JobsGrid_ItemCommand;
+            this.JobsGrid.ItemDataBound += this.JobsGrid_ItemDataBound;
             this.JobsGrid.DetailTableDataBind += this.JobsGrid_DetailTableDataBind;
 
             try
@@ -541,40 +542,6 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Renders the properties/lead cell for a particular application.
-        /// </summary>
-        /// <param name="gridRow">The data item for the row in the grid being renderd.</param>
-        /// <param name="isHtmlFormat">if set to <c>true</c> renders HTML; otherwise, renders plain text.</param>
-        /// <param name="applicationId">The ID of the application.</param>
-        private void RenderPropertiesCell(GridDataItem gridRow, bool isHtmlFormat, int applicationId)
-        {
-            var propertiesTextBuilder = new StringBuilder();
-            if (isHtmlFormat)
-            {
-                propertiesTextBuilder.Append("<ul>");
-            }
-
-            var propertiesTable = GetApplicationProperties(applicationId);
-            foreach (DataRow propertyRow in propertiesTable.Rows)
-            {
-                var leadText = this.GetLeadText(propertyRow["PropertyValue"] as string);
-                propertiesTextBuilder.AppendFormat(
-                    CultureInfo.CurrentCulture,
-                    isHtmlFormat ? "<li>{0}</li>" : "{0}{1}",
-                    isHtmlFormat ? HttpUtility.HtmlEncode(leadText) : leadText,
-                    Environment.NewLine);
-            }
-
-            if (isHtmlFormat)
-            {
-                propertiesTextBuilder.Append("</ul>");
-            }
-
-            var propertiesCell = gridRow["Properties"];
-            propertiesCell.Text = propertiesTextBuilder.ToString();
-        }
-
-        /// <summary>
         /// Handles the <see cref="RadGrid.NeedDataSource"/> event of the <see cref="JobsGrid"/> control.
         /// </summary>
         /// <param name="source">The source of the event.</param>
@@ -645,20 +612,21 @@ namespace Engage.Dnn.Employment.Admin
                 {
                     ((Label)pagerItem.FindControl("ChangePageSizeLabel")).Text = this.Localize("Change Page Size Label.Text");
                 }
-                else
-                {
-                    var dataItem = e.Item as GridDataItem;
-                    if (dataItem != null)
-                    {
-                        if (e.Item.OwnerTableView != this.JobsGrid.MasterTableView)
-                        {
-                            var isHtmlFormat = this.exportType != RadGrid.ExportToCsvCommandName;
-                            var applicationId = (int)dataItem.GetDataKeyValue("ApplicationId");
+            }
+        }
 
-                            this.RenderDocumentsCell(dataItem, isHtmlFormat, applicationId);
-                            this.RenderPropertiesCell(dataItem, isHtmlFormat, applicationId);
-                        }
-                    }
+        private void JobsGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            var dataItem = e.Item as GridDataItem;
+            if (dataItem != null)
+            {
+                if (dataItem.OwnerTableView != this.JobsGrid.MasterTableView)
+                {
+                    var isHtmlFormat = this.exportType != RadGrid.ExportToCsvCommandName;
+                    var application = (JobApplication)e.Item.DataItem;
+
+                    dataItem["Documents"].Text = this.RenderDocumentsCell(isHtmlFormat, application.GetDocuments());
+                    dataItem["Properties"].Text = this.RenderPropertiesCell(isHtmlFormat, application.GetApplicationProperties());
                 }
             }
         }
@@ -733,17 +701,18 @@ namespace Engage.Dnn.Employment.Admin
                 userIds,
                 e.DetailTableView.CurrentPageIndex, 
                 this.IsExport ? (int?)null : e.DetailTableView.PageSize, 
-                out unpagedApplicationCount);
+                out unpagedApplicationCount,
+                true);
             e.DetailTableView.VirtualItemCount = unpagedApplicationCount;
         }
 
         /// <summary>
         /// Renders the documents cell for a particular application.
         /// </summary>
-        /// <param name="gridRow">The data item for the row in the grid being renderd.</param>
         /// <param name="isHtmlFormat">if set to <c>true</c> renders HTML; otherwise, renders plain text.</param>
-        /// <param name="applicationId">The ID of the application.</param>
-        private void RenderDocumentsCell(GridDataItem gridRow, bool isHtmlFormat, int applicationId)
+        /// <param name="documents">The list of documents.</param>
+        /// <returns>The HTML for the documents cell</returns>
+        private string RenderDocumentsCell(bool isHtmlFormat, IEnumerable<Document> documents)
         {
             var documentsTextBuilder = new StringBuilder();
             if (isHtmlFormat)
@@ -751,11 +720,10 @@ namespace Engage.Dnn.Employment.Admin
                 documentsTextBuilder.Append("<ul>");
             }
 
-            var documentsTable = GetApplicationDocuments(applicationId);
-            foreach (DataRow documentRow in documentsTable.Rows)
+            foreach (var document in documents)
             {
-                var documentType = this.GetDocumentTypeText((int)documentRow["DocumentTypeId"]);
-                var documentUrl = this.GetDocumentUrl((int)documentRow["DocumentId"]);
+                var documentType = this.GetDocumentTypeText(document.DocumentTypeId);
+                var documentUrl = this.GetDocumentUrl(document.DocumentId);
                 documentsTextBuilder.AppendFormat(
                     CultureInfo.CurrentCulture,
                     isHtmlFormat ? "<li><a href=\"{1}\" target=\"_blank\">{0}</a></li>" : "{0}: {1}{2}",
@@ -769,8 +737,39 @@ namespace Engage.Dnn.Employment.Admin
                 documentsTextBuilder.Append("</ul>");
             }
 
-            var documentsCell = gridRow["Documents"];
-            documentsCell.Text = documentsTextBuilder.ToString();
+            return documentsTextBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Renders the properties/lead cell for a particular application.
+        /// </summary>
+        /// <param name="isHtmlFormat">if set to <c>true</c> renders HTML; otherwise, renders plain text.</param>
+        /// <param name="applicationProperties">The properties for the application.</param>
+        /// <returns>The HTML for the properties cell</returns>
+        private string RenderPropertiesCell(bool isHtmlFormat, Dictionary<string, string> applicationProperties)
+        {
+            var propertiesTextBuilder = new StringBuilder();
+            if (isHtmlFormat)
+            {
+                propertiesTextBuilder.Append("<ul>");
+            }
+
+            foreach (var propertyValue in applicationProperties.Values)
+            {
+                var leadText = this.GetLeadText(propertyValue);
+                propertiesTextBuilder.AppendFormat(
+                    CultureInfo.CurrentCulture,
+                    isHtmlFormat ? "<li>{0}</li>" : "{0}{1}",
+                    isHtmlFormat ? HttpUtility.HtmlEncode(leadText) : leadText,
+                    Environment.NewLine);
+            }
+
+            if (isHtmlFormat)
+            {
+                propertiesTextBuilder.Append("</ul>");
+            }
+
+            return propertiesTextBuilder.ToString();
         }
 
         /// <summary>

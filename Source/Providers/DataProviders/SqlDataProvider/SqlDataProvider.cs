@@ -319,7 +319,7 @@ namespace Engage.Dnn.Employment.Data
             var sql = new StringBuilder(512);
 
             sql.Append(" select ");
-            sql.Append(" DocumentId, [UserId], [FileName], [ContentType], [ContentLength], [ResumeData], [RevisionDate], [DocumentTypeId] ");
+            sql.Append(" DocumentId, [DocumentTypeId], [FileName] ");
             sql.Append(" from ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwDocuments ", this.NamePrefix);
             sql.Append(" where ");
@@ -395,25 +395,47 @@ namespace Engage.Dnn.Employment.Data
                     Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
         }
 
-        public override IDataReader GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount)
+        /// <summary>
+        /// Gets the applications for the given job.
+        /// </summary>
+        /// <param name="jobId">The ID of the job.</param>
+        /// <param name="jobGroupId">The ID of the job group by which to filter results (or <c>null</c> to not filter).</param>
+        /// <param name="applicationStatusId">The ID of the application status by which to filter applications.</param>
+        /// <param name="userIds">The IDs of the users by which to filter applications.</param>
+        /// <param name="pageIndex">Zero-based index of the page of results to retrieve (ignored if <paramref name="pageSize"/> is null).</param>
+        /// <param name="pageSize">The number of applications to retrieve per page (or <c>null</c> to retrieve all applications).</param>
+        /// <param name="unpagedCount">The total number of applications which would be returned by this query if there was no paging applied.</param>
+        /// <param name="fillDocumentsAndProperties">if set to <c>true</c> also retrieves the related documents (resumes and cover letters) and application properties (leads).</param>
+        /// <returns>
+        /// A <see cref="DataSet"/> with one table named <c>"Applications"</c> with the fields for a <see cref="JobApplication"/>.  
+        /// If <paramref name="fillDocumentsAndProperties"/>, the <see cref="DataSet"/> also contains tables named <c>"Documents"</c> and <c>"Properties"</c>
+        /// </returns>
+        public override DataSet GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
         {
             var userIdsList = userIds != null && userIds.Any() ? string.Join(",", userIds.Select(id => id.ToString(CultureInfo.InvariantCulture)).ToArray()) : null;
 
-            var applicationsReader = this.ExecuteReader(
+            var applicationsDataSet = this.ExecuteDataset(
                 "GetApplicationsForJob", 
                 Utility.CreateIntegerParam("@jobId", jobId), 
                 Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
                 Utility.CreateIntegerParam("@applicationStatusId", applicationStatusId),
                 Utility.CreateVarcharParam("@userIds", userIdsList),
                 Utility.CreateIntegerParam("@index", pageIndex),
-                Utility.CreateIntegerParam("@pageSize", pageSize));
+                Utility.CreateIntegerParam("@pageSize", pageSize),
+                Utility.CreateBitParam("@fillDocumentsAndProperties", fillDocumentsAndProperties));
 
-            applicationsReader.Read();
-            unpagedCount = applicationsReader.GetInt32(0);
+            unpagedCount = (int)applicationsDataSet.Tables[0].Rows[0][0];
 
-            applicationsReader.NextResult();
+            applicationsDataSet.Tables.RemoveAt(0);
+            applicationsDataSet.Tables[0].TableName = "Applications";
 
-            return applicationsReader;
+            if (fillDocumentsAndProperties)
+            {
+                applicationsDataSet.Tables[1].TableName = "Documents";
+                applicationsDataSet.Tables[2].TableName = "Properties";
+            }
+
+            return applicationsDataSet;
         }
 
         /// <summary>

@@ -183,6 +183,10 @@
           <name>1.8.5.SqlDataProvider</name>
         </file>
         <file>
+          <path>Providers\DataProviders\SqlDataProvider</path>
+          <name>1.8.6.SqlDataProvider</name>
+        </file>
+        <file>
           <name>Uninstall.SqlDataProvider</name>
         </file>
         <file>
