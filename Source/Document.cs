@@ -12,81 +12,18 @@
 
 namespace Engage.Dnn.Employment
 {
-    #region
-
     using System.Collections.Generic;
     using System.Data;
-    using System.Diagnostics;
 
     using Engage.Dnn.Employment.Data;
 
-    #endregion
-
     internal class Document
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int documentId;
+        public int DocumentId { get; private set; }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int documentTypeId;
+        public int DocumentTypeId { get; private set; }
 
-        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ////private DocumentType _documentType;
-        ////public DocumentType DocumentType
-        ////{
-        ////    get
-        ////    {
-        ////        if (_documentType == null)
-        ////        {
-        ////            _documentType = Employment.DocumentType.GetDocumentType(_documentTypeId);
-        ////        }
-        ////        return _documentType;
-        ////    }
-        ////}
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string fileName;
-
-        public int DocumentId
-        {
-            [DebuggerStepThrough]
-            get { return this.documentId; }
-        }
-
-        public int DocumentTypeId
-        {
-            [DebuggerStepThrough]
-            get { return this.documentTypeId; }
-        }
-
-        public string FileName
-        {
-            [DebuggerStepThrough]
-            get { return this.fileName; }
-        }
-
-        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ////private int _contentLength;
-        ////public int ContentLength
-        ////{
-        ////    [DebuggerStepThrough]
-        ////    get { return _contentLength; }
-        ////}
-
-        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ////private string _contentType;
-        ////public string ContentType
-        ////{
-        ////    [DebuggerStepThrough]
-        ////    get { return _contentType; }
-        ////}
-
-        ////[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ////private byte[] _data;
-        ////public byte[] Data
-        ////{
-        ////    [DebuggerStepThrough]
-        ////    get { return (byte[])_data.Clone(); }
-        ////}
+        public string FileName { get; private set; }
 
         /// <summary>
         /// Gets a list of IDs of the job groups that can view the document with the given ID.
@@ -117,7 +54,7 @@ namespace Engage.Dnn.Employment
 
             if (dt != null)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                for (var i = 0; i < dt.Rows.Count; i++)
                 {
                     documents.Add(FillDocument(dt.Rows[i]));
                 }
@@ -128,17 +65,12 @@ namespace Engage.Dnn.Employment
 
         private static Document FillDocument(DataRow dr)
         {
-            var document = new Document {
-                                            documentId = (int)dr["DocumentId"], 
-                                            documentTypeId = (int)dr["DocumentTypeId"], 
-                                            fileName = (string)dr["FileName"]
-                                            
-                                            ////document._contentType = (string)dr["ContentType"];
-                                            ////document._contentLength = (int)dr["ContentLength"];
-                                            ////document._data = (byte[])dr["ResumeData"];
-                                        };
-
-            return document;
+            return new Document
+                {
+                    DocumentId = (int)dr["DocumentId"],
+                    DocumentTypeId = (int)dr["DocumentTypeId"],
+                    FileName = (string)dr["FileName"]
+                };
         }
     }
 }
