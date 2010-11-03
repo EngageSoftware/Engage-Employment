@@ -322,7 +322,7 @@ namespace Engage.Dnn.Employment
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailLink", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailSalaryLabel", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(salaryText),
-                Utility.GetDocumentUrl(this.Request, resumeId),
+                this.MakeUrlAbsolute(Utility.GetDocumentUrl(this.Request, resumeId)),
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailResumeLink", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(messageText));

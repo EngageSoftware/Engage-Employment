@@ -142,11 +142,13 @@ namespace Engage.Dnn.Employment
         /// <returns>The URL used to retrieve the document.</returns>
         public static string GetDocumentUrl(HttpRequest request, int documentId)
         {
-            return
-                new Uri(
-                    request.Url, 
-                    Globals.ResolveUrl(DesktopModuleRelativePath + "GetResume.aspx?rid=" + documentId.ToString(CultureInfo.InvariantCulture))).
-                    AbsoluteUri;
+            string getResumeRelativeUrl = string.Format(
+                "{0}GetResume.aspx?rid={1}&portalid={2}",
+                DesktopModuleRelativePath,
+                documentId.ToString(CultureInfo.InvariantCulture),
+                Globals.GetPortalSettings().PortalId.ToString(CultureInfo.InvariantCulture));
+
+            return Globals.ResolveUrl(getResumeRelativeUrl);
         }
 
         public static int GetJobDetailTabId(int? jobGroupId, PortalSettings portalSettings)
