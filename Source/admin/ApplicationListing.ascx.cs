@@ -523,7 +523,8 @@ namespace Engage.Dnn.Employment.Admin
         protected void UserStatusDropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var userStatusDropDownList = (DropDownList)sender;
-            var userId = (int)Utility.FindParentControl<GridDataItem>(userStatusDropDownList).GetDataKeyValue("UserId");
+            var applicationRow = Utility.FindParentControl<GridDataItem>(userStatusDropDownList);
+            var userId = (int)applicationRow.GetDataKeyValue("UserId");
 
             int statusId;
             int? statusIdValue = null;
@@ -537,8 +538,13 @@ namespace Engage.Dnn.Employment.Admin
             }
 
             UserStatus.UpdateUserStatus(this.PortalSettings, userId, statusIdValue);
-                
-            this.JobsGrid.Rebind();
+
+            // collapse all other application grids, so that the user's status isn't out of sync
+            foreach (GridDataItem item in this.JobsGrid.MasterTableView.Items.Cast<GridDataItem>()
+                                            .Where(item => item.Expanded && item != applicationRow.OwnerTableView.ParentItem))
+            {
+                item.Expanded = false;
+            }
         }
 
         /// <summary>
