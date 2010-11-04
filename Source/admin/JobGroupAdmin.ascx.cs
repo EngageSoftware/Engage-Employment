@@ -16,6 +16,7 @@ namespace Engage.Dnn.Employment.Admin
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Web;
     using System.Web.UI;
@@ -26,7 +27,7 @@ namespace Engage.Dnn.Employment.Admin
 
     public partial class JobGroupAdmin : ModuleBase
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Letting execeptions go blows up the whole page, instead of just the module")]
         protected void Page_Init(object sender, EventArgs e)
         {
             try
@@ -36,13 +37,13 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobGroupsGridView.RowEditing += this.JobGroupsGridView_RowEditing;
                 this.JobGroupsGridView.RowCommand += this.JobGroupsGridView_RowCommand;
                 this.JobGroupsGridView.RowDeleting += this.JobGroupsGridView_RowDeleting;
-                this.rpJobs.ItemDataBound += this.RpJobsItemDataBound;
+                this.JobsRepeater.ItemDataBound += this.JobsRepeater_ItemDataBound;
                 this.SaveAssignmentsButton.Click += this.SaveAssignmentsButton_Click;
                 this.NewJobGroupButton.Click += this.NewJobGroupButton_Click;
                 this.EditAssignmentsButton.Click += this.EditAssignmentsButton_Click;
                 this.SaveNewJobGroupButton.Click += this.SaveNewJobGroupButton_Click;
                 this.EditJobGroupsButton.Click += this.EditJobGroupsButton_Click;
-                this.cvNewJobGroup.ServerValidate += this.CvNewJobGroupServerValidate;
+                this.NewJobGroupValidator.ServerValidate += this.NewJobGroupValidator_ServerValidate;
             }
             catch (Exception exc)
             {
@@ -50,7 +51,7 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Letting execeptions go blows up the whole page, instead of just the module")]
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -105,13 +106,12 @@ namespace Engage.Dnn.Employment.Admin
         private void BindJobGroupAssignments()
         {
             DataSet ds = DataProvider.Instance().GetAssignedJobGroups(PortalId);
-            this.rpJobs.DataSource = ds.Tables["Jobs"];
-            this.rpJobs.DataBind();
+            this.JobsRepeater.DataSource = ds.Tables["Jobs"];
+            this.JobsRepeater.DataBind();
         }
 
         #region vwAssignment Events
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void RpJobsItemDataBound(object sender, RepeaterItemEventArgs e)
+        private void JobsRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
             {
@@ -141,10 +141,9 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void SaveAssignmentsButton_Click(object sender, EventArgs e)
         {
-            foreach (RepeaterItem row in this.rpJobs.Items)
+            foreach (RepeaterItem row in this.JobsRepeater.Items)
             {
                 int jobId;
                 var hdnJobId = row.FindControl("hdnJobId") as HiddenField;
@@ -172,15 +171,13 @@ namespace Engage.Dnn.Employment.Admin
             this.BindJobGroups();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void EditJobGroupsButton_Click(object sender, EventArgs e)
         {
-            this.AuthorizationMultiview.SetActiveView(vwJobGroups);
+            this.AuthorizationMultiview.SetActiveView(this.vwJobGroups);
         }
         #endregion
 
         #region vwJobGroups Events
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void JobGroupsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e != null && e.Row.RowType == DataControlRowType.DataRow)
@@ -205,21 +202,18 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void EditAssignmentsButton_Click(object sender, EventArgs e)
         {
             this.AuthorizationMultiview.SetActiveView(this.vwAssignment);
             this.BindJobGroupAssignments();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void NewJobGroupButton_Click(object sender, EventArgs e)
         {
             this.NewJobGroupPanel.Visible = true;
             this.txtNewJobGroupName.Focus();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void SaveNewJobGroupButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
@@ -231,8 +225,7 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
-        private void CvNewJobGroupServerValidate(object sender, ServerValidateEventArgs e)
+        private void NewJobGroupValidator_ServerValidate(object sender, ServerValidateEventArgs e)
         {
             if (e != null && Engage.Utility.HasValue(e.Value))
             {
@@ -240,7 +233,6 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void JobGroupsGridView_RowCommand(object sender, CommandEventArgs e)
         {
             if (Page.IsValid && e != null)
@@ -256,7 +248,7 @@ namespace Engage.Dnn.Employment.Admin
                             var newJobGroupName = this.GetJobGroupName(rowIndex);
                             var oldJobGroupName = string.Empty;
                             var jobGroup = DataProvider.Instance().GetJobGroup(jobGroupId.Value);
-                            Debug.Assert(jobGroup.Rows.Count > 0);
+                            Debug.Assert(jobGroup.Rows.Count > 0, "Specified Job Group doesn't exist");
                             if (jobGroup.Rows.Count > 0)
                             {
                                 oldJobGroupName = jobGroup.Rows[0]["Name"] as string;
@@ -278,7 +270,6 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void JobGroupsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? jobGroupId = GetJobGroupId(e.RowIndex);
@@ -289,7 +280,6 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void JobGroupsGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
             if (e != null)
@@ -299,7 +289,6 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member")]
         private void JobGroupsGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             this.JobGroupsGridView.EditIndex = -1;

@@ -19,6 +19,7 @@ namespace Engage.Dnn.Employment.Admin
     using System.Linq;
     using System.Text;
     using System.Web;
+    using System.Web.UI;
     using System.Web.UI.WebControls;
     using Data;
     using DotNetNuke.Common;
@@ -42,12 +43,12 @@ namespace Engage.Dnn.Employment.Admin
         /// <summary>
         /// Backing field for <see cref="ApplicationStatuses"/>
         /// </summary>
-        private readonly List<ApplicationStatus> applicationStatuses;
+        private readonly IEnumerable<ApplicationStatus> applicationStatuses;
 
         /// <summary>
         /// Backing field for <see cref="UserStatuses"/>
         /// </summary>
-        private readonly List<UserStatus> userStatuses;
+        private readonly IEnumerable<UserStatus> userStatuses;
 
         /// <summary>
         /// The list of leads
@@ -306,6 +307,16 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
+        /// Gets the URL at which to view the document.
+        /// </summary>
+        /// <param name="documentId">The ID of the document.</param>
+        /// <returns>A URL pointing to the document with the given <paramref name="documentId"/></returns>
+        protected static string GetDocumentUrl(int documentId)
+        {
+            return Employment.Utility.GetDocumentUrl(documentId);
+        }
+
+        /// <summary>
         /// Gets the text for the lead entry with the given ID.
         /// </summary>
         /// <param name="leadIdValue">The ID of the list entry for the lead to display.</param>
@@ -320,16 +331,6 @@ namespace Engage.Dnn.Employment.Admin
 
             var leadListEntry = this.leadsList[leadId];
             return leadListEntry.Text;
-        }
-
-        /// <summary>
-        /// Gets the URL at which to view the document.
-        /// </summary>
-        /// <param name="documentId">The ID of the document.</param>
-        /// <returns>A URL pointing to the document with the given <paramref name="documentId"/></returns>
-        protected string GetDocumentUrl(int documentId)
-        {
-            return Employment.Utility.GetDocumentUrl(this.Request, documentId);
         }
 
         /// <summary>
@@ -474,7 +475,6 @@ namespace Engage.Dnn.Employment.Admin
             try
             {
                 this.SetLinks();
-                this.LoadJavaScript();
                 this.LocalizeGrid();
             }
             catch (Exception exc)
@@ -604,7 +604,7 @@ namespace Engage.Dnn.Employment.Admin
                 }
 
                 var leftColumn = commandItem.FindControl("AddNewRecordButton").Parent;
-                leftColumn.Controls.Add(new Literal { Text = this.Localize(tableHeaderResourceKey) });
+                leftColumn.Controls.Add(new LiteralControl(this.Localize(tableHeaderResourceKey)));
 
                 // from http://www.telerik.com/help/aspnet-ajax/grdexportwithajax.html
                 AJAX.RegisterPostBackControl(commandItem.FindControl("ExportToExcelButton"));
@@ -729,7 +729,7 @@ namespace Engage.Dnn.Employment.Admin
             foreach (var document in documents)
             {
                 var documentType = this.GetDocumentTypeText(document.DocumentTypeId);
-                var documentUrl = this.GetDocumentUrl(document.DocumentId);
+                var documentUrl = GetDocumentUrl(document.DocumentId);
                 documentsTextBuilder.AppendFormat(
                     CultureInfo.CurrentCulture,
                     isHtmlFormat ? "<li><a href=\"{1}\" target=\"_blank\">{0}</a></li>" : "{0}: {1}{2}",
@@ -787,14 +787,6 @@ namespace Engage.Dnn.Employment.Admin
             this.BackLink.NavigateUrl = mi != null ? Globals.NavigateURL(mi.TabID) : Globals.NavigateURL();
 
             this.AllLink.NavigateUrl = this.EditUrl(ControlKey.ManageApplications.ToString());
-        }
-
-        /// <summary>
-        /// Loads the required javascript on the page.
-        /// </summary>
-        private void LoadJavaScript()
-        {
-            ////this.Page.ClientScript.RegisterClientScriptResource(typeof(EmploymentController), "Engage.Dnn.Employment.JavaScript.jquery.grid.js");
         }
 
         /// <summary>

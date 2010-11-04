@@ -22,7 +22,6 @@ namespace Engage.Dnn.Employment
     using System.IO;
     using System.Text.RegularExpressions;
     using System.Threading;
-    using System.Web;
     using System.Web.Caching;
     using System.Web.Hosting;
     using System.Xml.XPath;
@@ -137,16 +136,16 @@ namespace Engage.Dnn.Employment
         /// <summary>
         /// Gets the URL to retrieve a particular document for an application.
         /// </summary>
-        /// <param name="request">The current web request.</param>
         /// <param name="documentId">The resumé id.</param>
         /// <returns>The URL used to retrieve the document.</returns>
-        public static string GetDocumentUrl(HttpRequest request, int documentId)
+        public static string GetDocumentUrl(int documentId)
         {
             string getResumeRelativeUrl = string.Format(
+                CultureInfo.InvariantCulture,
                 "{0}GetResume.aspx?rid={1}&portalid={2}",
                 DesktopModuleRelativePath,
-                documentId.ToString(CultureInfo.InvariantCulture),
-                Globals.GetPortalSettings().PortalId.ToString(CultureInfo.InvariantCulture));
+                documentId,
+                Globals.GetPortalSettings().PortalId);
 
             return Globals.ResolveUrl(getResumeRelativeUrl);
         }

@@ -121,13 +121,13 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.Button SaveNewJobGroupButton;
         
         /// <summary>
-        /// cvNewJobGroup control.
+        /// NewJobGroupValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvNewJobGroup;
+        protected global::System.Web.UI.WebControls.CustomValidator NewJobGroupValidator;
         
         /// <summary>
         /// NewJobGroupRequiredFieldValidator control.
@@ -157,13 +157,13 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.Button EditJobGroupsButton;
         
         /// <summary>
-        /// rpJobs control.
+        /// JobsRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rpJobs;
+        protected global::System.Web.UI.WebControls.Repeater JobsRepeater;
         
         /// <summary>
         /// SaveAssignmentsButton control.

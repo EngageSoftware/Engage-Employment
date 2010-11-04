@@ -38,16 +38,12 @@ namespace Engage.Dnn.Employment
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Only used via reflection (i.e. databinding)")]
         public string Status { get; private set; }
 
-        public static List<UserStatus> LoadStatuses(int portalId)
+        public static IEnumerable<UserStatus> LoadStatuses(int portalId)
         {
             DataTable statusTable = DataProvider.Instance().GetUserStatuses(portalId);
-            var statuses = new List<UserStatus>(statusTable.Rows.Count);
-            foreach (DataRow row in statusTable.Rows)
-            {
-                statuses.Add(FillUserStatus(row));
-            }
-
-            return statuses;
+            
+            return from DataRow row in statusTable.Rows
+                   select FillUserStatus(row);
         }
 
         public static UserStatus LoadStatus(int statusId)
@@ -94,7 +90,13 @@ namespace Engage.Dnn.Employment
         /// <returns>A sequence of all users in the given portal.</returns>
         public static IEnumerable<UserInfo> GetUsersWithStatus(PortalSettings portalSettings, int statusId)
         {
-            return UserController.GetUsers(portalSettings.PortalId).Cast<UserInfo>().Where(user => GetStatusForUser(portalSettings, user) == statusId);
+            if (portalSettings == null)
+            {
+                throw new ArgumentNullException("portalSettings");
+            }
+
+            return UserController.GetUsers(portalSettings.PortalId).Cast<UserInfo>()
+                    .Where(user => GetStatusForUser(portalSettings, user) == statusId);
         }
 
         /// <summary>
@@ -106,8 +108,40 @@ namespace Engage.Dnn.Employment
         /// <exception cref="NullReferenceException">If the user does not exist</exception>
         public static int? LoadUserStatus(PortalSettings portalSettings, int userId)
         {
+            if (portalSettings == null)
+            {
+                throw new ArgumentNullException("portalSettings");
+            }
+            
             var user = (new UserController()).GetUser(portalSettings.PortalId, userId);
             return GetStatusForUser(portalSettings, user);
+        }
+
+        /// <summary>
+        /// Updates the status of the given user.
+        /// </summary>
+        /// <param name="portalSettings">The portal settings.</param>
+        /// <param name="userId">The user ID.</param>
+        /// <param name="statusId">The status ID.</param>
+        public static void UpdateUserStatus(PortalSettings portalSettings, int userId, int? statusId)
+        {
+            if (portalSettings == null)
+            {
+                throw new ArgumentNullException("portalSettings");
+            }
+
+            CheckUserStatusPropertyExists(portalSettings);
+            UserInfo user = (new UserController()).GetUser(portalSettings.PortalId, userId);
+            ProfileController.GetUserProfile(ref user);
+
+            string statusValue = string.Empty;
+            if (statusId.HasValue)
+            {
+                statusValue = statusId.Value.ToString(CultureInfo.InvariantCulture);
+            }
+            
+            user.Profile.SetProfileProperty(Utility.UserStatusPropertyName, statusValue);
+            UserController.UpdateUser(portalSettings.PortalId, user);
         }
 
         /// <summary>
@@ -130,28 +164,6 @@ namespace Engage.Dnn.Employment
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Updates the status of the given user.
-        /// </summary>
-        /// <param name="portalSettings">The portal settings.</param>
-        /// <param name="userId">The user ID.</param>
-        /// <param name="statusId">The status ID.</param>
-        public static void UpdateUserStatus(PortalSettings portalSettings, int userId, int? statusId)
-        {
-            CheckUserStatusPropertyExists(portalSettings);
-            UserInfo user = (new UserController()).GetUser(portalSettings.PortalId, userId);
-            ProfileController.GetUserProfile(ref user);
-
-            string statusValue = string.Empty;
-            if (statusId.HasValue)
-            {
-                statusValue = statusId.Value.ToString(CultureInfo.InvariantCulture);
-            }
-            
-            user.Profile.SetProfileProperty(Utility.UserStatusPropertyName, statusValue);
-            UserController.UpdateUser(portalSettings.PortalId, user);
         }
 
         private static void CheckUserStatusPropertyExists(PortalSettings portalSettings)

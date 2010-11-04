@@ -15,6 +15,7 @@ namespace Engage.Dnn.Employment.Admin
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Web.UI;
     using System.Web.UI.WebControls;
@@ -33,9 +34,8 @@ namespace Engage.Dnn.Employment.Admin
 
         protected string MaxLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("CategoryMaxLength", LocalResourceFile), CategoryMaxLength); }
+            get { return string.Format(CultureInfo.CurrentCulture, Localization.GetString("CategoryMaxLength", LocalResourceFile), CategoryMaxLength); }
         }
-
 
         protected override void OnInit(EventArgs e)
         {
@@ -53,7 +53,7 @@ namespace Engage.Dnn.Employment.Admin
             base.OnInit(e);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Letting execeptions go blows up the whole page, instead of just the module")]
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -67,12 +67,10 @@ namespace Engage.Dnn.Employment.Admin
             }
             catch (Exception exc)
             {
-                // Module failed to load
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         protected void BackButton_Click(object sender, EventArgs e)
         {
             Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
@@ -91,14 +89,12 @@ namespace Engage.Dnn.Employment.Admin
             return null;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void AddButton_Click(object sender, EventArgs e)
         {
             this.PanelNew.Visible = true;
             this.txtNewCategoryName.Focus();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void SaveNewButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
@@ -116,20 +112,17 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CancelNewButton_Click(object sender, EventArgs e)
         {
             this.HideAndClearNewCategoryPanel();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             this.CategoriesGridView.EditIndex = -1;
             this.LoadCategories();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -154,7 +147,6 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             var categoryId = GetCategoryId(e.RowIndex);
@@ -165,7 +157,6 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
             this.CategoriesGridView.EditIndex = e.NewEditIndex;
@@ -173,7 +164,6 @@ namespace Engage.Dnn.Employment.Admin
             this.LoadCategories();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CategoriesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
@@ -245,7 +235,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 GridViewRow row = this.CategoriesGridView.Rows[rowIndex];
                 var txtCategoryName = row.FindControl("txtCategoryName") as TextBox;
-                Debug.Assert(txtCategoryName != null);
+                Debug.Assert(txtCategoryName != null, "txtCategoryName not found in row");
                 return txtCategoryName.Text;
             }
 

@@ -15,6 +15,7 @@ namespace Engage.Dnn.Employment.Admin
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using DotNetNuke.Services.Exceptions;
@@ -76,20 +77,15 @@ namespace Engage.Dnn.Employment.Admin
 
         private void BindData()
         {
-            List<UserStatus> statuses = UserStatus.LoadStatuses(this.PortalId);
+            var statuses = UserStatus.LoadStatuses(this.PortalId);
             this.StatusesGridView.DataSource = statuses;
             this.StatusesGridView.DataBind();
 
-            if (statuses == null || statuses.Count % 2 == 0)
-            {
-                this.NewPanel.CssClass = this.StatusesGridView.RowStyle.CssClass;
-            }
-            else
-            {
-                this.NewPanel.CssClass = this.StatusesGridView.AlternatingRowStyle.CssClass;
-            }
+            this.NewPanel.CssClass = statuses.Count() % 2 == 0
+                                         ? this.StatusesGridView.RowStyle.CssClass
+                                         : this.StatusesGridView.AlternatingRowStyle.CssClass;
 
-            this.rowNewHeader.Visible = statuses == null || statuses.Count < 1;
+            this.rowNewHeader.Visible = !statuses.Any();
         }
 
         private int? GetStatusId(int rowIndex)

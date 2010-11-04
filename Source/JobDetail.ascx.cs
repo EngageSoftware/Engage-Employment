@@ -253,7 +253,7 @@ namespace Engage.Dnn.Employment
                     {
                         lnkDocument.Parent.Visible = true; // should be the panel around the link
                         lnkDocument.Text = document.FileName;
-                        lnkDocument.NavigateUrl = Utility.GetDocumentUrl(this.Request, document.DocumentId);
+                        lnkDocument.NavigateUrl = Utility.GetDocumentUrl(document.DocumentId);
                     }
                 }
 
@@ -322,7 +322,7 @@ namespace Engage.Dnn.Employment
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailLink", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailSalaryLabel", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(salaryText),
-                this.MakeUrlAbsolute(Utility.GetDocumentUrl(this.Request, resumeId)),
+                this.MakeUrlAbsolute(Utility.GetDocumentUrl(resumeId)),
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailResumeLink", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile)),
                 HttpUtility.HtmlEncode(messageText));

@@ -16,6 +16,7 @@ namespace Engage.Dnn.Employment
     using System.Collections.ObjectModel;
     using System.Data;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Web;
     using Data;
@@ -423,6 +424,7 @@ namespace Engage.Dnn.Employment
             return jobs.AsReadOnly();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "4#", Justification = "Not a big deal")]
         public static ReadOnlyCollection<Job> LoadAll(int? jobGroupId, int portalId, int pageIndex, int? pageSize, out int totalCount)
         {
             var jobs = new List<Job>();

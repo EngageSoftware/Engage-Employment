@@ -12,10 +12,10 @@
 namespace Engage.Dnn.Employment.Admin
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using DotNetNuke.Services.Exceptions;
@@ -94,7 +94,7 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Letting execeptions go blows up the whole page, instead of just the module")]
         private void Page_Load(object sender, EventArgs e)
         {
             try
@@ -117,7 +117,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void BackButton_Click(object sender, EventArgs e)
         {
             this.Response.Redirect(this.EditUrl(ControlKey.ManageApplications.ToString()));
@@ -128,7 +127,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void AddButton_Click(object sender, EventArgs e)
         {
             this.NewPanel.Visible = true;
@@ -140,7 +138,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void SaveNewStatusButton_Click(object sender, EventArgs e)
         {
             if (this.Page.IsValid)
@@ -163,7 +160,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CancelNewStatusButton_Click(object sender, EventArgs e)
         {
             this.HideAndClearNewStatusPanel();
@@ -174,7 +170,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewCancelEditEventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatusesGrid_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             this.StatusesGrid.EditIndex = -1;
@@ -186,7 +181,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewRowEventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatusesGrid_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -219,8 +213,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewDeleteEventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"),
-         SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatusesGrid_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             var statusId = GetStatusId(e.RowIndex);
@@ -236,7 +228,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewEditEventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatusesGrid_RowEditing(object sender, GridViewEditEventArgs e)
         {
             this.StatusesGrid.EditIndex = e.NewEditIndex;
@@ -249,7 +240,6 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewCommandEventArgs"/> instance containing the event data.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void StatusesGrid_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
@@ -284,11 +274,11 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private void BindData()
         {
-            List<ApplicationStatus> statuses = ApplicationStatus.GetStatuses(this.PortalId);
+            var statuses = ApplicationStatus.GetStatuses(this.PortalId);
             this.StatusesGrid.DataSource = statuses;
             this.StatusesGrid.DataBind();
 
-            if (statuses == null || statuses.Count % 2 == 0)
+            if (statuses.Count() % 2 == 0)
             {
                 this.NewPanel.CssClass = this.StatusesGrid.RowStyle.CssClass;
             }
@@ -297,7 +287,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.NewPanel.CssClass = this.StatusesGrid.AlternatingRowStyle.CssClass;
             }
 
-            this.rowNewHeader.Visible = statuses == null || statuses.Count < 1;
+            this.rowNewHeader.Visible = !statuses.Any();
         }
 
         /// <summary>
@@ -343,7 +333,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 GridViewRow row = this.StatusesGrid.Rows[rowIndex];
                 var statusTextBox = row.FindControl("StatusTextBox") as TextBox;
-                Debug.Assert(statusTextBox != null);
+                Debug.Assert(statusTextBox != null, "StatusTextBox not found in row");
                 return statusTextBox.Text;
             }
 

@@ -11,9 +11,10 @@
 
 namespace Engage.Dnn.Employment
 {
-    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+
     using Data;
     using DotNetNuke.Common.Lists;
     using DotNetNuke.Common.Utilities;
@@ -24,73 +25,42 @@ namespace Engage.Dnn.Employment
     public class ApplicationStatus
     {
         /// <summary>
-        /// Backing field for <see cref="StatusId"/>.
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int statusId;
-
-        /// <summary>
-        /// Backing field for <see cref="StatusId"/>.
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string statusName;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationStatus"/> class.
         /// </summary>
         /// <param name="statusId">The ID of the status.</param>
         /// <param name="statusName">Name of the status.</param>
         private ApplicationStatus(int statusId, string statusName)
         {
-            this.statusId = statusId;
-            this.statusName = statusName;
+            this.StatusId = statusId;
+            this.StatusName = statusName;
         }
 
         /// <summary>
         /// Gets the ID of this status.
         /// </summary>
         /// <value>The ID of this status.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
-        public int StatusId
-        {
-            [DebuggerStepThrough]
-            get { return this.statusId; }
-            [DebuggerStepThrough]
-            private set { this.statusId = value; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
+        public int StatusId { get; private set; }
 
         /// <summary>
         /// Gets the name of this status.
         /// </summary>
         /// <value>The name of this status.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
-        public string StatusName
-        {
-            [DebuggerStepThrough]
-            get { return this.statusName; }
-            [DebuggerStepThrough]
-            private set { this.statusName = value; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called from data binding on ApplicationStatusListing.ascx")]
+        public string StatusName { get; private set; }
 
         /// <summary>
         /// Gets a list of all of the application statuses for this portal.
         /// </summary>
         /// <param name="portalId">The portal ID.</param>
         /// <returns>A list of all of the application statuses for this portal</returns>
-        public static List<ApplicationStatus> GetStatuses(int portalId)
+        public static IEnumerable<ApplicationStatus> GetStatuses(int portalId)
         {
-            var statuses = new List<ApplicationStatus>();
-            ListEntryInfoCollection statusList = (new ListController()).GetListEntryInfoCollection(Utility.ApplicationStatusListName);
+            var statusList = (new ListController()).GetListEntryInfoCollection(Utility.ApplicationStatusListName);
 
-            foreach (ListEntryInfo entry in statusList)
-            {
-                if (entry.PortalID == portalId)
-                {
-                    statuses.Add(new ApplicationStatus(entry.EntryID, entry.Text));
-                }
-            }
-
-            return statuses;
+            return from ListEntryInfo entry in statusList
+                   where entry.PortalID == portalId
+                   select new ApplicationStatus(entry.EntryID, entry.Text);
         }
 
         /// <summary>

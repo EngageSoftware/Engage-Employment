@@ -13,6 +13,7 @@
 namespace Engage.Dnn.Employment
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Web.UI.WebControls;
     using DotNetNuke.Common;
@@ -33,7 +34,7 @@ namespace Engage.Dnn.Employment
                 this.LimitCheckBox.AutoPostBack = true;
             }
 
-            rvLimit.MaximumValue = int.MaxValue.ToString(CultureInfo.InvariantCulture);
+            this.rvLimit.MaximumValue = int.MaxValue.ToString(CultureInfo.InvariantCulture);
 
             this.Load += this.Page_Load;
             this.UpdateButton.Click += this.UpdateButton_Click;
@@ -41,7 +42,7 @@ namespace Engage.Dnn.Employment
             base.OnInit(e);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Better to keep to module, rather than take down the whole page")]
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -64,9 +65,9 @@ namespace Engage.Dnn.Employment
                     this.DisplayOptionRadioButtonList.SelectedValue = ModuleSettings.JobListingShowOnlyHotJobs.GetValueAsBooleanFor(this).ToString();
                     this.LimitCheckBox.Checked = maximumNumberOfjobs.HasValue;
                     this.SetLimitEnabled(this.LimitCheckBox.Checked);
-                    if (this.LimitCheckBox.Checked)
+                    if (maximumNumberOfjobs.HasValue)
                     {
-                        txtLimit.Text = maximumNumberOfjobs.Value.ToString(CultureInfo.CurrentCulture);
+                        this.txtLimit.Text = maximumNumberOfjobs.Value.ToString(CultureInfo.CurrentCulture);
                     }
 
                     this.LimitOptionRadioButtonList.SelectedValue = ModuleSettings.JobListingLimitJobsRandomly.GetValueAsStringFor(this);
@@ -78,7 +79,7 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Better to catch at module level than take down the whole page")]
         protected void UpdateButton_Click(object sender, EventArgs e)
         {
             try
@@ -86,7 +87,7 @@ namespace Engage.Dnn.Employment
                 if (Page.IsValid)
                 {
                     ModuleSettings.JobListingShowOnlyHotJobs.Set(this, this.DisplayOptionRadioButtonList.SelectedValue);
-                    ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.Set(this, this.LimitCheckBox.Checked ? Convert.ToInt32(txtLimit.Text, CultureInfo.CurrentCulture).ToString(CultureInfo.InvariantCulture) : string.Empty);
+                    ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.Set(this, this.LimitCheckBox.Checked ? Convert.ToInt32(this.txtLimit.Text, CultureInfo.CurrentCulture).ToString(CultureInfo.InvariantCulture) : string.Empty);
                     ModuleSettings.JobListingLimitJobsRandomly.Set(this, this.LimitOptionRadioButtonList.SelectedValue);
 
                     Response.Redirect(Globals.NavigateURL(TabId));
@@ -98,14 +99,12 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         protected void CancelButton_Click(object sender, EventArgs e)
         {
             // return to the main page view
             Response.Redirect(Globals.NavigateURL(TabId), false);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         protected void LimitCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             this.SetLimitEnabled(this.LimitCheckBox.Checked);

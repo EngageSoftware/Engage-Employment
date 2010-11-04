@@ -71,7 +71,7 @@
                     <asp:Button ID="SaveNewJobGroupButton" runat="server" resourcekey="btnSaveNewJobGroup" ValidationGroup="NewJobGroup" />
                 </td></tr>
                 <tr><td colspan="2">
-                    <asp:CustomValidator ID="cvNewJobGroup" runat="server" ControlToValidate="txtNewJobGroupName" Display="Dynamic" CssClass="NormalRed" ValidationGroup="NewJobGroup" resourcekey="cvNewJobGroup" />
+                    <asp:CustomValidator ID="NewJobGroupValidator" runat="server" ControlToValidate="txtNewJobGroupName" Display="Dynamic" CssClass="NormalRed" ValidationGroup="NewJobGroup" resourcekey="cvNewJobGroup" />
                     <asp:RequiredFieldValidator ID="NewJobGroupRequiredFieldValidator" runat="server" ControlToValidate="txtNewJobGroupName" Display="Dynamic" CssClass="NormalRed" ValidationGroup="NewJobGroup" resourcekey="rfvNewJobGroup" />
                 </td></tr>
             </table>
@@ -86,7 +86,7 @@
             </td></tr>
         </table>
 
-        <asp:Repeater ID="rpJobs" runat="server">
+        <asp:Repeater ID="JobsRepeater" runat="server">
             <HeaderTemplate>
                 <table border="0" class="employmentTable">
                 <tr>

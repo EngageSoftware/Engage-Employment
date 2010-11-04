@@ -46,9 +46,15 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private DataTable applicationUsersTable;
 
+        /// <summary>
+        /// Maps from a status ID to an <see cref="ApplicationStatus"/>
+        /// </summary>
         private Dictionary<int, ApplicationStatus> applicationStatusMap;
-        private Dictionary<int, UserStatus> userStatusMap;
 
+        /// <summary>
+        /// Maps from a status ID to a <see cref="UserStatus"/>
+        /// </summary>
+        private Dictionary<int, UserStatus> userStatusMap;
 
         /// <summary>
         /// Gets the list of <see cref="ModuleAction"/>s to be displayed for this control.
@@ -233,8 +239,7 @@ namespace Engage.Dnn.Employment.Admin
                         Count = statusGrouping.Count(),
                         Status = statusGrouping.Key.Status
                     };
-            }
-            
+            }            
         }
 
         /// <summary>

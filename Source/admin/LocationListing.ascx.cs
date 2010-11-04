@@ -10,35 +10,36 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
-using DotNetNuke.UI.Utilities;
-
 namespace Engage.Dnn.Employment.Admin
 {
-    partial class LocationListing : ModuleBase
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Web.UI;
+    using System.Web.UI.WebControls;
+
+    using DotNetNuke.Services.Exceptions;
+    using DotNetNuke.Services.Localization;
+    using DotNetNuke.UI.Utilities;
+
+    public partial class LocationListing : ModuleBase
     {
         protected const int LocationMaxLength = 255;
-
-        protected string MaxLengthValidationText
-        {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("LocationMaxLength", LocalResourceFile), LocationMaxLength); }
-        }
 
         protected static string MaxLengthValidationExpression
         {
             get { return Utility.GetMaxLengthValidationExpression(LocationMaxLength); }
         }
 
+        protected string MaxLengthValidationText
+        {
+            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("LocationMaxLength", LocalResourceFile), LocationMaxLength); }
+        }
+
         protected override void OnInit(EventArgs e)
         {
-            this.Load += Page_Load;
+            this.Load += this.Page_Load;
             this.AddButton.Click += this.AddButton_Click;
             this.BackButton.Click += this.BackButton_Click;
             this.CancelNewButton.Click += this.CancelNewButton_Click;
@@ -52,72 +53,78 @@ namespace Engage.Dnn.Employment.Admin
             base.OnInit(e);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        protected void Page_Load(Object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
                 if (!IsPostBack)
                 {
                     Dnn.Utility.LocalizeGridView(ref this.LocationsGridView, LocalResourceFile);
-                    SetupLengthValidation();
-                    BindStates(this.NewStateDropDownList);
-                    LoadLocations();
+                    this.SetupLengthValidation();
+                    this.BindStates(this.NewStateDropDownList);
+                    this.LoadLocations();
                 }
             }
-            catch (Exception exc) //Module failed to load
+            catch (Exception exc)
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         protected void BackButton_Click(object sender, EventArgs e)
         {
             Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+        private static int? GetLocationId(Control row)
+        {
+            var hdnLocationId = (HiddenField)row.FindControl("hdnLocationId");
+
+            int locationId;
+            if (hdnLocationId != null && int.TryParse(hdnLocationId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out locationId))
+            {
+                return locationId;
+            }
+
+            return null;
+        }
+
         private void AddButton_Click(object sender, EventArgs e)
         {
             this.NewPanel.Visible = true;
-            txtNewLocationName.Focus();
+            this.txtNewLocationName.Focus();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void SaveNewButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 int stateId;
                 if (int.TryParse(this.NewStateDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId)
-                    && IsLocationNameUnique(null, txtNewLocationName.Text, stateId))
+                    && this.IsLocationNameUnique(null, this.txtNewLocationName.Text, stateId))
                 {
-                    Location.InsertLocation(txtNewLocationName.Text, stateId, PortalId);
-                    HideAndClearNewStatusPanel();
-                    LoadLocations();
+                    Location.InsertLocation(this.txtNewLocationName.Text, stateId, this.PortalId);
+                    this.HideAndClearNewStatusPanel();
+                    this.LoadLocations();
                 }
                 else
                 {
-                    cvDuplicateLocation.IsValid = false;
+                    this.cvDuplicateLocation.IsValid = false;
                 }
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void CancelNewButton_Click(object sender, EventArgs e)
         {
-            HideAndClearNewStatusPanel();
+            this.HideAndClearNewStatusPanel();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void LocationsGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             this.LocationsGridView.EditIndex = -1;
-            LoadLocations();
+            this.LoadLocations();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void LocationsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -135,38 +142,38 @@ namespace Engage.Dnn.Employment.Admin
                         }
                         else
                         {
-                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');",
-                                    ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", LocalResourceFile)));
+                            btnDelete.OnClientClick = string.Format(
+                                CultureInfo.CurrentCulture,
+                                "return confirm('{0}');",
+                                ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", LocalResourceFile)));
                         }
                     }
                     else if ((e.Row.RowState & DataControlRowState.Edit) != 0)
                     {
                         var ddlState = (DropDownList)row.FindControl("ddlState");
-                        BindStates(ddlState, location.StateId);
+                        this.BindStates(ddlState, location.StateId);
                     }
                 }
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", MessageId = "Member"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void LocationsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int? locationId = GetLocationId(e.RowIndex);
             if (locationId.HasValue)
             {
                 Location.DeleteLocation(locationId.Value);
-                LoadLocations();
+                this.LoadLocations();
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
         private void LocationsGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
             this.LocationsGridView.EditIndex = e.NewEditIndex;
-            HideAndClearNewStatusPanel();
-            LoadLocations();
+            this.HideAndClearNewStatusPanel();
+            this.LoadLocations();
         }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Member")]
+
         private void LocationsGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
@@ -179,17 +186,17 @@ namespace Engage.Dnn.Employment.Admin
                         int? locationId = GetLocationId(rowIndex);
                         if (locationId.HasValue)
                         {
-                            int? stateId = GetStateId(rowIndex);
-                            string newLocationName = GetLocationName(rowIndex);
-                            if (IsLocationNameUnique(locationId, newLocationName, stateId))
+                            int? stateId = this.GetStateId(rowIndex);
+                            string newLocationName = this.GetLocationName(rowIndex);
+                            if (this.IsLocationNameUnique(locationId, newLocationName, stateId))
                             {
                                 Location.UpdateLocation(locationId.Value, newLocationName, stateId.Value);
                                 this.LocationsGridView.EditIndex = -1;
-                                LoadLocations();
+                                this.LoadLocations();
                             }
                             else
                             {
-                                cvDuplicateLocation.IsValid = false;
+                                this.cvDuplicateLocation.IsValid = false;
                             }
                         }
                     }
@@ -218,12 +225,12 @@ namespace Engage.Dnn.Employment.Admin
                 this.NewPanel.CssClass = this.LocationsGridView.AlternatingRowStyle.CssClass;
             }
 
-            rowNewHeader.Visible = (locations == null || locations.Count < 1);
+            this.rowNewHeader.Visible = locations == null || locations.Count < 1;
         }
 
         private void BindStates(ListControl ddlState) 
         {
-            BindStates(ddlState, null);
+            this.BindStates(ddlState, null);
         }
 
         private void BindStates(ListControl ddlState, int? stateId) 
@@ -242,7 +249,7 @@ namespace Engage.Dnn.Employment.Admin
         private void SetupLengthValidation()
         {
             this.regexNewLocationName.ValidationExpression = MaxLengthValidationExpression;
-            this.regexNewLocationName.ErrorMessage = MaxLengthValidationText;
+            this.regexNewLocationName.ErrorMessage = this.MaxLengthValidationText;
         }
 
         private void HideAndClearNewStatusPanel()
@@ -258,9 +265,11 @@ namespace Engage.Dnn.Employment.Admin
             {
                 GridViewRow row = this.LocationsGridView.Rows[rowIndex];
                 var txtLocationName = row.FindControl("txtLocationName") as TextBox;
-                Debug.Assert(txtLocationName != null);
+                
+                Debug.Assert(txtLocationName != null, "txtLocationName not found in row");
                 return txtLocationName.Text;
             }
+
             return null;
         }
 
@@ -270,7 +279,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 GridViewRow row = this.LocationsGridView.Rows[rowIndex];
                 var ddlState = row.FindControl("ddlState") as DropDownList;
-                Debug.Assert(ddlState != null);
+                Debug.Assert(ddlState != null, "dllState not found in row");
 
                 int stateId;
                 if (int.TryParse(ddlState.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId))
@@ -278,18 +287,7 @@ namespace Engage.Dnn.Employment.Admin
                     return stateId;
                 }
             }
-            return null;
-        }
 
-        private static int? GetLocationId(Control row)
-        {
-            var hdnLocationId = (HiddenField)row.FindControl("hdnLocationId");
-
-            int locationId;
-            if (hdnLocationId != null && int.TryParse(hdnLocationId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out locationId))
-            {
-                return locationId;
-            }
             return null;
         }
 
@@ -299,6 +297,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 return GetLocationId(this.LocationsGridView.Rows[rowIndex]);
             }
+
             return null;
         }
     }
