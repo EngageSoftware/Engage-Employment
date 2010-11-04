@@ -14,7 +14,6 @@
         <MasterTableView DataKeyNames="JobId" CommandItemDisplay="Top">
             <CommandItemSettings ShowExportToExcelButton="true" ShowExportToCsvButton="true" />
             <Columns>
-                <telerik:GridBoundColumn Display="false" DataField="JobId" UniqueName="JobId" ItemStyle-CssClass="jobIdColumn" />
                 <telerik:GridTemplateColumn DataField="Title" HeaderText="JobTitleHeaderLabel" UniqueName="Title" ItemStyle-CssClass="jobTitleColumn">
                     <ItemTemplate>
                         <a href='<%#GetJobDetailUrl(Eval("JobId"))%>' id='job-<%#((int)Eval("JobId")).ToString(CultureInfo.InvariantCulture)%>'>
@@ -36,7 +35,6 @@
                     HierarchyDefaultExpanded="true"
                     CommandItemDisplay="Top" CommandItemSettings-ShowExportToCsvButton="true" CommandItemSettings-ShowExportToExcelButton="true">
                     <Columns>
-                        <telerik:GridBoundColumn Display="false" DataField="UserId" UniqueName="UserId" ItemStyle-CssClass="userIdColumn" />
                         <telerik:GridTemplateColumn SortExpression="DisplayName" HeaderText="ApplicantHeaderLabel" ItemStyle-CssClass="applicantColumn">
                             <ItemTemplate>
                                 <%# HttpUtility.HtmlEncode(GetUserName(Eval("UserId") as int?)) %>
