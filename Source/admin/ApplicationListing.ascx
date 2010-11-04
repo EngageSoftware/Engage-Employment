@@ -1,7 +1,4 @@
-<%@ Import Namespace="Engage.Dnn.Employment"%>
 <%@ Import namespace="System.Globalization"%>
-<%@ Import namespace="DotNetNuke.Common.Utilities"%>
-<%@ Import namespace="DotNetNuke.Services.Localization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.ApplicationListing" Codebehind="ApplicationListing.ascx.cs" AutoEventWireup="false" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
