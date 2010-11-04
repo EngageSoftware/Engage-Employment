@@ -276,7 +276,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
-    <Content Include="ReleaseNotes_1.8.5.htm" />
+    <Content Include="ReleaseNotes_1.8.6.htm" />
     <Content Include="images\plus-minus-icn.png" />
     <Content Include="images\small-grey-bg.jpg" />
     <Content Include="images\sortable-white.png" />
