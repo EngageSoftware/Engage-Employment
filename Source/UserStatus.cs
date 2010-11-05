@@ -20,12 +20,18 @@ namespace Engage.Dnn.Employment
 
     using Data;
     using DotNetNuke.Common.Lists;
+    using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Portals;
     using DotNetNuke.Entities.Profile;
     using DotNetNuke.Entities.Users;
 
     public class UserStatus
     {
+        /// <summary>
+        /// The cache key for <see cref="GetStatusForUser"/> and <see cref="LoadUserStatus"/>, taking a portalId and userId
+        /// </summary>
+        private const string UserStatusCacheKeyFormat = "UserStatus.GetStatusForUser({0}, {1})";
+
         public UserStatus(string status, int statusId)
         {
             this.Status = status;
@@ -112,9 +118,14 @@ namespace Engage.Dnn.Employment
             {
                 throw new ArgumentNullException("portalSettings");
             }
-            
-            var user = (new UserController()).GetUser(portalSettings.PortalId, userId);
-            return GetStatusForUser(portalSettings, user);
+
+            return DataCache.GetCachedData<int?>(
+                new CacheItemArgs(string.Format(CultureInfo.InvariantCulture, UserStatusCacheKeyFormat, portalSettings.PortalId, userId)),
+                args =>
+                    {
+                        var user = (new UserController()).GetUser(portalSettings.PortalId, userId);
+                        return GetStatusForUser(portalSettings, user);
+                    });
         }
 
         /// <summary>
@@ -142,6 +153,7 @@ namespace Engage.Dnn.Employment
             
             user.Profile.SetProfileProperty(Utility.UserStatusPropertyName, statusValue);
             UserController.UpdateUser(portalSettings.PortalId, user);
+            DataCache.RemoveCache(string.Format(CultureInfo.InvariantCulture, UserStatusCacheKeyFormat, portalSettings.PortalId, userId));
         }
 
         /// <summary>
@@ -152,18 +164,22 @@ namespace Engage.Dnn.Employment
         /// <returns>The ID of the user's status, or <c>null</c> if the user doesn't have a status set</returns>
         private static int? GetStatusForUser(PortalSettings portalSettings, UserInfo user)
         {
-            CheckUserStatusPropertyExists(portalSettings);
-            ProfileController.GetUserProfile(ref user);
-            var status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
+            return DataCache.GetCachedData<int?>(
+                new CacheItemArgs(string.Format(CultureInfo.InvariantCulture, UserStatusCacheKeyFormat, portalSettings.PortalId, user.UserID)),
+                args =>
+                    {
+                        CheckUserStatusPropertyExists(portalSettings);
+                        ProfileController.GetUserProfile(ref user);
+                        var status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
 
-            int statusId;
-            
-            if (int.TryParse(status, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
-            {
-                return statusId;
-            }
+                        int statusId;
+                        if (int.TryParse(status, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
+                        {
+                            return statusId;
+                        }
 
-            return null;
+                        return null;
+                    });
         }
 
         private static void CheckUserStatusPropertyExists(PortalSettings portalSettings)
