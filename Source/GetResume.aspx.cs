@@ -83,8 +83,7 @@ namespace Engage.Dnn.Employment
                 var moduleController = new ModuleController();
                 foreach (ModuleInfo module in moduleController.GetModulesByDefinition(requestingUser.PortalID, ModuleDefinition.JobListing.ToString()))
                 {
-#pragma restore disable 618
-
+#pragma warning restore 618
 
                     int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
                     if (!permissibleJobGroups.Contains(jobGroupId))
