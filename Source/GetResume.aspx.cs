@@ -76,11 +76,16 @@ namespace Engage.Dnn.Employment
             }
             else
             {
+// GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
+#pragma warning disable 618
+
                 // TODO: if user is in multiple portals, this might need to account for that
-                // GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
                 var moduleController = new ModuleController();
                 foreach (ModuleInfo module in moduleController.GetModulesByDefinition(requestingUser.PortalID, ModuleDefinition.JobListing.ToString()))
                 {
+#pragma restore disable 618
+
+
                     int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
                     if (!permissibleJobGroups.Contains(jobGroupId))
                     {

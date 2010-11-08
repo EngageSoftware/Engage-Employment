@@ -106,9 +106,13 @@ namespace Engage.Dnn.Employment
             ModuleInfo bestModule = null;
             var modules = new ModuleController();
 
-            // GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
+// GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
+#pragma warning disable 618
+
             foreach (ModuleInfo module in modules.GetModulesByDefinition(portalSettings.PortalId, moduleDefinition.ToString()))
             {
+#pragma warning restore 618
+
                 if (!module.IsDeleted)
                 {
                     TabInfo tab = (new TabController()).GetTab(module.TabID, portalSettings.PortalId, false);
