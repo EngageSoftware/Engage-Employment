@@ -106,6 +106,7 @@ namespace Engage.Dnn.Employment
             ModuleInfo bestModule = null;
             var modules = new ModuleController();
 
+            // GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
             foreach (ModuleInfo module in modules.GetModulesByDefinition(portalSettings.PortalId, moduleDefinition.ToString()))
             {
                 if (!module.IsDeleted)

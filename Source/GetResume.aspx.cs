@@ -77,6 +77,7 @@ namespace Engage.Dnn.Employment
             else
             {
                 // TODO: if user is in multiple portals, this might need to account for that
+                // GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
                 var moduleController = new ModuleController();
                 foreach (ModuleInfo module in moduleController.GetModulesByDefinition(requestingUser.PortalID, ModuleDefinition.JobListing.ToString()))
                 {
