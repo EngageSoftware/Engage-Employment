@@ -28,6 +28,7 @@ namespace Engage.Dnn.Employment
 
     using DotNetNuke.Common;
     using DotNetNuke.Common.Utilities;
+    using DotNetNuke.Entities.Host;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Portals;
     using DotNetNuke.Entities.Tabs;
@@ -338,7 +339,7 @@ namespace Engage.Dnn.Employment
                 userLanguage = defaultLanguage;
             }
 
-            Locale userLocale = Localization.GetSupportedLocales()[userLanguage];
+            Locale userLocale = Localization.GetLocale(userLanguage);
             if (userLocale != null && Engage.Utility.HasValue(userLocale.Fallback))
             {
                 fallbackLanguage = userLocale.Fallback.ToUpperInvariant();
@@ -508,7 +509,7 @@ namespace Engage.Dnn.Employment
 
                     try
                     {
-                        int cacheMinutes = 3 * Convert.ToInt32(Globals.PerformanceSetting, CultureInfo.InvariantCulture);
+                        int cacheMinutes = 3 * (int)Host.PerformanceSetting;
                         if (cacheMinutes > 0)
                         {
                             DataCache.SetCache(cacheKey, resources, dp, DateTime.MaxValue, new TimeSpan(0, cacheMinutes, 0));

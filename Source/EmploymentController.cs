@@ -62,7 +62,7 @@ namespace Engage.Dnn.Employment
 
             // only index the JobDetail module definition (since most of this information is only viewable there,
             // and because the Guid parameter on the SearchItemInfo ("jobid=" + jobid) gets put on the querystring to make it work all automagically).  BD
-            if (new ModuleDefinitionController().GetModuleDefinitionByName(modInfo.DesktopModuleID, ModuleDefinition.JobDetail.ToString()).ModuleDefID == modInfo.ModuleDefID 
+            if (ModuleDefinitionController.GetModuleDefinitionByFriendlyName(ModuleDefinition.JobDetail.ToString(), modInfo.DesktopModuleID).ModuleDefID == modInfo.ModuleDefID 
                 && ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(DesktopModuleName, modInfo, ModuleSettings.JobDetailEnableDnnSearch.DefaultValue).Value)
             {
                 int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(DesktopModuleName, modInfo, ModuleSettings.JobGroupId.DefaultValue);

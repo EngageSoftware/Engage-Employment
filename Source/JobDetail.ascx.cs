@@ -25,6 +25,7 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Common;
     using DotNetNuke.Common.Lists;
     using DotNetNuke.Common.Utilities;
+    using DotNetNuke.Entities.Host;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Modules.Actions;
     using DotNetNuke.Entities.Portals;
@@ -372,7 +373,7 @@ namespace Engage.Dnn.Employment
             this.ResumeFileRequiredValidator.Enabled = this.ResumeRequiredLabel.Visible = this.UserId == -1 || JobApplication.GetResumeId(this.UserId) == -1;
             this.ResumeMessageRow.Visible = this.UserId != -1 && JobApplication.GetResumeId(this.UserId) != -1;
 
-            string fileExtensionsList = (string)Globals.HostSettings["FileExtensions"] ?? string.Empty;
+            string fileExtensionsList = Host.FileExtensions ?? string.Empty;
             string fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
             this.ResumeFileExtensionValidator.ValidationExpression = this.CoverLetterFileExtensionValidator.ValidationExpression = fileExtensionValidationExpression;
             this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, Localization.GetString("regexResumeFile.Text", this.LocalResourceFile), fileExtensionsList);
