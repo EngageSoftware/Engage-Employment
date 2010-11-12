@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Engage: Employment" type="Module" version="1.6.0">
+    <package name="Engage: Employment" type="Module" version="1.8.7">
       <friendlyName>Engage: Employment</friendlyName>
       <description>The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com) used to manage job openings in your organization and allow for applicants to view jobs and submit applications.</description>
       <owner>
@@ -10,7 +10,7 @@
         <email>support@engagemodules.com</email>
       </owner>
       <license src="Licenses/EULA-Standard.htm"/>
-      <releaseNotes src="ReleaseNotes_1.6.0.htm" />
+      <releaseNotes src="ReleaseNotes_1.8.7.htm" />
       <components>
         <component type="ResourceFile">
           <resourceFiles>
@@ -71,9 +71,13 @@
               <name>1.8.6.SqlDataProvider</name>
               <version>1.8.6</version>
             </script>
+            <script type="Install">
+              <name>1.8.7.SqlDataProvider</name>
+              <version>1.8.7</version>
+            </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>
-              <version latestVersion="latestVersion">1.6.0</version>
+              <version latestVersion="latestVersion">1.8.7</version>
             </script>
           </scripts>
         </component>
@@ -239,7 +243,7 @@
             <attributes>
               <businessControllerClass>Engage.Dnn.Employment.EmploymentController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,01.01.00,01.02.00,01.03.00,01.03.02,01.04.00,01.04.01,01.04.02,1.5.0,1.5.1</upgradeVersionsList>
+              <upgradeVersionsList>1.8.7</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -247,7 +251,7 @@
           <assemblies>
             <assembly>
               <name>EngageEmployment.dll</name>
-              <version latestVersion="latestVersion">1.6.0</version>
+              <version latestVersion="latestVersion">1.8.7</version>
             </assembly>
             <assembly>
               <name>Engage.Framework.dll</name>
@@ -265,7 +269,7 @@
         </component>
       </components>
     </package>
-    <package name="Engage: Employment Group Admin" type="Module" version="1.6.0">
+    <package name="Engage: Employment Group Admin" type="Module" version="1.8.7">
       <friendlyName>Engage: Emp. Group Admin</friendlyName>
       <description>
         Administration of Job Groups for The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com).
@@ -279,7 +283,7 @@
         <email>support@engagemodules.com</email>
       </owner>
       <license src="Licenses/EULA-Standard.htm"/>
-      <releaseNotes src="ReleaseNotes_1.6.0.htm" />
+      <releaseNotes src="ReleaseNotes_1.8.7.htm" />
       <components>
         <component type="Module">
           <desktopModule>

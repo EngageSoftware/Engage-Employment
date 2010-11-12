@@ -264,6 +264,7 @@
     <Compile Include="Position.cs" />
     <Compile Include="Providers\DataProviders\SqlDataProvider\SqlDataProvider.cs" />
     <Compile Include="State.cs" />
+    <Compile Include="UserStatusInfo.cs" />
     <Compile Include="UserStatus.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
@@ -276,6 +277,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Content Include="ReleaseNotes_1.8.7.htm" />
     <Content Include="ReleaseNotes_1.8.6.htm" />
     <Content Include="images\plus-minus-icn.png" />
     <Content Include="images\small-grey-bg.jpg" />
@@ -313,6 +315,7 @@
     <None Include="Providers\DataProviders\SqlDataProvider\1.7.0.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\1.8.5.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\1.8.6.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\1.8.7.SqlDataProvider" />
     <None Include="Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>

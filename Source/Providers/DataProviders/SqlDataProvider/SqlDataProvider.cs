@@ -298,7 +298,7 @@ namespace Engage.Dnn.Employment.Data
 
             adminData.Tables[0].TableName = "Jobs";
             adminData.Tables[1].TableName = "ApplicationStatuses";
-            adminData.Tables[2].TableName = "Users";
+            adminData.Tables[2].TableName = "UserStatuses";
 
             return adminData;
         }
@@ -1141,6 +1141,90 @@ namespace Engage.Dnn.Employment.Data
             return
                 SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@statusId", statusId)).
                     Tables[0];
+        }
+
+        public override int? GetUserStatus(int portalId, int userId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(" UserStatusId ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, "{0}UserStatus", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" UserId = @userId ");
+            sql.Append(" and PortalId = @portalId ");
+
+            object statusId = SqlHelper.ExecuteScalar(
+                this.ConnectionString,
+                CommandType.Text,
+                sql.ToString(),
+                Utility.CreateIntegerParam("@userId", userId),
+                Utility.CreateIntegerParam("@portalId", portalId));
+
+            return ConvertReturnValueToInt(statusId);
+        }
+
+        public override DataTable GetUsersWithStatus(int portalId, int statusId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.Append(" select ");
+            sql.Append(" UserId, UserStatusId, PortalId ");
+            sql.Append(" from ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, "{0}UserStatus", this.NamePrefix);
+            sql.Append(" where ");
+            sql.Append(" PortalId = @portalId ");
+            sql.Append(" and UserStatusId = @statusId ");
+
+            return
+                SqlHelper.ExecuteDataset(
+                    this.ConnectionString,
+                    CommandType.Text,
+                    sql.ToString(),
+                    Utility.CreateIntegerParam("@portalId", portalId),
+                    Utility.CreateIntegerParam("@statusId", statusId)).Tables[0];
+        }
+
+        public override void UpdateUserStatus(int portalId, int userId, int? statusId)
+        {
+            this.ExecuteNonQuery(
+                "UpdateUserStatus",
+                Utility.CreateIntegerParam("@portalId", portalId),
+                Utility.CreateIntegerParam("@userId", userId),
+                Utility.CreateIntegerParam("@userStatusId", (statusId.HasValue)?statusId:null));
+
+
+            ////var sql = new StringBuilder(512);
+
+            ////sql.AppendFormat(CultureInfo.InvariantCulture, " update {0}UserStatus", this.NamePrefix);
+            ////sql.Append(" set UserStatusId = @statusId ");
+            ////sql.Append(" where UserId = @userId ");
+            ////sql.Append(" and PortalId = @portalId ");
+
+            ////SqlHelper.ExecuteNonQuery(
+            ////    this.ConnectionString,
+            ////    CommandType.Text,
+            ////    sql.ToString(),
+            ////    Utility.CreateIntegerParam("@statusId", statusId),
+            ////    Utility.CreateIntegerParam("@userId", userId),
+            ////    Utility.CreateIntegerParam("@portalId", portalId));
+        }
+
+        public override void DeleteUserStatus(int portalId, int userId)
+        {
+            var sql = new StringBuilder(512);
+
+            sql.AppendFormat(CultureInfo.InvariantCulture, " delete {0}UserStatus", this.NamePrefix);
+            sql.Append(" where UserId = @userId ");
+            sql.Append(" and PortalId = @portalId ");
+
+            SqlHelper.ExecuteNonQuery(
+                this.ConnectionString,
+                CommandType.Text,
+                sql.ToString(),
+                Utility.CreateIntegerParam("@userId", userId),
+                Utility.CreateIntegerParam("@portalId", portalId));
         }
 
         public override int? GetUserStatusId(string status, int portalId)

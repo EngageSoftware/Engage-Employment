@@ -389,7 +389,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (userId.HasValue)
                 {
-                    var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId.Value);
+                    var statusId = UserStatusInfo.LoadUserStatus(this.PortalSettings, userId.Value);
                     if (statusId.HasValue)
                     {
                         return statusId.Value.ToString(CultureInfo.InvariantCulture);
@@ -415,7 +415,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (userId.HasValue)
                 {
-                    var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId.Value);
+                    var statusId = UserStatusInfo.LoadUserStatus(this.PortalSettings, userId.Value);
                     if (statusId.HasValue)
                     {
                         return UserStatus.LoadStatus(statusId.Value).Status;
@@ -537,7 +537,7 @@ namespace Engage.Dnn.Employment.Admin
                 Exceptions.LogException(new InvalidOperationException("During update of application status, StatusId could not be parsed."));
             }
 
-            UserStatus.UpdateUserStatus(this.PortalSettings, userId, statusIdValue);
+            UserStatusInfo.UpdateUserStatus(this.PortalSettings, userId, statusIdValue);
 
             // collapse all other application grids, so that the user's status isn't out of sync
             foreach (GridDataItem item in this.JobsGrid.MasterTableView.Items.Cast<GridDataItem>()
@@ -696,7 +696,7 @@ namespace Engage.Dnn.Employment.Admin
             e.DetailTableView.Columns.FindByUniqueName("ApplicationStatus").Visible = this.ShowApplicationStatuses();
 
             var userIds = this.UserStatusId.HasValue
-                              ? UserStatus.GetUsersWithStatus(this.PortalSettings, this.UserStatusId.Value).Select(user => user.UserID)
+                              ? UserStatusInfo.GetUsersWithStatus(this.PortalSettings, this.UserStatusId.Value).Select(user => user.UserId)
                               : Enumerable.Empty<int>();
 
             int unpagedApplicationCount;

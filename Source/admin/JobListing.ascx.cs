@@ -44,17 +44,17 @@ namespace Engage.Dnn.Employment.Admin
         /// A table mapping users to jobs.  Used to calculate the number of applications with each user status for each job.
         /// Has the columns JobId, UserId
         /// </summary>
-        private DataTable applicationUsersTable;
+        private DataTable userStatusTable;
 
         /// <summary>
         /// Maps from a status ID to an <see cref="ApplicationStatus"/>
         /// </summary>
         private Dictionary<int, ApplicationStatus> applicationStatusMap;
 
-        /// <summary>
-        /// Maps from a status ID to a <see cref="UserStatus"/>
-        /// </summary>
-        private Dictionary<int, UserStatus> userStatusMap;
+        /////// <summary>
+        /////// Maps from a status ID to a <see cref="UserStatus"/>
+        /////// </summary>
+        ////private Dictionary<int, UserStatus> userStatusMap;
 
         /// <summary>
         /// Gets the list of <see cref="ModuleAction"/>s to be displayed for this control.
@@ -145,7 +145,7 @@ namespace Engage.Dnn.Employment.Admin
                 // empty row for categories or positions not assigned to a job
                 return locationName is DBNull ? this.Localize("UnassignedCategories") : this.Localize("UnassignedPositions");
             }
-            
+
             return string.Format(CultureInfo.CurrentCulture, this.Localize("Location"), locationName, stateName, stateAbbreviation);
         }
 
@@ -173,7 +173,7 @@ namespace Engage.Dnn.Employment.Admin
                     applicationCount,
                     applicationText);
             }
-            
+
             return string.Empty;
         }
 
@@ -187,11 +187,11 @@ namespace Engage.Dnn.Employment.Admin
             foreach (var statusRow in from DataRow row in this.applicationStatusTable.Rows
                                       where (int)row["JobId"] == jobId
                                       select new
-                                          {
-                                              Count = (int)row["Count"],
-                                              JobId = (int)row["JobId"],
-                                              StatusId = (int)row["StatusId"]
-                                          })
+                                      {
+                                          Count = (int)row["Count"],
+                                          JobId = (int)row["JobId"],
+                                          StatusId = (int)row["StatusId"]
+                                      })
             {
                 ApplicationStatus status;
                 if (!this.applicationStatusMap.TryGetValue(statusRow.StatusId, out status))
@@ -200,46 +200,35 @@ namespace Engage.Dnn.Employment.Admin
                 }
 
                 yield return new
-                    {
-                        IsUserStatus = false,
-                        Url = this.EditUrl(
-                                "jobId",
-                                jobId.ToString(CultureInfo.InvariantCulture),
-                                ControlKey.ManageApplications.ToString(),
-                                "statusId=" + statusRow.StatusId.ToString(CultureInfo.InvariantCulture)),
-                        Count = statusRow.Count,
-                        Status = status.StatusName
-                    };
+                {
+                    IsUserStatus = false,
+                    Url = this.EditUrl(
+                            "jobId",
+                            jobId.ToString(CultureInfo.InvariantCulture),
+                            ControlKey.ManageApplications.ToString(),
+                            "statusId=" + statusRow.StatusId.ToString(CultureInfo.InvariantCulture)),
+                    Count = statusRow.Count,
+                    Status = status.StatusName
+                };
             }
-            
-            foreach (var statusGrouping in this.applicationUsersTable.Rows.Cast<DataRow>()
-                                            .Where(row => (int)row["JobId"] == jobId)
-                                            .Select(row =>
-                                                {
-                                                    UserStatus status;
-                                                    if (this.userStatusMap.TryGetValue((int)row["UserId"], out status))
-                                                    {
-                                                        return status;
-                                                    }
 
-                                                    return null;
-                                                })
-                                            .Where(status => status != null)
-                                            .GroupBy(status => status))
+            foreach (var row in this.userStatusTable.Rows.Cast<DataRow>()
+                                            .Where(row => (int)row["JobId"] == jobId)
+                                            .Select(row => row))
             {
                 yield return new
-                    {
-                        IsUserStatus = true,
-                        Url =
-                            this.EditUrl(
-                                "jobId",
-                                jobId.ToString(CultureInfo.InvariantCulture),
-                                ControlKey.ManageApplications.ToString(),
-                                "userStatusId=" + statusGrouping.Key.StatusId.ToString(CultureInfo.InvariantCulture)),
-                        Count = statusGrouping.Count(),
-                        Status = statusGrouping.Key.Status
-                    };
-            }            
+                {
+                    IsUserStatus = true,
+                    Url =
+                        this.EditUrl(
+                            "jobId",
+                            jobId.ToString(CultureInfo.InvariantCulture),
+                            ControlKey.ManageApplications.ToString(),
+                            "userStatusId=" + ((int)row["UserStatusId"]).ToString(CultureInfo.InvariantCulture)),
+                    Count = (int)row["Count"],
+                    Status = (string)row["Status"]
+                };
+            }
         }
 
         /// <summary>
@@ -322,7 +311,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             var adminData = Job.GetAdminData(this.JobGroupId, this.PortalId);
             this.applicationStatusTable = adminData.Tables["ApplicationStatuses"];
-            this.applicationUsersTable = adminData.Tables["Users"];
+            this.userStatusTable = adminData.Tables["UserStatuses"];
 
             this.InitializeStatusMaps();
 
@@ -351,24 +340,42 @@ namespace Engage.Dnn.Employment.Admin
         private void InitializeStatusMaps()
         {
             this.applicationStatusMap = ApplicationStatus.GetStatuses(this.PortalId).ToDictionary(status => status.StatusId);
-            
-            var statusMap = UserStatus.LoadStatuses(this.PortalId).ToDictionary(status => status.StatusId);
-            this.userStatusMap = this.applicationUsersTable.Rows.Cast<DataRow>()
-                .Select(row => (int)row["UserId"])
-                .Distinct()
-                .ToDictionary(
-                    userId => userId,
-                    userId =>
-                        {
-                            UserStatus status;
-                            var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId);
-                            if (statusId.HasValue && statusMap.TryGetValue(statusId.Value, out status))
-                            {
-                                return status;
-                            }
 
-                            return null;
-                        });
+            ////var statusMap = UserStatus.LoadStatuses(this.PortalId).ToDictionary(status => status.StatusId);
+            ////this.userStatusMap = UserStatus.GetUsersWithStatus(this.PortalSettings).ToDictionary(
+            ////    user => user.UserID,
+            ////    user =>
+            ////    {
+            ////        var status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
+            ////        int statusId;
+            ////        if (int.TryParse(status, out statusId))
+            ////        {
+            ////            UserStatus userStatus;
+            ////            if (statusMap.TryGetValue(statusId, out userStatus))
+            ////            {
+            ////                return userStatus;
+            ////            }
+            ////        }
+
+            ////        return null;
+            ////    });
+
+            ////this.userStatusMap = this.applicationUsersTable.Rows.Cast<DataRow>()
+            ////    .Select(row => (int)row["UserId"])
+            ////    .Distinct()
+            ////    .ToDictionary(
+            ////        userId => userId,
+            ////        userId =>
+            ////            {
+            ////                UserStatus status;
+            ////                var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId);
+            ////                if (statusId.HasValue && statusMap.TryGetValue(statusId.Value, out status))
+            ////                {
+            ////                    return status;
+            ////                }
+
+            ////                return null;
+            ////            });
         }
 
         /// <summary>

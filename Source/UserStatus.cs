@@ -11,27 +11,15 @@
 
 namespace Engage.Dnn.Employment
 {
-    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
 
     using Data;
-    using DotNetNuke.Common.Lists;
-    using DotNetNuke.Common.Utilities;
-    using DotNetNuke.Entities.Portals;
-    using DotNetNuke.Entities.Profile;
-    using DotNetNuke.Entities.Users;
 
     public class UserStatus
     {
-        /// <summary>
-        /// The cache key for <see cref="GetStatusForUser"/> and <see cref="LoadUserStatus"/>, taking a portalId and userId
-        /// </summary>
-        private const string UserStatusCacheKeyFormat = "UserStatus.GetStatusForUser({0}, {1})";
-
         public UserStatus(string status, int statusId)
         {
             this.Status = status;
@@ -86,135 +74,6 @@ namespace Engage.Dnn.Employment
         public static int? GetStatusId(string statusName, int portalId)
         {
             return DataProvider.Instance().GetUserStatusId(statusName, portalId);
-        }
-
-        /// <summary>
-        /// Gets the list of users who have a given status.
-        /// </summary>
-        /// <param name="portalSettings">The settings of the portal in which the module is currently operating.</param>
-        /// <param name="statusId">The ID of the status we're looking for.</param>
-        /// <returns>A sequence of all users in the given portal.</returns>
-        public static IEnumerable<UserInfo> GetUsersWithStatus(PortalSettings portalSettings, int statusId)
-        {
-            if (portalSettings == null)
-            {
-                throw new ArgumentNullException("portalSettings");
-            }
-
-            return UserController.GetUsers(portalSettings.PortalId).Cast<UserInfo>()
-                    .Where(user => GetStatusForUser(portalSettings, user) == statusId);
-        }
-
-        /// <summary>
-        /// Loads the status ID of a user.
-        /// </summary>
-        /// <param name="portalSettings">The settings of the portal in which the module is currently operating.</param>
-        /// <param name="userId">The ID of the user whom we are looking up.</param>
-        /// <returns>The ID of the current status of the given user, or <c>null</c> if the user has no status.</returns>
-        /// <exception cref="NullReferenceException">If the user does not exist</exception>
-        public static int? LoadUserStatus(PortalSettings portalSettings, int userId)
-        {
-            if (portalSettings == null)
-            {
-                throw new ArgumentNullException("portalSettings");
-            }
-
-            return DataCache.GetCachedData<int?>(
-                new CacheItemArgs(string.Format(CultureInfo.InvariantCulture, UserStatusCacheKeyFormat, portalSettings.PortalId, userId)),
-                args =>
-                    {
-                        var user = (new UserController()).GetUser(portalSettings.PortalId, userId);
-                        return GetStatusForUser(portalSettings, user);
-                    });
-        }
-
-        /// <summary>
-        /// Updates the status of the given user.
-        /// </summary>
-        /// <param name="portalSettings">The portal settings.</param>
-        /// <param name="userId">The user ID.</param>
-        /// <param name="statusId">The status ID.</param>
-        public static void UpdateUserStatus(PortalSettings portalSettings, int userId, int? statusId)
-        {
-            if (portalSettings == null)
-            {
-                throw new ArgumentNullException("portalSettings");
-            }
-
-            CheckUserStatusPropertyExists(portalSettings);
-            UserInfo user = (new UserController()).GetUser(portalSettings.PortalId, userId);
-            ProfileController.GetUserProfile(ref user);
-
-            string statusValue = string.Empty;
-            if (statusId.HasValue)
-            {
-                statusValue = statusId.Value.ToString(CultureInfo.InvariantCulture);
-            }
-            
-            user.Profile.SetProfileProperty(Utility.UserStatusPropertyName, statusValue);
-            UserController.UpdateUser(portalSettings.PortalId, user);
-            DataCache.RemoveCache(string.Format(CultureInfo.InvariantCulture, UserStatusCacheKeyFormat, portalSettings.PortalId, userId));
-        }
-
-        /// <summary>
-        /// Gets the ID of the status for the given user.
-        /// </summary>
-        /// <param name="portalSettings">The settings of the portal in which the module is currently operating.</param>
-        /// <param name="user">The user for whom to get the status.</param>
-        /// <returns>The ID of the user's status, or <c>null</c> if the user doesn't have a status set</returns>
-        private static int? GetStatusForUser(PortalSettings portalSettings, UserInfo user)
-        {
-            return DataCache.GetCachedData<int?>(
-                new CacheItemArgs(string.Format(CultureInfo.InvariantCulture, UserStatusCacheKeyFormat, portalSettings.PortalId, user.UserID)),
-                args =>
-                    {
-                        CheckUserStatusPropertyExists(portalSettings);
-                        ProfileController.GetUserProfile(ref user);
-                        var status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
-
-                        int statusId;
-                        if (int.TryParse(status, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
-                        {
-                            return statusId;
-                        }
-
-                        return null;
-                    });
-        }
-
-        private static void CheckUserStatusPropertyExists(PortalSettings portalSettings)
-        {
-            try
-            {
-                if (ProfileController.GetPropertyDefinitionByName(portalSettings.PortalId, Utility.UserStatusPropertyName) == null)
-                {
-                    ProfileController.AddPropertyDefinition(GetUserStatusProfilePropertyDefinition(portalSettings));
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                ProfileController.AddPropertyDefinition(GetUserStatusProfilePropertyDefinition(portalSettings));
-            }
-        }
-
-        private static ProfilePropertyDefinition GetUserStatusProfilePropertyDefinition(PortalSettings portalSettings)
-        {
-            var property = new ProfilePropertyDefinition
-                {
-                    PortalId = portalSettings.PortalId,
-                    ModuleDefId =
-                        Utility.GetCurrentModuleByDefinition(
-                            portalSettings, ModuleDefinition.JobListing, null).ModuleDefID,
-                    DataType = (new ListController()).GetListEntryInfo("DataType", "Integer").EntryID,
-                    PropertyCategory = "Engage: Employment",
-                    PropertyName = Utility.UserStatusPropertyName,
-                    Required = false,
-                    ViewOrder = 0,
-                    Visibility = UserVisibilityMode.AdminOnly,
-                    Length = 0
-                };
-
-            return property;
         }
 
         private static UserStatus FillUserStatus(DataRow row)

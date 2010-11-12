@@ -1,0 +1,112 @@
+﻿if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] DROP CONSTRAINT {objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}[FK_EngageEmployment_UserStatus_Users]]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] DROP CONSTRAINT {objectQualifier}FK_EngageEmployment_UserStatus_Users
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]
+GO
+
+CREATE TABLE [dbo].[dnn_EngageEmployment_UserStatus](
+	[UserStatusId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+	[PortalId] [int] NOT NULL,
+ CONSTRAINT [PK_dnn_EngageEmployment_UserStatus] PRIMARY KEY CLUSTERED 
+(
+	[UserStatusId] ASC,
+	[UserId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] ADD 
+	CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus] FOREIGN KEY 
+	(
+		[UserStatusId]
+	) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] (
+		[UserStatusId]
+	),
+	CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserStatus_Users] FOREIGN KEY 
+	(
+		[UserId]
+	) REFERENCES {databaseOwner}[{objectQualifier}Users] (
+		[UserID]
+	)
+GO
+
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus
+@portalId int,
+@userId int,
+@userStatusId int
+AS
+BEGIN TRAN
+	IF @userStatusId IS NULL
+	BEGIN
+		DELETE {databaseOwner}{objectQualifier}EngageEmployment_UserStatus
+		WHERE PortalId = @portalId AND UserId = @userId	
+	END
+	ELSE
+	BEGIN 
+		IF NOT EXISTS (SELECT NULL FROM {databaseOwner}{objectQualifier}EngageEmployment_UserStatus (HOLDLOCK) WHERE PortalId = @portalId AND UserId = @userId)
+		BEGIN
+			INSERT INTO {databaseOwner}{objectQualifier}EngageEmployment_UserStatus(PortalId, UserId, UserStatusId)
+			VALUES(@portalId, @userId, @userStatusId)
+		END
+		ELSE
+		BEGIN
+			UPDATE {databaseOwner}{objectQualifier}EngageEmployment_UserStatus
+			SET [UserStatusId] = @userStatusId
+			WHERE PortalId = @portalId
+			AND UserId = @userId
+		END
+	END
+COMMIT
+GO
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData
+@JobGroupId int,
+@PortalId int
+AS
+	SELECT DISTINCT j.JobId
+	 INTO #jobs
+	 FROM dnn_EngageEmployment_vwJobs j
+	 LEFT JOIN dnn_EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId)
+	 WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
+	  AND PortalId = @PortalId
+	 
+	SELECT	JobId, PostedDate, SortOrder, LocationId, LocationName, 
+			StateId, StateName, StateAbbreviation, CategoryId, 
+			CategoryName, PositionId, JobTitle, JobDescription,
+			(SELECT count(*) FROM dnn_EngageEmployment_UserJob uj WHERE uj.JobId = j.JobId) AS ApplicationCount
+	 FROM dnn_EngageEmployment_vwJobs j
+	 WHERE JobId IN (SELECT JobId FROM #jobs)
+	 ORDER BY SortOrder, PostedDate
+
+    SELECT COUNT(*) AS Count, a.JobId, a.StatusId
+    FROM  {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
+    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+      AND a.StatusId IS NOT NULL
+    GROUP BY a.JobId, a.StatusId
+
+    SELECT a.JobId, COUNT(us.UserStatusId) AS Count, us.UserStatusId, l.Status
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
+    JOIN {databaseOwner}{objectQualifier}EngageEmployment_UserStatus us ON us.UserId = a.UserId
+    JOIN {databaseOwner}{objectQualifier}EngageEmployment_lkpUserStatus l ON l.UserStatusId = us.UserStatusId
+    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+      AND a.UserId IS NOT NULL
+    GROUP BY a.JobId, us.UserStatusId, l.Status
+    ORDER BY a.JobId
+GO

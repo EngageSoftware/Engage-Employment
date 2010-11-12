@@ -263,6 +263,14 @@ namespace Engage.Dnn.Employment.Data
 
         public abstract DataTable GetUserStatus(int statusId);
 
+        public abstract int? GetUserStatus(int portalId, int userId);
+
+        public abstract DataTable GetUsersWithStatus(int portalId, int statusId);
+
+        public abstract void UpdateUserStatus(int portalId, int userId, int? statusId);
+
+        public abstract void DeleteUserStatus(int portalId, int userId);
+
         public abstract void UpdateUserStatus(int statusId, string statusName);
 
         public abstract void InsertUserStatus(string statusName, int portalId);

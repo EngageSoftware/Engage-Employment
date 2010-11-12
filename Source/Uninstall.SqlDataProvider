@@ -250,4 +250,18 @@ GO
 UPDATE {objectQualifier}ProfilePropertyDefinition SET Deleted = 1 WHERE PropertyCategory = 'Engage: Employment'
 GO
 
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] DROP CONSTRAINT {objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus
+GO
 
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}[FK_EngageEmployment_UserStatus_Users]]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] DROP CONSTRAINT {objectQualifier}FK_EngageEmployment_UserStatus_Users
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]
+GO
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus
+GO

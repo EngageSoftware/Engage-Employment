@@ -15,17 +15,22 @@ namespace Engage.Dnn.Employment
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
+
     using Data;
     using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Modules.Definitions;
+    using DotNetNuke.Entities.Portals;
+    using DotNetNuke.Entities.Profile;
+    using DotNetNuke.Entities.Users;
     using DotNetNuke.Services.Search;
 
     /// <summary>
     /// Exposes the capabilities of this module to DNN.  Implements the method to allow searching and syndication integration.
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called by DNN through reflection")]
-    internal class EmploymentController : ISearchable
+    internal class EmploymentController : ISearchable, IUpgradeable
     {
         /// <summary>
         /// The name of this module's desktop module record in DNN
@@ -109,5 +114,37 @@ namespace Engage.Dnn.Employment
         }
 
         #endregion
+
+        public string UpgradeModule(string version)
+        {
+            var v = new Version(version);
+            if (v == new Version(1,8,7))
+            {
+                // Migrate UserStatus from UserProfile to EngageEmployment_UserStatus table.
+                var portalController = new PortalController();
+                var portals = portalController.GetPortals().Cast<PortalInfo>();
+
+                foreach (var portal in portals)
+                {
+                    var maxSize = 0;
+                    var users = UserController.GetUsersByProfileProperty(
+                        portal.PortalID, Utility.UserStatusPropertyName, "%", 0, int.MaxValue, ref maxSize).Cast<UserInfo>();
+
+                    foreach (var userInfo in users)
+                    {
+                        var userId = userInfo.UserID;
+                        var statusIdStr = userInfo.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
+                        int statusId;
+                        int.TryParse(statusIdStr, out statusId);
+
+                        DataProvider.Instance().UpdateUserStatus(portal.PortalID, userId, statusId);
+                    }
+
+                    ProfileController.DeletePropertyDefinition(ProfileController.GetPropertyDefinitionByName(portal.PortalID, Utility.UserStatusPropertyName));
+                }
+            }
+
+            return "No upgrade action required for this version";
+        }
     }
 }
