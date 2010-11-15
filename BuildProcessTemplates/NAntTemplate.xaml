@@ -30,7 +30,7 @@
   <this:Process.Metadata>
     <mtbw:ProcessParameterMetadataCollection />
   </this:Process.Metadata>
-  <sap:VirtualizedContainerService.HintSize>588,1619</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>588,1913</sap:VirtualizedContainerService.HintSize>
   <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
   <sap:WorkflowViewStateService.ViewState>
     <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -38,7 +38,7 @@
       <x:Boolean x:Key="ShouldCollapseAll">True</x:Boolean>
     </scg:Dictionary>
   </sap:WorkflowViewStateService.ViewState>
-  <Sequence sad:XamlDebuggerXmlReader.FileName="C:\Users\bdukes\Documents\Visual Studio 2008\Projects\TFS\F3\NAntTemplate.xaml" sap:VirtualizedContainerService.HintSize="548,1579" mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+  <Sequence sad:XamlDebuggerXmlReader.FileName="C:\Users\bdukes\Documents\Visual Studio 2008\Projects\TFS\Employment\BuildProcessTemplates\NAntTemplate.xaml" sap:VirtualizedContainerService.HintSize="548,1873" mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
     <Sequence.Variables>
       <Variable x:TypeArguments="mtbc:IBuildDetail" Name="BuildDetail" />
     </Sequence.Variables>
@@ -109,7 +109,7 @@
         </If.Then>
       </If>
     </Sequence>
-    <mtbwa:AgentScope DisplayName="Run On Agent" sap:VirtualizedContainerService.HintSize="526,1211" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+    <mtbwa:AgentScope DisplayName="Run On Agent" sap:VirtualizedContainerService.HintSize="526,1505" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
       <mtbwa:AgentScope.Variables>
         <Variable x:TypeArguments="mtbc:IBuildAgent" Name="BuildAgent" />
         <Variable x:TypeArguments="mtvc1:Workspace" Name="Workspace" />
@@ -237,7 +237,7 @@
           </mtbwa:InvokeForReason>
         </If.Then>
       </If>
-      <TryCatch DisplayName="Try Compile, Test, and Associate Changesets and Work Items" sap:VirtualizedContainerService.HintSize="504,814" mtbwt:BuildTrackingParticipant.Importance="Low">
+      <TryCatch DisplayName="Try Compile, Test, and Associate Changesets and Work Items" sap:VirtualizedContainerService.HintSize="504,1108" mtbwt:BuildTrackingParticipant.Importance="Low">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsPinned">True</x:Boolean>
@@ -245,7 +245,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
         <TryCatch.Finally>
-          <Sequence DisplayName="Revert Workspace and Copy Files to Drop Location" sap:VirtualizedContainerService.HintSize="486,649" mtbwt:BuildTrackingParticipant.Importance="Low">
+          <Sequence DisplayName="Revert Workspace and Copy Files to Drop Location" sap:VirtualizedContainerService.HintSize="486,943" mtbwt:BuildTrackingParticipant.Importance="Low">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -255,14 +255,14 @@
             <mtbwa:InvokeForReason DisplayName="Revert Workspace for Shelveset Builds" sap:VirtualizedContainerService.HintSize="464,51" Reason="ValidateShelveset, CheckInShelveset">
               <mtbwa:RevertWorkspace DisplayName="Revert Workspace" sap:VirtualizedContainerService.HintSize="200,22" Workspace="[Workspace]" />
             </mtbwa:InvokeForReason>
-            <If Condition="[DropBuild AndAlso Not String.IsNullOrEmpty(BuildDetail.DropLocation)]" DisplayName="If DropBuild And DropLocation is Set" sap:VirtualizedContainerService.HintSize="464,434" mtbwt:BuildTrackingParticipant.Importance="Low">
+            <If Condition="[DropBuild AndAlso Not String.IsNullOrEmpty(BuildDetail.DropLocation)]" DisplayName="If DropBuild And DropLocation is Set" sap:VirtualizedContainerService.HintSize="464,728" mtbwt:BuildTrackingParticipant.Importance="Low">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsPinned">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
               <If.Then>
-                <Sequence sap:VirtualizedContainerService.HintSize="281,328">
+                <Sequence sap:VirtualizedContainerService.HintSize="297,622">
                   <Sequence.Variables>
                     <Variable x:TypeArguments="scg:IEnumerable(x:String)" Name="PackageFiles" />
                   </Sequence.Variables>
@@ -272,7 +272,7 @@
                       <x:Boolean x:Key="IsPinned">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;-D:testBuild=false -D:binDirectory=&quot;&quot;{0}&quot;&quot;&quot;, BinariesDirectory)]" DisplayName="NAnt" FileName="D:\Tools\nant\bin\NAnt.exe" sap:VirtualizedContainerService.HintSize="200,51" WorkingDirectory="[SourcesDirectory]">
+                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;-D:testBuild=false -D:binDirectory=&quot;&quot;{0}&quot;&quot;&quot;, BinariesDirectory)]" DisplayName="NAnt" FileName="D:\Tools\nant\bin\NAnt.exe" sap:VirtualizedContainerService.HintSize="234,198" WorkingDirectory="[SourcesDirectory &amp; &quot;\Source&quot;]">
                     <mtbwa:InvokeProcess.ErrorDataReceived>
                       <ActivityAction x:TypeArguments="x:String">
                         <ActivityAction.Argument>
@@ -289,8 +289,13 @@
                         <mtbwa:WriteBuildMessage sap:VirtualizedContainerService.HintSize="200,22" Importance="[Microsoft.TeamFoundation.Build.Client.BuildMessageImportance.High]" Message="[stdOutput]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" />
                       </ActivityAction>
                     </mtbwa:InvokeProcess.OutputDataReceived>
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsPinned">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
                   </mtbwa:InvokeProcess>
-                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;&quot;&quot;{0}&quot;&quot; &quot;&quot;{1}&quot;&quot;&quot;, Path.Combine(SourcesDirectory, &quot;package&quot;, &quot;*.zip&quot;), BinariesDirectory)]" DisplayName="Copy Packages" FileName="xcopy" sap:VirtualizedContainerService.HintSize="200,51">
+                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;&quot;&quot;{0}&quot;&quot; &quot;&quot;{1}&quot;&quot;&quot;, Path.Combine(SourcesDirectory, &quot;package&quot;, &quot;*.zip&quot;), BinariesDirectory)]" DisplayName="Copy Packages" FileName="xcopy" sap:VirtualizedContainerService.HintSize="234,198">
                     <mtbwa:InvokeProcess.ErrorDataReceived>
                       <ActivityAction x:TypeArguments="x:String">
                         <ActivityAction.Argument>
@@ -307,8 +312,13 @@
                         <mtbwa:WriteBuildMessage sap:VirtualizedContainerService.HintSize="200,22" Message="[stdOutput]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" />
                       </ActivityAction>
                     </mtbwa:InvokeProcess.OutputDataReceived>
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsPinned">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
                   </mtbwa:InvokeProcess>
-                  <mtbwa:CopyDirectory Destination="[BuildDetail.DropLocation]" DisplayName="Copy Files to Drop Location" sap:VirtualizedContainerService.HintSize="200,22" Source="[BinariesDirectory]" />
+                  <mtbwa:CopyDirectory Destination="[BuildDetail.DropLocation]" DisplayName="Copy Files to Drop Location" sap:VirtualizedContainerService.HintSize="234,22" Source="[BinariesDirectory]" />
                 </Sequence>
               </If.Then>
             </If>
