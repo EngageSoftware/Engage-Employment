@@ -1,48 +1,17 @@
-﻿if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] DROP CONSTRAINT {objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus
+﻿IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]', N'U') IS NULL
+    CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus](
+	    [UserStatusId] [int] NOT NULL,
+	    [UserId] [int] NOT NULL,
+	    [PortalId] [int] NOT NULL,
+        CONSTRAINT [PK_{objectQualifier}EngageEmployment_UserStatus] PRIMARY KEY CLUSTERED ([UserStatusId], [UserId], [PortalId]),
+        CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus] FOREIGN KEY ([UserStatusId]) 
+            REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] ([UserStatusId])
+    )
 GO
-
-if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}[FK_EngageEmployment_UserStatus_Users]]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] DROP CONSTRAINT {objectQualifier}FK_EngageEmployment_UserStatus_Users
-GO
-
-if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-drop table {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]
-GO
-
-CREATE TABLE [dbo].[dnn_EngageEmployment_UserStatus](
-	[UserStatusId] [int] NOT NULL,
-	[UserId] [int] NOT NULL,
-	[PortalId] [int] NOT NULL,
- CONSTRAINT [PK_dnn_EngageEmployment_UserStatus] PRIMARY KEY CLUSTERED 
-(
-	[UserStatusId] ASC,
-	[UserId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] ADD 
-	CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus] FOREIGN KEY 
-	(
-		[UserStatusId]
-	) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] (
-		[UserStatusId]
-	),
-	CONSTRAINT [{objectQualifier}FK_EngageEmployment_UserStatus_Users] FOREIGN KEY 
-	(
-		[UserId]
-	) REFERENCES {databaseOwner}[{objectQualifier}Users] (
-		[UserID]
-	)
-GO
-
 
 IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus', N'P') IS NOT NULL
     DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus
 GO
-
 CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus
 @portalId int,
 @userId int,
@@ -75,7 +44,6 @@ GO
 IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData', N'P') IS NOT NULL
     DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData
 GO
-
 CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData
 @JobGroupId int,
 @PortalId int
