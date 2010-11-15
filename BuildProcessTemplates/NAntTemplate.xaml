@@ -295,7 +295,7 @@
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
                   </mtbwa:InvokeProcess>
-                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;&quot;&quot;{0}&quot;&quot; &quot;&quot;{1}&quot;&quot;&quot;, Path.Combine(SourcesDirectory, &quot;package&quot;, &quot;*.zip&quot;), BinariesDirectory)]" DisplayName="Copy Packages" FileName="xcopy" sap:VirtualizedContainerService.HintSize="234,198">
+                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;&quot;&quot;{0}&quot;&quot; &quot;&quot;{1}&quot;&quot;&quot;, Path.Combine(SourcesDirectory, &quot;Source&quot;, &quot;package&quot;, &quot;*.zip&quot;), BinariesDirectory)]" DisplayName="Copy Packages" FileName="xcopy" sap:VirtualizedContainerService.HintSize="234,198">
                     <mtbwa:InvokeProcess.ErrorDataReceived>
                       <ActivityAction x:TypeArguments="x:String">
                         <ActivityAction.Argument>
