@@ -50,16 +50,16 @@ CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData
 AS
 	SELECT DISTINCT j.JobId
 	 INTO #jobs
-	 FROM dnn_EngageEmployment_vwJobs j
-	 LEFT JOIN dnn_EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId)
+	 FROM {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j
+	 LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId)
 	 WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
 	  AND PortalId = @PortalId
 	 
 	SELECT	JobId, PostedDate, SortOrder, LocationId, LocationName, 
 			StateId, StateName, StateAbbreviation, CategoryId, 
 			CategoryName, PositionId, JobTitle, JobDescription,
-			(SELECT count(*) FROM dnn_EngageEmployment_UserJob uj WHERE uj.JobId = j.JobId) AS ApplicationCount
-	 FROM dnn_EngageEmployment_vwJobs j
+			(SELECT count(*) FROM {databaseOwner}{objectQualifier}EngageEmployment_UserJob uj WHERE uj.JobId = j.JobId) AS ApplicationCount
+	 FROM {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j
 	 WHERE JobId IN (SELECT JobId FROM #jobs)
 	 ORDER BY SortOrder, PostedDate
 
