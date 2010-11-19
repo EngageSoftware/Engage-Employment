@@ -56,6 +56,11 @@ namespace Engage.Dnn.Employment.Admin
         private readonly Dictionary<int, ListEntryInfo> leadsList;
 
         /// <summary>
+        /// Backing field for <see cref="LocationsForSearch"/>
+        /// </summary>
+        private readonly IEnumerable<Location> locations;
+
+        /// <summary>
         /// Backing field for <see cref="JobId"/>
         /// </summary>
         private int? jobId;
@@ -84,6 +89,7 @@ namespace Engage.Dnn.Employment.Admin
             this.userStatuses = UserStatus.LoadStatuses(this.PortalId);
             this.applicationStatuses = ApplicationStatus.GetStatuses(this.PortalId);
             this.leadsList = (new ListController()).GetListEntryInfoCollection(Employment.Utility.LeadListName).Cast<ListEntryInfo>().ToDictionary(entry => entry.EntryID);
+            this.locations = Location.LoadLocations(null, this.PortalId);
         }
 
         /// <summary>
@@ -173,6 +179,54 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
+        /// Gets the application statuses for search drop down.
+        /// </summary>
+        /// <value>The application statuses list.</value>
+        protected IEnumerable<ListItem> ApplicationStatusesForSearch
+        {
+            get
+            {
+                yield return new ListItem(string.Empty, string.Empty);
+
+                foreach (var applicationStatus in this.applicationStatuses)
+                {
+                    yield return new ListItem(applicationStatus.StatusName, applicationStatus.StatusId.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the leads for search drop down.
+        /// </summary>
+        /// <value>The leads for search.</value>
+        protected IEnumerable<ListItem> LeadsForSearch
+        {
+            get
+            {
+                yield return new ListItem(string.Empty, string.Empty);
+
+                foreach (var leadInfo in this.leadsList)
+                {
+                    yield return new ListItem(leadInfo.Value.Text, leadInfo.Key.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+
+        protected IEnumerable<ListItem> LocationsForSearch
+        {
+            get
+            {
+                yield return new ListItem(string.Empty, string.Empty);
+
+                foreach (var location in this.locations)
+                {
+                    yield return new ListItem(location.LocationName, location.LocationId.ToString());
+                }
+            }
+        }
+        
+        /// <summary>
         /// Gets the list of user statuses to display to the user.
         /// </summary>
         /// <value>The user statuses list.</value>
@@ -189,6 +243,23 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
+        /// <summary>
+        /// Gets the user statuses for search drop down.
+        /// </summary>
+        /// <value>The user statuses list.</value>
+        protected IEnumerable<ListItem> UserStatusesForSearch
+        {
+            get
+            {
+                yield return new ListItem(string.Empty, string.Empty);
+
+                foreach (var userStatus in this.userStatuses)
+                {
+                    yield return new ListItem(userStatus.Status, userStatus.StatusId.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+        }
+        
         /// <summary>
         /// Gets the ID of the job for which to display applications (or <c>null</c> to display all jobs).
         /// </summary>
@@ -219,6 +290,11 @@ namespace Engage.Dnn.Employment.Admin
         {
             get 
             {
+                if (ViewState["ApplicationStatusId"] != null)
+                {
+                    this.applicationStatusId = (int?)ViewState["ApplicationStatusId"];
+                }
+
                 if (!this.applicationStatusId.HasValue)
                 {
                     int statusId;
@@ -231,6 +307,11 @@ namespace Engage.Dnn.Employment.Admin
 
                 return this.applicationStatusId;
             }
+
+            set
+            {
+                ViewState["ApplicationStatusId"] = this.applicationStatusId = value;
+            }
         }
 
         /// <summary>
@@ -241,6 +322,11 @@ namespace Engage.Dnn.Employment.Admin
         {
             get 
             {
+                if (ViewState["UserStatusId"] != null)
+                {
+                    this.userStatusId = (int?)ViewState["UserStatusId"];
+                }
+
                 if (!this.userStatusId.HasValue)
                 {
                     int statusId;
@@ -252,6 +338,11 @@ namespace Engage.Dnn.Employment.Admin
                 }
 
                 return this.userStatusId;
+            }
+
+            set
+            {
+                ViewState["UserStatusId"] = this.userStatusId = value;
             }
         }
 
@@ -466,11 +557,16 @@ namespace Engage.Dnn.Employment.Admin
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
+
+            this.Load += this.Page_Load;
+
             this.JobsGrid.NeedDataSource += this.JobsGrid_NeedDataSource;
             this.JobsGrid.ItemCreated += this.JobsGrid_ItemCreated;
             this.JobsGrid.ItemCommand += this.JobsGrid_ItemCommand;
             this.JobsGrid.ItemDataBound += this.JobsGrid_ItemDataBound;
             this.JobsGrid.DetailTableDataBind += this.JobsGrid_DetailTableDataBind;
+
+            this.PopulateSearchDropDown();
 
             try
             {
@@ -481,6 +577,60 @@ namespace Engage.Dnn.Employment.Admin
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
+        }
+
+        /// <summary>
+        /// Populates list items of all the search drop downs.
+        /// </summary>
+        private void PopulateSearchDropDown()
+        {
+            this.SearchByLocationDropDown.DataSource = this.LocationsForSearch;
+            this.SearchByLocationDropDown.DataTextField = "Text";
+            this.SearchByLocationDropDown.DataValueField = "Value";
+            this.SearchByLocationDropDown.DataBind();
+
+            this.SearchByApplicantStatusDropDown.DataSource = this.UserStatusesForSearch;
+            this.SearchByApplicantStatusDropDown.DataTextField = "Text";
+            this.SearchByApplicantStatusDropDown.DataValueField = "Value";
+            this.SearchByApplicantStatusDropDown.SelectedValue = (this.UserStatusId.HasValue) ? this.UserStatusId.ToString() : string.Empty;
+            this.SearchByApplicantStatusDropDown.DataBind();
+            this.SearchByApplicantStatusDropDown.Enabled = !this.UserStatusId.HasValue;
+
+            this.SearchByApplicationStatusDropDown.DataSource = this.ApplicationStatusesForSearch;
+            this.SearchByApplicationStatusDropDown.DataTextField = "Text";
+            this.SearchByApplicationStatusDropDown.DataValueField = "Value";
+            this.SearchByApplicationStatusDropDown.SelectedValue = (this.ApplicationStatusId.HasValue) ? this.ApplicationStatusId.ToString() : string.Empty;
+            this.SearchByApplicationStatusDropDown.DataBind();
+            this.SearchByApplicationStatusDropDown.Enabled = !this.ApplicationStatusId.HasValue;
+
+            this.SearchByLeadDropDown.DataSource = this.LeadsForSearch;
+            this.SearchByLeadDropDown.DataTextField = "Text";
+            this.SearchByLeadDropDown.DataValueField = "Value";
+            this.SearchByLeadDropDown.DataBind();
+
+        }
+
+        /// <summary>
+        /// Handles the Click event of the SearchButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        protected void SearchButton_Click(object sender, EventArgs e)
+        {
+            int tempUserStatusId, tempApplicationStatusId, tempLeadId, tempLocationId;
+            
+            ViewState["UserStatusId"] = (int.TryParse(this.SearchByApplicantStatusDropDown.SelectedValue, out tempUserStatusId)) ? (int?)tempUserStatusId : null;
+            ViewState["ApplicationStatusId"] = (int.TryParse(this.SearchByApplicationStatusDropDown.SelectedValue, out tempApplicationStatusId))
+                                                   ? (int?)tempApplicationStatusId
+                                                   : null;
+            ViewState["LeadId"] = (int.TryParse(this.SearchByLeadDropDown.SelectedValue, out tempLeadId)) ? (int?)tempLeadId : null;
+            ViewState["DateFrom"] = (this.SearchByDateFromTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateFromTextBox.Text, CultureInfo.CurrentCulture): null;
+            ViewState["DateTo"] = (this.SearchByDateToTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateToTextBox.Text, CultureInfo.CurrentCulture): null;
+            ViewState["JobTitle"] = (this.SearchByJobTitleTextBox.Text != null) ? this.SearchByJobTitleTextBox.Text.Trim() : null;
+            ViewState["LocationId"] = (int.TryParse(this.SearchByLocationDropDown.SelectedValue, out tempLocationId)) ? (int?)tempLocationId : null;
+
+            this.JobsGrid.Rebind();
+
         }
 
         /// <summary>
@@ -568,6 +718,8 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobsGrid.DataSource = Job.LoadAll(
                     this.JobGroupId,
                     this.PortalId,
+                    (string)ViewState["JobTitle"],
+                    (int?)ViewState["LocationId"],
                     this.JobsGrid.CurrentPageIndex,
                     this.IsExport ? (int?)null : this.JobsGrid.MasterTableView.PageSize,
                     out totalJobCount);
@@ -695,16 +847,19 @@ namespace Engage.Dnn.Employment.Admin
             e.DetailTableView.ExpandCollapseColumn.Display = false;
             e.DetailTableView.Columns.FindByUniqueName("ApplicationStatus").Visible = this.ShowApplicationStatuses();
 
-            var userIds = this.UserStatusId.HasValue
-                              ? UserStatusInfo.GetUsersWithStatus(this.PortalSettings, this.UserStatusId.Value).Select(user => user.UserId)
-                              : Enumerable.Empty<int>();
+            ////var userIds = this.UserStatusId.HasValue
+            ////                  ? UserStatusInfo.GetUsersWithStatus(this.PortalSettings, this.UserStatusId.Value).Select(user => user.UserId)
+            ////                  : Enumerable.Empty<int>();
 
             int unpagedApplicationCount;
             e.DetailTableView.DataSource = JobApplication.LoadApplicationsForJob(
                 parentJobId,
                 this.JobGroupId,
                 this.ApplicationStatusId,
-                userIds,
+                this.UserStatusId,
+                (int?)ViewState["LeadId"],
+                (DateTime?)ViewState["DateFrom"],
+                (DateTime?)ViewState["DateTo"],
                 e.DetailTableView.CurrentPageIndex, 
                 this.IsExport ? (int?)null : e.DetailTableView.PageSize, 
                 out unpagedApplicationCount,
@@ -852,6 +1007,31 @@ namespace Engage.Dnn.Employment.Admin
             }
 
             this.JobsGrid.ExportSettings.FileName = fileName;
+        }
+
+        /// <summary>
+        /// Handles the Load event of the Page control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                this.RegisterDatePickerBehavior();
+            }
+        }
+
+        /// <summary>
+        /// Registers the jQuery date picker plugin on the page.
+        /// </summary>
+        private void RegisterDatePickerBehavior()
+        {
+            this.AddJQueryReference();
+            this.Page.ClientScript.RegisterClientScriptResource(typeof(JobEdit), "Engage.Dnn.Employment.JavaScript.jquery-ui.js");
+
+            var datePickerOptions = new DatePickerOptions(CultureInfo.CurrentCulture, this.LocalSharedResourceFile);
+            this.Page.ClientScript.RegisterClientScriptBlock(typeof(JobEdit), "datepicker options", "var datePickerOpts = " + datePickerOptions.Serialize() + ";", true);        
         }
     }
 }

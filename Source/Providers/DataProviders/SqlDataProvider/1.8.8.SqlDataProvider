@@ -1,0 +1,144 @@
+﻿IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetApplicationsForJob', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetApplicationsForJob
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetApplicationsForJob (
+    @jobId int,
+    @jobGroupId int,
+    @applicationStatusId int,
+    @userStatusId int,
+	@leadId int,
+	@dateFrom datetime,
+	@dateTo datetime,
+    @index int, 
+    @pageSize int,
+    @fillDocumentsAndProperties bit
+)
+AS
+BEGIN
+
+IF (@pageSize = 0)
+    SET @pageSize = NULL
+ 
+CREATE TABLE #results (
+[Id] int NOT NULL IDENTITY(1,1),
+[ApplicationId] int
+)
+ 
+INSERT INTO #results ([ApplicationId]) 
+SELECT B.ApplicationId FROM
+    (SELECT DISTINCT a.ApplicationId, a.AppliedDate
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
+    LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (a.JobId = jjg.JobId) 
+	LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_UserStatus us on (a.UserId = us.UserId) 
+	LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_UserJobProperty ujp on (a.ApplicationId = ujp.ApplicationId)
+	LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty ap on (ujp.ApplicationPropertyId = ap.ApplicationPropertyId)
+    WHERE a.JobId = @jobId
+    AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)
+    AND (@applicationStatusId IS NULL OR a.StatusId = @applicationStatusId)
+    AND (@userStatusId IS NULL OR us.UserStatusId = @userStatusId)
+    AND (ap.PropertyName = 'Lead')
+    AND (@leadId IS NULL OR ujp.PropertyValue = @leadId)
+	AND (@dateFrom IS NULL OR a.AppliedDate >= @dateFrom)
+	AND (@dateTo IS NULL OR a.AppliedDate <= @dateTo)
+	) AS B
+ORDER BY B.AppliedDate DESC
+ 
+SELECT @@RowCount AS TotalRecords
+ 
+IF (@pageSize IS NULL)
+    BEGIN
+        SELECT a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, a.SalaryRequirement, a.Message, a.StatusId
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a ON (r.ApplicationId = a.ApplicationId)
+        ORDER BY r.Id
+    END
+ELSE
+    BEGIN
+        SELECT a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, a.SalaryRequirement, a.Message, a.StatusId
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a ON (r.ApplicationId = a.ApplicationId)
+        WHERE (r.Id >= @index * @pageSize + 1) AND r.Id < (@index * @pageSize) + @pageSize + 1
+        ORDER BY r.Id
+    END
+END
+
+IF (@fillDocumentsAndProperties = 1)
+BEGIN
+    SELECT DocumentId, [DocumentTypeId], [FileName], ApplicationId
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwDocuments
+    WHERE ApplicationId IN (SELECT ApplicationId 
+                            FROM #results
+                            WHERE @pageSize IS NULL
+                               OR ((Id >= @index * @pageSize + 1) 
+                                AND Id < (@index * @pageSize) + @pageSize + 1))
+
+    SELECT ujp.[ApplicationId], ujp.[ApplicationPropertyId], ujp.[Visibility], ap.[PropertyName],
+        CASE WHEN ujp.[PropertyValue] IS NULL THEN ujp.[PropertyText] ELSE ujp.[PropertyValue] END AS PropertyValue
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_UserJobProperty ujp 
+    JOIN {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty ap ON (ujp.ApplicationPropertyId = ap.ApplicationPropertyId)
+    WHERE ApplicationId IN (SELECT ApplicationId 
+                            FROM #results
+                            WHERE @pageSize IS NULL
+                               OR ((Id >= @index * @pageSize + 1) 
+                                AND Id < (@index * @pageSize) + @pageSize + 1))
+END
+GO
+
+
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetJobs', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetJobs
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetJobs (
+    @jobGroupId int,
+    @portalId int,
+	@jobTitle nvarchar(255),
+	@locationId int,
+    @index int, 
+    @pageSize int
+)
+AS
+BEGIN
+ 
+ 
+CREATE TABLE #results (
+[Id] int NOT NULL IDENTITY(1,1),
+[JobId] int
+)
+ 
+INSERT INTO #results ([JobId]) 
+SELECT A.JobId FROM
+    (SELECT DISTINCT j.JobId, j.SortOrder, j.CategoryName, j.JobTitle
+    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j
+    LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId) 
+    WHERE j.PortalId = @portalId
+    AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)
+	AND (@jobTitle IS NULL OR j.JobTitle LIKE '%' + @jobTitle + '%')
+	AND (@locationId is NULL OR j.LocationId = @locationId)
+	) AS A
+ORDER BY A.SortOrder, A.CategoryName, A.JobTitle
+ 
+SELECT @@RowCount AS TotalRecords
+ 
+IF (@pageSize = 0 OR @pageSize IS NULL)
+    BEGIN
+        SELECT j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, 
+               j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, j.ApplicationUrl, 
+               j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate 
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j ON (r.JobId = j.JobId)
+        ORDER BY r.Id
+    END
+ELSE
+    BEGIN
+        SELECT j.JobId, j.JobTitle, j.PositionId, j.LocationName, j.LocationId, j.StateName, j.StateAbbreviation, j.StateId, 
+               j.RequiredQualifications, j.DesiredQualifications, j.CategoryName, j.CategoryId, j.NotificationEmailAddress, j.ApplicationUrl, 
+               j.IsHot, j.IsFilled, j.PostedDate, j.JobDescription, j.SortOrder, j.RevisingUser, j.RevisionDate, j.StartDate, j.ExpireDate 
+        FROM #results r
+        JOIN {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j ON (r.JobId = j.JobId)
+        WHERE (id >= @index * @pageSize + 1) AND id < (@index * @pageSize) + @pageSize + 1
+        ORDER BY r.Id
+    END
+END 
+GO

@@ -91,10 +91,7 @@ namespace Engage.Dnn.Employment
                 throw new ArgumentNullException("portalSettings");
             }
 
-            return
-                DataCache.GetCachedData<int?>(
-                    new CacheItemArgs(string.Format(CultureInfo.InvariantCulture, UserStatusCacheKeyFormat, portalSettings.PortalId, userId)),
-                    args => DataProvider.Instance().GetUserStatus(portalSettings.PortalId, userId));
+            return DataProvider.Instance().GetUserStatus(portalSettings.PortalId, userId);
         }
 
         private static UserStatusInfo FillUserInfo(DataRow row)

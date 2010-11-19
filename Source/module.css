@@ -1,4 +1,23 @@
-﻿#job_listing_copy h3 {
+﻿.DateTextBox {
+width: 100px;
+}
+.search_group {
+clear: both;
+}
+.search_title {
+clear: both;
+}
+
+.search_button {
+clear: both;
+margin: 10px;
+}
+.search_field {
+float: left;
+margin: 5px;
+}
+
+#job_listing_copy h3 {
 font-size:136%;
 font-weight:400;
 letter-spacing:-2px;

@@ -277,6 +277,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Content Include="ReleaseNotes_1.8.8.htm" />
     <Content Include="ReleaseNotes_1.8.7.htm" />
     <Content Include="ReleaseNotes_1.8.6.htm" />
     <Content Include="images\plus-minus-icn.png" />
@@ -316,6 +317,7 @@
     <None Include="Providers\DataProviders\SqlDataProvider\1.8.5.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\1.8.6.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\1.8.7.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\1.8.8.SqlDataProvider" />
     <None Include="Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>

@@ -298,4 +298,43 @@
   <data name="JobsTableHeader.Text" xml:space="preserve">
     <value>&lt;h5&gt;Jobs&lt;/h5&gt;</value>
   </data>
+  <data name="btnSearch.Text" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchByApplicationStatusLabel.Text" xml:space="preserve">
+    <value>Application Status:</value>
+  </data>
+  <data name="SearchByDateFromLabel.Text" xml:space="preserve">
+    <value>From:</value>
+  </data>
+  <data name="SearchByJobTitleLabel.Text" xml:space="preserve">
+    <value>Job Title:</value>
+  </data>
+  <data name="SearchByLeadLabel.Text" xml:space="preserve">
+    <value>Lead:</value>
+  </data>
+  <data name="SearchByLocationLabel.Text" xml:space="preserve">
+    <value>Location:</value>
+  </data>
+  <data name="SearchBySalaryLabel.Text" xml:space="preserve">
+    <value>Salary:</value>
+  </data>
+  <data name="SearchByUserStatusLabel.Text" xml:space="preserve">
+    <value>Applicant Status:</value>
+  </data>
+  <data name="SearchTitleLabel.Text" xml:space="preserve">
+    <value>Search By:</value>
+  </data>
+  <data name="SearchByDateFromCompareValidator.Text" xml:space="preserve">
+    <value>From date must occur  before To date.</value>
+  </data>
+  <data name="SearchByDateFromTypeValidator.Text" xml:space="preserve">
+    <value>From date must be a valid date.</value>
+  </data>
+  <data name="SearchByDateToLabel.Text" xml:space="preserve">
+    <value>To:</value>
+  </data>
+  <data name="SearchByDateToTypeValidator.Text" xml:space="preserve">
+    <value>To date must b a valid date.</value>
+  </data>
 </root>

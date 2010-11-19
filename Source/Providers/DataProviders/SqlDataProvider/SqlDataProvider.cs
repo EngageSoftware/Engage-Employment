@@ -401,25 +401,33 @@ namespace Engage.Dnn.Employment.Data
         /// <param name="jobId">The ID of the job.</param>
         /// <param name="jobGroupId">The ID of the job group by which to filter results (or <c>null</c> to not filter).</param>
         /// <param name="applicationStatusId">The ID of the application status by which to filter applications.</param>
-        /// <param name="userIds">The IDs of the users by which to filter applications.</param>
+        /// <param name="userStatusId">The ID of user status by which to filter applications.</param>
+        /// <param name="leadId">The ID of lead by which to filter applications.</param>
+        /// <param name="dateFrom">The date from by which to filter applications.</param>
+        /// <param name="dateTo">The date to by which to filter applications.</param>
         /// <param name="pageIndex">Zero-based index of the page of results to retrieve (ignored if <paramref name="pageSize"/> is null).</param>
         /// <param name="pageSize">The number of applications to retrieve per page (or <c>null</c> to retrieve all applications).</param>
         /// <param name="unpagedCount">The total number of applications which would be returned by this query if there was no paging applied.</param>
         /// <param name="fillDocumentsAndProperties">if set to <c>true</c> also retrieves the related documents (resumes and cover letters) and application properties (leads).</param>
         /// <returns>
-        /// A <see cref="DataSet"/> with one table named <c>"Applications"</c> with the fields for a <see cref="JobApplication"/>.  
+        /// A <see cref="DataSet"/> with one table named <c>"Applications"</c> with the fields for a <see cref="JobApplication"/>.
         /// If <paramref name="fillDocumentsAndProperties"/>, the <see cref="DataSet"/> also contains tables named <c>"Documents"</c> and <c>"Properties"</c>
         /// </returns>
-        public override DataSet GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
+        public override DataSet GetApplicationsForJob(int jobId, int? jobGroupId, 
+            int? applicationStatusId, int? userStatusId, int? leadId, DateTime? dateFrom, DateTime? dateTo,
+            int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
         {
-            var userIdsList = userIds != null && userIds.Any() ? string.Join(",", userIds.Select(id => id.ToString(CultureInfo.InvariantCulture)).ToArray()) : null;
+            ////var userIdsList = userIds != null && userIds.Any() ? string.Join(",", userIds.Select(id => id.ToString(CultureInfo.InvariantCulture)).ToArray()) : null;
 
             var applicationsDataSet = this.ExecuteDataset(
                 "GetApplicationsForJob", 
                 Utility.CreateIntegerParam("@jobId", jobId), 
                 Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
                 Utility.CreateIntegerParam("@applicationStatusId", applicationStatusId),
-                Utility.CreateVarcharParam("@userIds", userIdsList),
+                Utility.CreateIntegerParam("@userStatusId", userStatusId),
+                Utility.CreateIntegerParam("@leadId", leadId),
+                Utility.CreateDateTimeParam("@dateFrom", dateFrom),
+                Utility.CreateDateTimeParam("@dateTo", dateTo),
                 Utility.CreateIntegerParam("@index", pageIndex),
                 Utility.CreateIntegerParam("@pageSize", pageSize),
                 Utility.CreateBitParam("@fillDocumentsAndProperties", fillDocumentsAndProperties));
@@ -780,15 +788,17 @@ namespace Engage.Dnn.Employment.Data
         public override IDataReader GetJobs(int? jobGroupId, int portalId)
         {
             int totalCount;
-            return this.GetJobs(jobGroupId, portalId, 0, null, out totalCount);
+            return this.GetJobs(jobGroupId, portalId, null, null, 0, null, out totalCount);
         }
 
-        public override IDataReader GetJobs(int? jobGroupId, int portalId, int pageIndex, int? pageSize, out int totalCount)
+        public override IDataReader GetJobs(int? jobGroupId, int portalId, string jobTitle, int? locationId, int pageIndex, int? pageSize, out int totalCount)
         {
             var jobsReader = this.ExecuteReader(
                 "GetJobs",
                 Utility.CreateIntegerParam("@jobGroupId", jobGroupId),
                 Utility.CreateIntegerParam("@portalId", portalId),
+                Utility.CreateVarcharParam("@jobTitle", jobTitle),
+                Utility.CreateIntegerParam("@locationId", locationId),
                 Utility.CreateIntegerParam("@index", pageIndex),
                 Utility.CreateIntegerParam("@pageSize", pageSize));
 

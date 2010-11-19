@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Engage: Employment" type="Module" version="1.8.7">
+    <package name="Engage: Employment" type="Module" version="1.8.8">
       <friendlyName>Engage: Employment</friendlyName>
       <description>The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com) used to manage job openings in your organization and allow for applicants to view jobs and submit applications.</description>
       <owner>
@@ -75,9 +75,13 @@
               <name>1.8.7.SqlDataProvider</name>
               <version>1.8.7</version>
             </script>
+            <script type="Install">
+              <name>1.8.8.SqlDataProvider</name>
+              <version>1.8.8</version>
+            </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>
-              <version latestVersion="latestVersion">1.8.7</version>
+              <version latestVersion="latestVersion">1.8.8</version>
             </script>
           </scripts>
         </component>
@@ -251,7 +255,7 @@
           <assemblies>
             <assembly>
               <name>EngageEmployment.dll</name>
-              <version latestVersion="latestVersion">1.8.7</version>
+              <version latestVersion="latestVersion">1.8.8</version>
             </assembly>
             <assembly>
               <name>Engage.Framework.dll</name>
@@ -269,7 +273,7 @@
         </component>
       </components>
     </package>
-    <package name="Engage: Employment Group Admin" type="Module" version="1.8.7">
+    <package name="Engage: Employment Group Admin" type="Module" version="1.8.8">
       <friendlyName>Engage: Emp. Group Admin</friendlyName>
       <description>
         Administration of Job Groups for The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com).

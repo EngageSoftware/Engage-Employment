@@ -160,9 +160,13 @@ namespace Engage.Dnn.Employment
             return null;
         }
 
-        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, IEnumerable<int> userIds, int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
+        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId, 
+            int? applicationStatusId, int? userStatusId, int? leadId, DateTime? dateFrom, DateTime? dateTo,
+            int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
         {
-            using (var applicationsDataSet = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, applicationStatusId, userIds, pageIndex, pageSize, out unpagedCount, fillDocumentsAndProperties))
+            using (var applicationsDataSet = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, 
+                applicationStatusId, userStatusId, leadId, dateFrom, dateTo,
+                pageIndex, pageSize, out unpagedCount, fillDocumentsAndProperties))
             {
                 var documentsRelation = applicationsDataSet.Relations.Add(
                     applicationsDataSet.Tables["Applications"].Columns["ApplicationId"],

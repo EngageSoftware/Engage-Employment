@@ -118,7 +118,7 @@ namespace Engage.Dnn.Employment
         public string UpgradeModule(string version)
         {
             var v = new Version(version);
-            if (v == new Version(1,8,7))
+            if (v >= new Version(1,8,7))
             {
                 // Migrate UserStatus from UserProfile to EngageEmployment_UserStatus table.
                 var portalController = new PortalController();

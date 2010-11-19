@@ -425,10 +425,10 @@ namespace Engage.Dnn.Employment
         }
 
         [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "4#", Justification = "Not a big deal")]
-        public static ReadOnlyCollection<Job> LoadAll(int? jobGroupId, int portalId, int pageIndex, int? pageSize, out int totalCount)
+        public static ReadOnlyCollection<Job> LoadAll(int? jobGroupId, int portalId, string jobTitle, int? locationId, int pageIndex, int? pageSize, out int totalCount)
         {
             var jobs = new List<Job>();
-            using (IDataReader dr = DataProvider.Instance().GetJobs(jobGroupId, portalId, pageIndex, pageSize, out totalCount))
+            using (IDataReader dr = DataProvider.Instance().GetJobs(jobGroupId, portalId, jobTitle, locationId, pageIndex, pageSize, out totalCount))
             {
                 while (dr.Read())
                 {

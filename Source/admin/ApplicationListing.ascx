@@ -2,6 +2,52 @@
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.ApplicationListing" Codebehind="ApplicationListing.ascx.cs" AutoEventWireup="false" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
+<div>
+    <div class="search_title">
+    <asp:Label ID="SearchTitle" runat="server" resourceKey="SearchTitleLabel" CssClass="SubHead"/>
+    </div>
+
+    <div class="search_group">
+        <div class="search_field">
+            <asp:Label ID="SearchByJobTitleLabel" runat="server" resourcekey="SearchByJobTitleLabel" /><br />
+            <asp:TextBox ID="SearchByJobTitleTextBox" runat="server" />
+        </div>
+        <div class="search_field">
+            <asp:Label ID="SearchByLocationLabel" runat="server" resourcekey="SearchByLocationLabel" /><br />
+            <asp:DropDownList ID="SearchByLocationDropDown" runat="server" />
+        </div>
+    </div>
+    <div class="search_group">
+        <div class="search_field">
+            <asp:Label ID="SearchByUserStatusLabel" runat="server" resourcekey="SearchByUserStatusLabel" /><br />        
+            <asp:DropDownList ID="SearchByApplicantStatusDropDown" runat="server"/>
+        </div>
+        <div class="search_field">
+            <asp:Label ID="SearchByApplicationStatusLabel" runat="server" resourcekey="SearchByApplicationStatusLabel" /><br />
+            <asp:DropDownList ID="SearchByApplicationStatusDropDown" runat="server"/>
+        </div>
+        <div class="search_field">
+            <asp:Label ID="SearchByDateFromLabel" runat="server" resourcekey="SearchByDateFromLabel" /><br />
+            <asp:TextBox ID="SearchByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="SearchByDateFromTextBox" Display="None" resourcekey="SearchByDateFromTypeValidator" ValidationGroup="SearchDate" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="LessThanEqual" ControlToValidate="SearchByDateFromTextBox" ControlToCompare="SearchByDateToTextBox" Display="None" resourcekey="SearchByDateFromCompareValidator" ValidationGroup="SearchDate" />
+        </div>
+        <div class="search_field">
+            <asp:Label ID="SearchByDateToLabel" runat="server" resourcekey="SearchByDateToLabel" /><br />
+            <asp:TextBox ID="SearchByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="SearchByDateToTextBox" Display="None" resourcekey="SearchByDateToTypeValidator" ValidationGroup="SearchDate" />
+        </div>
+        <div class="search_field">
+            <asp:Label runat="server" resourcekey="SearchByLeadLabel" /><br />
+            <asp:DropDownList ID="SearchByLeadDropDown" runat="server"/>
+        </div>
+    </div>
+    <div class="search_button">
+    <asp:LinkButton ID="SearchButton" runat="server" CssClass="CommandButton" resourcekey="btnSearch" OnClick="SearchButton_Click" ValidationGroup="SearchDate"/><br />
+    <asp:ValidationSummary runat="server" DisplayMode="BulletList" ShowMessageBox="true" ShowSummary="false" ValidationGroup="SearchDate" />
+    </div>
+</div>
+
 <div class="manageApplications">
     <telerik:RadGrid ID="JobsGrid" runat="server" 
         AllowPaging="true" AllowCustomPaging="true" PageSize="10" 
@@ -95,3 +141,16 @@
         <li><asp:HyperLink ID="BackLink" runat="server" CssClass="CommandButton" resourcekey="btnBack" /></li>
     </ul>
 </div>
+
+<script type="text/javascript">
+    jQuery(function () { jQuery('.DatePicker').datepicker(datePickerOpts); });
+
+    $(document).ready(function () {
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+
+        function EndRequestHandler(sender, args) {
+            jQuery('.DatePicker').datepicker(datePickerOpts);
+        }
+
+    });
+</script>
