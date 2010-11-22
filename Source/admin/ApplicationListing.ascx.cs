@@ -292,10 +292,9 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (ViewState["ApplicationStatusId"] != null)
                 {
-                    this.applicationStatusId = (int?)ViewState["ApplicationStatusId"];
+                    this.applicationStatusId = ((int?)ViewState["ApplicationStatusId"] > 0)? (int?)ViewState["ApplicationStatusId"]: null;
                 }
-
-                if (!this.applicationStatusId.HasValue)
+                else if (!this.applicationStatusId.HasValue)
                 {
                     int statusId;
                     if (!string.IsNullOrEmpty(this.Request.QueryString["statusId"]) &&
@@ -324,10 +323,9 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (ViewState["UserStatusId"] != null)
                 {
-                    this.userStatusId = (int?)ViewState["UserStatusId"];
+                    this.userStatusId = ((int?)ViewState["UserStatusId"] > 0) ? ((int?)ViewState["UserStatusId"]) : null;
                 }
-
-                if (!this.userStatusId.HasValue)
+                else if (!this.userStatusId.HasValue)
                 {
                     int statusId;
                     if (!string.IsNullOrEmpty(this.Request.QueryString["userStatusId"]) &&
@@ -584,6 +582,13 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private void PopulateSearchDropDown()
         {
+            this.SearchByJobsGroup.Visible = !(this.JobId.HasValue);
+            ////this.SearchByJobTitleLabel.Visible = !(this.JobId.HasValue);
+            ////this.SearchByJobTitleTextBox.Visible = !(this.JobId.HasValue);
+
+            ////this.SearchByLocationLabel.Visible = !(this.JobId.HasValue);
+            ////this.SearchByLocationDropDown.Visible = !(this.JobId.HasValue);
+
             this.SearchByLocationDropDown.DataSource = this.LocationsForSearch;
             this.SearchByLocationDropDown.DataTextField = "Text";
             this.SearchByLocationDropDown.DataValueField = "Value";
@@ -594,14 +599,14 @@ namespace Engage.Dnn.Employment.Admin
             this.SearchByApplicantStatusDropDown.DataValueField = "Value";
             this.SearchByApplicantStatusDropDown.SelectedValue = (this.UserStatusId.HasValue) ? this.UserStatusId.ToString() : string.Empty;
             this.SearchByApplicantStatusDropDown.DataBind();
-            this.SearchByApplicantStatusDropDown.Enabled = !this.UserStatusId.HasValue;
+            ////this.SearchByApplicantStatusDropDown.Enabled = !this.UserStatusId.HasValue;
 
             this.SearchByApplicationStatusDropDown.DataSource = this.ApplicationStatusesForSearch;
             this.SearchByApplicationStatusDropDown.DataTextField = "Text";
             this.SearchByApplicationStatusDropDown.DataValueField = "Value";
             this.SearchByApplicationStatusDropDown.SelectedValue = (this.ApplicationStatusId.HasValue) ? this.ApplicationStatusId.ToString() : string.Empty;
             this.SearchByApplicationStatusDropDown.DataBind();
-            this.SearchByApplicationStatusDropDown.Enabled = !this.ApplicationStatusId.HasValue;
+            ////this.SearchByApplicationStatusDropDown.Enabled = !this.ApplicationStatusId.HasValue;
 
             this.SearchByLeadDropDown.DataSource = this.LeadsForSearch;
             this.SearchByLeadDropDown.DataTextField = "Text";
@@ -619,10 +624,10 @@ namespace Engage.Dnn.Employment.Admin
         {
             int tempUserStatusId, tempApplicationStatusId, tempLeadId, tempLocationId;
             
-            ViewState["UserStatusId"] = (int.TryParse(this.SearchByApplicantStatusDropDown.SelectedValue, out tempUserStatusId)) ? (int?)tempUserStatusId : null;
+            ViewState["UserStatusId"] = (int.TryParse(this.SearchByApplicantStatusDropDown.SelectedValue, out tempUserStatusId)) ? (int?)tempUserStatusId : -1;
             ViewState["ApplicationStatusId"] = (int.TryParse(this.SearchByApplicationStatusDropDown.SelectedValue, out tempApplicationStatusId))
                                                    ? (int?)tempApplicationStatusId
-                                                   : null;
+                                                   : -1;
             ViewState["LeadId"] = (int.TryParse(this.SearchByLeadDropDown.SelectedValue, out tempLeadId)) ? (int?)tempLeadId : null;
             ViewState["DateFrom"] = (this.SearchByDateFromTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateFromTextBox.Text, CultureInfo.CurrentCulture): null;
             ViewState["DateTo"] = (this.SearchByDateToTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateToTextBox.Text, CultureInfo.CurrentCulture): null;
@@ -710,7 +715,8 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobsGrid.VirtualItemCount = 1;
 
                 // TODO: Hide search
-                this.AllLinkWrapper.Visible = true;
+                this.AllLinkWrapperBottom.Visible = true;
+                this.AllLinkWrapperTop.Visible = true;
             }
             else
             {
@@ -941,7 +947,7 @@ namespace Engage.Dnn.Employment.Admin
             var mi = Employment.Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
             this.BackLink.NavigateUrl = mi != null ? Globals.NavigateURL(mi.TabID) : Globals.NavigateURL();
 
-            this.AllLink.NavigateUrl = this.EditUrl(ControlKey.ManageApplications.ToString());
+            this.AllLinkTop.NavigateUrl = this.AllLinkBottom.NavigateUrl = this.EditUrl(ControlKey.ManageApplications.ToString());
         }
 
         /// <summary>
@@ -956,7 +962,7 @@ namespace Engage.Dnn.Employment.Admin
             this.JobsGrid.HierarchySettings.CollapseTooltip = this.Localize("Collapse.ToolTip");
 
             this.LocalizeGridTable(this.JobsGrid.MasterTableView);
-            this.LocalizeGridTable(this.JobsGrid.MasterTableView.DetailTables[0]);
+            this.LocalizeDetailGridTable(this.JobsGrid.MasterTableView.DetailTables[0]);
         }
 
         /// <summary>
@@ -981,6 +987,12 @@ namespace Engage.Dnn.Employment.Admin
             {
                 column.HeaderText = this.Localize(column.HeaderText);
             }
+        }
+
+        private void LocalizeDetailGridTable(GridTableView detailTableView)
+        {
+            this.LocalizeGridTable(detailTableView);
+            detailTableView.PagerStyle.PagerTextFormat = this.Localize("DetailPager.Format");
         }
 
         /// <summary>

@@ -299,10 +299,10 @@
     <value>&lt;h5&gt;Jobs&lt;/h5&gt;</value>
   </data>
   <data name="btnSearch.Text" xml:space="preserve">
-    <value>Search</value>
+    <value>Filter</value>
   </data>
   <data name="SearchByApplicationStatusLabel.Text" xml:space="preserve">
-    <value>Application Status:</value>
+    <value>Status:</value>
   </data>
   <data name="SearchByDateFromLabel.Text" xml:space="preserve">
     <value>From:</value>
@@ -320,13 +320,13 @@
     <value>Salary:</value>
   </data>
   <data name="SearchByUserStatusLabel.Text" xml:space="preserve">
-    <value>Applicant Status:</value>
+    <value>Applicant:</value>
   </data>
-  <data name="SearchTitleLabel.Text" xml:space="preserve">
-    <value>Search By:</value>
+  <data name="SearchByJobsLabel.Text" xml:space="preserve">
+    <value>Filter Jobs:</value>
   </data>
   <data name="SearchByDateFromCompareValidator.Text" xml:space="preserve">
-    <value>From date must occur  before To date.</value>
+    <value>From date must occur before To date.</value>
   </data>
   <data name="SearchByDateFromTypeValidator.Text" xml:space="preserve">
     <value>From date must be a valid date.</value>
@@ -336,5 +336,17 @@
   </data>
   <data name="SearchByDateToTypeValidator.Text" xml:space="preserve">
     <value>To date must b a valid date.</value>
+  </data>
+  <data name="DetailPager.Format" xml:space="preserve">
+    <value>{4} &amp;nbsp;&lt;strong&gt;{5}&lt;/strong&gt; applications in &lt;strong&gt;{1}&lt;/strong&gt; pages</value>
+    <comment>{0} = current page number
+{1} is replaced by total number of pages
+{2} is replaced by number of the first item in the current page
+{3} is replaced by number of the last item in the current page
+{4} is replaced by pager buttons
+{5} is replaced by total number of applications</comment>
+  </data>
+  <data name="SearchByApplicationsLabel.Text" xml:space="preserve">
+    <value>Filter Applications:</value>
   </data>
 </root>

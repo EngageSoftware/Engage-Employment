@@ -1,18 +1,23 @@
-﻿.DateTextBox {
-width: 100px;
-}
-.search_group {
-clear: both;
-}
-.search_title {
-clear: both;
+﻿.applicationFilter, .applicationFilter fieldset 
+{
+    border: none;
+    clear: both;
 }
 
-.search_button {
+.applicationFilter .search_field label
+{
+    display: block;
+}
+
+.applicationFilter .DateTextBox {
+width: 100px;
+}
+
+.applicationFilter .search_button {
 clear: both;
 margin: 10px;
 }
-.search_field {
+.applicationFilter .search_field {
 float: left;
 margin: 5px;
 }

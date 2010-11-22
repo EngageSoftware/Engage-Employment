@@ -13,13 +13,22 @@ namespace Engage.Dnn.Employment.Admin {
     public partial class ApplicationListing {
         
         /// <summary>
-        /// SearchTitle control.
+        /// SearchByJobsGroup control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchTitle;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl SearchByJobsGroup;
+        
+        /// <summary>
+        /// SearchByJobTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label SearchByJobTitle;
         
         /// <summary>
         /// SearchByJobTitleLabel control.
@@ -58,6 +67,15 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.DropDownList SearchByLocationDropDown;
         
         /// <summary>
+        /// SearchByApplicationsTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label SearchByApplicationsTitle;
+        
+        /// <summary>
         /// SearchByUserStatusLabel control.
         /// </summary>
         /// <remarks>
@@ -74,24 +92,6 @@ namespace Engage.Dnn.Employment.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList SearchByApplicantStatusDropDown;
-        
-        /// <summary>
-        /// SearchByApplicationStatusLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByApplicationStatusLabel;
-        
-        /// <summary>
-        /// SearchByApplicationStatusDropDown control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList SearchByApplicationStatusDropDown;
         
         /// <summary>
         /// SearchByDateFromLabel control.
@@ -139,6 +139,24 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.DropDownList SearchByLeadDropDown;
         
         /// <summary>
+        /// SearchByApplicationStatusLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label SearchByApplicationStatusLabel;
+        
+        /// <summary>
+        /// SearchByApplicationStatusDropDown control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList SearchByApplicationStatusDropDown;
+        
+        /// <summary>
         /// SearchButton control.
         /// </summary>
         /// <remarks>
@@ -146,6 +164,24 @@ namespace Engage.Dnn.Employment.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton SearchButton;
+        
+        /// <summary>
+        /// AllLinkWrapperTop control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl AllLinkWrapperTop;
+        
+        /// <summary>
+        /// AllLinkTop control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink AllLinkTop;
         
         /// <summary>
         /// JobsGrid control.
@@ -157,22 +193,22 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::Telerik.Web.UI.RadGrid JobsGrid;
         
         /// <summary>
-        /// AllLinkWrapper control.
+        /// AllLinkWrapperBottom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl AllLinkWrapper;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl AllLinkWrapperBottom;
         
         /// <summary>
-        /// AllLink control.
+        /// AllLinkBottom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink AllLink;
+        protected global::System.Web.UI.WebControls.HyperLink AllLinkBottom;
         
         /// <summary>
         /// BackLink control.
