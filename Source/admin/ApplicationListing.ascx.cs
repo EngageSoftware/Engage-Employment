@@ -630,7 +630,7 @@ namespace Engage.Dnn.Employment.Admin
                                                    : -1;
             ViewState["LeadId"] = (int.TryParse(this.SearchByLeadDropDown.SelectedValue, out tempLeadId)) ? (int?)tempLeadId : null;
             ViewState["DateFrom"] = (this.SearchByDateFromTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateFromTextBox.Text, CultureInfo.CurrentCulture): null;
-            ViewState["DateTo"] = (this.SearchByDateToTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateToTextBox.Text, CultureInfo.CurrentCulture): null;
+            ViewState["DateTo"] = (this.SearchByDateToTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateToTextBox.Text, CultureInfo.CurrentCulture).AddDays(1).AddMilliseconds(-1): null;
             ViewState["JobTitle"] = (this.SearchByJobTitleTextBox.Text != null) ? this.SearchByJobTitleTextBox.Text.Trim() : null;
             ViewState["LocationId"] = (int.TryParse(this.SearchByLocationDropDown.SelectedValue, out tempLocationId)) ? (int?)tempLocationId : null;
 
