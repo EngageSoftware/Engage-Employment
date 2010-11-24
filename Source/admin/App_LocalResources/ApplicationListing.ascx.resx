@@ -298,43 +298,43 @@
   <data name="JobsTableHeader.Text" xml:space="preserve">
     <value>&lt;h5&gt;Jobs&lt;/h5&gt;</value>
   </data>
-  <data name="btnSearch.Text" xml:space="preserve">
-    <value>Filter</value>
+  <data name="btnApplyFilter.Text" xml:space="preserve">
+    <value>Apply Filter</value>
   </data>
-  <data name="SearchByApplicationStatusLabel.Text" xml:space="preserve">
+  <data name="FilterByApplicationStatusLabel.Text" xml:space="preserve">
     <value>Status:</value>
   </data>
-  <data name="SearchByDateFromLabel.Text" xml:space="preserve">
+  <data name="FilterByDateFromLabel.Text" xml:space="preserve">
     <value>From:</value>
   </data>
-  <data name="SearchByJobTitleLabel.Text" xml:space="preserve">
+  <data name="FilterByJobTitleLabel.Text" xml:space="preserve">
     <value>Job Title:</value>
   </data>
-  <data name="SearchByLeadLabel.Text" xml:space="preserve">
+  <data name="FilterByLeadLabel.Text" xml:space="preserve">
     <value>Lead:</value>
   </data>
-  <data name="SearchByLocationLabel.Text" xml:space="preserve">
+  <data name="FilterByLocationLabel.Text" xml:space="preserve">
     <value>Location:</value>
   </data>
-  <data name="SearchBySalaryLabel.Text" xml:space="preserve">
+  <data name="FilterBySalaryLabel.Text" xml:space="preserve">
     <value>Salary:</value>
   </data>
-  <data name="SearchByUserStatusLabel.Text" xml:space="preserve">
+  <data name="FilterByUserStatusLabel.Text" xml:space="preserve">
     <value>Applicant:</value>
   </data>
-  <data name="SearchByJobsLabel.Text" xml:space="preserve">
+  <data name="FilterByJobsLabel.Text" xml:space="preserve">
     <value>Filter Jobs:</value>
   </data>
-  <data name="SearchByDateFromCompareValidator.Text" xml:space="preserve">
+  <data name="FilterByDateFromCompareValidator.Text" xml:space="preserve">
     <value>From date must occur before To date.</value>
   </data>
-  <data name="SearchByDateFromTypeValidator.Text" xml:space="preserve">
+  <data name="FilterByDateFromTypeValidator.Text" xml:space="preserve">
     <value>From date must be a valid date.</value>
   </data>
-  <data name="SearchByDateToLabel.Text" xml:space="preserve">
+  <data name="FilterByDateToLabel.Text" xml:space="preserve">
     <value>To:</value>
   </data>
-  <data name="SearchByDateToTypeValidator.Text" xml:space="preserve">
+  <data name="FilterByDateToTypeValidator.Text" xml:space="preserve">
     <value>To date must b a valid date.</value>
   </data>
   <data name="DetailPager.Format" xml:space="preserve">
@@ -346,7 +346,13 @@
 {4} is replaced by pager buttons
 {5} is replaced by total number of applications</comment>
   </data>
-  <data name="SearchByApplicationsLabel.Text" xml:space="preserve">
+  <data name="FilterByApplicationsLabel.Text" xml:space="preserve">
     <value>Filter Applications:</value>
+  </data>
+  <data name="FilterNoApplicationStatus.Text" xml:space="preserve">
+    <value>No Status</value>
+  </data>
+  <data name="FilterNoUserStatus.Text" xml:space="preserve">
+    <value>No Status</value>
   </data>
 </root>

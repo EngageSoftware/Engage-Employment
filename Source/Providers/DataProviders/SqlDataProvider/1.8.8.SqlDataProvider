@@ -35,8 +35,8 @@ SELECT B.ApplicationId FROM
 	LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty ap on (ujp.ApplicationPropertyId = ap.ApplicationPropertyId)
     WHERE a.JobId = @jobId
     AND (@jobGroupId IS NULL OR jjg.jobGroupId = @jobGroupId)
-    AND (@applicationStatusId IS NULL OR a.StatusId = @applicationStatusId)
-    AND (@userStatusId IS NULL OR us.UserStatusId = @userStatusId)
+    AND (@applicationStatusId IS NULL OR (@applicationStatusId = 0 AND a.StatusId IS NULL) OR a.StatusId = @applicationStatusId)
+    AND (@userStatusId IS NULL OR (@userStatusId = 0 AND us.UserStatusId IS NULL) OR us.UserStatusId = @userStatusId)
     AND (ap.PropertyName = 'Lead')
     AND (@leadId IS NULL OR ujp.PropertyValue = @leadId)
 	AND (@dateFrom IS NULL OR a.AppliedDate >= @dateFrom)

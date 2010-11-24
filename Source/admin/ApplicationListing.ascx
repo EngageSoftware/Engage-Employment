@@ -3,60 +3,58 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
 <fieldset class="applicationFilter">
-    <fieldset ID="SearchByJobsGroup" runat="server">
+    <fieldset ID="FilterByJobsGroup" runat="server">
         <legend>
-            <asp:Label ID="SearchByJobTitle" runat="server" resourceKey="SearchByJobsLabel" CssClass="SubHead"/>
+            <asp:Label ID="FilterByJobTitle" runat="server" resourceKey="FilterByJobsLabel" CssClass="SubHead"/>
         </legend>
 
         <div class="search_field">
-            <asp:Label ID="SearchByJobTitleLabel" runat="server" resourcekey="SearchByJobTitleLabel" AssociatedControlID="SearchByJobTitleTextBox" />
-            <asp:TextBox ID="SearchByJobTitleTextBox" runat="server" CssClass="NormalTextBox" />
+            <asp:Label ID="FilterByJobTitleLabel" runat="server" resourcekey="FilterByJobTitleLabel" AssociatedControlID="FilterByJobTitleTextBox" />
+            <asp:TextBox ID="FilterByJobTitleTextBox" runat="server" CssClass="NormalTextBox" />
         </div>
         <div class="search_field">
-            <asp:Label ID="SearchByLocationLabel" runat="server" resourcekey="SearchByLocationLabel" AssociatedControlID="SearchByLocationDropDown"/>
-            <asp:DropDownList ID="SearchByLocationDropDown" runat="server" CssClass="NormalTextBox" />
+            <asp:Label ID="FilterByLocationLabel" runat="server" resourcekey="FilterByLocationLabel" AssociatedControlID="FilterByLocationDropDown"/>
+            <asp:DropDownList ID="FilterByLocationDropDown" runat="server" CssClass="NormalTextBox" />
         </div>
     </fieldset>
 
     <fieldset>
         <legend>
-            <asp:Label ID="SearchByApplicationsTitle" runat="server" resourceKey="SearchByApplicationsLabel" CssClass="SubHead"/>
+            <asp:Label ID="FilterByApplicationsTitle" runat="server" resourceKey="FilterByApplicationsLabel" CssClass="SubHead"/>
         </legend>
 
         <div class="search_field">
-            <asp:Label ID="SearchByUserStatusLabel" runat="server" resourcekey="SearchByUserStatusLabel" AssociatedControlID="SearchByApplicantStatusDropDown"/>
-            <asp:DropDownList ID="SearchByApplicantStatusDropDown" runat="server" CssClass="NormalTextBox" />
+            <asp:Label ID="FilterByUserStatusLabel" runat="server" resourcekey="FilterByUserStatusLabel" AssociatedControlID="FilterByApplicantStatusDropDown"/>
+            <asp:DropDownList ID="FilterByApplicantStatusDropDown" runat="server" CssClass="NormalTextBox" />
         </div>
         <div class="search_field">
-            <asp:Label ID="SearchByDateFromLabel" runat="server" resourcekey="SearchByDateFromLabel" AssociatedControlID="SearchByDateFromTextBox"/>
-            <asp:TextBox ID="SearchByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="SearchByDateFromTextBox" Display="None" resourcekey="SearchByDateFromTypeValidator" ValidationGroup="SearchDate" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="LessThanEqual" ControlToValidate="SearchByDateFromTextBox" ControlToCompare="SearchByDateToTextBox" Display="None" resourcekey="SearchByDateFromCompareValidator" ValidationGroup="SearchDate" />
+            <asp:Label ID="FilterByDateFromLabel" runat="server" resourcekey="FilterByDateFromLabel" AssociatedControlID="FilterByDateFromTextBox"/>
+            <asp:TextBox ID="FilterByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="FilterByDateFromTextBox" Display="None" resourcekey="FilterByDateFromTypeValidator" ValidationGroup="SearchDate" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="LessThanEqual" ControlToValidate="FilterByDateFromTextBox" ControlToCompare="FilterByDateToTextBox" Display="None" resourcekey="FilterByDateFromCompareValidator" ValidationGroup="SearchDate" />
         </div>
         <div class="search_field">
-            <asp:Label ID="SearchByDateToLabel" runat="server" resourcekey="SearchByDateToLabel" AssociatedControlID="SearchByDateToTextBox"/>
-            <asp:TextBox ID="SearchByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="SearchByDateToTextBox" Display="None" resourcekey="SearchByDateToTypeValidator" ValidationGroup="SearchDate" />
+            <asp:Label ID="FilterByDateToLabel" runat="server" resourcekey="FilterByDateToLabel" AssociatedControlID="FilterByDateToTextBox"/>
+            <asp:TextBox ID="FilterByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" />
+            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="FilterByDateToTextBox" Display="None" resourcekey="FilterByDateToTypeValidator" ValidationGroup="SearchDate" />
         </div>
         <div class="search_field">
-            <asp:Label runat="server" resourcekey="SearchByLeadLabel" AssociatedControlID="SearchByLeadDropDown"/>
-            <asp:DropDownList ID="SearchByLeadDropDown" runat="server" CssClass="NormalTextBox" />
+            <asp:Label runat="server" resourcekey="FilterByLeadLabel" AssociatedControlID="FilterByLeadDropDown"/>
+            <asp:DropDownList ID="FilterByLeadDropDown" runat="server" CssClass="NormalTextBox" />
         </div>
         <div class="search_field">
-            <asp:Label ID="SearchByApplicationStatusLabel" runat="server" resourcekey="SearchByApplicationStatusLabel" AssociatedControlID="SearchByApplicationStatusDropDown"/>
-            <asp:DropDownList ID="SearchByApplicationStatusDropDown" runat="server" CssClass="NormalTextBox" />
+            <asp:Label ID="FilterByApplicationStatusLabel" runat="server" resourcekey="FilterByApplicationStatusLabel" AssociatedControlID="FilterByApplicationStatusDropDown"/>
+            <asp:DropDownList ID="FilterByApplicationStatusDropDown" runat="server" CssClass="NormalTextBox" />
         </div>
     </fieldset>
-    <div class="search_button">
-    <asp:LinkButton ID="SearchButton" runat="server" CssClass="CommandButton" resourcekey="btnSearch" OnClick="SearchButton_Click" ValidationGroup="SearchDate"/>
+    <ul class="search_button eng-action-btns">
+        <li><asp:LinkButton ID="SearchButton" runat="server" CssClass="CommandButton" resourcekey="btnApplyFilter.Text" OnClick="SearchButton_Click" ValidationGroup="SearchDate"/></li>
+        <li id="AllLinkWrapperTop" runat="server" Visible="false"><asp:HyperLink ID="AllLinkTop" runat="server" CssClass="CommandButton" resourcekey="btnAll" /></li>
+    </ul>
     <asp:ValidationSummary runat="server" DisplayMode="BulletList" ShowMessageBox="true" ShowSummary="false" ValidationGroup="SearchDate" />
-    </div>
 </fieldset>
 
 <div class="manageApplications">
-    <ul class="eng-action-btns">
-        <li id="AllLinkWrapperTop" runat="server" Visible="false"><asp:HyperLink ID="AllLinkTop" runat="server" CssClass="CommandButton" resourcekey="btnAll" /></li>
-    </ul>
 
     <telerik:RadGrid ID="JobsGrid" runat="server" 
         AllowPaging="true" AllowCustomPaging="true" PageSize="10" 

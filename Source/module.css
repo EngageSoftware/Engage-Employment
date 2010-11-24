@@ -13,9 +13,20 @@
 width: 100px;
 }
 
-.applicationFilter .search_button {
-clear: both;
-margin: 10px;
+ul.eng-action-btns
+{
+    padding: 0;
+}
+.applicationFilter ul.eng-action-btns
+{
+    padding: 0 7px;
+    margin: 0 2px;
+}
+.eng-action-btns li 
+{
+    clear: both;
+    list-style-type: none;
+    margin-bottom: 10px;
 }
 .applicationFilter .search_field {
 float: left;

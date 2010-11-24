@@ -187,6 +187,7 @@ namespace Engage.Dnn.Employment.Admin
             get
             {
                 yield return new ListItem(string.Empty, string.Empty);
+                yield return new ListItem(this.Localize("FilterNoApplicationStatus"), "0");
 
                 foreach (var applicationStatus in this.applicationStatuses)
                 {
@@ -252,6 +253,7 @@ namespace Engage.Dnn.Employment.Admin
             get
             {
                 yield return new ListItem(string.Empty, string.Empty);
+                yield return new ListItem(this.Localize("FilterNoUserStatus.Text"), "0");
 
                 foreach (var userStatus in this.userStatuses)
                 {
@@ -292,7 +294,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (ViewState["ApplicationStatusId"] != null)
                 {
-                    this.applicationStatusId = ((int?)ViewState["ApplicationStatusId"] > 0)? (int?)ViewState["ApplicationStatusId"]: null;
+                    this.applicationStatusId = ((int?)ViewState["ApplicationStatusId"] >= 0)? (int?)ViewState["ApplicationStatusId"]: null;
                 }
                 else if (!this.applicationStatusId.HasValue)
                 {
@@ -323,7 +325,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (ViewState["UserStatusId"] != null)
                 {
-                    this.userStatusId = ((int?)ViewState["UserStatusId"] > 0) ? ((int?)ViewState["UserStatusId"]) : null;
+                    this.userStatusId = ((int?)ViewState["UserStatusId"] >= 0) ? ((int?)ViewState["UserStatusId"]) : null;
                 }
                 else if (!this.userStatusId.HasValue)
                 {
@@ -582,36 +584,36 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         private void PopulateSearchDropDown()
         {
-            this.SearchByJobsGroup.Visible = !(this.JobId.HasValue);
-            ////this.SearchByJobTitleLabel.Visible = !(this.JobId.HasValue);
-            ////this.SearchByJobTitleTextBox.Visible = !(this.JobId.HasValue);
+            this.FilterByJobsGroup.Visible = !(this.JobId.HasValue);
+            ////this.FilterByJobTitleLabel.Visible = !(this.JobId.HasValue);
+            ////this.FilterByJobTitleTextBox.Visible = !(this.JobId.HasValue);
 
-            ////this.SearchByLocationLabel.Visible = !(this.JobId.HasValue);
-            ////this.SearchByLocationDropDown.Visible = !(this.JobId.HasValue);
+            ////this.FilterByLocationLabel.Visible = !(this.JobId.HasValue);
+            ////this.FilterByLocationDropDown.Visible = !(this.JobId.HasValue);
 
-            this.SearchByLocationDropDown.DataSource = this.LocationsForSearch;
-            this.SearchByLocationDropDown.DataTextField = "Text";
-            this.SearchByLocationDropDown.DataValueField = "Value";
-            this.SearchByLocationDropDown.DataBind();
+            this.FilterByLocationDropDown.DataSource = this.LocationsForSearch;
+            this.FilterByLocationDropDown.DataTextField = "Text";
+            this.FilterByLocationDropDown.DataValueField = "Value";
+            this.FilterByLocationDropDown.DataBind();
 
-            this.SearchByApplicantStatusDropDown.DataSource = this.UserStatusesForSearch;
-            this.SearchByApplicantStatusDropDown.DataTextField = "Text";
-            this.SearchByApplicantStatusDropDown.DataValueField = "Value";
-            this.SearchByApplicantStatusDropDown.SelectedValue = (this.UserStatusId.HasValue) ? this.UserStatusId.ToString() : string.Empty;
-            this.SearchByApplicantStatusDropDown.DataBind();
-            ////this.SearchByApplicantStatusDropDown.Enabled = !this.UserStatusId.HasValue;
+            this.FilterByApplicantStatusDropDown.DataSource = this.UserStatusesForSearch;
+            this.FilterByApplicantStatusDropDown.DataTextField = "Text";
+            this.FilterByApplicantStatusDropDown.DataValueField = "Value";
+            this.FilterByApplicantStatusDropDown.SelectedValue = (this.UserStatusId.HasValue) ? this.UserStatusId.ToString() : string.Empty;
+            this.FilterByApplicantStatusDropDown.DataBind();
+            ////this.FilterByApplicantStatusDropDown.Enabled = !this.UserStatusId.HasValue;
 
-            this.SearchByApplicationStatusDropDown.DataSource = this.ApplicationStatusesForSearch;
-            this.SearchByApplicationStatusDropDown.DataTextField = "Text";
-            this.SearchByApplicationStatusDropDown.DataValueField = "Value";
-            this.SearchByApplicationStatusDropDown.SelectedValue = (this.ApplicationStatusId.HasValue) ? this.ApplicationStatusId.ToString() : string.Empty;
-            this.SearchByApplicationStatusDropDown.DataBind();
-            ////this.SearchByApplicationStatusDropDown.Enabled = !this.ApplicationStatusId.HasValue;
+            this.FilterByApplicationStatusDropDown.DataSource = this.ApplicationStatusesForSearch;
+            this.FilterByApplicationStatusDropDown.DataTextField = "Text";
+            this.FilterByApplicationStatusDropDown.DataValueField = "Value";
+            this.FilterByApplicationStatusDropDown.SelectedValue = (this.ApplicationStatusId.HasValue) ? this.ApplicationStatusId.ToString() : string.Empty;
+            this.FilterByApplicationStatusDropDown.DataBind();
+            ////this.FilterByApplicationStatusDropDown.Enabled = !this.ApplicationStatusId.HasValue;
 
-            this.SearchByLeadDropDown.DataSource = this.LeadsForSearch;
-            this.SearchByLeadDropDown.DataTextField = "Text";
-            this.SearchByLeadDropDown.DataValueField = "Value";
-            this.SearchByLeadDropDown.DataBind();
+            this.FilterByLeadDropDown.DataSource = this.LeadsForSearch;
+            this.FilterByLeadDropDown.DataTextField = "Text";
+            this.FilterByLeadDropDown.DataValueField = "Value";
+            this.FilterByLeadDropDown.DataBind();
 
         }
 
@@ -624,15 +626,15 @@ namespace Engage.Dnn.Employment.Admin
         {
             int tempUserStatusId, tempApplicationStatusId, tempLeadId, tempLocationId;
             
-            ViewState["UserStatusId"] = (int.TryParse(this.SearchByApplicantStatusDropDown.SelectedValue, out tempUserStatusId)) ? (int?)tempUserStatusId : -1;
-            ViewState["ApplicationStatusId"] = (int.TryParse(this.SearchByApplicationStatusDropDown.SelectedValue, out tempApplicationStatusId))
+            ViewState["UserStatusId"] = (int.TryParse(this.FilterByApplicantStatusDropDown.SelectedValue, out tempUserStatusId)) ? (int?)tempUserStatusId : -1;
+            ViewState["ApplicationStatusId"] = (int.TryParse(this.FilterByApplicationStatusDropDown.SelectedValue, out tempApplicationStatusId))
                                                    ? (int?)tempApplicationStatusId
                                                    : -1;
-            ViewState["LeadId"] = (int.TryParse(this.SearchByLeadDropDown.SelectedValue, out tempLeadId)) ? (int?)tempLeadId : null;
-            ViewState["DateFrom"] = (this.SearchByDateFromTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateFromTextBox.Text, CultureInfo.CurrentCulture): null;
-            ViewState["DateTo"] = (this.SearchByDateToTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.SearchByDateToTextBox.Text, CultureInfo.CurrentCulture).AddDays(1).AddMilliseconds(-1): null;
-            ViewState["JobTitle"] = (this.SearchByJobTitleTextBox.Text != null) ? this.SearchByJobTitleTextBox.Text.Trim() : null;
-            ViewState["LocationId"] = (int.TryParse(this.SearchByLocationDropDown.SelectedValue, out tempLocationId)) ? (int?)tempLocationId : null;
+            ViewState["LeadId"] = (int.TryParse(this.FilterByLeadDropDown.SelectedValue, out tempLeadId)) ? (int?)tempLeadId : null;
+            ViewState["DateFrom"] = (this.FilterByDateFromTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.FilterByDateFromTextBox.Text, CultureInfo.CurrentCulture): null;
+            ViewState["DateTo"] = (this.FilterByDateToTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.FilterByDateToTextBox.Text, CultureInfo.CurrentCulture).AddDays(1).AddMilliseconds(-1): null;
+            ViewState["JobTitle"] = (this.FilterByJobTitleTextBox.Text != null) ? this.FilterByJobTitleTextBox.Text.Trim() : null;
+            ViewState["LocationId"] = (int.TryParse(this.FilterByLocationDropDown.SelectedValue, out tempLocationId)) ? (int?)tempLocationId : null;
 
             this.JobsGrid.Rebind();
 

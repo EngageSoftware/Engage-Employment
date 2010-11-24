@@ -13,148 +13,148 @@ namespace Engage.Dnn.Employment.Admin {
     public partial class ApplicationListing {
         
         /// <summary>
-        /// SearchByJobsGroup control.
+        /// FilterByJobsGroup control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl SearchByJobsGroup;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl FilterByJobsGroup;
         
         /// <summary>
-        /// SearchByJobTitle control.
+        /// FilterByJobTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByJobTitle;
+        protected global::System.Web.UI.WebControls.Label FilterByJobTitle;
         
         /// <summary>
-        /// SearchByJobTitleLabel control.
+        /// FilterByJobTitleLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByJobTitleLabel;
+        protected global::System.Web.UI.WebControls.Label FilterByJobTitleLabel;
         
         /// <summary>
-        /// SearchByJobTitleTextBox control.
+        /// FilterByJobTitleTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox SearchByJobTitleTextBox;
+        protected global::System.Web.UI.WebControls.TextBox FilterByJobTitleTextBox;
         
         /// <summary>
-        /// SearchByLocationLabel control.
+        /// FilterByLocationLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByLocationLabel;
+        protected global::System.Web.UI.WebControls.Label FilterByLocationLabel;
         
         /// <summary>
-        /// SearchByLocationDropDown control.
+        /// FilterByLocationDropDown control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList SearchByLocationDropDown;
+        protected global::System.Web.UI.WebControls.DropDownList FilterByLocationDropDown;
         
         /// <summary>
-        /// SearchByApplicationsTitle control.
+        /// FilterByApplicationsTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByApplicationsTitle;
+        protected global::System.Web.UI.WebControls.Label FilterByApplicationsTitle;
         
         /// <summary>
-        /// SearchByUserStatusLabel control.
+        /// FilterByUserStatusLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByUserStatusLabel;
+        protected global::System.Web.UI.WebControls.Label FilterByUserStatusLabel;
         
         /// <summary>
-        /// SearchByApplicantStatusDropDown control.
+        /// FilterByApplicantStatusDropDown control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList SearchByApplicantStatusDropDown;
+        protected global::System.Web.UI.WebControls.DropDownList FilterByApplicantStatusDropDown;
         
         /// <summary>
-        /// SearchByDateFromLabel control.
+        /// FilterByDateFromLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByDateFromLabel;
+        protected global::System.Web.UI.WebControls.Label FilterByDateFromLabel;
         
         /// <summary>
-        /// SearchByDateFromTextBox control.
+        /// FilterByDateFromTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox SearchByDateFromTextBox;
+        protected global::System.Web.UI.WebControls.TextBox FilterByDateFromTextBox;
         
         /// <summary>
-        /// SearchByDateToLabel control.
+        /// FilterByDateToLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByDateToLabel;
+        protected global::System.Web.UI.WebControls.Label FilterByDateToLabel;
         
         /// <summary>
-        /// SearchByDateToTextBox control.
+        /// FilterByDateToTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox SearchByDateToTextBox;
+        protected global::System.Web.UI.WebControls.TextBox FilterByDateToTextBox;
         
         /// <summary>
-        /// SearchByLeadDropDown control.
+        /// FilterByLeadDropDown control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList SearchByLeadDropDown;
+        protected global::System.Web.UI.WebControls.DropDownList FilterByLeadDropDown;
         
         /// <summary>
-        /// SearchByApplicationStatusLabel control.
+        /// FilterByApplicationStatusLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SearchByApplicationStatusLabel;
+        protected global::System.Web.UI.WebControls.Label FilterByApplicationStatusLabel;
         
         /// <summary>
-        /// SearchByApplicationStatusDropDown control.
+        /// FilterByApplicationStatusDropDown control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList SearchByApplicationStatusDropDown;
+        protected global::System.Web.UI.WebControls.DropDownList FilterByApplicationStatusDropDown;
         
         /// <summary>
         /// SearchButton control.
