@@ -310,7 +310,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="EngageEmployment.Build" />
-    <None Include="EngageEmployment.4.dnn" />
     <None Include="Migrated rules for EngageEmployment.ruleset" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.01.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.02.00.SqlDataProvider" />

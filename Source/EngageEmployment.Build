@@ -3,7 +3,7 @@
   <property name="projectName" value="Employment"/>
   <property name="createTrialPackage" value="true"/>
   <property name="trialPackageLicenseName" value="Trial"/>
-  <property name="versions" value="4,5,5.2+"/>
+  <property name="versions" value="5,5.2+"/>
   <property name="licenses" value="Standard,Professional,Enterprise"/>
   <property name="packageFileNameTemplate" value="${projectName}_${packageLicense}_${projectVersion}_${packageType}_DNN${dnnVersion}" dynamic="true"/>
   <property name="dependencySourcePackageFileNameTemplate" value="${projectName}_${packageLicense}_${projectVersion}_DependencySource" dynamic="true"/>
