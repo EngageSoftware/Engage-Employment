@@ -34,6 +34,8 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Services.Localization;
     using DotNetNuke.Services.Mail;
 
+    using MailPriority = DotNetNuke.Services.Mail.MailPriority;
+
     /// <summary>
     /// A control which displays detailed information about a job opening.  Allows users to email the job opening to a friend, and to apply for the job opening.
     /// </summary>
@@ -421,29 +423,38 @@ namespace Engage.Dnn.Employment
             return new Uri(this.Request.Url, url).AbsoluteUri;
         }
 
-        private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
+        private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
             try
             {
-                string fromAddress = this.DefaultNotificationEmailAddress;
-                string subject = string.Format(
-                        CultureInfo.CurrentCulture, 
-                        Localization.GetString(isNewApplication ? newSubjectResourceKey : updateSubjectResourceKey, this.LocalResourceFile), 
-                        this.UserInfo.DisplayName, 
-                        this.CurrentJob.Title);
-                string message = this.GetMessageBody(resumeId, messageResourceKey);
+                var fromAddress = this.DefaultNotificationEmailAddress;
+                var replyTo = replyToApplicant
+                                  ? Engage.Utility.HasValue(this.UserInfo.Email) ? this.UserInfo.Email : fromAddress
+                                  : this.DefaultNotificationEmailAddress;
+                var subject = string.Format(
+                    CultureInfo.CurrentCulture,
+                    this.Localize(isNewApplication ? newSubjectResourceKey : updateSubjectResourceKey),
+                    this.UserInfo.DisplayName,
+                    this.CurrentJob.Title);
+                var message = this.GetMessageBody(resumeId, messageResourceKey);
+
                 Mail.SendMail(
                         fromAddress, 
                         toAddress, 
-                        string.Empty, 
-                        subject, 
-                        message, 
-                        string.Empty, 
-                        "HTML", 
-                        string.Empty, 
-                        string.Empty, 
-                        string.Empty, 
-                        string.Empty);
+                        string.Empty,
+                        string.Empty,
+                        replyTo,
+                        MailPriority.Normal, 
+                        subject,
+                        MailFormat.Html, 
+                        Encoding.UTF8,
+                        message,
+                        new string[0],
+                        Host.SMTPServer,
+                        Host.SMTPAuthentication, 
+                        Host.SMTPUsername, 
+                        Host.SMTPPassword,
+                        Host.EnableSMTPSSL);
             }
             catch (SmtpException exc)
             {
@@ -573,7 +584,8 @@ namespace Engage.Dnn.Employment
                 this.SendNotificationEmail(
                     resumeId,
                     isNewApplication,
-                    notificationEmailAddress,
+                    notificationEmailAddress, 
+                    true,
                     "ApplicationSubject",
                     "ApplicationUpdateSubject",
                     "NotificationEmailBody.Format");
@@ -583,7 +595,8 @@ namespace Engage.Dnn.Employment
                     this.SendNotificationEmail(
                         resumeId,
                         isNewApplication,
-                        this.UserInfo.Email,
+                        this.UserInfo.Email, 
+                        false,
                         "ApplicationAutoRespondSubject",
                         "ApplicationUpdateAutoRespondSubject",
                         "ReceiptEmailBody.Format");
@@ -703,13 +716,13 @@ namespace Engage.Dnn.Employment
             if (Job.CurrentJobId != -1)
             {
                 // send email to list
-                string toAddress = this.SendToAddressTextBox.Text;
-                string subject = String.Format(
-                        CultureInfo.CurrentCulture, 
-                        Localization.GetString("FriendEmailSubject", this.LocalResourceFile), 
-                        this.FromNameTextBox.Text, 
-                        this.PortalSettings.PortalName);
-                string message = this.GetSendToAFriendMessageBody();
+                var toAddress = this.SendToAddressTextBox.Text;
+                var subject = string.Format(
+                    CultureInfo.CurrentCulture, 
+                    this.Localize("FriendEmailSubject"), 
+                    this.FromNameTextBox.Text, 
+                    this.PortalSettings.PortalName);
+                var message = this.GetSendToAFriendMessageBody();
 
                 try
                 {
@@ -728,7 +741,7 @@ namespace Engage.Dnn.Employment
                 }
                 catch (SmtpException exc)
                 {
-                    this.EmailErrorLabel.Text = Localization.GetString("SmtpError", this.LocalResourceFile);
+                    this.EmailErrorLabel.Text = this.Localize("SmtpError");
                     Exceptions.LogException(exc);
                     return;
                 }
