@@ -31,7 +31,6 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Entities.Portals;
     using DotNetNuke.Security;
     using DotNetNuke.Services.Exceptions;
-    using DotNetNuke.Services.Localization;
     using DotNetNuke.Services.Mail;
 
     using MailPriority = DotNetNuke.Services.Mail.MailPriority;
@@ -46,6 +45,9 @@ namespace Engage.Dnn.Employment
         /// </summary>
         private Job currentJob;
 
+        /// <summary>
+        /// Gets the actions that this module performs.
+        /// </summary>
         public ModuleActionCollection ModuleActions
         {
             get
@@ -54,7 +56,7 @@ namespace Engage.Dnn.Employment
                 {
                     new ModuleAction(
                         this.GetNextActionID(), 
-                        Localization.GetString("JobDetailOptions", this.LocalResourceFile), 
+                        this.Localize("JobDetailOptions"), 
                         ModuleActionType.ContentOptions, 
                         string.Empty, 
                         string.Empty, 
@@ -68,6 +70,9 @@ namespace Engage.Dnn.Employment
             }
         }
 
+        /// <summary>
+        /// Gets the ID of the application being edited (or <c>null</c> if no application is being edited).
+        /// </summary>
         protected int? ApplicationId
         {
             get
@@ -83,6 +88,12 @@ namespace Engage.Dnn.Employment
             }
         }
 
+        /// <summary>
+        /// Gets or sets the current job being viewed.
+        /// </summary>
+        /// <value>
+        /// The current job.
+        /// </value>
         protected Job CurrentJob
         {
             get
@@ -116,36 +127,60 @@ namespace Engage.Dnn.Employment
             }
         }
 
+        /// <summary>
+        /// Gets the default notification email address for this instance of the module.
+        /// </summary>
         private string DefaultNotificationEmailAddress
         {
             get { return ModuleSettings.JobDetailApplicationEmailAddress.GetValueAsStringFor(this) ?? PortalController.GetCurrentPortalSettings().Email; }
         }
 
+        /// <summary>
+        /// Gets the setting for whether to display the cover letter field.
+        /// </summary>
         private Visibility DisplayCoverLetter
         {
             get { return ModuleSettings.JobDetailDisplayCoverLetter.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
+        /// <summary>
+        /// Gets the setting for whether to display the lead (How did you hear?) field.
+        /// </summary>
         private Visibility DisplayLead
         {
             get { return ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
+        /// <summary>
+        /// Gets the setting for whether to display the message field.
+        /// </summary>
         private Visibility DisplayMessage
         {
             get { return ModuleSettings.JobDetailDisplayMessage.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
+        /// <summary>
+        /// Gets the setting for whether to display the salary requirement field.
+        /// </summary>
         private Visibility DisplaySalaryRequirement
         {
             get { return ModuleSettings.JobDetailDisplaySalaryRequirement.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
+        /// <summary>
+        /// Gets the email address from which "send to a friend" email come.
+        /// </summary>
         private string FriendEmailAddress
         {
             get { return ModuleSettings.JobDetailFriendEmailAddress.GetValueAsStringFor(this) ?? PortalSettings.Email; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether applying requires registration.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if anonymous users can apply for jobs through this module; otherwise, <c>false</c>.
+        /// </value>
         private bool RequireRegistration
         {
             get { return ModuleSettings.JobDetailRequireRegistration.GetValueAsBooleanFor(this).Value; }
@@ -266,6 +301,9 @@ namespace Engage.Dnn.Employment
             return false;
         }
 
+        /// <summary>
+        /// Fills the <see cref="LeadDropDownList"/>.
+        /// </summary>
         private void FillLeadDropDown()
         {
             this.LeadRow.Visible = this.DisplayLead != Visibility.Hidden;
@@ -284,7 +322,7 @@ namespace Engage.Dnn.Employment
 
                     if (this.DisplayLead == Visibility.Optional)
                     {
-                        this.LeadDropDownList.Items.Insert(0, new ListItem(Localization.GetString("ChooseLead", this.LocalResourceFile), string.Empty));
+                        this.LeadDropDownList.Items.Insert(0, new ListItem(this.Localize("ChooseLead"), string.Empty));
                     }
                 }
                 else
@@ -310,24 +348,24 @@ namespace Engage.Dnn.Employment
 
             if (string.IsNullOrEmpty(salaryText))
             {
-                salaryText = Localization.GetString("EmailSalaryBlank", this.LocalResourceFile);
+                salaryText = this.Localize("EmailSalaryBlank");
             }
 
             if (string.IsNullOrEmpty(messageText))
             {
-                messageText = Localization.GetString("EmailMessageBlank", this.LocalResourceFile);
+                messageText = this.Localize("EmailMessageBlank");
             }
 
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize(emailBodyResourceKey),
                 this.MakeUrlAbsolute(jobDetailsUrl),
-                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailLink", this.LocalResourceFile)),
-                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailSalaryLabel", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(this.Localize("ApplicationEmailLink")),
+                HttpUtility.HtmlEncode(this.Localize("ApplicationEmailSalaryLabel")),
                 HttpUtility.HtmlEncode(salaryText),
                 this.MakeUrlAbsolute(Utility.GetDocumentUrl(resumeId)),
-                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailResumeLink", this.LocalResourceFile)),
-                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(this.Localize("ApplicationEmailResumeLink")),
+                HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 HttpUtility.HtmlEncode(messageText));
         }
 
@@ -348,15 +386,15 @@ namespace Engage.Dnn.Employment
             
             if (string.IsNullOrEmpty(messageText))
             {
-                messageText = Localization.GetString("FriendEmailMessageBlank", this.LocalResourceFile);
+                messageText = this.Localize("FriendEmailMessageBlank");
             }
 
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize("FriendEmailBody.Format"),
                 jobDetailLink,
-                HttpUtility.HtmlEncode(Localization.GetString("FriendEmailLink", this.LocalResourceFile)),
-                HttpUtility.HtmlEncode(Localization.GetString("ApplicationEmailMessageLabel", this.LocalResourceFile)),
+                HttpUtility.HtmlEncode(this.Localize("FriendEmailLink")),
+                HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 HttpUtility.HtmlEncode(messageText));
         }
 
@@ -378,8 +416,8 @@ namespace Engage.Dnn.Employment
             string fileExtensionsList = Host.FileExtensions ?? string.Empty;
             string fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
             this.ResumeFileExtensionValidator.ValidationExpression = this.CoverLetterFileExtensionValidator.ValidationExpression = fileExtensionValidationExpression;
-            this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, Localization.GetString("regexResumeFile.Text", this.LocalResourceFile), fileExtensionsList);
-            this.CoverLetterFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, Localization.GetString("regexCoverLetterFile.Text", this.LocalResourceFile), fileExtensionsList);
+            this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexResumeFile.Text"), fileExtensionsList);
+            this.CoverLetterFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexCoverLetterFile.Text"), fileExtensionsList);
 
             this.ApplicationMessageRow.Visible = this.DisplayMessage != Visibility.Hidden;
             this.ApplicationMessageRequiredValidator.Enabled = this.MessageRequiredLabel.Visible = this.DisplayMessage == Visibility.Required;
@@ -423,6 +461,16 @@ namespace Engage.Dnn.Employment
             return new Uri(this.Request.Url, url).AbsoluteUri;
         }
 
+        /// <summary>
+        /// Sends an notifcation email about a new application.
+        /// </summary>
+        /// <param name="resumeId">The ID of the resumé.</param>
+        /// <param name="isNewApplication">if set to <c>true</c> it's a new application, otherwise it's an application edit.</param>
+        /// <param name="toAddress">The email address to which the notification should be sent.</param>
+        /// <param name="replyToApplicant">if set to <c>true</c> sets the reply-to to the applicant's email address (if they're logged in), otherwise leaves it as the "from" address.</param>
+        /// <param name="newSubjectResourceKey">The resource key to use to retreive the localized email subject for new applications.</param>
+        /// <param name="updateSubjectResourceKey">The resource key to use to retreive the localized email subject for updated applications.</param>
+        /// <param name="messageResourceKey">The resource key to use to retrieve the localized email message (with format placeholders).</param>
         private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
             try
@@ -458,7 +506,7 @@ namespace Engage.Dnn.Employment
             }
             catch (SmtpException exc)
             {
-                this.EmailErrorLabel.Text = Localization.GetString("SmtpError", this.LocalResourceFile);
+                this.EmailErrorLabel.Text = this.Localize("SmtpError");
                 Exceptions.LogException(exc);
             }
         }
@@ -471,12 +519,12 @@ namespace Engage.Dnn.Employment
                 {
                     if (Engage.Utility.IsLoggedIn && JobApplication.HasAppliedForJob(Job.CurrentJobId, this.UserId))
                     {
-                        this.NextActionButton.Text = Localization.GetString("AlreadyApplied", this.LocalResourceFile);
+                        this.NextActionButton.Text = this.Localize("AlreadyApplied");
                         this.NextActionButton.Enabled = false;
                     }
                     else if (this.CurrentJob.IsFilled)
                     {
-                        this.NextActionButton.Text = Localization.GetString("JobIsFilled", this.LocalResourceFile);
+                        this.NextActionButton.Text = this.Localize("JobIsFilled");
                         this.NextActionButton.Enabled = false;
                     }
                     else if (Engage.Utility.IsLoggedIn && !Engage.Utility.ValidateEmailAddress(this.UserInfo.Email))
@@ -486,28 +534,28 @@ namespace Engage.Dnn.Employment
                     }
                     else if (!string.IsNullOrEmpty(this.CurrentJob.ApplicationUrl))
                     {
-                        this.NextActionButton.Text = Localization.GetString("RemoteApply", this.LocalResourceFile);
+                        this.NextActionButton.Text = this.Localize("RemoteApply");
                         this.NextActionButton.Click += this.NextActionButtonRedirect_Click;
                     }
                     else
                     {
-                        this.NextActionButton.Text = Localization.GetString("Apply", this.LocalResourceFile);
+                        this.NextActionButton.Text = this.Localize("Apply");
                         this.NextActionButton.Click += this.NextActionButtonApply_Click;
                     }
                 }
             }
             else
             {
-                this.NextActionButton.Text = Localization.GetString("Register", this.LocalResourceFile);
+                this.NextActionButton.Text = this.Localize("Register");
                 this.NextActionButton.Click += this.NextActionButtonLogOn_Click;
             }
         }
 
         /// <summary>
-        /// Handles the Click event of the ApplyButton control.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="ApplyButton"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void ApplyButton_Click(object sender, EventArgs e)
         {
             this.InitializeApplicantInfoSection();
@@ -604,25 +652,25 @@ namespace Engage.Dnn.Employment
             }
 
             this.SuccessLabel.Visible = true;
-            this.SuccessLabel.Text = Localization.GetString("ApplicationSent", this.LocalResourceFile);
+            this.SuccessLabel.Text = this.Localize("ApplicationSent");
             this.ApplicantInfoSection.Visible = false;
         }
 
         /// <summary>
-        /// Handles the Click event of the BackButton control.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="BackButton"/> control.
         /// </summary>
         /// <param name="source">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void BackButton_Click(object source, EventArgs e)
         {
             this.Response.Redirect(Globals.NavigateURL(Utility.GetJobListingTabId(this.JobGroupId, this.PortalSettings) ?? this.TabId));
         }
 
         /// <summary>
-        /// Handles the Click event of the EmailFriendButton control.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="EmailFriendButton"/> control.
         /// </summary>
         /// <param name="source">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void EmailFriendButton_Click(object source, EventArgs e)
         {
             this.EmailFriendSection.Visible = true;
@@ -631,40 +679,40 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Handles the Click event of the NextActionButton control, displaying the application panel.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="NextActionButton"/> control, displaying the application panel.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void NextActionButtonApply_Click(object sender, EventArgs e)
         {
             this.InitializeApplicantInfoSection();
         }
 
         /// <summary>
-        /// Handles the Click event of the NextActionButton control, redirecting the user to the login.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="NextActionButton"/> control, redirecting the user to the login.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void NextActionButtonLogOn_Click(object sender, EventArgs e)
         {
             this.Response.Redirect(Dnn.Utility.GetLoginUrl(this.PortalSettings, this.Request));
         }
 
         /// <summary>
-        /// Handles the Click event of the NextActionButton control, redirecting the user to the job's <see cref="Job.ApplicationUrl"/>.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="NextActionButton"/> control, redirecting the user to the job's <see cref="Job.ApplicationUrl"/>.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void NextActionButtonRedirect_Click(object sender, EventArgs e)
         {
             this.Response.Redirect(this.CurrentJob.ApplicationUrl);
         }
 
         /// <summary>
-        /// Handles the Load event of the Page control.
+        /// Handles the <see cref="Control.Load"/> event of this control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Page_Load(object sender, EventArgs e)
         {
             try
@@ -701,10 +749,10 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Handles the Click event of the SendToFriendButton control.
+        /// Handles the <see cref="LinkButton.Click"/> event of the <see cref="SendToFriendButton"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SendToFriendButton_Click(object sender, EventArgs e)
         {
             this.Page.Validate("email");
@@ -748,7 +796,7 @@ namespace Engage.Dnn.Employment
             }
 
             this.SuccessLabel.Visible = true;
-            this.SuccessLabel.Text = Localization.GetString("EmailToFriendSent", this.LocalResourceFile);
+            this.SuccessLabel.Text = this.Localize("EmailToFriendSent");
             this.EmailFriendSection.Visible = false;
         }
     }
