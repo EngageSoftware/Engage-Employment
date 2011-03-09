@@ -17,8 +17,7 @@ namespace Engage.Dnn.Employment
     using System.Data;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Web;
+
     using Data;
 
     public class Job
@@ -95,28 +94,6 @@ namespace Engage.Dnn.Employment
         private Job()
         {
             this.JobId = -1;
-        }
-
-        public static int CurrentJobId
-        {
-            get
-            {
-                object jobId = null;
-                if (HttpContext.Current != null)
-                {
-                    jobId = HttpContext.Current.Session["JobId"];
-                }
-
-                return jobId == null ? -1 : Convert.ToInt32(jobId, CultureInfo.InvariantCulture);
-            }
-
-            set
-            {
-                if (HttpContext.Current != null)
-                {
-                    HttpContext.Current.Session["JobId"] = value;
-                }
-            }
         }
 
         public string ApplicationUrl

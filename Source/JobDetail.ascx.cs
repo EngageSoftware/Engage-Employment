@@ -46,6 +46,11 @@ namespace Engage.Dnn.Employment
         private Job currentJob;
 
         /// <summary>
+        /// Backing field for <see cref="JobId"/>
+        /// </summary>
+        private int? jobId;
+
+        /// <summary>
         /// Gets the actions that this module performs.
         /// </summary>
         public ModuleActionCollection ModuleActions
@@ -89,7 +94,7 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Gets or sets the current job being viewed.
+        /// Gets the current job being viewed.
         /// </summary>
         /// <value>
         /// The current job.
@@ -98,32 +103,40 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                if (this.currentJob == null)
+                if (this.currentJob == null && this.JobId.HasValue)
                 {
-                    this.currentJob = (Job)this.Context.Items["Job"];
+                    if (!this.JobGroupId.HasValue || DataProvider.Instance().IsJobInGroup(this.JobId.Value, this.JobGroupId.Value))
+                    {
+                        this.currentJob = Job.Load(this.JobId.Value);
+                    }
+
                     if (this.currentJob == null)
                     {
-                        int id = Job.CurrentJobId;
-                        if (id != -1 && (!this.JobGroupId.HasValue || DataProvider.Instance().IsJobInGroup(id, this.JobGroupId.Value)))
-                        {
-                            this.currentJob = Job.Load(id);
-                        }
-
-                        if (this.currentJob == null)
-                        {
-                            this.currentJob = Job.CreateJob();
-                        }
-
-                        this.Context.Items["Job"] = this.currentJob;
+                        this.currentJob = Job.CreateJob();
                     }
                 }
 
                 return this.currentJob;
             }
+        }
 
-            set
+        /// <summary>
+        /// Gets the ID of the application being edited (or <c>null</c> if no application is being edited).
+        /// </summary>
+        private int? JobId
+        {
+            get
             {
-                this.Context.Items["Job"] = this.currentJob = value;
+                if (!this.jobId.HasValue)
+                {
+                    int id;
+                    if (int.TryParse(this.Request.QueryString["jobId"], NumberStyles.Integer, CultureInfo.InvariantCulture, out id))
+                    {
+                        this.jobId = id;
+                    }
+                }
+
+                return this.jobId;
             }
         }
 
@@ -192,6 +205,11 @@ namespace Engage.Dnn.Employment
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnInit(EventArgs e)
         {
+            if (this.JobId == null)
+            {
+                this.Visible = false;
+            }
+
             base.OnInit(e);
             this.Load += this.Page_Load;
             this.EmailFriendButton.Click += this.EmailFriendButton_Click;
@@ -340,31 +358,22 @@ namespace Engage.Dnn.Employment
         /// <returns>A formatted email message body</returns>
         private string GetMessageBody(int resumeId, string emailBodyResourceKey)
         {
-            var jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
-            var salaryText = this.SalaryTextBox.Text;
-            var messageText = this.ApplicationMessageTextBox.Text;
-            var jobDetailsUrl = Globals.NavigateURL(
-                jobDetailModule == null ? -1 : jobDetailModule.TabID, string.Empty, "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture));
+            var jobUrl = Globals.NavigateURL(this.TabId, string.Empty, "jobId=" + this.JobId.Value.ToString(CultureInfo.InvariantCulture));
+            var salaryText = !string.IsNullOrEmpty(this.SalaryTextBox.Text) 
+                                    ? this.SalaryTextBox.Text 
+                                    : this.Localize("EmailSalaryBlank");
+            var messageText = !string.IsNullOrEmpty(this.ApplicationMessageTextBox.Text)
+                                     ? this.ApplicationMessageTextBox.Text
+                                     : this.Localize("EmailMessageBlank");
 
-            if (string.IsNullOrEmpty(salaryText))
-            {
-                salaryText = this.Localize("EmailSalaryBlank");
-            }
-
-            if (string.IsNullOrEmpty(messageText))
-            {
-                messageText = this.Localize("EmailMessageBlank");
-            }
-
-            string url = Utility.GetDocumentUrl(resumeId);
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize(emailBodyResourceKey),
-                Engage.Utility.MakeUrlAbsolute(this.Page, jobDetailsUrl),
+                Engage.Utility.MakeUrlAbsolute(this.Page, jobUrl),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailSalaryLabel")),
                 HttpUtility.HtmlEncode(salaryText),
-                Engage.Utility.MakeUrlAbsolute(this.Page, url),
+                Engage.Utility.MakeUrlAbsolute(this.Page, Utility.GetDocumentUrl(resumeId)),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailResumeLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 HttpUtility.HtmlEncode(messageText));
@@ -376,12 +385,7 @@ namespace Engage.Dnn.Employment
         /// <returns>A formatted email message body</returns>
         private string GetSendToAFriendMessageBody()
         {
-            var jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
-            string url = Globals.NavigateURL(
-                jobDetailModule == null ? -1 : jobDetailModule.TabID,
-                string.Empty,
-                "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture));
-            var jobDetailLink = Engage.Utility.MakeUrlAbsolute(this.Page, url);
+            var jobUrl = Globals.NavigateURL(this.TabId, string.Empty, "jobId=" + this.JobId.Value.ToString(CultureInfo.InvariantCulture));
             var messageText = !string.IsNullOrEmpty(this.FriendEmailMessageTextBox.Text)
                                   ? HttpUtility.HtmlEncode(this.FriendEmailMessageTextBox.Text).Replace(Environment.NewLine, "<br />")
                                   : this.Localize("FriendEmailMessageBlank");
@@ -389,10 +393,18 @@ namespace Engage.Dnn.Employment
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize("FriendEmailBody.Format"),
-                jobDetailLink,
+                Engage.Utility.MakeUrlAbsolute(this.Page, jobUrl),
                 HttpUtility.HtmlEncode(this.Localize("FriendEmailLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 messageText);
+        }
+
+        /// <summary>
+        /// Sends the user back to the Job Listing page.
+        /// </summary>
+        private void GoBack()
+        {
+            this.Response.Redirect(Globals.NavigateURL(Utility.GetJobListingTabId(this.JobGroupId, this.PortalSettings) ?? this.TabId));
         }
 
         /// <summary>
@@ -495,9 +507,9 @@ namespace Engage.Dnn.Employment
         {
             if (Engage.Utility.IsLoggedIn || !this.RequireRegistration)
             {
-                if (Job.CurrentJobId != -1)
+                if (this.JobId != null)
                 {
-                    if (Engage.Utility.IsLoggedIn && JobApplication.HasAppliedForJob(Job.CurrentJobId, this.UserId))
+                    if (Engage.Utility.IsLoggedIn && JobApplication.HasAppliedForJob(this.JobId.Value, this.UserId))
                     {
                         this.NextActionButton.Text = this.Localize("AlreadyApplied");
                         this.NextActionButton.Enabled = false;
@@ -553,7 +565,7 @@ namespace Engage.Dnn.Employment
             }
 
             bool isNewApplication = jobApplication == null;
-            if (Job.CurrentJobId != -1 && (this.UserId == -1 || (!isNewApplication && jobApplication.UserId == this.UserId) || !JobApplication.HasAppliedForJob(Job.CurrentJobId, this.UserId)))
+            if (this.JobId != null && (this.UserId == -1 || (!isNewApplication && jobApplication.UserId == this.UserId) || !JobApplication.HasAppliedForJob(this.JobId.Value, this.UserId)))
             {
                 string resumeFile = string.Empty;
                 string resumeContentType = string.Empty;
@@ -581,7 +593,7 @@ namespace Engage.Dnn.Employment
                 int? userId = (this.UserId == -1) ? (int?)null : this.UserId;
                 int resumeId = isNewApplication
                                    ? JobApplication.Apply(
-                                       Job.CurrentJobId,
+                                       this.JobId.Value,
                                        userId,
                                        resumeFile,
                                        resumeContentType,
@@ -643,7 +655,7 @@ namespace Engage.Dnn.Employment
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void BackButton_Click(object source, EventArgs e)
         {
-            this.Response.Redirect(Globals.NavigateURL(Utility.GetJobListingTabId(this.JobGroupId, this.PortalSettings) ?? this.TabId));
+            this.GoBack();
         }
 
         /// <summary>
@@ -703,22 +715,15 @@ namespace Engage.Dnn.Employment
             {
                 if (!this.IsPostBack)
                 {
-                    bool editingApplication = false;
+                    var editingApplication = false;
                     if (this.ApplicationId.HasValue)
                     {
                         editingApplication = this.FillApplication();
                     }
 
-                    int jobId;
-                    if (int.TryParse(this.Request.QueryString["jobid"], NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
+                    if (this.CurrentJob == null || (!this.CurrentJob.IsActive && !editingApplication))
                     {
-                        Job.CurrentJobId = jobId;
-
-                        if (!this.CurrentJob.IsActive && !editingApplication)
-                        {
-                            Job.CurrentJobId = Null.NullInteger;
-                            this.CurrentJob = null;
-                        }
+                        this.Visible = false;
                     }
                 }
 
@@ -745,7 +750,7 @@ namespace Engage.Dnn.Employment
                 return;
             }
 
-            if (Job.CurrentJobId != -1)
+            if (this.JobId != null)
             {
                 // send email to list
                 var toAddress = this.SendToAddressTextBox.Text;
