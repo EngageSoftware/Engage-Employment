@@ -251,7 +251,7 @@ namespace Engage.Dnn.Employment
         /// <returns>Whether the specified application was filled in</returns>
         private bool FillApplication()
         {
-            JobApplication jobApplication = JobApplication.Load(this.ApplicationId.Value);
+            var jobApplication = JobApplication.Load(this.ApplicationId.Value);
             if (this.UserId == jobApplication.UserId && !Null.IsNull(this.UserId))
             {
                 List<Document> documents = jobApplication.GetDocuments();
@@ -511,6 +511,9 @@ namespace Engage.Dnn.Employment
             }
         }
 
+        /// <summary>
+        /// Determines what happens when the <see cref="NextActionButton"/> is clicked (or whether it can be clicked)
+        /// </summary>
         private void SetNextAction()
         {
             if (Engage.Utility.IsLoggedIn || !this.RequireRegistration)
