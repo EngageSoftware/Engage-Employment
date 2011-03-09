@@ -1,4 +1,3 @@
-<%@ Import Namespace="DotNetNuke.Services.Localization"%>
 <%@ Import Namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.JobSearch" AutoEventWireup="false" Codebehind="JobSearch.ascx.cs" %>
 <asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red" ></asp:Label>
@@ -53,7 +52,7 @@
         <tr>
             <td><%#HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
             <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("JobTitle")) %></a></td>
-            <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))) %></td>
+            <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))) %></td>
             <td><%# HttpUtility.HtmlEncode(Convert.ToDateTime(this.Eval("PostedDate")).ToString("d MMM yyyy", CultureInfo.CurrentCulture))%></td>
         </tr>
         <tr>

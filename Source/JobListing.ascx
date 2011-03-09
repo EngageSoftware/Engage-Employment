@@ -1,4 +1,3 @@
-<%@ Import Namespace="DotNetNuke.Services.Localization"%>
 <%@ Import Namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.JobListing" AutoEventWireup="false" Codebehind="JobListing.ascx.cs" %>
 
@@ -27,7 +26,7 @@
                 <tr>
                     <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
                     <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></a></td>
-                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location.Text", this.LocalResourceFile), this.Eval("LocationName"), this.Eval("StateName"), this.Eval("StateAbbreviation"))) %></td>
+                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location.Text", this.LocalResourceFile), this.Eval("LocationName"), this.Eval("StateName"), this.Eval("StateAbbreviation"))) %></td>
                     <td><%# HttpUtility.HtmlEncode(string.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("PostedDate")))) %></td>
                 </tr>
     </ItemTemplate>
@@ -93,7 +92,7 @@
                 <tr>
                     <td><%# HttpUtility.HtmlEncode((string)Eval("Job.CategoryName")) %></td>
                     <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("Job.Title")) %></a></td>
-                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("Location.Text", this.LocalResourceFile), this.Eval("Job.LocationName"), this.Eval("Job.StateName"), this.Eval("Job.StateAbbreviation"))) %></td>
+                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location.Text", this.LocalResourceFile), this.Eval("Job.LocationName"), this.Eval("Job.StateName"), this.Eval("Job.StateAbbreviation"))) %></td>
                     <td><%# HttpUtility.HtmlEncode(string.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("AppliedForDate")))) %></td>
                     <td><asp:Button ID="EditApplicationButton" runat="server" resourcekey="btnEditApplication"/></td>
                 </tr>

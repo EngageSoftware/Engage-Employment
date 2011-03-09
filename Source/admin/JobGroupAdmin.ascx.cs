@@ -195,7 +195,7 @@ namespace Engage.Dnn.Employment.Admin
                         }
                         else
                         {
-                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", Localization.GetString("DeleteConfirm", LocalResourceFile).Replace("'", "\'"));
+                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", this.Localize("DeleteConfirm").Replace("'", "\'"));
                         }
                     }
                 }

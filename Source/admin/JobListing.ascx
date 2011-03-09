@@ -1,5 +1,3 @@
-<%@ Import namespace="Engage.Dnn.Employment"%>
-<%@ Import namespace="DotNetNuke.Services.Localization"%>
 <%@ Control Language="C#" Inherits="Engage.Dnn.Employment.Admin.JobListing" AutoEventWireup="false" CodeBehind="JobListing.ascx.cs" %>
 
 <asp:GridView ID="JobsGrid" runat="server" AutoGenerateColumns="false" GridLines="None" CssClass="Normal employmentTable">
@@ -12,7 +10,7 @@
             <HeaderStyle CssClass="locationHeader" />
             <ItemStyle CssClass="locationListing" />
             <HeaderTemplate>
-                <asp:HyperLink runat="server" resourcekey="lnkLocationHeader" NavigateUrl='<%#EditUrl("ManageLocations") %>' /><%=Localization.GetString("LocationSeparator.Text", LocalResourceFile) %><asp:HyperLink runat="server" resourcekey="lnkStateHeader" NavigateUrl='<%#EditUrl("ManageStates") %>' />
+                <asp:HyperLink runat="server" resourcekey="lnkLocationHeader" NavigateUrl='<%#EditUrl("ManageLocations") %>' /><%=this.Localize("LocationSeparator.Text") %><asp:HyperLink runat="server" resourcekey="lnkStateHeader" NavigateUrl='<%#EditUrl("ManageStates") %>' />
             </HeaderTemplate>
             <ItemTemplate>
                 <span><%#HttpUtility.HtmlEncode(GetLocationName(Eval("LocationId"), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation")))%></span>
@@ -46,7 +44,7 @@
             <HeaderStyle CssClass="editHeader" />
             <ItemStyle CssClass="editListing" />
             <ItemTemplate>
-                <asp:HyperLink runat="server" NavigateUrl='<%# GetEditUrl(Container.DataItem) %>' ImageUrl="~/images/edit.gif" ToolTip='<%#Localization.GetString("Edit.Text", LocalResourceFile) %>' />
+                <asp:HyperLink runat="server" NavigateUrl='<%# GetEditUrl(Container.DataItem) %>' ImageUrl="~/images/edit.gif" ToolTip='<%#this.Localize("Edit.Text") %>' />
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Applications">
@@ -78,7 +76,7 @@
     </Columns>
 </asp:GridView><asp:Button ID="AddJobButton" runat="server" resourcekey="btnAddJob" Visible="false" />
 
-<h3 class="SubHead"><%=Localization.GetString("lblUnusedItems", LocalResourceFile)%></h3>
+<h3 class="SubHead"><%=this.Localize("lblUnusedItems")%></h3>
 <div class="unusedItems">
     <asp:Repeater ID="EmptyStateRepeater" runat="server">
         <HeaderTemplate>
@@ -112,7 +110,7 @@
         <ItemTemplate>
                 <tr class='listingRow locationRow <%#Container.ItemIndex % 2 == 0 ? string.Empty : "alternateListingRow alternateLocationRow"%>'>
                     <td class="locationListing">
-                        <span><%#HttpUtility.HtmlEncode(string.Format(Localization.GetString("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation")))%></span>
+                        <span><%#HttpUtility.HtmlEncode(string.Format(this.Localize("Location"), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation")))%></span>
                     </td>
                 </tr>
         </ItemTemplate>

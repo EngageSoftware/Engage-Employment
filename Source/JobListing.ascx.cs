@@ -23,7 +23,6 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Framework;
     using DotNetNuke.Security;
     using DotNetNuke.Services.Exceptions;
-    using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
     using Globals = DotNetNuke.Common.Globals;
 
@@ -43,7 +42,7 @@ namespace Engage.Dnn.Employment
                            {
                                    {
                                            this.GetNextActionID(), 
-                                           Localization.GetString("ManageApplications", this.LocalResourceFile), 
+                                           this.Localize("ManageApplications"), 
                                            ModuleActionType.AddContent, 
                                            string.Empty, 
                                            string.Empty, 
@@ -55,7 +54,7 @@ namespace Engage.Dnn.Employment
                                    }, 
                                    {
                                            this.GetNextActionID(), 
-                                           Localization.GetString("ManageJobs", this.LocalResourceFile), 
+                                           this.Localize("ManageJobs"), 
                                            ModuleActionType.AddContent, 
                                            string.Empty, 
                                            string.Empty, 
@@ -67,7 +66,7 @@ namespace Engage.Dnn.Employment
                                    }, 
                                    {
                                            this.GetNextActionID(), 
-                                           Localization.GetString("JobListingOptions", this.LocalResourceFile), 
+                                           this.Localize("JobListingOptions"), 
                                            ModuleActionType.AddContent, 
                                            string.Empty, 
                                            string.Empty, 
@@ -141,28 +140,28 @@ namespace Engage.Dnn.Employment
                     return this.ShowOnlyHotJobs
                                    ? string.Format(
                                              CultureInfo.CurrentCulture, 
-                                             Localization.GetString("HotJobs", this.LocalResourceFile), 
+                                             this.Localize("HotJobs"), 
                                              this.MaximumNumberOfJobsDisplayed.Value)
                                    : string.Format(
                                              CultureInfo.CurrentCulture, 
-                                             Localization.GetString("Jobs", this.LocalResourceFile), 
+                                             this.Localize("Jobs"), 
                                              this.MaximumNumberOfJobsDisplayed.Value);
                 }
 
                 return this.ShowOnlyHotJobs
                                ? string.Format(
                                          CultureInfo.CurrentCulture, 
-                                         Localization.GetString("TopHotJobs", this.LocalResourceFile), 
+                                         this.Localize("TopHotJobs"), 
                                          this.MaximumNumberOfJobsDisplayed.Value)
                                : string.Format(
                                          CultureInfo.CurrentCulture, 
-                                         Localization.GetString("TopJobs", this.LocalResourceFile), 
+                                         this.Localize("TopJobs"), 
                                          this.MaximumNumberOfJobsDisplayed.Value);
             }
 
             return this.ShowOnlyHotJobs
-                           ? Localization.GetString("AllHotJobs", this.LocalResourceFile)
-                           : Localization.GetString("AllJobs", this.LocalResourceFile);
+                           ? this.Localize("AllHotJobs")
+                           : this.Localize("AllJobs");
         }
 
         /// <summary>
@@ -324,7 +323,7 @@ namespace Engage.Dnn.Employment
                 {
                     if (deleteButton != null)
                     {
-                        ClientAPI.AddButtonConfirm(deleteButton, Localization.GetString("DeleteConfirm.Text", this.LocalResourceFile));
+                        ClientAPI.AddButtonConfirm(deleteButton, this.Localize("DeleteConfirm.Text"));
                         deleteButton.CommandArgument = query.Id.ToString(CultureInfo.InvariantCulture);
                     }
 

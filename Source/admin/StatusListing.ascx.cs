@@ -13,7 +13,6 @@
 namespace Engage.Dnn.Employment.Admin
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Web.UI;
@@ -38,7 +37,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             get
             {
-                return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StatusMaxLength", this.LocalResourceFile), StatusMaxLength);
+                return String.Format(CultureInfo.CurrentCulture, this.Localize("StatusMaxLength"), StatusMaxLength);
             }
         }
 
@@ -251,7 +250,7 @@ namespace Engage.Dnn.Employment.Admin
                             btnDelete.OnClientClick = string.Format(
                                     CultureInfo.CurrentCulture, 
                                     "return confirm('{0}');", 
-                                    ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", this.LocalResourceFile)));
+                                    ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
                         }
                     }
                 }

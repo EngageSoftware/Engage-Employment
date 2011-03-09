@@ -33,7 +33,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected string MaxLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("JobTitleMaxLength", this.LocalResourceFile), JobTitleMaxLength); }
+            get { return String.Format(CultureInfo.CurrentCulture, this.Localize("JobTitleMaxLength"), JobTitleMaxLength); }
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (args == null)
             {
-                throw new ArgumentNullException("args", "args must not be null");
+                throw new ArgumentNullException("args", @"args must not be null");
             }
 
             args.IsValid = TextEditorHasValue(this.GetJobDescription(this.PositionsGrid.EditIndex));
@@ -294,7 +294,7 @@ namespace Engage.Dnn.Employment.Admin
                             btnDelete.OnClientClick = string.Format(
                                     CultureInfo.CurrentCulture,
                                     "return confirm('{0}');",
-                                    ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", this.LocalResourceFile)));
+                                    ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
                         }
                     }
                 }

@@ -18,7 +18,6 @@ namespace Engage.Dnn.Employment.Admin
     using Data;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Services.Exceptions;
-    using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
 
     /// <summary>
@@ -93,7 +92,7 @@ namespace Engage.Dnn.Employment.Admin
                         // updating
                         this.UpdateFields(jobId);
                         this.DeleteButton.Visible = true;
-                        ClientAPI.AddButtonConfirm(this.DeleteButton, Localization.GetString("DeleteConfirm", this.LocalResourceFile));
+                        ClientAPI.AddButtonConfirm(this.DeleteButton, this.Localize("DeleteConfirm"));
                     }
                     else
                     {
@@ -202,14 +201,9 @@ namespace Engage.Dnn.Employment.Admin
                 int length = this.RequiredQualificationsTextEditor.Text.Length;
                 if (length == 0)
                 {
-                    this.RequiredQualificationsRequiredValidator.ErrorMessage = Localization.GetString("RequiredQualificationsRequired", this.LocalResourceFile);
+                    this.RequiredQualificationsRequiredValidator.ErrorMessage = this.Localize("RequiredQualificationsRequired");
                     args.IsValid = false;
                 }
-                ////else if (length > MaximumQualificationLength)
-                ////{
-                ////    this.RequiredQualificationsRequiredValidator.ErrorMessage = String.Format(CultureInfo.CurrentCulture, Localization.GetString("RequiredQualificationsMaxLength", LocalResourceFile), MaximumQualificationLength, length);
-                ////    args.IsValid = false;
-                ////}
             }
         }
 
@@ -225,7 +219,7 @@ namespace Engage.Dnn.Employment.Admin
                 int length = this.DesiredQualificationsTextEditor.Text.Length;
                 if (length == 0)
                 {
-                    this.DesiredQualificationsRequiredValidator.ErrorMessage = Localization.GetString("DesiredQualificationsRequired", this.LocalResourceFile);
+                    this.DesiredQualificationsRequiredValidator.ErrorMessage = this.Localize("DesiredQualificationsRequired");
                     args.IsValid = false;
                 }
                 ////else if (length > MaximumQualificationLength)
@@ -246,7 +240,7 @@ namespace Engage.Dnn.Employment.Admin
             this.CategoryDropDownList.DataValueField = "CategoryId";
             this.CategoryDropDownList.DataBind();
 
-            this.CategoryDropDownList.Items.Insert(0, new ListItem(Localization.GetString("SelectACategory", this.LocalResourceFile), "-1"));
+            this.CategoryDropDownList.Items.Insert(0, new ListItem(this.Localize("SelectACategory"), "-1"));
         }
 
         /// <summary>
@@ -259,7 +253,7 @@ namespace Engage.Dnn.Employment.Admin
             this.PositionDropDownList.DataValueField = "PositionId";
             this.PositionDropDownList.DataBind();
 
-            this.PositionDropDownList.Items.Insert(0, new ListItem(Localization.GetString("SelectAPosition", this.LocalResourceFile), "-1"));
+            this.PositionDropDownList.Items.Insert(0, new ListItem(this.Localize("SelectAPosition"), "-1"));
         }
 
         /// <summary>
@@ -280,7 +274,7 @@ namespace Engage.Dnn.Employment.Admin
                     location.LocationId.Value.ToString(CultureInfo.InvariantCulture)));
             }
 
-            this.LocationDropDownList.Items.Insert(0, new ListItem(Localization.GetString("SelectALocation", this.LocalResourceFile), "-1"));
+            this.LocationDropDownList.Items.Insert(0, new ListItem(this.Localize("SelectALocation"), "-1"));
         }
 
         /// <summary>

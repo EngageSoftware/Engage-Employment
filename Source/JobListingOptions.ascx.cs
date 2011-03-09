@@ -19,7 +19,6 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Common;
     using DotNetNuke.Framework;
     using DotNetNuke.Services.Exceptions;
-    using DotNetNuke.Services.Localization;
 
     public partial class JobListingOptions : ModuleBase
     {
@@ -121,15 +120,15 @@ namespace Engage.Dnn.Employment
         private void FillDisplayOptionList()
         {
             this.DisplayOptionRadioButtonList.Items.Clear();
-            this.DisplayOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("ShowHotJobs", LocalResourceFile), true.ToString(CultureInfo.InvariantCulture)));
-            this.DisplayOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("ShowAllJobs", LocalResourceFile), false.ToString(CultureInfo.InvariantCulture)));
+            this.DisplayOptionRadioButtonList.Items.Add(new ListItem(this.Localize("ShowHotJobs"), true.ToString(CultureInfo.InvariantCulture)));
+            this.DisplayOptionRadioButtonList.Items.Add(new ListItem(this.Localize("ShowAllJobs"), false.ToString(CultureInfo.InvariantCulture)));
         }
 
         private void FillLimitOptionList()
         {
             this.LimitOptionRadioButtonList.Items.Clear();
-            this.LimitOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("Sorted", LocalResourceFile), false.ToString(CultureInfo.InvariantCulture)));
-            this.LimitOptionRadioButtonList.Items.Add(new ListItem(Localization.GetString("Random", LocalResourceFile), true.ToString(CultureInfo.InvariantCulture)));
+            this.LimitOptionRadioButtonList.Items.Add(new ListItem(this.Localize("Sorted"), false.ToString(CultureInfo.InvariantCulture)));
+            this.LimitOptionRadioButtonList.Items.Add(new ListItem(this.Localize("Random"), true.ToString(CultureInfo.InvariantCulture)));
         }
 
         #endregion

@@ -17,7 +17,6 @@ namespace Engage.Dnn.Employment
     using System.Web.UI.WebControls;
     using System.Windows.Forms;
     using DotNetNuke.Services.Exceptions;
-    using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
     using Globals = DotNetNuke.Common.Globals;
 
@@ -83,8 +82,8 @@ namespace Engage.Dnn.Employment
         private void InitializeLocationButtons()
         {
             this.LocationRadioButtonList.Items.Clear();
-            this.LocationRadioButtonList.Items.Add(new ListItem(Localization.GetString("liCity", this.LocalResourceFile), LocationType.City.ToString()));
-            this.LocationRadioButtonList.Items.Add(new ListItem(Localization.GetString("liState", this.LocalResourceFile), LocationType.State.ToString()));
+            this.LocationRadioButtonList.Items.Add(new ListItem(this.Localize("liCity"), LocationType.City.ToString()));
+            this.LocationRadioButtonList.Items.Add(new ListItem(this.Localize("liState"), LocationType.State.ToString()));
 
             this.LocationRadioButtonList.Items[0].Selected = true;
         }
@@ -111,7 +110,7 @@ namespace Engage.Dnn.Employment
 
         private void LoadLocations()
         {
-            this.LocationHeaderLabel.Text = Localization.GetString(this.LocationRadioButtonList.SelectedValue, this.LocalResourceFile);
+            this.LocationHeaderLabel.Text = this.Localize(this.LocationRadioButtonList.SelectedValue);
 
             if (string.Equals(this.LocationRadioButtonList.SelectedValue, LocationType.City.ToString(), StringComparison.OrdinalIgnoreCase))
             {
@@ -121,7 +120,7 @@ namespace Engage.Dnn.Employment
                     this.LocationDropDownList.Items.Add(new ListItem(
                         string.Format(
                             CultureInfo.CurrentCulture, 
-                            Localization.GetString("Location.Text", this.LocalResourceFile), 
+                            this.Localize("Location.Text"), 
                             location.LocationName, 
                             location.StateName, 
                             location.StateAbbreviation), 

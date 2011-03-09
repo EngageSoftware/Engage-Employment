@@ -38,12 +38,12 @@ namespace Engage.Dnn.Employment.Admin
 
         protected string MaxLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StateMaxLength", LocalResourceFile), StateNameMaxLength); }
+            get { return String.Format(CultureInfo.CurrentCulture, this.Localize("StateMaxLength"), StateNameMaxLength); }
         }
 
         protected string MaxAbbreviationLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("AbbreviationMaxLength", LocalResourceFile), AbbreviationMaxLength); }
+            get { return String.Format(CultureInfo.CurrentCulture, this.Localize("AbbreviationMaxLength"), AbbreviationMaxLength); }
         }
 
         protected override void OnInit(EventArgs e)
@@ -139,7 +139,7 @@ namespace Engage.Dnn.Employment.Admin
                 GridViewRow row = e.Row;
                 if (row != null)
                 {
-                    Button btnDelete = (Button)row.FindControl("btnDelete");
+                    var btnDelete = (Button)row.FindControl("btnDelete");
                     if (btnDelete != null)
                     {
                         int? stateId = GetStateId(row);
@@ -149,7 +149,7 @@ namespace Engage.Dnn.Employment.Admin
                         }
                         else
                         {
-                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", LocalResourceFile)));
+                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
                         }
                     }
                 }

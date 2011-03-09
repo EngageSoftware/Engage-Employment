@@ -34,7 +34,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected string MaxLengthValidationText
         {
-            get { return string.Format(CultureInfo.CurrentCulture, Localization.GetString("CategoryMaxLength", LocalResourceFile), CategoryMaxLength); }
+            get { return string.Format(CultureInfo.CurrentCulture, this.Localize("CategoryMaxLength"), CategoryMaxLength); }
         }
 
         protected override void OnInit(EventArgs e)
@@ -140,7 +140,7 @@ namespace Engage.Dnn.Employment.Admin
                         }
                         else
                         {
-                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", LocalResourceFile)));
+                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
                         }
                     }
                 }

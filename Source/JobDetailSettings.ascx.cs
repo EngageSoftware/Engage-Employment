@@ -18,7 +18,6 @@ namespace Engage.Dnn.Employment
     using System.Web.UI.WebControls;
     using Data;
     using DotNetNuke.Services.Exceptions;
-    using DotNetNuke.Services.Localization;
 
     /// <summary>
     /// Displays settings for the Job Details module
@@ -43,7 +42,7 @@ namespace Engage.Dnn.Employment
                     string helpTextResourceKey = "lblJobGroup.Help";
                     if (jobGroups.Rows.Count > 0)
                     {
-                        this.JobGroupDropDownList.Items.Insert(0, new ListItem(Localization.GetString("All", LocalResourceFile), string.Empty));
+                        this.JobGroupDropDownList.Items.Insert(0, new ListItem(this.Localize("All"), string.Empty));
                     }
                     else
                     {

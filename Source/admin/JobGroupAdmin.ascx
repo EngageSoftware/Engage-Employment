@@ -1,5 +1,4 @@
 <%@ Import namespace="System.Globalization"%>
-<%@ Import namespace="DotNetNuke.Services.Localization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.JobGroupAdmin" AutoEventWireup="true" Codebehind="JobGroupAdmin.ascx.cs" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
@@ -97,7 +96,7 @@
             <ItemTemplate>
                 <tr class='<%# Container.ItemIndex % 2 == 0 ? "DataGrid_Item" : "DataGrid_AlternatingItem" %>'>
                     <td class="jobLabelCell">
-                        <%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localization.GetString("lbJobInLocation", this.LocalResourceFile), this.Eval("JobTitle"), this.Eval("LocationName"), this.Eval("StateName"))) %>
+                        <%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, this.Localize("lbJobInLocation"), this.Eval("JobTitle"), this.Eval("LocationName"), this.Eval("StateName"))) %>
                         <asp:HiddenField ID="hdnJobId" runat="server" Value='<%# Eval("JobId") %>' />
                     </td>
                     <td>

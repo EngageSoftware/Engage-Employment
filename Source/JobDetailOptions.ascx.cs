@@ -107,27 +107,25 @@ namespace Engage.Dnn.Employment
 
                     this.DisplayLeadRadioButtonList.DataSource = Enum.GetValues(typeof(Visibility));
                     this.DisplayLeadRadioButtonList.DataBind();
-                    ////rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
-                    ////rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
-                    ////rblDisplayLead.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
+
                     var displayLead = ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this);
                     this.DisplayLeadRadioButtonList.SelectedValue = displayLead.ToString();
                     this.rowLeadItems.Visible = displayLead != Visibility.Hidden;
                     Dnn.Utility.LocalizeListControl(this.DisplayLeadRadioButtonList, LocalResourceFile);
 
-                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
-                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
-                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
+                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
+                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
+                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Required.ToString()), Visibility.Required.ToString()));
                     this.DisplaySalaryRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplaySalaryRequirement.GetValueAsEnumFor<Visibility>(this).ToString();
 
-                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
-                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
-                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
+                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
+                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
+                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Required.ToString()), Visibility.Required.ToString()));
                     this.DisplayCoverLetterRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplayCoverLetter.GetValueAsEnumFor<Visibility>(this).ToString();
 
-                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Hidden.ToString(), LocalResourceFile), Visibility.Hidden.ToString()));
-                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Optional.ToString(), LocalResourceFile), Visibility.Optional.ToString()));
-                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
+                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
+                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
+                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Required.ToString()), Visibility.Required.ToString()));
                     this.DisplayMessageRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplayMessage.GetValueAsEnumFor<Visibility>(this).ToString();
 
                     Localization.LocalizeGridView(ref this.LeadItemsGridView, this.LocalResourceFile);
@@ -211,7 +209,7 @@ namespace Engage.Dnn.Employment
                     }
                     else
                     {
-                        btnDelete.OnClientClick = "return confirm('" + Localization.GetString("DeleteConfirm", LocalResourceFile).Replace("'", "\'") + "');";
+                        btnDelete.OnClientClick = "return confirm('" + this.Localize("DeleteConfirm").Replace("'", "\'") + "');";
                     }
                 }
             }

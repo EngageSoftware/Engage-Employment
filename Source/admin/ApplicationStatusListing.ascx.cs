@@ -21,7 +21,6 @@ namespace Engage.Dnn.Employment.Admin
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
     using DotNetNuke.UI.Utilities;
-    using Utility = Dnn.Utility;
 
     /// <summary>
     /// Displays and edits the list of application statuses
@@ -39,7 +38,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <value>The regular expression to limit the length of the status name.</value>
         protected static string MaxLengthValidationExpression
         {
-            get { return Employment.Utility.GetMaxLengthValidationExpression(StatusMaxLength); }
+            get { return Utility.GetMaxLengthValidationExpression(StatusMaxLength); }
         }
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <value>The max length validation text.</value>
         protected string MaxLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, Localization.GetString("StatusMaxLength", this.LocalResourceFile), StatusMaxLength); }
+            get { return string.Format(CultureInfo.CurrentCulture, this.Localize("StatusMaxLength"), StatusMaxLength); }
         }
 
         /// <summary>
@@ -201,7 +200,7 @@ namespace Engage.Dnn.Employment.Admin
                             deleteButton.OnClientClick = string.Format(
                                 CultureInfo.CurrentCulture,
                                 "return confirm('{0}');",
-                                ClientAPI.GetSafeJSString(Localization.GetString("DeleteConfirm", this.LocalResourceFile)));
+                                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
                         }
                     }
                 }
@@ -278,14 +277,7 @@ namespace Engage.Dnn.Employment.Admin
             this.StatusesGrid.DataSource = statuses;
             this.StatusesGrid.DataBind();
 
-            if (statuses.Count() % 2 == 0)
-            {
-                this.NewPanel.CssClass = this.StatusesGrid.RowStyle.CssClass;
-            }
-            else
-            {
-                this.NewPanel.CssClass = this.StatusesGrid.AlternatingRowStyle.CssClass;
-            }
+            this.NewPanel.CssClass = statuses.Count() % 2 == 0 ? this.StatusesGrid.RowStyle.CssClass : this.StatusesGrid.AlternatingRowStyle.CssClass;
 
             this.rowNewHeader.Visible = !statuses.Any();
         }
