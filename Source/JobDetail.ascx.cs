@@ -382,20 +382,17 @@ namespace Engage.Dnn.Employment
                 string.Empty,
                 "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture));
             var jobDetailLink = Engage.Utility.MakeUrlAbsolute(this.Page, url);
-            var messageText = this.FriendEmailMessageTextBox.Text;
+            var messageText = !string.IsNullOrEmpty(this.FriendEmailMessageTextBox.Text)
+                                  ? HttpUtility.HtmlEncode(this.FriendEmailMessageTextBox.Text).Replace(Environment.NewLine, "<br />")
+                                  : this.Localize("FriendEmailMessageBlank");
             
-            if (string.IsNullOrEmpty(messageText))
-            {
-                messageText = this.Localize("FriendEmailMessageBlank");
-            }
-
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize("FriendEmailBody.Format"),
                 jobDetailLink,
                 HttpUtility.HtmlEncode(this.Localize("FriendEmailLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
-                HttpUtility.HtmlEncode(messageText));
+                messageText);
         }
 
         /// <summary>
