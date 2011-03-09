@@ -60,8 +60,6 @@ namespace Engage.Dnn.Employment.Admin
             this.UpdateButton.Click += this.UpdateButton_Click;
             this.DeleteButton.Click += this.DeleteButton_Click;
             this.CancelButton.Click += this.CancelButton_Click;
-            this.RequiredQualificationsRequiredValidator.ServerValidate += this.RequiredQualificationsRequiredValidator_ServerValidate;
-            this.DesiredQualificationsRequiredValidator.ServerValidate += this.DesiredQualificationsRequiredValidator_ServerValidate;
         }
 
         /// <summary>
@@ -187,47 +185,6 @@ namespace Engage.Dnn.Employment.Admin
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
-        }
-
-        /// <summary>
-        /// Handles the ServerValidate event of the <see cref="RequiredQualificationsRequiredValidator"/> control.
-        /// </summary>
-        /// <param name="source">The source of the event.</param>
-        /// <param name="args">The <see cref="System.Web.UI.WebControls.ServerValidateEventArgs"/> instance containing the event data.</param>
-        private void RequiredQualificationsRequiredValidator_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-            if (args != null)
-            {
-                int length = this.RequiredQualificationsTextEditor.Text.Length;
-                if (length == 0)
-                {
-                    this.RequiredQualificationsRequiredValidator.ErrorMessage = this.Localize("RequiredQualificationsRequired");
-                    args.IsValid = false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles the ServerValidate event of the <see cref="DesiredQualificationsRequiredValidator"/> control.
-        /// </summary>
-        /// <param name="source">The source of the event.</param>
-        /// <param name="args">The <see cref="System.Web.UI.WebControls.ServerValidateEventArgs"/> instance containing the event data.</param>
-        private void DesiredQualificationsRequiredValidator_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-            if (args != null)
-            {
-                int length = this.DesiredQualificationsTextEditor.Text.Length;
-                if (length == 0)
-                {
-                    this.DesiredQualificationsRequiredValidator.ErrorMessage = this.Localize("DesiredQualificationsRequired");
-                    args.IsValid = false;
-                }
-                ////else if (length > MaximumQualificationLength)
-                ////{
-                ////    this.DesiredQualificationsRequiredValidator.ErrorMessage = String.Format(CultureInfo.CurrentCulture, Localization.GetString("DesiredQualificationsMaxLength", LocalResourceFile), MaximumQualificationLength, length);
-                ////    args.IsValid = false;
-                ////}
-            }
         }
 
         /// <summary>

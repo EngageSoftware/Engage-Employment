@@ -82,7 +82,6 @@
         </td>
         <td valign="top">
             <dnn:TextEditor Height="400px" Width="400px" ID="RequiredQualificationsTextEditor" runat="server" ChooseMode="false" HtmlEncode="false" TextRenderMode="raw" />
-            <asp:CustomValidator ID="RequiredQualificationsRequiredValidator" runat="server" Display="None" ValidationGroup="JobEdit"/></td>
     </tr>
     <tr>
         <td class="SubHead">
@@ -90,7 +89,6 @@
         </td>
         <td valign="top">
             <dnn:TextEditor Height="400px" Width="400px" ID="DesiredQualificationsTextEditor" runat="server" ChooseMode="false" HtmlEncode="false" TextRenderMode="raw"  />
-            <asp:CustomValidator ID="DesiredQualificationsRequiredValidator" runat="server" Display="None" ValidationGroup="JobEdit"/></td>
     </tr>
     <tr>
         <td class="SubHead">
