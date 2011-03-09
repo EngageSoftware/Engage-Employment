@@ -1,6 +1,6 @@
 // <copyright file="JobListingOptions.ascx.cs" company="Engage Software">
 // Engage: Employment
-// Copyright (c) 2004-2010
+// Copyright (c) 2004-2011
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
 
