@@ -213,7 +213,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!this.IsPostBack)
                 {
-                    Dnn.Utility.LocalizeGridView(ref this.PositionsGrid, this.LocalResourceFile);
+                    Localization.LocalizeGridView(ref this.PositionsGrid, this.LocalResourceFile);
                     this.SetupLengthValidation();
                     this.LoadPositions();
                 }

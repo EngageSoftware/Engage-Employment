@@ -101,7 +101,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!this.IsPostBack)
                 {
-                    Utility.LocalizeGridView(ref this.StatusesGrid, this.LocalResourceFile);
+                    Localization.LocalizeGridView(ref this.StatusesGrid, this.LocalResourceFile);
                     this.SetupStatusLengthValidation();
                     this.BindData();
                 }

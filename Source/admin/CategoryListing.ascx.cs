@@ -60,7 +60,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (!IsPostBack)
                 {
-                    Dnn.Utility.LocalizeGridView(ref this.CategoriesGridView, LocalResourceFile);
+                    Localization.LocalizeGridView(ref this.CategoriesGridView, this.LocalResourceFile);
                     this.SetupLengthValidation();
                     this.LoadCategories();
                 }

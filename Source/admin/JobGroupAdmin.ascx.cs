@@ -59,7 +59,7 @@ namespace Engage.Dnn.Employment.Admin
                 this.AuthorizationMultiview.SetActiveView(this.IsEditable ? this.vwJobGroups : this.vwUnauthorized);
                 if (!Page.IsPostBack)
                 {
-                    Dnn.Utility.LocalizeGridView(ref this.JobGroupsGridView, LocalResourceFile);
+                    Localization.LocalizeGridView(ref this.JobGroupsGridView, this.LocalResourceFile);
 
                     this.BindJobGroups();
                 }

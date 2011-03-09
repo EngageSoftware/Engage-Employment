@@ -130,7 +130,7 @@ namespace Engage.Dnn.Employment
                     this.DisplayMessageRadioButtonList.Items.Add(new ListItem(Localization.GetString(Visibility.Required.ToString(), LocalResourceFile), Visibility.Required.ToString()));
                     this.DisplayMessageRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplayMessage.GetValueAsEnumFor<Visibility>(this).ToString();
 
-                    Dnn.Utility.LocalizeGridView(ref this.LeadItemsGridView, LocalResourceFile);
+                    Localization.LocalizeGridView(ref this.LeadItemsGridView, this.LocalResourceFile);
                     this.BindLeadItems();
                 }
             }
