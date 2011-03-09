@@ -356,14 +356,15 @@ namespace Engage.Dnn.Employment
                 messageText = this.Localize("EmailMessageBlank");
             }
 
+            string url = Utility.GetDocumentUrl(resumeId);
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize(emailBodyResourceKey),
-                this.MakeUrlAbsolute(jobDetailsUrl),
+                Engage.Utility.MakeUrlAbsolute(this.Page, jobDetailsUrl),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailSalaryLabel")),
                 HttpUtility.HtmlEncode(salaryText),
-                this.MakeUrlAbsolute(Utility.GetDocumentUrl(resumeId)),
+                Engage.Utility.MakeUrlAbsolute(this.Page, url),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailResumeLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 HttpUtility.HtmlEncode(messageText));
@@ -376,12 +377,11 @@ namespace Engage.Dnn.Employment
         private string GetSendToAFriendMessageBody()
         {
             var jobDetailModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
-            var jobDetailLink =
-                this.MakeUrlAbsolute(
-                    Globals.NavigateURL(
-                        jobDetailModule == null ? -1 : jobDetailModule.TabID,
-                        string.Empty,
-                        "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture)));
+            string url = Globals.NavigateURL(
+                jobDetailModule == null ? -1 : jobDetailModule.TabID,
+                string.Empty,
+                "jobId=" + Job.CurrentJobId.ToString(CultureInfo.InvariantCulture));
+            var jobDetailLink = Engage.Utility.MakeUrlAbsolute(this.Page, url);
             var messageText = this.FriendEmailMessageTextBox.Text;
             
             if (string.IsNullOrEmpty(messageText))
@@ -439,26 +439,6 @@ namespace Engage.Dnn.Employment
                                                                 ? (Control)this.CoverLetterUpload 
                                                                 : this.ResumeUpload;
             firstVisibleInputControl.Focus();
-        }
-
-        /// <summary>
-        /// Transforms the given <paramref name="url"/> into an absolute URL.
-        /// </summary>
-        /// <param name="url">The URL to transform.</param>
-        /// <returns>An absolute URL</returns>
-        private string MakeUrlAbsolute(string url)
-        {
-            if (url.StartsWith("~", StringComparison.Ordinal))
-            {
-                url = this.ResolveUrl(url);
-            }
-
-            if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
-            {
-                return url;
-            }
-
-            return new Uri(this.Request.Url, url).AbsoluteUri;
         }
 
         /// <summary>
