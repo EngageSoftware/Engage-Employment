@@ -358,6 +358,8 @@ list-style-type:none;
 
 .applicationMessage{padding: 0 0 15px 25px;}
 
+.email_jobs .em-input .NormalTextBox {width:80%;}
+
 /*
  * Telerik Grid
  * Overrides from Simple skin

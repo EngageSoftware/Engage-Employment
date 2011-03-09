@@ -310,6 +310,24 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.TextBox FromNameTextBox;
         
         /// <summary>
+        /// FromAddressTextBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox FromAddressTextBox;
+        
+        /// <summary>
+        /// FriendFromEmailRegexValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator FriendFromEmailRegexValidator;
+        
+        /// <summary>
         /// SendToAddressTextBox control.
         /// </summary>
         /// <remarks>

@@ -678,7 +678,11 @@ namespace Engage.Dnn.Employment
         {
             this.EmailFriendSection.Visible = true;
             this.ApplicantInfoSection.Visible = false;
+            this.FriendFromEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
             this.FriendEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx;
+
+            this.FromNameTextBox.Text = this.UserInfo.DisplayName;
+            this.FromAddressTextBox.Text = this.UserInfo.Email;
         }
 
         /// <summary>
@@ -768,6 +772,9 @@ namespace Engage.Dnn.Employment
             {
                 // send email to list
                 var toAddress = this.SendToAddressTextBox.Text;
+                var fromAddress = !string.IsNullOrEmpty(this.FromAddressTextBox.Text) 
+                    ? this.FromAddressTextBox.Text 
+                    : this.FriendEmailAddress;
                 var subject = string.Format(
                     CultureInfo.CurrentCulture, 
                     this.Localize("FriendEmailSubject"), 
@@ -780,15 +787,20 @@ namespace Engage.Dnn.Employment
                     Mail.SendMail(
                             this.FriendEmailAddress, 
                             toAddress, 
-                            string.Empty, 
+                            string.Empty,
+                            string.Empty,
+                            fromAddress,
+                            MailPriority.Normal, 
                             subject, 
+                            MailFormat.Html, 
+                            Encoding.UTF8,
                             message, 
-                            string.Empty, 
-                            "HTML", 
-                            string.Empty, 
-                            string.Empty, 
-                            string.Empty, 
-                            string.Empty);
+                            new string[] { }, 
+                            Host.SMTPServer, 
+                            Host.SMTPAuthentication, 
+                            Host.SMTPUsername, 
+                            Host.SMTPPassword,
+                            Host.EnableSMTPSSL);
                 }
                 catch (SmtpException exc)
                 {

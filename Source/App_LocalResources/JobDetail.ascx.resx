@@ -211,13 +211,13 @@
     <value>Your profile has an invalid email address.  Please correct it before submitting an application.</value>
   </data>
   <data name="lblEmailFromNameHeader.Text" xml:space="preserve">
-    <value> Name</value>
+    <value>Your Name</value>
   </data>
   <data name="lblEmailMessageHeader.Text" xml:space="preserve">
     <value>Message</value>
   </data>
   <data name="lblEmailToAddressHeader.Text" xml:space="preserve">
-    <value> Email Address</value>
+    <value>Friends' Email Address(es)</value>
   </data>
   <data name="lblEmailToAddressMessage.Text" xml:space="preserve">
     <value>(separate by , if sending to multiple recipients)</value>
@@ -247,7 +247,7 @@
     <value>You must supply a valid email address</value>
   </data>
   <data name="regexFriendEmailValidation.Text" xml:space="preserve">
-    <value>You must supply a valid email address</value>
+    <value>You must supply one or more valid email addresses (separated by commas)</value>
   </data>
   <data name="Register.Text" xml:space="preserve">
     <value>Register Now to Apply</value>
@@ -340,5 +340,11 @@
 	&lt;/tr&gt;
 &lt;/table&gt;</value>
     <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text</comment>
+  </data>
+  <data name="lblEmailFromAddressHeader.Text" xml:space="preserve">
+    <value>Your Email Address</value>
+  </data>
+  <data name="regexFriendFromEmailValidation.Text" xml:space="preserve">
+    <value>You must supply a valid email address</value>
   </data>
 </root>
