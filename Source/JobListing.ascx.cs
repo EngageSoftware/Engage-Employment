@@ -15,6 +15,7 @@ namespace Engage.Dnn.Employment
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Web.UI;
     using System.Web.UI.WebControls;
     using DotNetNuke.Common.Utilities;
@@ -224,25 +225,28 @@ namespace Engage.Dnn.Employment
         private void LoadSavedSearches()
         {
             this.SavedSearchesRepeater.Controls.Clear();
-            if (!Null.IsNull(this.UserId))
+            if (Null.IsNull(this.UserId) || Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings) == null)
             {
-                ReadOnlyCollection<JobSearchQuery> queries = JobSearchQuery.LoadSearches(this.UserId, this.JobGroupId);
-
-                if (queries.Count > 0)
-                {
-                    this.SavedSearchesRepeater.DataSource = queries;
-                    this.SavedSearchesRepeater.DataBind();
-                }
+                return;
             }
+
+            var queries = JobSearchQuery.LoadSearches(this.UserId, this.JobGroupId);
+            if (!queries.Any())
+            {
+                return;
+            }
+
+            this.SavedSearchesRepeater.DataSource = queries;
+            this.SavedSearchesRepeater.DataBind();
         }
 
         private void SetLinkUrls()
         {
-            int searchResultsTabId = Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings);
-            this.SearchJobsLink.Visible = searchResultsTabId != this.TabId;
-            if (this.SearchJobsLink.Visible)
+            var searchResultsTabId = Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings);
+            this.SearchJobsLink.Visible = searchResultsTabId != null && searchResultsTabId.Value != this.TabId;
+            if (searchResultsTabId != null)
             {
-                this.SearchJobsLink.NavigateUrl = Globals.NavigateURL(searchResultsTabId);
+                this.SearchJobsLink.NavigateUrl = Globals.NavigateURL(searchResultsTabId.Value);
             }
         }
 
@@ -327,10 +331,19 @@ namespace Engage.Dnn.Employment
                         deleteButton.CommandArgument = query.Id.ToString(CultureInfo.InvariantCulture);
                     }
 
-                    if (searchLink != null)
+                    if (searchLink == null)
                     {
-                        searchLink.NavigateUrl = Globals.NavigateURL(Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings), string.Empty, "usid=" + query.Id);
+                        return;
                     }
+
+                    var searchResultsTabId = Utility.GetSearchResultsTabId(this.JobGroupId, this.PortalSettings);
+                    if (searchResultsTabId == null)
+                    {
+                        searchLink.Visible = false;
+                        return;
+                    }
+
+                    searchLink.NavigateUrl = Globals.NavigateURL(searchResultsTabId.Value, string.Empty, "usid=" + query.Id);
                 }
             }
         }

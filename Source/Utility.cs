@@ -20,6 +20,7 @@ namespace Engage.Dnn.Employment
     using System.Data;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Web.Caching;
@@ -33,6 +34,7 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Entities.Portals;
     using DotNetNuke.Entities.Tabs;
     using DotNetNuke.Security;
+    using DotNetNuke.Security.Permissions;
     using DotNetNuke.Services.Localization;
 
     using Engage.Dnn.Employment.Data;
@@ -103,40 +105,21 @@ namespace Engage.Dnn.Employment
         /// <returns>A non-deleted <see cref="ModuleInfo"/> with the given <paramref name="moduleDefinition"/>, or null if none exists.</returns>
         public static ModuleInfo GetCurrentModuleByDefinition(PortalSettings portalSettings, ModuleDefinition moduleDefinition, int? jobGroupId)
         {
-            ModuleInfo bestModule = null;
-            var modules = new ModuleController();
+            var moduleController = new ModuleController();
+            var tabController = new TabController();
 
 // GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
 #pragma warning disable 618
 
-            foreach (ModuleInfo module in modules.GetModulesByDefinition(portalSettings.PortalId, moduleDefinition.ToString()))
-            {
+            return (from ModuleInfo module in moduleController.GetModulesByDefinition(portalSettings.PortalId, moduleDefinition.ToString())
+                    where !module.IsDeleted && PortalSecurity.HasNecessaryPermission(SecurityAccessLevel.View, portalSettings, module)
+                    let moduleJobGroupSetting = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue)
+                    let tab = tabController.GetTab(module.TabID, portalSettings.PortalId, false)
+                    where tab != null && !tab.IsDeleted && TabPermissionController.HasTabPermission(tab.TabPermissions, "VIEW") && (jobGroupId.Equals(moduleJobGroupSetting) || moduleJobGroupSetting == null)
+                    orderby !jobGroupId.Equals(moduleJobGroupSetting), moduleJobGroupSetting != null // false then true (i.e. job groups are equal *first*, then module's job group is null)
+                    select module).FirstOrDefault();
+
 #pragma warning restore 618
-
-                if (!module.IsDeleted)
-                {
-                    TabInfo tab = (new TabController()).GetTab(module.TabID, portalSettings.PortalId, false);
-                    if (tab != null && !tab.IsDeleted && PortalSecurity.HasNecessaryPermission(SecurityAccessLevel.View, portalSettings, module))
-                    {
-                        bestModule = bestModule ?? module; // set the value if it is null, otherwise leave it the same
-
-                        int? moduleJobGroupSetting = ModuleSettings.JobGroupId.GetValueAsInt32For(
-                            EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
-                        if (jobGroupId.Equals(moduleJobGroupSetting))
-                        {
-                            // if it's the right Job Group, return this one now; otherwise, keep it around, but see if we can find a better match.  BD
-                            bestModule = module;
-                            break;
-                        }
-                        else if (!moduleJobGroupSetting.HasValue)
-                        {
-                            bestModule = module; // a module without a jobGroupId beats out one with the wrong jobGroupId.  BD
-                        }
-                    }
-                }
-            }
-
-            return bestModule;
         }
 
         /// <summary>
@@ -201,10 +184,10 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        public static int GetSearchResultsTabId(int? jobGroupId, PortalSettings portalSettings)
+        public static int? GetSearchResultsTabId(int? jobGroupId, PortalSettings portalSettings)
         {
             ModuleInfo mi = GetCurrentModuleByDefinition(portalSettings, ModuleDefinition.JobSearch, jobGroupId);
-            return mi == null ? -1 : mi.TabID;
+            return mi == null ? (int?)null : mi.TabID;
         }
 
         public static string GetString(string name, string resourceFileRoot, int portalId)

@@ -13,7 +13,7 @@
 namespace Engage.Dnn.Employment
 {
     using System.Diagnostics.CodeAnalysis;
-    using DotNetNuke.Entities.Portals;
+
     using Engage.Dnn.Framework;
 
     public static class ModuleSettings
