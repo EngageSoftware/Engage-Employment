@@ -131,7 +131,8 @@
         <exclude name="${referencesDirectory}/Microsoft.ApplicationBlocks.Data.dll"/>
         <exclude name="${referencesDirectory}/System.Web.Extensions.dll"/>
         <exclude name="${referencesDirectory}/*.Design.dll"/>
-        <exclude name="${referencesDirectory}/Engage.Events.dll"/>
+        <exclude name="${referencesDirectory}/Framework/Engage.Events.dll"/>
+        <exclude name="${referencesDirectory}/Framework/EvolutionjaryAlgorithms.dll"/>
         <!--<exclude name="${referencesDirectory}/Telerik.Web.UI.dll"/>-->
       </fileset>
     </copy>
