@@ -413,7 +413,7 @@ namespace Engage.Dnn.Employment
                         foreach (string keyword in keywords)
                         {
                             // add <b> tags around keywords
-                            rowText = Regex.Replace(rowText, "(" + Regex.Escape(keyword) + ")", "<b>$1</b>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            ////rowText = Regex.Replace(rowText, "(" + Regex.Escape(keyword) + ")", "<b>$1</b>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
                             // make whitespace a consistent single space (makes counting words much easier)
                             rowText = Regex.Replace(rowText, @"\s{2,}", " ", RegexOptions.Compiled);
@@ -437,7 +437,8 @@ namespace Engage.Dnn.Employment
                             }
                         }
 
-                        row[i] = HtmlConverter.ValidateAndCloseTags(rowText); // make sure we didn't cut out any closing <b> tags somehow
+                        ////row[i] = HtmlConverter.ValidateAndCloseTags(rowText); // make sure we didn't cut out any closing <b> tags somehow
+                        row[i] = rowText;
                     }
                 }
             }
