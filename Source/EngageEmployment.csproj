@@ -278,8 +278,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
-    <Content Include="ReleaseNotes_1.9.6.htm" />
-    <Content Include="ReleaseNotes_1.9.5.htm" />
+    <Content Include="ReleaseNotes_1.9.7.htm" />
     <Content Include="ReleaseNotes_1.9.0.htm" />
     <Content Include="ReleaseNotes_1.8.8.htm" />
     <Content Include="ReleaseNotes_1.8.7.htm" />
