@@ -15,18 +15,36 @@ namespace Engage.Dnn.Employment
     using System.Collections.Generic;
     using System.Data;
     using System.Globalization;
+    using System.Linq;
+
     using DotNetNuke.Common;
     using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Users;
     using DotNetNuke.Framework;
-    using DotNetNuke.Security;
+    using DotNetNuke.Security.Permissions;
 
     /// <summary>
     /// Displays the document with the given ID, assuming that the user is authenticated.  Otherwise redirects to login page.
     /// </summary>
     public partial class GetResume : PageBase
     {
+        /// <summary>
+        /// Gets the current user's ID.
+        /// </summary>
+        private static int UserId
+        {
+            get { return UserInfo.UserID; }
+        }
+
+        /// <summary>
+        /// Gets the current user's info.
+        /// </summary>
+        private static UserInfo UserInfo
+        {
+            get { return UserController.GetCurrentUserInfo(); }
+        }
+
         /// <summary>
         /// Handles the Load event of the Page control.
         /// </summary>
@@ -41,19 +59,16 @@ namespace Engage.Dnn.Employment
                 {
                     if (documentReader.Read())
                     {
-                        UserInfo requestingUser = UserController.GetCurrentUserInfo();
-                        if (this.UserHasPermissionToViewDocument((int)documentReader["DocumentId"], documentReader["UserId"] as int?, requestingUser))
+                        if (this.UserHasPermissionToViewDocument((int)documentReader["DocumentId"], documentReader["UserId"] as int?))
                         {
                             this.WriteDocumentContent(documentReader);
                             return;
                         }
-                        else
+                        
+                        if (UserId == Null.NullInteger)
                         {
-                            if (requestingUser.UserID == Null.NullInteger)
-                            {
-                                this.Response.Redirect(Dnn.Utility.GetLoginUrl(this.PortalSettings, this.Request));
-                                return;
-                            }
+                            this.Response.Redirect(Dnn.Utility.GetLoginUrl(this.PortalSettings, this.Request));
+                            return;
                         }
                     }
                 }
@@ -63,14 +78,13 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Gets a list of IDs of the job groups which the <paramref name="requestingUser"/> has permission to edit (and therefore to view documents for).
+        /// Gets a list of IDs of the job groups which the current user has permission to edit (and therefore to view documents for).
         /// </summary>
-        /// <param name="requestingUser">The user making this request.</param>
-        /// <returns>A list of IDs for the job groups that the <paramref name="requestingUser"/> can view documents for.</returns>
-        private IList<int?> GetPermissibleJobGroups(UserInfo requestingUser)
+        /// <returns>A list of IDs for the job groups that the current user can view documents for.</returns>
+        private IList<int?> GetPermissibleJobGroups()
         {
             var permissibleJobGroups = new List<int?>();
-            if (requestingUser.IsSuperUser)
+            if (UserInfo.IsSuperUser)
             {
                 permissibleJobGroups.Add(null);
             }
@@ -79,16 +93,14 @@ namespace Engage.Dnn.Employment
 // GetModulesByDefinition's obsolete status was rescinded after DNN 5.0
 #pragma warning disable 618
 
-                // TODO: if user is in multiple portals, this might need to account for that
                 var moduleController = new ModuleController();
-                foreach (ModuleInfo module in moduleController.GetModulesByDefinition(requestingUser.PortalID, ModuleDefinition.JobListing.ToString()))
+                foreach (ModuleInfo module in moduleController.GetModulesByDefinition(this.PortalSettings.PortalId, ModuleDefinition.JobListing.ToString()))
                 {
 #pragma warning restore 618
-
                     int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
                     if (!permissibleJobGroups.Contains(jobGroupId))
                     {
-                        if (PortalSecurity.HasNecessaryPermission(SecurityAccessLevel.Edit, this.PortalSettings, module, requestingUser))
+                        if (ModulePermissionController.CanEditModuleContent(module))
                         {
                             permissibleJobGroups.Add(jobGroupId);
 
@@ -110,18 +122,17 @@ namespace Engage.Dnn.Employment
         /// </summary>
         /// <param name="documentId">The ID of the document.</param>
         /// <param name="documentUserId">The ID of the user who submitted the requested document.</param>
-        /// <param name="requestingUser">The user making this request.</param>
         /// <returns>
         /// <c>true</c> if the current user has permission to view the requested document; otherwise <c>false</c>.
         /// </returns>
-        private bool UserHasPermissionToViewDocument(int documentId, int? documentUserId, UserInfo requestingUser)
+        private bool UserHasPermissionToViewDocument(int documentId, int? documentUserId)
         {
-            if (documentUserId.HasValue && documentUserId.Value == requestingUser.UserID)
+            if (documentUserId.HasValue && documentUserId.Value == UserId)
             {
                 return true;
             }
 
-            IList<int?> permissibleJobGroups = this.GetPermissibleJobGroups(requestingUser);
+            var permissibleJobGroups = this.GetPermissibleJobGroups();
             if (permissibleJobGroups.Contains(null))
             {
                 return true;
@@ -129,13 +140,7 @@ namespace Engage.Dnn.Employment
 
             if (permissibleJobGroups.Count > 0)
             {
-                foreach (int jobGroup in Document.GetDocumentJobGroups(documentId))
-                {
-                    if (permissibleJobGroups.Contains(jobGroup))
-                    {
-                        return true;
-                    }
-                }
+                return Document.GetDocumentJobGroups(documentId).Any(jobGroup => permissibleJobGroups.Contains(jobGroup));
             }
 
             return false;
