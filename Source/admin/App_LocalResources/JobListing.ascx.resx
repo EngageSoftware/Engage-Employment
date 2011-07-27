@@ -164,7 +164,7 @@
     <value>Category</value>
   </data>
   <data name="DatePosted.Header" xml:space="preserve">
-    <value>Date Posted</value>
+    <value>Date Created</value>
   </data>
   <data name="lnkLocationHeader.Text" xml:space="preserve">
     <value>Location</value>
@@ -229,5 +229,8 @@
   </data>
   <data name="lblJobsHeader.Text" xml:space="preserve">
     <value>Job Openings</value>
+  </data>
+  <data name="StartDate.Header" xml:space="preserve">
+    <value>Start Date</value>
   </data>
 </root>

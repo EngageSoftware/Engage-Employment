@@ -78,6 +78,7 @@
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridBoundColumn DataField="PostedDate" UniqueName="PostedDate" HeaderText="PostedDateHeaderLabel" DataFormatString="{0:d}" ItemStyle-CssClass="postedDateColumn" />
+                <telerik:GridBoundColumn DataField="StartDate" UniqueName="StartDate" HeaderText="DateStartHeaderLabel" DataFormatString="{0:d}" ItemStyle-CssClass="startDateColumn" />
             </Columns>
             <DetailTables>
                 <telerik:GridTableView runat="server" 

@@ -201,6 +201,8 @@
     </Build>
     <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\engage_EngageEmployment_Job.table.sql">
       <SubType>Code</SubType>
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\engage_EngageEmployment_JobGroup.table.sql">
       <SubType>Code</SubType>
@@ -378,6 +380,8 @@
     </Build>
     <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Programmability\Stored Procedures\engage_EngageEmployment_spGetAdminData.proc.sql">
       <SubType>Code</SubType>
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Programmability\Stored Procedures\engage_EngageEmployment_spGetApplicationsByStatus.proc.sql">
       <SubType>Code</SubType>
@@ -434,6 +438,42 @@
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Programmability\Stored Procedures\engage_EngageEmployment_spUpdatePosition.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\Keys\dnn_FK_EngageEmployment_UserStatus_EngageEmployment_lkpUserStatus.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Programmability\Functions\dnn_EngageEmployment_fnParseCsvString.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\Keys\PK_dnn_EngageEmployment_UserStatus.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Programmability\Stored Procedures\dnn_EngageEmployment_spUpdateUserStatus.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Programmability\Stored Procedures\dnn_EngageEmployment_spGetJobs.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Programmability\Stored Procedures\dnn_EngageEmployment_spGetApplicationsForJob.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\Keys\dnn_IX_EngageEmployment_lkpState_Name.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\Keys\dnn_IX_EngageEmployment_lkpLocation_Description_StateId.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\Keys\dnn_IX_EngageEmployment_JobPosition_JobTitle.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\Keys\dnn_IX_EngageEmployment_lkpJobCategory_Description.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\Keys\dnn_IX_EngageEmployment_lkpCommonWords_Word.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dotnetnuke_dukes\Tables\dnn_EngageEmployment_UserStatus.table.sql">
       <SubType>Code</SubType>
     </Build>
   </ItemGroup>

@@ -714,8 +714,7 @@ namespace Engage.Dnn.Employment.Data
             var sql = new StringBuilder(512);
 
             sql.Append(" select ");
-            sql.Append(
-                " UserSearchId, SearchName, JobTitle, LocationName, StateName, Keywords, CreationDate, LocationId, StateId, CategoryId, CategoryName, PositionId, JobGroupId ");
+            sql.Append(" UserSearchId, SearchName, JobTitle, LocationName, StateName, Keywords, CreationDate, LocationId, StateId, CategoryId, CategoryName, PositionId, JobGroupId ");
             sql.Append(" from ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwSavedSearches ", this.NamePrefix);
             sql.Append(" where UserSearchId = @searchId ");
@@ -730,7 +729,7 @@ namespace Engage.Dnn.Employment.Data
 
             sql.Append(" SELECT ");
             sql.Append(" j.JobId, j.JobTitle, j.LocationName, j.StateName, j.StateAbbreviation, j.CategoryName, ");
-            sql.Append(" j.PostedDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
+            sql.Append(" j.PostedDate, j.StartDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
             sql.Append(" FROM ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwJobs j ", this.NamePrefix);
             if (jobGroupId.HasValue)
@@ -848,7 +847,7 @@ namespace Engage.Dnn.Employment.Data
             var sql = new StringBuilder(256);
             sql.Append(" SELECT ");
             sql.Append(" j.JobId, j.JobTitle, j.LocationName, j.StateName, j.StateAbbreviation, j.CategoryName, ");
-            sql.Append(" j.PostedDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
+            sql.Append(" j.PostedDate, j.StartDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
             sql.Append(" FROM ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwJobs j ", this.NamePrefix);
             if (jobGroupId.HasValue)
@@ -901,7 +900,7 @@ namespace Engage.Dnn.Employment.Data
                         {
                             sql.Append(" SELECT ");
                             sql.Append(" j.JobId, j.JobTitle, j.LocationName, j.StateName, j.StateAbbreviation, j.CategoryName, ");
-                            sql.Append(" j.PostedDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
+                            sql.Append(" j.PostedDate, j.StartDate, j.RequiredQualifications, j.DesiredQualifications, j.JobDescription ");
                             sql.Append(" FROM ");
                             sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwJobs j ", this.NamePrefix);
                             if (jobGroupId.HasValue)

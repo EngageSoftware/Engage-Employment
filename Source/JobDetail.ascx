@@ -1,4 +1,5 @@
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.JobDetail" AutoEventWireup="false" Codebehind="JobDetail.ascx.cs" %>
+<%@ Import Namespace="System.Globalization" %>
 <div id="employment" class="job-details employmentTable">
     <table>
         <tr class="jd-title">
@@ -28,7 +29,8 @@
                 <asp:Label runat="server" resourcekey="lblDatePostedHeader" EnableViewState="false" />
             </td>
             <td class="em-value">
-                <%= HttpUtility.HtmlEncode(CurrentJob.PostedDate) %></td>
+                <%= HttpUtility.HtmlEncode(CurrentJob.StartDate.ToString("d", CultureInfo.InvariantCulture)) %>
+            </td>
         </tr>
         <tr class="jd-position-desc">
             <td class="SubHead em-label">

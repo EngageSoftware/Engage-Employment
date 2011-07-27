@@ -252,7 +252,7 @@
 {5} is replaced by total number of jobs</comment>
   </data>
   <data name="PostedDateHeaderLabel.Text" xml:space="preserve">
-    <value>Posted Date</value>
+    <value>Created Date</value>
   </data>
   <data name="Previous Page.Text" xml:space="preserve">
     <value />
@@ -354,5 +354,8 @@
   </data>
   <data name="FilterNoUserStatus.Text" xml:space="preserve">
     <value>No Status</value>
+  </data>
+  <data name="DateStartHeaderLabel.Text" xml:space="preserve">
+    <value>Start Date</value>
   </data>
 </root>

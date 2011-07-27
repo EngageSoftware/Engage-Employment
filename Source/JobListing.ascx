@@ -26,8 +26,8 @@
                 <tr>
                     <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
                     <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></a></td>
-                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location.Text", this.LocalResourceFile), this.Eval("LocationName"), this.Eval("StateName"), this.Eval("StateAbbreviation"))) %></td>
-                    <td><%# HttpUtility.HtmlEncode(string.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("PostedDate")))) %></td>
+                    <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location.Text"), this.Eval("LocationName"), this.Eval("StateName"), this.Eval("StateAbbreviation"))) %></td>
+                    <td><%# HttpUtility.HtmlEncode(((DateTime)Eval("StartDate")).ToString("d MMM yyyy", CultureInfo.CurrentCulture)) %></td>
                 </tr>
     </ItemTemplate>
 	<FooterTemplate>

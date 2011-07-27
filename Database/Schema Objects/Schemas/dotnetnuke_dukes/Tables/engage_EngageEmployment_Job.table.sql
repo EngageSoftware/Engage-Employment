@@ -12,9 +12,11 @@
     [RevisionDate]             DATETIME        NOT NULL,
     [SortOrder]                INT             NOT NULL,
     [PortalId]                 INT             NOT NULL,
-    [NotificationEmailAddress] NVARCHAR (320)  NULL,
+    [NotificationEmailAddress] NTEXT           NULL,
     [StartDate]                DATETIME        NOT NULL,
     [ExpireDate]               DATETIME        NULL,
     [ApplicationUrl]           NVARCHAR (2000) NULL
 );
+
+
 

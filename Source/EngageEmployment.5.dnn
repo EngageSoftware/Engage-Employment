@@ -79,6 +79,10 @@
               <name>1.8.8.SqlDataProvider</name>
               <version>1.8.8</version>
             </script>
+            <script type="Install">
+              <name>1.9.7.SqlDataProvider</name>
+              <version>1.9.7</version>
+            </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>
               <version latestVersion="latestVersion">1.8.8</version>

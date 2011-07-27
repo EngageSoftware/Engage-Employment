@@ -40,6 +40,10 @@
             <HeaderStyle CssClass="datePostedHeader" />
             <ItemStyle CssClass="datePostedListing" />
         </asp:BoundField>
+        <asp:BoundField HeaderText="StartDate" DataField="StartDate">
+            <HeaderStyle CssClass="startDateHeader" />
+            <ItemStyle CssClass="startDateListing" />
+        </asp:BoundField>
         <asp:TemplateField HeaderText="Edit">
             <HeaderStyle CssClass="editHeader" />
             <ItemStyle CssClass="editListing" />
@@ -55,7 +59,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <th colspan="6">
+                    <th colspan="7">
                         <asp:Button ID="AddJobButton" runat="server" resourcekey="btnAddJob" />
             </HeaderTemplate>
             <ItemTemplate>
