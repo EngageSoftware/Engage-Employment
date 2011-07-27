@@ -308,11 +308,6 @@ namespace Engage.Dnn.Employment.Admin
 
                 return this.applicationStatusId;
             }
-
-            set
-            {
-                ViewState["ApplicationStatusId"] = this.applicationStatusId = value;
-            }
         }
 
         /// <summary>
@@ -338,11 +333,6 @@ namespace Engage.Dnn.Employment.Admin
                 }
 
                 return this.userStatusId;
-            }
-
-            set
-            {
-                ViewState["UserStatusId"] = this.userStatusId = value;
             }
         }
 
@@ -625,19 +615,24 @@ namespace Engage.Dnn.Employment.Admin
         protected void SearchButton_Click(object sender, EventArgs e)
         {
             int tempUserStatusId, tempApplicationStatusId, tempLeadId, tempLocationId;
-            
-            ViewState["UserStatusId"] = (int.TryParse(this.FilterByApplicantStatusDropDown.SelectedValue, out tempUserStatusId)) ? (int?)tempUserStatusId : -1;
-            ViewState["ApplicationStatusId"] = (int.TryParse(this.FilterByApplicationStatusDropDown.SelectedValue, out tempApplicationStatusId))
+
+            ViewState["UserStatusId"] = int.TryParse(this.FilterByApplicantStatusDropDown.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out tempUserStatusId)
+                                            ? (int?)tempUserStatusId
+                                            : -1;
+            ViewState["ApplicationStatusId"] = int.TryParse(this.FilterByApplicationStatusDropDown.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out tempApplicationStatusId)
                                                    ? (int?)tempApplicationStatusId
                                                    : -1;
             ViewState["LeadId"] = (int.TryParse(this.FilterByLeadDropDown.SelectedValue, out tempLeadId)) ? (int?)tempLeadId : null;
-            ViewState["DateFrom"] = (this.FilterByDateFromTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.FilterByDateFromTextBox.Text, CultureInfo.CurrentCulture): null;
-            ViewState["DateTo"] = (this.FilterByDateToTextBox.Text != string.Empty)?(DateTime?)DateTime.Parse(this.FilterByDateToTextBox.Text, CultureInfo.CurrentCulture).AddDays(1).AddMilliseconds(-1): null;
-            ViewState["JobTitle"] = (this.FilterByJobTitleTextBox.Text != null) ? this.FilterByJobTitleTextBox.Text.Trim() : null;
-            ViewState["LocationId"] = (int.TryParse(this.FilterByLocationDropDown.SelectedValue, out tempLocationId)) ? (int?)tempLocationId : null;
+            ViewState["DateFrom"] = !string.IsNullOrEmpty(this.FilterByDateFromTextBox.Text)
+                                        ? (DateTime?)DateTime.Parse(this.FilterByDateFromTextBox.Text, CultureInfo.CurrentCulture)
+                                        : null;
+            ViewState["DateTo"] = !string.IsNullOrEmpty(this.FilterByDateToTextBox.Text)
+                                      ? (DateTime?)DateTime.Parse(this.FilterByDateToTextBox.Text, CultureInfo.CurrentCulture).AddDays(1).AddMilliseconds(-1)
+                                      : null;
+            ViewState["JobTitle"] = !string.IsNullOrEmpty(this.FilterByJobTitleTextBox.Text) ? this.FilterByJobTitleTextBox.Text.Trim() : null;
+            ViewState["LocationId"] = int.TryParse(this.FilterByLocationDropDown.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out tempLocationId) ? (int?)tempLocationId : null;
 
             this.JobsGrid.Rebind();
-
         }
 
         /// <summary>

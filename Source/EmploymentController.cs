@@ -134,8 +134,7 @@ namespace Engage.Dnn.Employment
                     {
                         var userId = userInfo.UserID;
                         var statusIdStr = userInfo.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
-                        int statusId;
-                        int.TryParse(statusIdStr, out statusId);
+                        int statusId = int.Parse(statusIdStr, NumberStyles.Integer, CultureInfo.InvariantCulture);
 
                         DataProvider.Instance().UpdateUserStatus(portal.PortalID, userId, statusId);
                     }
