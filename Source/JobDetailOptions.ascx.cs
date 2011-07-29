@@ -37,6 +37,12 @@ namespace Engage.Dnn.Employment
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnInit(EventArgs e) 
         {
+            if (!PermissionController.CanManageJobDetailOptions(this))
+            {
+                DenyAccess();
+                return;
+            }
+
             this.Load += this.Page_Load;
             this.UpdateButton.Click += this.UpdateButton_Click;
             this.CancelButton.Click += this.CancelButton_Click;

@@ -262,6 +262,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ModuleSettings.cs" />
+    <Compile Include="PermissionController.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Providers\DataProviders\SqlDataProvider\SqlDataProvider.cs" />
     <Compile Include="State.cs" />

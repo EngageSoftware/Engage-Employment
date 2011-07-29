@@ -108,7 +108,7 @@
                   <moduleControl>
                     <controlKey>Options</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/JobListingOptions.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                   </moduleControl>
                   <moduleControl>
@@ -120,85 +120,66 @@
                   <moduleControl>
                     <controlKey>Edit</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/JobListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
-                    <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>EditCategory</controlKey>
-                    <controlSrc>DesktopModules/EngageEmployment/admin/CategoryEdit.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>EditJob</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/JobEdit.ascx</controlSrc>
-                    <controlType>Edit</controlType>
-                    <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>EditLocation</controlKey>
-                    <controlSrc>DesktopModules/EngageEmployment/admin/LocationEdit.ascx</controlSrc>
-                    <controlType>Edit</controlType>
-                    <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>EditPosition</controlKey>
-                    <controlSrc>DesktopModules/EngageEmployment/admin/PositionEdit.ascx</controlSrc>
-                    <controlType>Edit</controlType>
-                    <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>EditState</controlKey>
-                    <controlSrc>DesktopModules/EngageEmployment/admin/StateEdit.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManageApplications</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/ApplicationListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                     <supportsPartialRendering>True</supportsPartialRendering>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManageCategories</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/CategoryListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManageLocations</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/LocationListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManagePositions</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/PositionListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManageStates</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/StateListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManageStatuses</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/StatusListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                     <supportsPartialRendering>True</supportsPartialRendering>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>ManageApplicationStatuses</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/admin/ApplicationStatusListing.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                     <supportsPartialRendering>True</supportsPartialRendering>
                   </moduleControl>
                 </moduleControls>
+                <permissions>
+                  <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-APPLICATIONS" name="Manage Applications" />
+                  <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-JOBS" name="Manage Jobs" />
+                  <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-JOB-LISTING-OPTIONS" name="Manage Job Listing Options" />
+                </permissions>
               </moduleDefinition>
               <moduleDefinition>
                 <friendlyName>JobSearch</friendlyName>
@@ -237,11 +218,14 @@
                   <moduleControl>
                     <controlKey>Options</controlKey>
                     <controlSrc>DesktopModules/EngageEmployment/JobDetailOptions.ascx</controlSrc>
-                    <controlType>Edit</controlType>
+                    <controlType>View</controlType>
                     <helpUrl>http://www.EngageSoftware.com/Support.aspx</helpUrl>
                     <supportsPartialRendering>True</supportsPartialRendering>
                   </moduleControl>
                 </moduleControls>
+                <permissions>
+                  <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-JOB-DETAIL-OPTIONS" name="Manage Job Detail Options" />
+                </permissions>
               </moduleDefinition>
             </moduleDefinitions>
           </desktopModule>

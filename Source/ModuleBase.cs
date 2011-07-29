@@ -11,6 +11,7 @@
 
 namespace Engage.Dnn.Employment
 {
+    using DotNetNuke.Common;
     using DotNetNuke.Security;
 
 #if TRIAL
@@ -58,6 +59,14 @@ namespace Engage.Dnn.Employment
             base.OnInit(e);
         }
 #endif
+
+        /// <summary>
+        /// Denies access to this control.
+        /// </summary>
+        protected void DenyAccess()
+        {
+            this.Response.Redirect(this.Request.IsAuthenticated ? Globals.AccessDeniedURL() : Dnn.Utility.GetLoginUrl(this.PortalSettings, this.Request), true);
+        }
 
         /// <summary>
         /// Filters the given HTML to remove any scripting if the user is not an administrator.

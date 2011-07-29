@@ -25,6 +25,12 @@ namespace Engage.Dnn.Employment
         #region Event Handlers
         protected override void OnInit(EventArgs e)
         {
+            if (!PermissionController.CanManageJobListingOptions(this))
+            {
+                DenyAccess();
+                return;
+            }
+
             if (AJAX.IsInstalled())
             {
                 // AJAX.AddScriptManager(Page);

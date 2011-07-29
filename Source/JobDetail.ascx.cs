@@ -57,9 +57,10 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                return new ModuleActionCollection(new[]
+                var actions = new ModuleActionCollection();
+                if (PermissionController.CanManageJobDetailOptions(this))
                 {
-                    new ModuleAction(
+                    actions.Add(new ModuleAction(
                         this.GetNextActionID(), 
                         this.Localize("JobDetailOptions"), 
                         ModuleActionType.ContentOptions, 
@@ -68,10 +69,12 @@ namespace Engage.Dnn.Employment
                         this.EditUrl(ControlKey.Options.ToString()), 
                         string.Empty, 
                         false, 
-                        SecurityAccessLevel.Edit, 
+                        SecurityAccessLevel.View, 
                         true, 
-                        false)
-                });
+                        false));
+                }
+
+                return actions;
             }
         }
 

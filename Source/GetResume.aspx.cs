@@ -22,7 +22,6 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Users;
     using DotNetNuke.Framework;
-    using DotNetNuke.Security.Permissions;
 
     /// <summary>
     /// Displays the document with the given ID, assuming that the user is authenticated.  Otherwise redirects to login page.
@@ -100,7 +99,7 @@ namespace Engage.Dnn.Employment
                     int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
                     if (!permissibleJobGroups.Contains(jobGroupId))
                     {
-                        if (ModulePermissionController.CanEditModuleContent(module))
+                        if (PermissionController.CanManageJobs(module))
                         {
                             permissibleJobGroups.Add(jobGroupId);
 

@@ -39,45 +39,53 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                return new ModuleActionCollection
-                           {
-                                   {
-                                           this.GetNextActionID(), 
-                                           this.Localize("ManageApplications"), 
-                                           ModuleActionType.AddContent, 
-                                           string.Empty, 
-                                           string.Empty, 
-                                           this.EditUrl(ControlKey.ManageApplications.ToString()), 
-                                           false, 
-                                           SecurityAccessLevel.Edit, 
-                                           true, 
-                                           false
-                                   }, 
-                                   {
-                                           this.GetNextActionID(), 
-                                           this.Localize("ManageJobs"), 
-                                           ModuleActionType.AddContent, 
-                                           string.Empty, 
-                                           string.Empty, 
-                                           this.EditUrl(ControlKey.Edit.ToString()), 
-                                           false, 
-                                           SecurityAccessLevel.Edit, 
-                                           true, 
-                                           false
-                                   }, 
-                                   {
-                                           this.GetNextActionID(), 
-                                           this.Localize("JobListingOptions"), 
-                                           ModuleActionType.AddContent, 
-                                           string.Empty, 
-                                           string.Empty, 
-                                           this.EditUrl(ControlKey.Options.ToString()), 
-                                           false, 
-                                           SecurityAccessLevel.Edit, 
-                                           true, 
-                                           false
-                                   }
-                           };
+                var actions = new ModuleActionCollection();
+                if (PermissionController.CanManageApplications(this))
+                {
+                    actions.Add(
+                        this.GetNextActionID(),
+                        this.Localize("ManageApplications"),
+                        ModuleActionType.AddContent,
+                        string.Empty,
+                        string.Empty,
+                        this.EditUrl(ControlKey.ManageApplications.ToString()),
+                        false,
+                        SecurityAccessLevel.View,
+                        true,
+                        false);
+                }
+
+                if (PermissionController.CanManageJobs(this))
+                {
+                    actions.Add(
+                        this.GetNextActionID(),
+                        this.Localize("ManageJobs"),
+                        ModuleActionType.AddContent,
+                        string.Empty,
+                        string.Empty,
+                        this.EditUrl(ControlKey.Edit.ToString()),
+                        false,
+                        SecurityAccessLevel.View,
+                        true,
+                        false);
+                }
+
+                if (PermissionController.CanManageJobListingOptions(this))
+                {
+                    actions.Add(
+                        this.GetNextActionID(),
+                        this.Localize("JobListingOptions"),
+                        ModuleActionType.AddContent,
+                        string.Empty,
+                        string.Empty,
+                        this.EditUrl(ControlKey.Options.ToString()),
+                        false,
+                        SecurityAccessLevel.View,
+                        true,
+                        false);
+                }
+
+                return actions;
             }
         }
 

@@ -47,6 +47,12 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         protected override void OnInit(EventArgs e)
         {
+            if (!PermissionController.CanManageApplications(this))
+            {
+                DenyAccess();
+                return;
+            }
+
             this.Load += this.Page_Load;
             this.AddButton.Click += this.AddButton_Click;
             this.BackButton.Click += this.BackButton_Click;

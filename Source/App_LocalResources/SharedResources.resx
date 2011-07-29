@@ -196,6 +196,18 @@
   <data name="CalendarYearStatus.Text" xml:space="preserve">
     <value>Show a different year</value>
   </data>
+  <data name="Manage Applications.Permission" xml:space="preserve">
+    <value>Manage Applications</value>
+  </data>
+  <data name="Manage Job Detail Options.Permission" xml:space="preserve">
+    <value>Manage Job Detail Options</value>
+  </data>
+  <data name="Manage Job Listing Options.Permission" xml:space="preserve">
+    <value>Manage Job Listing Options</value>
+  </data>
+  <data name="Manage Jobs.Permission" xml:space="preserve">
+    <value>Manage Jobs</value>
+  </data>
   <data name="UserName.Text" xml:space="preserve">
     <value>{0}</value>
     <comment>{0} is replaced by Display Name, {1} is replaced by First Name, {2} is replaced by Last Name</comment>
