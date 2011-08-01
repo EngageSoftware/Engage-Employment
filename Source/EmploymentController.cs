@@ -118,29 +118,42 @@ namespace Engage.Dnn.Employment
         public string UpgradeModule(string version)
         {
             var v = new Version(version);
-            if (v >= new Version(1,8,7))
+            if (v == new Version(1, 8, 7))
             {
                 // Migrate UserStatus from UserProfile to EngageEmployment_UserStatus table.
                 var portalController = new PortalController();
-                var portals = portalController.GetPortals().Cast<PortalInfo>();
+                var portals = portalController.GetPortals();
 
-                foreach (var portal in portals)
+                foreach (PortalInfo portal in portals)
                 {
                     var maxSize = 0;
                     var users = UserController.GetUsersByProfileProperty(
-                        portal.PortalID, Utility.UserStatusPropertyName, "%", 0, int.MaxValue, ref maxSize).Cast<UserInfo>();
+                        portal.PortalID, 
+                        propertyName: Utility.UserStatusPropertyName, 
+                        propertyValue: "%", 
+                        pageIndex: 0, 
+                        pageSize: int.MaxValue, 
+                        totalRecords: ref maxSize);
 
-                    foreach (var userInfo in users)
+                    foreach (UserInfo userInfo in users)
                     {
                         var userId = userInfo.UserID;
                         var statusIdStr = userInfo.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
-                        int statusId = int.Parse(statusIdStr, NumberStyles.Integer, CultureInfo.InvariantCulture);
-
-                        DataProvider.Instance().UpdateUserStatus(portal.PortalID, userId, statusId);
+                        int statusId;
+                        if (int.TryParse(statusIdStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
+                        {
+                            DataProvider.Instance().UpdateUserStatus(portal.PortalID, userId, statusId);
+                        }
                     }
 
-                    ProfileController.DeletePropertyDefinition(ProfileController.GetPropertyDefinitionByName(portal.PortalID, Utility.UserStatusPropertyName));
+                    var userStatusPropertyDefinition = ProfileController.GetPropertyDefinitionByName(portal.PortalID, Utility.UserStatusPropertyName);
+                    if (userStatusPropertyDefinition != null)
+                    {
+                        ProfileController.DeletePropertyDefinition(userStatusPropertyDefinition);
+                    }
                 }
+
+                return "Migrated user statuses from DNN user profile to EngageEmployment_UserStatus table";
             }
 
             return "No upgrade action required for this version";
