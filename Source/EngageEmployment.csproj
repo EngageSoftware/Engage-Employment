@@ -279,6 +279,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Content Include="images\employment-icon32.png" />
     <Content Include="ReleaseNotes_01.09.08.htm" />
     <Content Include="ReleaseNotes_1.9.0.htm" />
     <Content Include="ReleaseNotes_1.8.8.htm" />
