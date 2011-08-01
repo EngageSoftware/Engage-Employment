@@ -175,11 +175,14 @@
                     <supportsPartialRendering>True</supportsPartialRendering>
                   </moduleControl>
                 </moduleControls>
+                <!-- 
+                Custom Permissions implemented via IUpgradeable, because of DNN-13973
                 <permissions>
                   <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-APPLICATIONS" name="Manage Applications" />
                   <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-JOBS" name="Manage Jobs" />
                   <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-JOB-LISTING-OPTIONS" name="Manage Job Listing Options" />
                 </permissions>
+                -->
               </moduleDefinition>
               <moduleDefinition>
                 <friendlyName>JobSearch</friendlyName>
@@ -223,9 +226,12 @@
                     <supportsPartialRendering>True</supportsPartialRendering>
                   </moduleControl>
                 </moduleControls>
+                <!-- 
+                Custom Permissions implemented via IUpgradeable, because of DNN-13973
                 <permissions>
                   <permission code="ENGAGE_EMPLOYMENT" key="MANAGE-JOB-DETAIL-OPTIONS" name="Manage Job Detail Options" />
                 </permissions>
+                -->
               </moduleDefinition>
             </moduleDefinitions>
           </desktopModule>
@@ -235,7 +241,7 @@
             <attributes>
               <businessControllerClass>Engage.Dnn.Employment.EmploymentController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>1.8.7</upgradeVersionsList>
+              <upgradeVersionsList>1.8.7,01.09.08</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>

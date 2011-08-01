@@ -156,6 +156,12 @@ namespace Engage.Dnn.Employment
                 return "Migrated user statuses from DNN user profile to EngageEmployment_UserStatus table";
             }
 
+            if (v == new Version(1, 9, 8)) 
+            {
+                new PermissionController().CreateCustomPermissions();
+                return "Created custom module permissions";
+            }
+
             return "No upgrade action required for this version";
         }
     }

@@ -13,15 +13,22 @@ namespace Engage.Dnn.Employment
 {
     using System;
 
+    using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Modules;
+    using DotNetNuke.Entities.Modules.Definitions;
     using DotNetNuke.Security.Permissions;
     using DotNetNuke.UI.Modules;
 
     /// <summary>
     /// Answers whether the current user can do certain things
     /// </summary>
-    public static class PermissionController
+    public class PermissionController
     {
+        /// <summary>
+        /// The permission code for Engage: Employment
+        /// </summary>
+        private const string PermissionCode = "ENGAGE_EMPLOYMENT";
+
         /// <summary>
         /// The permission key for accessing the job detail options
         /// </summary>
@@ -41,6 +48,19 @@ namespace Engage.Dnn.Employment
         /// The permission key for accessing the job listing options
         /// </summary>
         private const string ManageJobListingOptionsPermissionKey = "MANAGE-JOB-LISTING-OPTIONS";
+
+        /// <summary>
+        /// Provides the ability to create new permissions
+        /// </summary>
+        private readonly DotNetNuke.Security.Permissions.PermissionController permissionController;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PermissionController"/> class.
+        /// </summary>
+        public PermissionController() 
+        {
+            this.permissionController = new DotNetNuke.Security.Permissions.PermissionController();
+        }
 
         /// <summary>
         /// Determines whether the current user can manage applications for the specified module.
@@ -160,6 +180,48 @@ namespace Engage.Dnn.Employment
         public static bool CanManageJobDetailOptions(ModuleInfo moduleInfo)
         {
             return HasModulePermission(moduleInfo, ManageJobDetailOptionsPermissionKey);
+        }
+
+        /// <summary>
+        /// Creates the custom permissions for Engage: Employment.
+        /// </summary>
+        public void CreateCustomPermissions()
+        {
+            var desktopModule = DesktopModuleController.GetDesktopModuleByModuleName(EmploymentController.DesktopModuleName, Null.NullInteger);
+            var jobListingModuleDefinition = ModuleDefinitionController.GetModuleDefinitionByFriendlyName(ModuleDefinition.JobListing.ToString(), desktopModule.DesktopModuleID);
+            var jobDetailModuleDefinition = ModuleDefinitionController.GetModuleDefinitionByFriendlyName(ModuleDefinition.JobDetail.ToString(), desktopModule.DesktopModuleID);
+
+            this.permissionController.AddPermission(new PermissionInfo
+            {
+                ModuleDefID = jobListingModuleDefinition.ModuleDefID,
+                PermissionCode = PermissionCode,
+                PermissionKey = ManageApplicationsPermissionKey,
+                PermissionName = "Manage Applications"
+            });
+
+            this.permissionController.AddPermission(new PermissionInfo
+            {
+                ModuleDefID = jobListingModuleDefinition.ModuleDefID,
+                PermissionCode = PermissionCode,
+                PermissionKey = ManageJobsPermissionKey,
+                PermissionName = "Manage Jobs"
+            });
+
+            this.permissionController.AddPermission(new PermissionInfo
+            {
+                ModuleDefID = jobListingModuleDefinition.ModuleDefID,
+                PermissionCode = PermissionCode,
+                PermissionKey = ManageJobListingOptionsPermissionKey,
+                PermissionName = "Manage Job Listing Options"
+            });
+
+            this.permissionController.AddPermission(new PermissionInfo
+            {
+                ModuleDefID = jobDetailModuleDefinition.ModuleDefID,
+                PermissionCode = PermissionCode,
+                PermissionKey = ManageJobDetailOptionsPermissionKey,
+                PermissionName = "Manage Job Detail Options"
+            });
         }
 
         /// <summary>
