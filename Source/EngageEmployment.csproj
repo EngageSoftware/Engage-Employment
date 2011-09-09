@@ -280,11 +280,11 @@
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
     <Content Include="images\employment-icon32.png" />
-    <Content Include="ReleaseNotes_01.09.08.htm" />
-    <Content Include="ReleaseNotes_1.9.0.htm" />
-    <Content Include="ReleaseNotes_1.8.8.htm" />
-    <Content Include="ReleaseNotes_1.8.7.htm" />
-    <Content Include="ReleaseNotes_1.8.6.htm" />
+    <Content Include="ReleaseNotes_01.09.09.htm" />
+    <Content Include="ReleaseNotes_01.09.00.htm" />
+    <Content Include="ReleaseNotes_01.08.08.htm" />
+    <Content Include="ReleaseNotes_01.08.07.htm" />
+    <Content Include="ReleaseNotes_01.08.06.htm" />
     <Content Include="images\plus-minus-icn.png" />
     <Content Include="images\small-grey-bg.jpg" />
     <Content Include="images\sortable-white.png" />
@@ -295,9 +295,9 @@
     <Content Include="References\Telerik.Web.Design.dll" />
     <Content Include="References\Telerik.Web.UI.dll" />
     <Content Include="References\Telerik.Web.UI.xml" />
-    <Content Include="ReleaseNotes_1.8.1.htm" />
-    <Content Include="ReleaseNotes_1.8.0.htm" />
-    <Content Include="ReleaseNotes_1.7.0.htm" />
+    <Content Include="ReleaseNotes_01.08.01.htm" />
+    <Content Include="ReleaseNotes_01.08.00.htm" />
+    <Content Include="ReleaseNotes_01.07.00.htm" />
     <Content Include="GetResume.aspx" />
     <Content Include="JobDetail.ascx" />
     <Content Include="JobListing.ascx" />
@@ -451,9 +451,9 @@
     <Content Include="App_LocalResources\SharedResources.resx">
     </Content>
     <EmbeddedResource Include="JavaScript\jquery-ui.js" />
-    <Content Include="ReleaseNotes_1.6.0.htm" />
+    <Content Include="ReleaseNotes_01.06.00.htm" />
     <Content Include="images\info.png" />
-    <Content Include="ReleaseNotes_1.5.1.htm" />
+    <Content Include="ReleaseNotes_01.05.01.htm" />
     <Content Include="images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="images\ui-bg_glass_55_4F6B72_1x400.png" />
@@ -469,7 +469,7 @@
     <Content Include="images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="images\ui-icons_ffffff_256x240.png" />
     <Content Include="References\System.Web.Extensions.dll" />
-    <Content Include="ReleaseNotes_1.5.0.htm" />
+    <Content Include="ReleaseNotes_01.05.00.htm" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
