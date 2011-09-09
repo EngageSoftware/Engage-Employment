@@ -57,9 +57,9 @@ namespace Engage.Dnn.Employment
                     this.FillDisplayOptionList();
                     this.FillLimitOptionList();
 
-                    //// If the maximum number of jobs is set as no maximum, it is stored as an empty string.  
-                    //// Since this isn't an int value, getting it as an int gives us the default, instead of null
-                    //// So, if we get the default, we need to doublecheck that it's the default and not the "no maximum" value
+                    // If the maximum number of jobs is set as no maximum, it is stored as an empty string.  
+                    // Since this isn't an int value, getting it as an int gives us the default, instead of null
+                    // So, if we get the default, we need to doublecheck that it's the default and not the "no maximum" value
                     int? maximumNumberOfjobs = ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsInt32For(this);
                     if (maximumNumberOfjobs == ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.DefaultValue 
                         && string.IsNullOrEmpty(ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.GetValueAsStringFor(this)))
@@ -76,6 +76,7 @@ namespace Engage.Dnn.Employment
                     }
 
                     this.LimitOptionRadioButtonList.SelectedValue = ModuleSettings.JobListingLimitJobsRandomly.GetValueAsStringFor(this);
+                    this.ShowCloseDateCheckBox.Checked = ModuleSettings.JobListingShowCloseDate.GetValueAsBooleanFor(this).Value;
                 }
             }
             catch (Exception exc)
@@ -94,6 +95,7 @@ namespace Engage.Dnn.Employment
                     ModuleSettings.JobListingShowOnlyHotJobs.Set(this, this.DisplayOptionRadioButtonList.SelectedValue);
                     ModuleSettings.JobListingMaximumNumberOfJobsDisplayed.Set(this, this.LimitCheckBox.Checked ? Convert.ToInt32(this.txtLimit.Text, CultureInfo.CurrentCulture).ToString(CultureInfo.InvariantCulture) : string.Empty);
                     ModuleSettings.JobListingLimitJobsRandomly.Set(this, this.LimitOptionRadioButtonList.SelectedValue);
+                    ModuleSettings.JobListingShowCloseDate.Set(this, this.ShowCloseDateCheckBox.Checked);
 
                     Response.Redirect(Globals.NavigateURL(TabId));
                 }

@@ -16,6 +16,9 @@ namespace Engage.Dnn.Employment
 
     using Engage.Dnn.Framework;
 
+    /// <summary>
+    /// All of the settings for Engage: Employment
+    /// </summary>
     public static class ModuleSettings
     {
         #region Global Settings
@@ -37,6 +40,9 @@ namespace Engage.Dnn.Employment
         
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
         public static readonly Setting<bool> JobListingLimitJobsRandomly = new Setting<bool>("LimitJobsRandomly", SettingScope.TabModule, false);
+        
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
+        public static readonly Setting<bool> JobListingShowCloseDate = new Setting<bool>("ShowCloseDate", SettingScope.TabModule, false);
 
         #endregion
 
@@ -65,6 +71,9 @@ namespace Engage.Dnn.Employment
         
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
         public static readonly Setting<Visibility> JobDetailDisplayMessage = new Setting<Visibility>("DisplayMessage", SettingScope.TabModule, Visibility.Optional);
+        
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
+        public static readonly Setting<bool> JobDetailShowCloseDate = new Setting<bool>("ShowCloseDate", SettingScope.TabModule, false);
 
         #endregion 
     }

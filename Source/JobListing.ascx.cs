@@ -35,6 +35,11 @@ namespace Engage.Dnn.Employment
     {
         private const string EditCommandName = "Edit";
 
+        /// <summary>
+        /// Backing field for <see cref="ShowCloseDate"/>
+        /// </summary>
+        private bool? showCloseDate;
+
         public ModuleActionCollection ModuleActions
         {
             get
@@ -86,6 +91,19 @@ namespace Engage.Dnn.Employment
                 }
 
                 return actions;
+            }
+        }
+
+        protected bool ShowCloseDate
+        {
+            get
+            {
+                if (!this.showCloseDate.HasValue)
+                {
+                    this.showCloseDate = ModuleSettings.JobListingShowCloseDate.GetValueAsBooleanFor(this).Value;
+                }
+
+                return this.showCloseDate.Value;
             }
         }
 

@@ -168,4 +168,7 @@
   <data name="ControlTitle_options.Text" xml:space="preserve">
     <value>Engage: Employment Job Listing Options</value>
   </data>
+  <data name="Show Close Date.Text" xml:space="preserve">
+    <value>Show Close Date</value>
+  </data>
 </root>

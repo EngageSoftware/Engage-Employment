@@ -33,6 +33,14 @@
 		    </td>
 	    </tr>
 	    <tr>
+		    <td class="SubHead labelColumn nowrap">
+		        <dnn:label ResourceKey="Show Close Date" runat="server" />
+		    </td>
+		    <td class="contentColumn">
+		        <asp:CheckBox ID="ShowCloseDateCheckBox" runat="server"/>
+		    </td>
+	    </tr>
+	    <tr>
 	        <td colspan="2">
                 <asp:ValidationSummary runat="server" CssClass="NormalRed" DisplayMode="BulletList" ValidationGroup="SaveSettings" />
 	        </td>

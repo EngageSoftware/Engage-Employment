@@ -20,6 +20,7 @@
                     <th class="nowrap"><asp:Label id="PositionHeaderLabel" runat="server" resourcekey="lblPositionHeader" /></th>
                     <th class="nowrap"><asp:Label id="LocationHeaderLabel" runat="server" resourcekey="lblLocationHeader" /></th>
                     <th class="nowrap"><asp:Label id="DateHeaderLabel" runat="server" resourcekey="lblDateHeader" /></th>
+                    <% if (ShowCloseDate) { %><th class="nowrap"><asp:Label id="CloseDateHeaderLabel" runat="server" resourcekey="lblCloseDateHeader" /></th> <% } %>
                 </tr>
 	</HeaderTemplate>
     <ItemTemplate>
@@ -27,7 +28,8 @@
                     <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
                     <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></a></td>
                     <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location.Text"), this.Eval("LocationName"), this.Eval("StateName"), this.Eval("StateAbbreviation"))) %></td>
-                    <td><%# HttpUtility.HtmlEncode(((DateTime)Eval("StartDate")).ToString("d MMM yyyy", CultureInfo.CurrentCulture)) %></td>
+                    <td><%# HttpUtility.HtmlEncode(Eval("StartDate", Localize("StartDate.Format")))%></td>
+                    <% if (ShowCloseDate) { %><td><%# HttpUtility.HtmlEncode(Eval("ExpireDate") == null ? Localize("No Expire Date") : Eval("ExpireDate", Localize("ExpireDate.Format"))) %></td> <% } %>
                 </tr>
     </ItemTemplate>
 	<FooterTemplate>
