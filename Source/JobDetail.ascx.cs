@@ -51,6 +51,11 @@ namespace Engage.Dnn.Employment
         private int? jobId;
 
         /// <summary>
+        /// Backing field for <see cref="ShowCloseDate"/>
+        /// </summary>
+        private bool? showCloseDate;
+
+        /// <summary>
         /// Gets the actions that this module performs.
         /// </summary>
         public ModuleActionCollection ModuleActions
@@ -120,6 +125,25 @@ namespace Engage.Dnn.Employment
                 }
 
                 return this.currentJob;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether to display the job's close date.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the close date is shown; otherwise, <c>false</c>.
+        /// </value>
+        protected bool ShowCloseDate
+        {
+            get
+            {
+                if (!this.showCloseDate.HasValue)
+                {
+                    this.showCloseDate = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
+                }
+
+                return this.showCloseDate.Value;
             }
         }
 

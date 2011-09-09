@@ -32,6 +32,16 @@
                 <%= HttpUtility.HtmlEncode(CurrentJob.StartDate.ToString(Localize("StartDate.Format"), CultureInfo.CurrentCulture))%>
             </td>
         </tr>
+        <% if (ShowCloseDate) { %>
+        <tr class="jd-close-date">
+            <td class="SubHead em-label">
+                <asp:Label runat="server" resourcekey="lblCloseDateHeader" EnableViewState="false" />
+            </td>
+            <td class="em-value">
+                <%= HttpUtility.HtmlEncode(CurrentJob.ExpireDate.HasValue ? CurrentJob.ExpireDate.Value.ToString(Localize("CloseDate.Format"), CultureInfo.CurrentCulture) : Localize("No Close Date"))%>
+            </td>
+        </tr>
+        <% } %>
         <tr class="jd-position-desc">
             <td class="SubHead em-label">
                 <asp:Label runat="server" resourcekey="lblPositionHeader" EnableViewState="false" />

@@ -347,6 +347,15 @@
   <data name="regexFriendFromEmailValidation.Text" xml:space="preserve">
     <value>You must supply a valid email address</value>
   </data>
+  <data name="CloseDate.Format" xml:space="preserve">
+    <value>d MMM yyyy</value>
+  </data>
+  <data name="lblCloseDateHeader.Text" xml:space="preserve">
+    <value>Close Date</value>
+  </data>
+  <data name="No Close Date.Text" xml:space="preserve">
+    <value>None</value>
+  </data>
   <data name="StartDate.Format" xml:space="preserve">
     <value>d MMM yyyy</value>
   </data>

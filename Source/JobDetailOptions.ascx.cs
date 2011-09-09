@@ -110,6 +110,7 @@ namespace Engage.Dnn.Employment
                     this.txtFriendEmailAddress.Text = ModuleSettings.JobDetailFriendEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
                     this.RequireRegistrationCheckBox.Checked = ModuleSettings.JobDetailRequireRegistration.GetValueAsBooleanFor(this).Value;
                     this.EnableDnnSearchCheckBox.Checked = ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(this).Value;
+                    this.ShowCloseDateCheckBox.Checked = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
 
                     this.DisplayLeadRadioButtonList.DataSource = Enum.GetValues(typeof(Visibility));
                     this.DisplayLeadRadioButtonList.DataBind();
@@ -154,19 +155,22 @@ namespace Engage.Dnn.Employment
         {
             try
             {
-                if (Page.IsValid)
+                if (!this.Page.IsValid)
                 {
-                    ModuleSettings.JobDetailApplicationEmailAddress.Set(this, this.txtApplicationEmailAddress.Text);
-                    ModuleSettings.JobDetailFriendEmailAddress.Set(this, this.txtFriendEmailAddress.Text);
-                    ModuleSettings.JobDetailRequireRegistration.Set(this, this.RequireRegistrationCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
-                    ModuleSettings.JobDetailDisplayLead.Set(this, this.DisplayLeadRadioButtonList.SelectedValue);
-                    ModuleSettings.JobDetailDisplaySalaryRequirement.Set(this, this.DisplaySalaryRadioButtonList.SelectedValue);
-                    ModuleSettings.JobDetailDisplayCoverLetter.Set(this, this.DisplayCoverLetterRadioButtonList.SelectedValue);
-                    ModuleSettings.JobDetailDisplayMessage.Set(this, this.DisplayMessageRadioButtonList.SelectedValue);
-                    ModuleSettings.JobDetailEnableDnnSearch.Set(this, this.EnableDnnSearchCheckBox.Checked.ToString(CultureInfo.InvariantCulture));
-
-                    Response.Redirect(Globals.NavigateURL(TabId));
+                    return;
                 }
+
+                ModuleSettings.JobDetailApplicationEmailAddress.Set(this, this.txtApplicationEmailAddress.Text);
+                ModuleSettings.JobDetailFriendEmailAddress.Set(this, this.txtFriendEmailAddress.Text);
+                ModuleSettings.JobDetailRequireRegistration.Set(this, this.RequireRegistrationCheckBox.Checked);
+                ModuleSettings.JobDetailDisplayLead.Set(this, this.DisplayLeadRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplaySalaryRequirement.Set(this, this.DisplaySalaryRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayCoverLetter.Set(this, this.DisplayCoverLetterRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayMessage.Set(this, this.DisplayMessageRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailEnableDnnSearch.Set(this, this.EnableDnnSearchCheckBox.Checked);
+                ModuleSettings.JobDetailShowCloseDate.Set(this, this.ShowCloseDateCheckBox.Checked);
+
+                this.Response.Redirect(Globals.NavigateURL(this.TabId));
             }
             catch (Exception exc)
             {

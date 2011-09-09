@@ -237,4 +237,7 @@
   <data name="FriendEmailRequired.Text" xml:space="preserve">
     <value>Email Address from which to Email a Friend is required</value>
   </data>
+  <data name="lblShowCloseDate.Text" xml:space="preserve">
+    <value>Show Close Date</value>
+  </data>
 </root>
