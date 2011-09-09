@@ -53,7 +53,7 @@
             <td><%#HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
             <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("JobTitle")) %></a></td>
             <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location", LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))) %></td>
-            <td><%# HttpUtility.HtmlEncode(((DateTime)Eval("StartDate")).ToString("d MMM yyyy", CultureInfo.CurrentCulture)) %></td>
+            <td><%# HttpUtility.HtmlEncode(Eval("StartDate", Localize("StartDate.Format")))%></td>
         </tr>
         <tr>
             <td colspan="4">

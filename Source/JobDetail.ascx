@@ -29,7 +29,7 @@
                 <asp:Label runat="server" resourcekey="lblDatePostedHeader" EnableViewState="false" />
             </td>
             <td class="em-value">
-                <%= HttpUtility.HtmlEncode(CurrentJob.StartDate.ToString("d", CultureInfo.InvariantCulture)) %>
+                <%= HttpUtility.HtmlEncode(CurrentJob.StartDate.ToString(Localize("StartDate.Format"), CultureInfo.CurrentCulture))%>
             </td>
         </tr>
         <tr class="jd-position-desc">

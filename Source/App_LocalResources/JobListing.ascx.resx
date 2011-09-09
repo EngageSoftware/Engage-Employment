@@ -217,6 +217,9 @@
     <value>{0}, {1}</value>
     <comment>{0} is replaced by location name, {1} is replaced by region name, {2} is replaced by region abbreviation</comment>
   </data>
+  <data name="DateApplied.Format" xml:space="preserve">
+    <value>{0:d MMM yyyy}</value>
+  </data>
   <data name="ExpireDate.Format" xml:space="preserve">
     <value>{0:d MMM yyyy}</value>
   </data>
@@ -225,6 +228,9 @@
   </data>
   <data name="No Expire Date.Text" xml:space="preserve">
     <value />
+  </data>
+  <data name="SearchCreatedDate.Format" xml:space="preserve">
+    <value>{0:d MMM yyyy}</value>
   </data>
   <data name="StartDate.Format" xml:space="preserve">
     <value>{0:d MMM yyyy}</value>

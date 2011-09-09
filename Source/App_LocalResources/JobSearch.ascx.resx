@@ -181,4 +181,7 @@
     <value>{0}, {1}</value>
     <comment>{0} is replaced by the location name, {1} is replaced by the region name, {2} is replaced by the region abbreviation</comment>
   </data>
+  <data name="StartDate.Format" xml:space="preserve">
+    <value>{0:d MMM yyyy}</value>
+  </data>
 </root>

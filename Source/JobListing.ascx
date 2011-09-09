@@ -65,7 +65,7 @@
                             <td><%#HttpUtility.HtmlEncode((string)Eval("JobPosition")) %></td>
                             <td><%#HttpUtility.HtmlEncode((string)Eval("LocationName")) %></td>
                             <td><%#HttpUtility.HtmlEncode((string)Eval("StateName"))%></td>
-                            <td><%#HttpUtility.HtmlEncode(Eval("CreationDate", "{0:d}"))%></td>
+                            <td><%#HttpUtility.HtmlEncode(Eval("CreationDate", Localize("SearchCreatedDate.Format")))%></td>
                         </tr>
             </ItemTemplate>
             <FooterTemplate>
@@ -95,7 +95,7 @@
                     <td><%# HttpUtility.HtmlEncode((string)Eval("Job.CategoryName")) %></td>
                     <td><a href="<%# GetJobDetailUrl(Eval("JobId")) %>"><%# HttpUtility.HtmlEncode((string)Eval("Job.Title")) %></a></td>
                     <td><%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, Localize("Location.Text", this.LocalResourceFile), this.Eval("Job.LocationName"), this.Eval("Job.StateName"), this.Eval("Job.StateAbbreviation"))) %></td>
-                    <td><%# HttpUtility.HtmlEncode(string.Format("{0:d MMM yyyy}", Convert.ToDateTime(Eval("AppliedForDate")))) %></td>
+                    <td><%# HttpUtility.HtmlEncode(Eval("AppliedForDate", Localize("DateApplied.Format")))%></td>
                     <td><asp:Button ID="EditApplicationButton" runat="server" resourcekey="btnEditApplication"/></td>
                 </tr>
     </ItemTemplate>
