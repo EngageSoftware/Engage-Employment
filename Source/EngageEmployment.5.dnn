@@ -3,7 +3,7 @@
     <package name="Engage: Employment" type="Module" version="1.9.0">
       <friendlyName>Engage: Employment</friendlyName>
       <description>The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com) used to manage job openings in your organization and allow for applicants to view jobs and submit applications.</description>
-      <iconFile>DesktopModules/EngageSurvey/images/employment-icon32.png</iconFile>
+      <iconFile>DesktopModules/EngageEmployment/images/employment-icon32.png</iconFile>
       <owner>
         <name>Engage Software</name>
         <organization>Engage Software</organization>
