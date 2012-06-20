@@ -1,6 +1,6 @@
 ﻿// <copyright file="AssemblyInfo.cs" company="Engage Software">
 // Engage: Employment
-// Copyright (c) 2004-2011
+// Copyright (c) 2004-2012
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
@@ -19,7 +19,7 @@ using System.Web.UI;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Engage Software")]
 [assembly: AssemblyProduct("Engage: Employment")]
-[assembly: AssemblyCopyright("Copyright © Engage Software 2011")]
+[assembly: AssemblyCopyright("Copyright © Engage Software 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -27,7 +27,7 @@ using System.Web.UI;
 [assembly: Guid("3d5900ae-111a-45be-96b3-d9e4606ca793")]
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyVersion("1.9.9.*")]
-[assembly: AssemblyFileVersion("1.9.9.0")]
+[assembly: AssemblyVersion("1.10.0.*")]
+[assembly: AssemblyFileVersion("1.10.0.0")]
 
 [assembly: WebResource("Engage.Dnn.Employment.JavaScript.jquery-ui.js", "text/javascript")]
