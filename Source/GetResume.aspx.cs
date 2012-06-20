@@ -99,7 +99,7 @@ namespace Engage.Dnn.Employment
                     int? jobGroupId = ModuleSettings.JobGroupId.GetValueAsInt32For(EmploymentController.DesktopModuleName, module, ModuleSettings.JobGroupId.DefaultValue);
                     if (!permissibleJobGroups.Contains(jobGroupId))
                     {
-                        if (PermissionController.CanManageJobs(module))
+                        if (PermissionController.CanManageApplications(module))
                         {
                             permissibleJobGroups.Add(jobGroupId);
 
