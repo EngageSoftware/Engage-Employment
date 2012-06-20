@@ -35,6 +35,7 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Entities.Tabs;
     using DotNetNuke.Security;
     using DotNetNuke.Security.Permissions;
+    using DotNetNuke.Services.Cache;
     using DotNetNuke.Services.Localization;
 
     using Engage.Dnn.Employment.Data;
@@ -469,7 +470,7 @@ namespace Engage.Dnn.Employment
             }
 
             XPathDocument doc = null;
-            using (var dp = new CacheDependency(filePath))
+            using (var dp = new DNNCacheDependency(filePath))
             {
                 bool xmlLoaded;
                 try
