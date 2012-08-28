@@ -2,6 +2,8 @@
 bin/
 obj/
 *.[Rr]e[Ss]harper
+_[Rr]e[Ss]harper.*
+*.user
 
 # NAnt
 package/
@@ -9,6 +11,4 @@ package/
 # DNN
 *.Host.resx
 /*.[Ss]ql[Dd]ata[Pp]rovider
-
-# Employment
-admin/module.css
+Resources.zip.manifest
