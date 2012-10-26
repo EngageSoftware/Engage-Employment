@@ -13,6 +13,14 @@
       <license src="Licenses/EULA-Standard.htm"/>
       <releaseNotes src="ReleaseNotes_1.9.0.htm" />
       <components>
+        <component type="Cleanup" version="1.10.1">
+          <files>
+            <file>
+              <path>DesktopModules\EngageEmployment\admin</path>
+              <name>module.css</name>
+            </file>
+          </files>
+        </component>
         <component type="ResourceFile">
           <resourceFiles>
             <basePath>DesktopModules/EngageEmployment</basePath>
