@@ -359,4 +359,7 @@
   <data name="StartDate.Format" xml:space="preserve">
     <value>d MMM yyyy</value>
   </data>
+  <data name="AnonymousApplicationSubject.Text" xml:space="preserve">
+    <value>A job application has been submitted for '{1}'</value>
+  </data>
 </root>

@@ -1,6 +1,6 @@
 // <copyright file="JobDetail.ascx.cs" company="Engage Software">
-// Engage: Employment - http://www.engagesoftware.com
-// Copyright (c) 2004-2011
+// Engage: Employment
+// Copyright (c) 2004-2012
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
@@ -489,18 +489,35 @@ namespace Engage.Dnn.Employment
         /// <param name="messageResourceKey">The resource key to use to retrieve the localized email message (with format placeholders).</param>
         private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
+            this.SendNotificationEmail(resumeId, isNewApplication, toAddress, replyToApplicant, newSubjectResourceKey, newSubjectResourceKey, updateSubjectResourceKey, messageResourceKey);
+        }
+
+        /// <summary>
+        /// Sends an notification email about a new application.
+        /// </summary>
+        /// <param name="resumeId">The ID of the resume.</param>
+        /// <param name="isNewApplication">if set to <c>true</c> it's a new application, otherwise it's an application edit.</param>
+        /// <param name="toAddress">The email address to which the notification should be sent.</param>
+        /// <param name="replyToApplicant">if set to <c>true</c> sets the reply-to to the applicant's email address (if they're logged in), otherwise leaves it as the "from" address.</param>
+        /// <param name="newSubjectResourceKey">The resource key to use to retrieve the localized email subject for new applications.</param>
+        /// <param name="newAnonymousSubjectResourceKey">The resource key to use to retrieve the localized email subject for new applications from users who aren't logged in.</param>
+        /// <param name="updateSubjectResourceKey">The resource key to use to retrieve the localized email subject for updated applications.</param>
+        /// <param name="messageResourceKey">The resource key to use to retrieve the localized email message (with format placeholders).</param>
+        private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string newAnonymousSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
+        {
             try
             {
                 var fromAddress = this.DefaultNotificationEmailAddress;
                 var replyTo = replyToApplicant
                                   ? Engage.Utility.HasValue(this.UserInfo.Email) ? this.UserInfo.Email : fromAddress
                                   : this.DefaultNotificationEmailAddress;
+
+                var subjectResourceKey = isNewApplication ? Framework.ModuleBase.IsLoggedIn ? newSubjectResourceKey : newAnonymousSubjectResourceKey : updateSubjectResourceKey;
                 var subject = string.Format(
                     CultureInfo.CurrentCulture,
-                    this.Localize(isNewApplication ? newSubjectResourceKey : updateSubjectResourceKey),
+                    this.Localize(subjectResourceKey),
                     this.UserInfo.DisplayName,
                     this.CurrentJob.Title);
-                var message = this.GetMessageBody(resumeId, messageResourceKey);
 
                 Mail.SendMail(
                         fromAddress, 
@@ -512,7 +529,7 @@ namespace Engage.Dnn.Employment
                         subject,
                         MailFormat.Html, 
                         Encoding.UTF8,
-                        message,
+                        this.GetMessageBody(resumeId, messageResourceKey),
                         new string[0],
                         Host.SMTPServer,
                         Host.SMTPAuthentication, 
@@ -654,6 +671,7 @@ namespace Engage.Dnn.Employment
                     notificationEmailAddress, 
                     true,
                     "ApplicationSubject",
+                    "AnonymousApplicationSubject",
                     "ApplicationUpdateSubject",
                     "NotificationEmailBody.Format");
 
