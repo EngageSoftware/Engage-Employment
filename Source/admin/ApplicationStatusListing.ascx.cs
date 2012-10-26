@@ -58,7 +58,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (!PermissionController.CanManageApplications(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 
@@ -275,7 +275,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Fills <see cref="StatusesGrid"/> with the list of all <see cref="ApplicationStatus"/>es for this portal
+        /// Fills <see cref="StatusesGrid"/> with the list of all <see cref="ApplicationStatus"/> instances for this portal
         /// </summary>
         private void BindData()
         {

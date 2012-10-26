@@ -1,4 +1,4 @@
-﻿// <copyright file="UserInfo.cs" company="Engage Software">
+﻿// <copyright file="UserStatusInfo.cs" company="Engage Software">
 // Engage: Employment - http://www.engagesoftware.com
 // Copyright (c) 2004-2011
 // by Engage Software ( http://www.engagesoftware.com )
@@ -14,10 +14,8 @@ namespace Engage.Dnn.Employment
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Globalization;
     using System.Linq;
 
-    using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Portals;
 
     using Engage.Dnn.Employment.Data;

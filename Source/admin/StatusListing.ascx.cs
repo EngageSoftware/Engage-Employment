@@ -37,7 +37,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             get
             {
-                return String.Format(CultureInfo.CurrentCulture, this.Localize("StatusMaxLength"), StatusMaxLength);
+                return string.Format(CultureInfo.CurrentCulture, this.Localize("StatusMaxLength"), StatusMaxLength);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (!PermissionController.CanManageApplications(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 

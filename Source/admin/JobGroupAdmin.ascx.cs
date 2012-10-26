@@ -229,7 +229,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (e != null && Engage.Utility.HasValue(e.Value))
             {
-                e.IsValid = !DataProvider.Instance().IsJobGroupNameUsed(e.Value, PortalId);
+                e.IsValid = !DataProvider.Instance().IsJobGroupNameUsed(e.Value, this.PortalId);
             }
         }
 
@@ -254,7 +254,7 @@ namespace Engage.Dnn.Employment.Admin
                                 oldJobGroupName = jobGroup.Rows[0]["Name"] as string;
                             }
 
-                            if (string.Equals(newJobGroupName, oldJobGroupName, StringComparison.CurrentCultureIgnoreCase) || !DataProvider.Instance().IsJobGroupNameUsed(newJobGroupName, PortalId))
+                            if (string.Equals(newJobGroupName, oldJobGroupName, StringComparison.CurrentCultureIgnoreCase) || !DataProvider.Instance().IsJobGroupNameUsed(newJobGroupName, this.PortalId))
                             {
                                 DataProvider.Instance().UpdateJobGroup(jobGroupId.Value, newJobGroupName);
                                 this.JobGroupsGridView.EditIndex = -1;

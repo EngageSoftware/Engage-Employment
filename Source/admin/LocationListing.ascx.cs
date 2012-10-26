@@ -34,14 +34,14 @@ namespace Engage.Dnn.Employment.Admin
 
         protected string MaxLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, this.Localize("LocationMaxLength"), LocationMaxLength); }
+            get { return string.Format(CultureInfo.CurrentCulture, this.Localize("LocationMaxLength"), LocationMaxLength); }
         }
 
         protected override void OnInit(EventArgs e)
         {
             if (!PermissionController.CanManageJobs(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             try
             {
-                if (!IsPostBack)
+                if (!this.IsPostBack)
                 {
                     Localization.LocalizeGridView(ref this.LocationsGridView, this.LocalResourceFile);
                     this.SetupLengthValidation();
@@ -79,7 +79,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected void BackButton_Click(object sender, EventArgs e)
         {
-            Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
+            Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
         }
 
         private static int? GetLocationId(Control row)
@@ -241,7 +241,7 @@ namespace Engage.Dnn.Employment.Admin
 
         private void BindStates(ListControl ddlState, int? stateId) 
         {
-            ddlState.DataSource = State.LoadStates(null, PortalId);
+            ddlState.DataSource = State.LoadStates(null, this.PortalId);
             ddlState.DataValueField = "StateId";
             ddlState.DataTextField = "StateName";
             ddlState.DataBind();

@@ -52,7 +52,7 @@ namespace Engage.Dnn.Employment
                     settingValue = value.Value.ToString(CultureInfo.InvariantCulture);
                 }
 
-                (new ModuleController()).UpdateTabModuleSetting(TabModuleId, Utility.JobGroupIdSetting, settingValue);
+                (new ModuleController()).UpdateTabModuleSetting(this.TabModuleId, Utility.JobGroupIdSetting, settingValue);
             }
         }
     }

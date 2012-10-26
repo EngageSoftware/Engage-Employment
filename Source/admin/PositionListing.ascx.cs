@@ -33,7 +33,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected string MaxLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, this.Localize("JobTitleMaxLength"), JobTitleMaxLength); }
+            get { return string.Format(CultureInfo.CurrentCulture, this.Localize("JobTitleMaxLength"), JobTitleMaxLength); }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (!PermissionController.CanManageJobs(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 

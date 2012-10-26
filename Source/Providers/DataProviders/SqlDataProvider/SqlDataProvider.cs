@@ -132,7 +132,7 @@ namespace Engage.Dnn.Employment.Data
                     SqlHelper.ExecuteNonQuery(
                         tran, 
                         CommandType.Text, 
-                        String.Format(CultureInfo.InvariantCulture, "DELETE FROM {0}JobJobGroup WHERE JobId = @JobId", this.NamePrefix), 
+                        string.Format(CultureInfo.InvariantCulture, "DELETE FROM {0}JobJobGroup WHERE JobId = @JobId", this.NamePrefix), 
                         Utility.CreateIntegerParam("@JobId", jobId));
 
                     // Add back the selected JobGroup assignments
@@ -413,12 +413,8 @@ namespace Engage.Dnn.Employment.Data
         /// A <see cref="DataSet"/> with one table named <c>"Applications"</c> with the fields for a <see cref="JobApplication"/>.
         /// If <paramref name="fillDocumentsAndProperties"/>, the <see cref="DataSet"/> also contains tables named <c>"Documents"</c> and <c>"Properties"</c>
         /// </returns>
-        public override DataSet GetApplicationsForJob(int jobId, int? jobGroupId, 
-            int? applicationStatusId, int? userStatusId, int? leadId, DateTime? dateFrom, DateTime? dateTo,
-            int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
+        public override DataSet GetApplicationsForJob(int jobId, int? jobGroupId, int? applicationStatusId, int? userStatusId, int? leadId, DateTime? dateFrom, DateTime? dateTo, int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
         {
-            ////var userIdsList = userIds != null && userIds.Any() ? string.Join(",", userIds.Select(id => id.ToString(CultureInfo.InvariantCulture)).ToArray()) : null;
-
             var applicationsDataSet = this.ExecuteDataset(
                 "GetApplicationsForJob", 
                 Utility.CreateIntegerParam("@jobId", jobId), 
@@ -541,8 +537,8 @@ namespace Engage.Dnn.Employment.Data
             object categoryId = SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@name", categoryName, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@name", categoryName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId));
 
             return ConvertReturnValueToInt(categoryId);
@@ -876,7 +872,7 @@ namespace Engage.Dnn.Employment.Data
                     this.ConnectionString, 
                     CommandType.Text, 
                     sql.ToString(), 
-                    Utility.CreateVarcharParam("@keyword", String.Format(CultureInfo.CurrentCulture, "%{0}%", keyword)), 
+                    Utility.CreateVarcharParam("@keyword", string.Format(CultureInfo.CurrentCulture, "%{0}%", keyword)), 
                     Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
                     Utility.CreateIntegerParam("@portalId", portalId), 
                     Utility.CreateDateTimeParam("@now", DateTime.Now)).Tables[0];
@@ -938,7 +934,7 @@ namespace Engage.Dnn.Employment.Data
                                 cmd.Parameters.Add(
                                     Utility.CreateVarcharParam(
                                         "@keyword" + i.ToString(CultureInfo.InvariantCulture), 
-                                        String.Format(CultureInfo.InvariantCulture, "%{0}%", keywords[i])));
+                                        string.Format(CultureInfo.InvariantCulture, "%{0}%", keywords[i])));
                             }
 
                             // ReSharper disable UseObjectOrCollectionInitializer
@@ -996,8 +992,8 @@ namespace Engage.Dnn.Employment.Data
             object locationId = SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@locationName", locationName, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@locationName", locationName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId), 
                 Utility.CreateIntegerParam("@stateId", stateId));
 
@@ -1039,8 +1035,8 @@ namespace Engage.Dnn.Employment.Data
             object positionId = SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@jobTitle", name, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@jobTitle", name, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId));
 
             return ConvertReturnValueToInt(positionId);
@@ -1110,8 +1106,8 @@ namespace Engage.Dnn.Employment.Data
             object stateId = SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@stateName", name, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId));
 
             return ConvertReturnValueToInt(stateId);
@@ -1147,9 +1143,7 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" where ");
             sql.Append(" UserStatusId = @statusId ");
 
-            return
-                SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@statusId", statusId)).
-                    Tables[0];
+            return SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@statusId", statusId)).Tables[0];
         }
 
         public override int? GetUserStatus(int portalId, int userId)
@@ -1201,23 +1195,7 @@ namespace Engage.Dnn.Employment.Data
                 "UpdateUserStatus",
                 Utility.CreateIntegerParam("@portalId", portalId),
                 Utility.CreateIntegerParam("@userId", userId),
-                Utility.CreateIntegerParam("@userStatusId", (statusId.HasValue)?statusId:null));
-
-
-            ////var sql = new StringBuilder(512);
-
-            ////sql.AppendFormat(CultureInfo.InvariantCulture, " update {0}UserStatus", this.NamePrefix);
-            ////sql.Append(" set UserStatusId = @statusId ");
-            ////sql.Append(" where UserId = @userId ");
-            ////sql.Append(" and PortalId = @portalId ");
-
-            ////SqlHelper.ExecuteNonQuery(
-            ////    this.ConnectionString,
-            ////    CommandType.Text,
-            ////    sql.ToString(),
-            ////    Utility.CreateIntegerParam("@statusId", statusId),
-            ////    Utility.CreateIntegerParam("@userId", userId),
-            ////    Utility.CreateIntegerParam("@portalId", portalId));
+                Utility.CreateIntegerParam("@userStatusId", statusId.HasValue ? statusId : null));
         }
 
         public override void DeleteUserStatus(int portalId, int userId)
@@ -1247,8 +1225,8 @@ namespace Engage.Dnn.Employment.Data
             object statusId = SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@status", status, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@status", status, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId));
 
             return ConvertReturnValueToInt(statusId);
@@ -1266,9 +1244,7 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" order by ");
             sql.Append(" StatusName ");
 
-            return
-                SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@portalId", portalId)).
-                    Tables[0];
+            return SqlHelper.ExecuteDataset(this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
         }
 
         public override bool HasUserAppliedForJob(int jobId, int userId)
@@ -1311,9 +1287,9 @@ namespace Engage.Dnn.Employment.Data
                     CommandType.Text, 
                     sql.ToString(), 
                     Utility.CreateIntegerParam("@userId", userId), 
-                    Utility.CreateIntegerParam("@jobId", jobId), 
-                    Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, VarcharLength), 
-                    Utility.CreateVarcharParam("@message", message, VarcharLength));
+                    Utility.CreateIntegerParam("@jobId", jobId),
+                    Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, DataProvider.VarcharLength),
+                    Utility.CreateVarcharParam("@message", message, DataProvider.VarcharLength));
         }
 
         public override void InsertApplicationProperty(int applicationId, int propertyId, string value)
@@ -1350,8 +1326,8 @@ namespace Engage.Dnn.Employment.Data
         public override void InsertCategory(string categoryName, int portalId)
         {
             this.ExecuteNonQuery(
-                "InsertCategory", 
-                Utility.CreateVarcharParam("@categoryName", categoryName, VarcharLength), 
+                "InsertCategory",
+                Utility.CreateVarcharParam("@categoryName", categoryName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId));
         }
 
@@ -1377,8 +1353,8 @@ namespace Engage.Dnn.Employment.Data
                     this.ConnectionString, 
                     CommandType.Text, 
                     sql.ToString(), 
-                    Utility.CreateIntegerParam("@userId", userId), 
-                    Utility.CreateVarcharParam("@fileName", fileName, VarcharLength), 
+                    Utility.CreateIntegerParam("@userId", userId),
+                    Utility.CreateVarcharParam("@fileName", fileName, DataProvider.VarcharLength), 
                     Utility.CreateVarcharParam("@contentType", contentType), 
                     Utility.CreateIntegerParam("@contentLength", document.Length), 
                     Utility.CreateImageParam("@resumeData", document), 
@@ -1438,16 +1414,16 @@ namespace Engage.Dnn.Employment.Data
             SqlHelper.ExecuteNonQuery(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@jobGroupName", jobGroupName, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@jobGroupName", jobGroupName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId));
         }
 
         public override void InsertLocation(string locationName, int stateId, int portalId)
         {
             this.ExecuteNonQuery(
-                "InsertLocation", 
-                Utility.CreateVarcharParam("@locationName", locationName, VarcharLength), 
+                "InsertLocation",
+                Utility.CreateVarcharParam("@locationName", locationName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@stateId", stateId), 
                 Utility.CreateIntegerParam("@portalId", portalId));
         }
@@ -1455,8 +1431,8 @@ namespace Engage.Dnn.Employment.Data
         public override void InsertPosition(string jobTitle, string jobDescription, int portalId)
         {
             this.ExecuteNonQuery(
-                "InsertPosition", 
-                Utility.CreateVarcharParam("@jobTitle", jobTitle, VarcharLength), 
+                "InsertPosition",
+                Utility.CreateVarcharParam("@jobTitle", jobTitle, DataProvider.VarcharLength), 
                 Utility.CreateTextParam("@jobDescription", jobDescription), 
                 Utility.CreateIntegerParam("@portalId", portalId));
         }
@@ -1471,8 +1447,8 @@ namespace Engage.Dnn.Employment.Data
             this.ExecuteNonQuery(
                 "InsertState", 
                 Utility.CreateIntegerParam("@portalId", portalId), 
-                Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
-                Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, AbbreviationLength));
+                Utility.CreateVarcharParam("@stateName", name, DataProvider.VarcharLength), 
+                Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, DataProvider.AbbreviationLength));
         }
 
         public override void InsertUserStatus(string statusName, int portalId)
@@ -1486,8 +1462,8 @@ namespace Engage.Dnn.Employment.Data
             SqlHelper.ExecuteNonQuery(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@status", statusName, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@status", statusName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@portalId", portalId));
         }
 
@@ -1532,8 +1508,8 @@ namespace Engage.Dnn.Employment.Data
                 IDataReader dr = SqlHelper.ExecuteReader(
                     this.ConnectionString, 
                     CommandType.Text, 
-                    sql.ToString(), 
-                    Utility.CreateVarcharParam("@jobGroupName", jobGroupName, VarcharLength), 
+                    sql.ToString(),
+                    Utility.CreateVarcharParam("@jobGroupName", jobGroupName, DataProvider.VarcharLength), 
                     Utility.CreateIntegerParam("@portalId", portalId)))
             {
                 return dr.Read();
@@ -1672,8 +1648,8 @@ namespace Engage.Dnn.Employment.Data
 
             this.ExecuteNonQuery(
                 "SaveJobSearchQuery", 
-                Utility.CreateIntegerParam("@userId", userId), 
-                Utility.CreateVarcharParam("@name", searchName, VarcharLength), 
+                Utility.CreateIntegerParam("@userId", userId),
+                Utility.CreateVarcharParam("@name", searchName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@positionId", positionId), 
                 Utility.CreateIntegerParam("@stateId", stateId), 
                 Utility.CreateIntegerParam("@locationId", locationId), 
@@ -1711,9 +1687,9 @@ namespace Engage.Dnn.Employment.Data
                 this.ConnectionString, 
                 CommandType.Text, 
                 sql.ToString(), 
-                Utility.CreateIntegerParam("@applicationId", applicationId), 
-                Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, VarcharLength), 
-                Utility.CreateVarcharParam("@message", message, VarcharLength));
+                Utility.CreateIntegerParam("@applicationId", applicationId),
+                Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@message", message, DataProvider.VarcharLength));
         }
 
         public override void UpdateApplicationProperty(int applicationId, int propertyId, string value)
@@ -1752,8 +1728,8 @@ namespace Engage.Dnn.Employment.Data
         public override void UpdateCategory(int categoryId, string description)
         {
             this.ExecuteNonQuery(
-                "UpdateCategory", 
-                Utility.CreateVarcharParam("@categoryName", description, VarcharLength), 
+                "UpdateCategory",
+                Utility.CreateVarcharParam("@categoryName", description, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@categoryId", categoryId));
         }
 
@@ -1787,8 +1763,8 @@ namespace Engage.Dnn.Employment.Data
                 Utility.CreateIntegerParam("@sortOrder", sortOrder), 
                 Utility.CreateTextParam("@notificationEmailAddress", notificationEmailAddress), 
                 Utility.CreateDateTimeParam("@startDate", startDate), 
-                Utility.CreateDateTimeParam("@expireDate", expireDate), 
-                Utility.CreateVarcharParam("@applicationUrl", applicationUrl, MaxUrlLength));
+                Utility.CreateDateTimeParam("@expireDate", expireDate),
+                Utility.CreateVarcharParam("@applicationUrl", applicationUrl, DataProvider.MaxUrlLength));
         }
 
         public override void UpdateJobGroup(int jobGroupId, string jobGroupName)
@@ -1809,8 +1785,8 @@ namespace Engage.Dnn.Employment.Data
         public override void UpdateLocation(int locationId, string description, int stateId)
         {
             this.ExecuteNonQuery(
-                "UpdateLocation", 
-                Utility.CreateVarcharParam("@locationName", description, VarcharLength), 
+                "UpdateLocation",
+                Utility.CreateVarcharParam("@locationName", description, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@stateId", stateId), 
                 Utility.CreateIntegerParam("@locationId", locationId));
         }
@@ -1818,8 +1794,8 @@ namespace Engage.Dnn.Employment.Data
         public override void UpdatePosition(int positionId, string jobTitle, string jobDescription)
         {
             this.ExecuteNonQuery(
-                "UpdatePosition", 
-                Utility.CreateVarcharParam("@jobTitle", jobTitle, VarcharLength), 
+                "UpdatePosition",
+                Utility.CreateVarcharParam("@jobTitle", jobTitle, DataProvider.VarcharLength), 
                 Utility.CreateTextParam("@jobDescription", jobDescription), 
                 Utility.CreateIntegerParam("@positionId", positionId));
         }
@@ -1828,9 +1804,9 @@ namespace Engage.Dnn.Employment.Data
         {
             this.ExecuteNonQuery(
                 "UpdateState", 
-                Utility.CreateIntegerParam("@stateId", id), 
-                Utility.CreateVarcharParam("@stateName", name, VarcharLength), 
-                Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, AbbreviationLength));
+                Utility.CreateIntegerParam("@stateId", id),
+                Utility.CreateVarcharParam("@stateName", name, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@stateAbbreviation", abbreviation, DataProvider.AbbreviationLength));
         }
 
         public override void UpdateUserStatus(int statusId, string statusName)
@@ -1846,8 +1822,8 @@ namespace Engage.Dnn.Employment.Data
             SqlHelper.ExecuteNonQuery(
                 this.ConnectionString, 
                 CommandType.Text, 
-                sql.ToString(), 
-                Utility.CreateVarcharParam("@status", statusName, VarcharLength), 
+                sql.ToString(),
+                Utility.CreateVarcharParam("@status", statusName, DataProvider.VarcharLength), 
                 Utility.CreateIntegerParam("@statusId", statusId));
         }
 

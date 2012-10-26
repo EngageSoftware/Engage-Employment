@@ -37,7 +37,7 @@ namespace Engage.Dnn.Employment
 
         public string Description
         {
-            [DebuggerStepThrough()]
+            [DebuggerStepThrough]
             get { return this.description; }
         }
 
@@ -75,4 +75,3 @@ namespace Engage.Dnn.Employment
         }
     }
 }
-

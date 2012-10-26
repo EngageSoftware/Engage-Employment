@@ -39,7 +39,7 @@ namespace Engage.Dnn.Employment
         {
             if (!PermissionController.CanManageJobDetailOptions(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 
@@ -101,7 +101,7 @@ namespace Engage.Dnn.Employment
         {
             try
             {
-                if (!IsPostBack)
+                if (!this.IsPostBack)
                 {
                     this.ApplicationEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx; 
                     this.FriendEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
@@ -118,7 +118,7 @@ namespace Engage.Dnn.Employment
                     var displayLead = ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this);
                     this.DisplayLeadRadioButtonList.SelectedValue = displayLead.ToString();
                     this.rowLeadItems.Visible = displayLead != Visibility.Hidden;
-                    Dnn.Utility.LocalizeListControl(this.DisplayLeadRadioButtonList, LocalResourceFile);
+                    Dnn.Utility.LocalizeListControl(this.DisplayLeadRadioButtonList, this.LocalResourceFile);
 
                     this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
                     this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
@@ -404,4 +404,3 @@ namespace Engage.Dnn.Employment
         }
     }
 }
-

@@ -160,13 +160,20 @@ namespace Engage.Dnn.Employment
             return null;
         }
 
-        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(int jobId, int? jobGroupId, 
-            int? applicationStatusId, int? userStatusId, int? leadId, DateTime? dateFrom, DateTime? dateTo,
-            int pageIndex, int? pageSize, out int unpagedCount, bool fillDocumentsAndProperties)
+        public static ReadOnlyCollection<JobApplication> LoadApplicationsForJob(
+            int jobId, 
+            int? jobGroupId, 
+            int? applicationStatusId, 
+            int? userStatusId, 
+            int? leadId, 
+            DateTime? dateFrom, 
+            DateTime? dateTo,
+            int pageIndex, 
+            int? pageSize, 
+            out int unpagedCount, 
+            bool fillDocumentsAndProperties)
         {
-            using (var applicationsDataSet = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, 
-                applicationStatusId, userStatusId, leadId, dateFrom, dateTo,
-                pageIndex, pageSize, out unpagedCount, fillDocumentsAndProperties))
+            using (var applicationsDataSet = DataProvider.Instance().GetApplicationsForJob(jobId, jobGroupId, applicationStatusId, userStatusId, leadId, dateFrom, dateTo, pageIndex, pageSize, out unpagedCount, fillDocumentsAndProperties))
             {
                 var documentsRelation = applicationsDataSet.Relations.Add(
                     applicationsDataSet.Tables["Applications"].Columns["ApplicationId"],
@@ -176,11 +183,12 @@ namespace Engage.Dnn.Employment
                     applicationsDataSet.Tables["Properties"].Columns["ApplicationId"]);
 
                 return (from DataRow applicationRow in applicationsDataSet.Tables["Applications"].Rows
-                        select
-                            FillApplication(
-                                applicationRow,
-                                fillDocumentsAndProperties ? applicationRow.GetChildRows(documentsRelation) : null,
-                                fillDocumentsAndProperties ? applicationRow.GetChildRows(propertiesRelation) : null)).ToList().AsReadOnly();
+                        select FillApplication(
+                            applicationRow,
+                            fillDocumentsAndProperties ? applicationRow.GetChildRows(documentsRelation) : null,
+                            fillDocumentsAndProperties ? applicationRow.GetChildRows(propertiesRelation) : null))
+                        .ToList()
+                        .AsReadOnly();
             }
         }
 

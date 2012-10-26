@@ -38,19 +38,19 @@ namespace Engage.Dnn.Employment.Admin
 
         protected string MaxLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, this.Localize("StateMaxLength"), StateNameMaxLength); }
+            get { return string.Format(CultureInfo.CurrentCulture, this.Localize("StateMaxLength"), StateNameMaxLength); }
         }
 
         protected string MaxAbbreviationLengthValidationText
         {
-            get { return String.Format(CultureInfo.CurrentCulture, this.Localize("AbbreviationMaxLength"), AbbreviationMaxLength); }
+            get { return string.Format(CultureInfo.CurrentCulture, this.Localize("AbbreviationMaxLength"), AbbreviationMaxLength); }
         }
 
         protected override void OnInit(EventArgs e)
         {
             if (!PermissionController.CanManageJobs(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 
@@ -88,7 +88,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected void BackButton_Click(object sender, EventArgs e)
         {
-            Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
+            Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
         }
 
         private static int? GetStateId(Control row)

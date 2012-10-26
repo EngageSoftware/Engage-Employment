@@ -249,25 +249,25 @@ namespace Engage.Dnn.Employment
         /// Builds a regular expression to validate the a given filename ends with a file extension in the provided (comma-delimited) list.
         /// </summary>
         /// <remarks>            
-        ///  A description of the regular expression: .*\.(?:[Pp][Dd][Ff]|[Dd][Oo][Cc][Xx]|[Ee][Tt][Cc])$
-        ///  .*\.
+        ///  A description of the regular expression: <c>.*\.(?:[Pp][Dd][Ff]|[Dd][Oo][Cc][Xx]|[Ee][Tt][Cc])$</c>
+        ///  <c>.*\.</c>
         ///      Any character, any number of repetitions
-        ///      Literal .
-        ///  Match expression but don't capture it. [Pp][Dd][Ff]|[Dd][Oo][Cc][Xx]|[Ee][Tt][Cc]
+        ///      Literal <c>.</c>
+        ///  Match expression but don't capture it. <c>[Pp][Dd][Ff]|[Dd][Oo][Cc][Xx]|[Ee][Tt][Cc]</c>
         ///      Select from alternatives
-        ///          [Pp][Dd][Ff]
-        ///              Any character in this class: [Pp]
-        ///              Any character in this class: [Dd]
-        ///              Any character in this class: [Ff]
-        ///          [Dd][Oo][Cc][Xx]
-        ///              Any character in this class: [Dd]
-        ///              Any character in this class: [Oo]
-        ///              Any character in this class: [Cc]
-        ///              Any character in this class: [Xx]
-        ///          [Ee][Tt][Cc]
-        ///              Any character in this class: [Ee]
-        ///              Any character in this class: [Tt]
-        ///              Any character in this class: [Cc]            
+        ///          <c>[Pp][Dd][Ff]</c>
+        ///              Any character in this class: <c>[Pp]</c>
+        ///              Any character in this class: <c>[Dd]</c>
+        ///              Any character in this class: <c>[Ff]</c>
+        ///          <c>[Dd][Oo][Cc][Xx]</c>
+        ///              Any character in this class: <c>[Dd]</c>
+        ///              Any character in this class: <c>[Oo]</c>
+        ///              Any character in this class: <c>[Cc]</c>
+        ///              Any character in this class: <c>[Xx]</c>
+        ///          <c>[Ee][Tt][Cc]</c>
+        ///              Any character in this class: <c>[Ee]</c>
+        ///              Any character in this class: <c>[Tt]</c>
+        ///              Any character in this class: <c>[Cc]</c>     
         ///  End of line or string
         /// </remarks>
         /// <param name="fileExtensionsList">The comma-delimited list of acceptable file extensions.</param>
@@ -478,14 +478,14 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Sends an notifcation email about a new application.
+        /// Sends an notification email about a new application.
         /// </summary>
-        /// <param name="resumeId">The ID of the resumé.</param>
+        /// <param name="resumeId">The ID of the resume.</param>
         /// <param name="isNewApplication">if set to <c>true</c> it's a new application, otherwise it's an application edit.</param>
         /// <param name="toAddress">The email address to which the notification should be sent.</param>
         /// <param name="replyToApplicant">if set to <c>true</c> sets the reply-to to the applicant's email address (if they're logged in), otherwise leaves it as the "from" address.</param>
-        /// <param name="newSubjectResourceKey">The resource key to use to retreive the localized email subject for new applications.</param>
-        /// <param name="updateSubjectResourceKey">The resource key to use to retreive the localized email subject for updated applications.</param>
+        /// <param name="newSubjectResourceKey">The resource key to use to retrieve the localized email subject for new applications.</param>
+        /// <param name="updateSubjectResourceKey">The resource key to use to retrieve the localized email subject for updated applications.</param>
         /// <param name="messageResourceKey">The resource key to use to retrieve the localized email message (with format placeholders).</param>
         private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
@@ -657,7 +657,7 @@ namespace Engage.Dnn.Employment
                     "ApplicationUpdateSubject",
                     "NotificationEmailBody.Format");
 
-                if (IsLoggedIn)
+                if (Framework.ModuleBase.IsLoggedIn)
                 {
                     this.SendNotificationEmail(
                         resumeId,

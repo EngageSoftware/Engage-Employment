@@ -41,7 +41,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (!PermissionController.CanManageJobs(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 
@@ -64,7 +64,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             try
             {
-                if (!IsPostBack)
+                if (!this.IsPostBack)
                 {
                     Localization.LocalizeGridView(ref this.CategoriesGridView, this.LocalResourceFile);
                     this.SetupLengthValidation();
@@ -79,7 +79,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected void BackButton_Click(object sender, EventArgs e)
         {
-            Response.Redirect(EditUrl(ControlKey.Edit.ToString()));
+            Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
         }
 
         private static int? GetCategoryId(Control row)

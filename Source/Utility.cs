@@ -126,7 +126,7 @@ namespace Engage.Dnn.Employment
         /// <summary>
         /// Gets the URL to retrieve a particular document for an application.
         /// </summary>
-        /// <param name="documentId">The resumé id.</param>
+        /// <param name="documentId">The document ID.</param>
         /// <returns>The URL used to retrieve the document.</returns>
         public static string GetDocumentUrl(int documentId)
         {
@@ -264,7 +264,7 @@ namespace Engage.Dnn.Employment
             var list = new List<string>(words);
             var commonWords = GetCommonWords();
 
-            list.RemoveAll(delegate(string word) { return commonWords.Contains(word); });
+            list.RemoveAll(commonWords.Contains);
 
             return list;
         }
@@ -272,7 +272,7 @@ namespace Engage.Dnn.Employment
         /// <summary>
         /// Splits <paramref name="text"/> at each space, unless the space is wrapped in quotes
         /// </summary>
-        /// <remarks>based on http://www.devx.com/vb2themax/Tip/19420 </remarks>
+        /// <remarks>based on <see href="http://www.devx.com/vb2themax/Tip/19420"/></remarks>
         /// <param name="text">The text value to be split</param>
         /// <returns>A list of the words in <paramref cref="text"/></returns>
         public static List<string> SplitQuoted(string text)

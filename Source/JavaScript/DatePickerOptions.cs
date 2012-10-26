@@ -605,19 +605,19 @@ namespace Engage.Dnn.Employment
         /// <remarks>
         /// <list type="bullet">
         ///     <listheader><description>The format can be combinations of the following:</description></listheader>
-        ///     <item><term>d</term><description>day of month (no leading zero)</description></item>
-        ///     <item><term>dd</term><description>day of month (two digit)</description></item>
-        ///     <item><term>D</term><description>day name short</description></item>
-        ///     <item><term>DD</term><description>day name long</description></item>
-        ///     <item><term>m</term><description>month of year (no leading zero)</description></item>
-        ///     <item><term>mm</term><description>month of year (two digit)</description></item>
-        ///     <item><term>M</term><description>month name short</description></item>
-        ///     <item><term>MM</term><description>month name long</description></item>
-        ///     <item><term>y</term><description>year (two digit)</description></item>
-        ///     <item><term>yy</term><description>year (four digit)</description></item>
-        ///     <item><term>@</term><description>Unix timestamp (ms since 01/01/1970)</description></item>
-        ///     <item><term>'...'</term><description>literal text</description></item>
-        ///     <item><term>''</term><description>single quote</description></item>
+        ///     <item><term><c>d</c></term><description>day of month (no leading zero)</description></item>
+        ///     <item><term><c>dd</c></term><description>day of month (two digit)</description></item>
+        ///     <item><term><c>D</c></term><description>day name short</description></item>
+        ///     <item><term><c>DD</c></term><description>day name long</description></item>
+        ///     <item><term><c>m</c></term><description>month of year (no leading zero)</description></item>
+        ///     <item><term><c>mm</c></term><description>month of year (two digit)</description></item>
+        ///     <item><term><c>M</c></term><description>month name short</description></item>
+        ///     <item><term><c>MM</c></term><description>month name long</description></item>
+        ///     <item><term><c>y</c></term><description>year (two digit)</description></item>
+        ///     <item><term><c>yy</c></term><description>year (four digit)</description></item>
+        ///     <item><term><c>@</c></term><description>Unix timestamp (milliseconds since 01/01/1970)</description></item>
+        ///     <item><term><c>'...'</c></term><description>literal text</description></item>
+        ///     <item><term><c>''</c></term><description>single quote</description></item>
         /// </list>
         /// </remarks>
         /// <param name="pattern">The <see cref="DateTime"/> format pattern.</param>

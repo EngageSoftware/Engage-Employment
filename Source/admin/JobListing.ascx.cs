@@ -181,7 +181,7 @@ namespace Engage.Dnn.Employment.Admin
         /// Gets a sequence of objects with information about applications grouped by both application and user status.
         /// </summary>
         /// <param name="jobId">The job ID.</param>
-        /// <returns>A sequence of anonymous objects with four properies (<c>IsUserStatus</c>, <c>Url</c>, <c>Count</c>, and <c>Status</c>)</returns>
+        /// <returns>A sequence of anonymous objects with four properties (<c>IsUserStatus</c>, <c>Url</c>, <c>Count</c>, and <c>Status</c>)</returns>
         protected IEnumerable<object> GetApplicationStatusLinks(int jobId)
         {
             foreach (var statusRow in from DataRow row in this.applicationStatusTable.Rows
@@ -255,7 +255,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (!PermissionController.CanManageJobs(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 

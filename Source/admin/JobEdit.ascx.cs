@@ -56,7 +56,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             if (!PermissionController.CanManageJobs(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 

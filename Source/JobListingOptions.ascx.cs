@@ -27,7 +27,7 @@ namespace Engage.Dnn.Employment
         {
             if (!PermissionController.CanManageJobListingOptions(this))
             {
-                DenyAccess();
+                this.DenyAccess();
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace Engage.Dnn.Employment
         {
             try
             {
-                if (!IsPostBack)
+                if (!this.IsPostBack)
                 {
                     this.FillDisplayOptionList();
                     this.FillLimitOptionList();
@@ -97,7 +97,7 @@ namespace Engage.Dnn.Employment
                     ModuleSettings.JobListingLimitJobsRandomly.Set(this, this.LimitOptionRadioButtonList.SelectedValue);
                     ModuleSettings.JobListingShowCloseDate.Set(this, this.ShowCloseDateCheckBox.Checked);
 
-                    Response.Redirect(Globals.NavigateURL(TabId));
+                    Response.Redirect(Globals.NavigateURL(this.TabId));
                 }
             }
             catch (Exception exc)
@@ -109,7 +109,7 @@ namespace Engage.Dnn.Employment
         protected void CancelButton_Click(object sender, EventArgs e)
         {
             // return to the main page view
-            Response.Redirect(Globals.NavigateURL(TabId), false);
+            Response.Redirect(Globals.NavigateURL(this.TabId), false);
         }
 
         protected void LimitCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -142,4 +142,3 @@ namespace Engage.Dnn.Employment
         #endregion
     }
 }
-

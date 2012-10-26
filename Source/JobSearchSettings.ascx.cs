@@ -31,7 +31,7 @@ namespace Engage.Dnn.Employment
         {
             try
             {
-                if (!IsPostBack)
+                if (!this.IsPostBack)
                 {
                     DataTable jobGroups = DataProvider.Instance().GetJobGroups(PortalId);
                     this.JobGroupDropDownList.DataSource = jobGroups;
@@ -71,7 +71,7 @@ namespace Engage.Dnn.Employment
             {
                 Employment.ModuleSettings.JobGroupId.Set(this, this.JobGroupDropDownList.SelectedValue);
                 base.UpdateSettings();
-           }
+            }
             catch (Exception exc)
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
@@ -79,4 +79,3 @@ namespace Engage.Dnn.Employment
         }
     }
 }
-
