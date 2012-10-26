@@ -4,6 +4,8 @@ obj/
 *.[Rr]e[Ss]harper
 _[Rr]e[Ss]harper.*
 *.user
+*.suo
+*.sln.cache
 
 # NAnt
 package/
