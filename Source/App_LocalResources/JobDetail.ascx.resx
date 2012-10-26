@@ -308,7 +308,7 @@
 		&lt;td&gt;{6}{7}&lt;/td&gt;
 	&lt;/tr&gt;
 &lt;/table&gt;</value>
-    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text</comment>
+    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text, {8} = Applicant name, {9} = Applicant username</comment>
   </data>
   <data name="EmailSalaryBlank.Text" xml:space="preserve">
     <value>[The applicant did not specify any salary requirement]</value>
@@ -339,7 +339,7 @@
 		&lt;td&gt;{6}{7}&lt;/td&gt;
 	&lt;/tr&gt;
 &lt;/table&gt;</value>
-    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text</comment>
+    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text, {8} = Applicant name, {9} = Applicant username</comment>
   </data>
   <data name="lblEmailFromAddressHeader.Text" xml:space="preserve">
     <value>Your Email Address</value>
@@ -361,5 +361,11 @@
   </data>
   <data name="AnonymousApplicationSubject.Text" xml:space="preserve">
     <value>A job application has been submitted for '{1}'</value>
+  </data>
+  <data name="DisplayNameBlank.Text" xml:space="preserve">
+    <value>[anonymous applicant]</value>
+  </data>
+  <data name="UsernameBlank.Text" xml:space="preserve">
+    <value>[anonymous applicant]</value>
   </data>
 </root>

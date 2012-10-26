@@ -387,12 +387,17 @@ namespace Engage.Dnn.Employment
         {
             var jobUrl = Globals.NavigateURL(this.TabId, string.Empty, "jobId=" + this.JobId.Value.ToString(CultureInfo.InvariantCulture));
             var salaryText = !string.IsNullOrEmpty(this.SalaryTextBox.Text) 
-                                    ? this.SalaryTextBox.Text 
-                                    : this.Localize("EmailSalaryBlank");
+                                ? this.SalaryTextBox.Text 
+                                : this.Localize("EmailSalaryBlank");
             var messageText = !string.IsNullOrEmpty(this.ApplicationMessageTextBox.Text)
-                                     ? this.ApplicationMessageTextBox.Text
-                                     : this.Localize("EmailMessageBlank");
-
+                                ? this.ApplicationMessageTextBox.Text
+                                : this.Localize("EmailMessageBlank");
+            var displayNameText = !string.IsNullOrEmpty(this.UserInfo.DisplayName)
+                                    ? this.UserInfo.DisplayName
+                                    : this.Localize("DisplayNameBlank");
+            var usernameText = !string.IsNullOrEmpty(this.UserInfo.Username)
+                                    ? this.UserInfo.Username
+                                    : this.Localize("UsernameBlank");
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize(emailBodyResourceKey),
@@ -403,7 +408,9 @@ namespace Engage.Dnn.Employment
                 Engage.Utility.MakeUrlAbsolute(this.Page, Utility.GetDocumentUrl(resumeId)),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailResumeLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
-                HttpUtility.HtmlEncode(messageText));
+                HttpUtility.HtmlEncode(messageText),
+                HttpUtility.HtmlEncode(displayNameText),
+                HttpUtility.HtmlEncode(usernameText));
         }
 
         /// <summary>
