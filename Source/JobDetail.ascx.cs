@@ -401,11 +401,11 @@ namespace Engage.Dnn.Employment
             return string.Format(
                 CultureInfo.CurrentCulture,
                 this.Localize(emailBodyResourceKey),
-                Engage.Utility.MakeUrlAbsolute(this.Page, jobUrl),
+                HttpUtility.HtmlEncode(Engage.Utility.MakeUrlAbsolute(this.Page, jobUrl)),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailSalaryLabel")),
                 HttpUtility.HtmlEncode(salaryText),
-                Engage.Utility.MakeUrlAbsolute(this.Page, Utility.GetDocumentUrl(resumeId)),
+                HttpUtility.HtmlEncode(Engage.Utility.MakeUrlAbsolute(this.Page, Utility.GetDocumentUrl(resumeId))),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailResumeLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 HttpUtility.HtmlEncode(messageText),

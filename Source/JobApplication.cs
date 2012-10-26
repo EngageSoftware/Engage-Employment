@@ -100,10 +100,10 @@ namespace Engage.Dnn.Employment
             string message, 
             int? leadId)
         {
-            //// we need to insert the applicaiton before the documents in order to satisfy the foriegn key.  BD
+            // we need to insert the applicaiton before the documents in order to satisfy the foriegn key.  BD
             int applicationId = DataProvider.Instance().InsertApplication(jobId, userId, salaryRequirement, message);
 
-            //// don't check for an empty resumé here, we'll check inside InsertResume, since resumés can carry over from previous applications. BD
+            // don't check for an empty resumé here, we'll check inside InsertResume, since resumés can carry over from previous applications. BD
             int resumeId = InsertResume(applicationId, userId, resumeFileName, resumeContentType, resumeData);
             if (Engage.Utility.HasValue(coverLetterFileName) && coverLetterData != null && coverLetterData.Length > 0)
             {
