@@ -22,12 +22,12 @@
 		        <dnn:label ResourceKey="lblLimitOption" runat="server" />
 		    </td>
 		    <td class="contentColumn">
-		        <asp:PlaceHolder ID="phLimitOption" runat="server">
+		        <asp:PlaceHolder ID="LimitOptionPlaceholder" runat="server">
 		        <%--<asp:UpdatePanel ID="upnlLimitOption" runat="server" RenderMode="Inline" UpdateMode="Conditional"><ContentTemplate>--%>
 		            <asp:CheckBox ID="LimitCheckBox" runat="server" /> <asp:Label runat="server" resourcekey="lblLimitTextStart"/><asp:TextBox ID="txtLimit" runat="server" Columns="4"/><asp:Label runat="server" resourcekey="lblLimitTextEnd"/>
 		            <asp:RadioButtonList ID="LimitOptionRadioButtonList" runat="server"/>
 		            <asp:RequiredFieldValidator ID="LimitRequiredFieldValidator" runat="server" ControlToValidate="txtLimit" Display="None" resourcekey="rfvLimit" ValidationGroup="SaveSettings" />
-		            <asp:RangeValidator ID="rvLimit" runat="server" ControlToValidate="txtLimit" Display="None" MinimumValue="1" Operator="DataTypeCheck" Type="Integer" resourcekey="rvLimit" ValidationGroup="SaveSettings" />
+		            <asp:RangeValidator ID="LimitRangeValidator" runat="server" ControlToValidate="txtLimit" Display="None" MinimumValue="1" Operator="DataTypeCheck" Type="Integer" resourcekey="rvLimit" ValidationGroup="SaveSettings" />
 		        <%--</ContentTemplate></asp:UpdatePanel>--%>
 		        </asp:PlaceHolder>
 		    </td>

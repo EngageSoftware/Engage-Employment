@@ -22,22 +22,22 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.MultiView AuthorizationMultiview;
         
         /// <summary>
-        /// vwUnauthorized control.
+        /// UnauthorizedView control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.View vwUnauthorized;
+        protected global::System.Web.UI.WebControls.View UnauthorizedView;
         
         /// <summary>
-        /// vwJobGroups control.
+        /// JobGroupsView control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.View vwJobGroups;
+        protected global::System.Web.UI.WebControls.View JobGroupsView;
         
         /// <summary>
         /// NewJobGroupButton control.
@@ -139,13 +139,13 @@ namespace Engage.Dnn.Employment.Admin {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator NewJobGroupRequiredFieldValidator;
         
         /// <summary>
-        /// vwAssignment control.
+        /// AssignmentView control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.View vwAssignment;
+        protected global::System.Web.UI.WebControls.View AssignmentView;
         
         /// <summary>
         /// EditJobGroupsButton control.

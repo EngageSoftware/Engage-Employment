@@ -22,13 +22,13 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.RadioButtonList DisplayOptionRadioButtonList;
         
         /// <summary>
-        /// phLimitOption control.
+        /// LimitOptionPlaceholder control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phLimitOption;
+        protected global::System.Web.UI.WebControls.PlaceHolder LimitOptionPlaceholder;
         
         /// <summary>
         /// LimitCheckBox control.
@@ -67,13 +67,13 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator LimitRequiredFieldValidator;
         
         /// <summary>
-        /// rvLimit control.
+        /// LimitRangeValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvLimit;
+        protected global::System.Web.UI.WebControls.RangeValidator LimitRangeValidator;
         
         /// <summary>
         /// ShowCloseDateCheckBox control.

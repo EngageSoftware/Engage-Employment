@@ -56,7 +56,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             try
             {
-                this.AuthorizationMultiview.SetActiveView(this.IsEditable ? this.vwJobGroups : this.vwUnauthorized);
+                this.AuthorizationMultiview.SetActiveView(this.IsEditable ? this.JobGroupsView : this.UnauthorizedView);
                 if (!Page.IsPostBack)
                 {
                     Localization.LocalizeGridView(ref this.JobGroupsGridView, this.LocalResourceFile);
@@ -110,7 +110,7 @@ namespace Engage.Dnn.Employment.Admin
             this.JobsRepeater.DataBind();
         }
 
-        #region vwAssignment Events
+        #region AssignmentView Events
         private void JobsRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
@@ -167,17 +167,17 @@ namespace Engage.Dnn.Employment.Admin
                 }
             }
 
-            this.AuthorizationMultiview.SetActiveView(this.vwJobGroups);
+            this.AuthorizationMultiview.SetActiveView(this.JobGroupsView);
             this.BindJobGroups();
         }
 
         private void EditJobGroupsButton_Click(object sender, EventArgs e)
         {
-            this.AuthorizationMultiview.SetActiveView(this.vwJobGroups);
+            this.AuthorizationMultiview.SetActiveView(this.JobGroupsView);
         }
         #endregion
 
-        #region vwJobGroups Events
+        #region JobGroupsView Events
         private void JobGroupsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e != null && e.Row.RowType == DataControlRowType.DataRow)
@@ -204,7 +204,7 @@ namespace Engage.Dnn.Employment.Admin
 
         private void EditAssignmentsButton_Click(object sender, EventArgs e)
         {
-            this.AuthorizationMultiview.SetActiveView(this.vwAssignment);
+            this.AuthorizationMultiview.SetActiveView(this.AssignmentView);
             this.BindJobGroupAssignments();
         }
 

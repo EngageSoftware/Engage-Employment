@@ -34,12 +34,12 @@ namespace Engage.Dnn.Employment
             if (AJAX.IsInstalled())
             {
                 // AJAX.AddScriptManager(Page);
-                AJAX.WrapUpdatePanelControl(this.phLimitOption, false);
+                AJAX.WrapUpdatePanelControl(this.LimitOptionPlaceholder, false);
                 this.LimitCheckBox.CheckedChanged += this.LimitCheckBox_CheckedChanged;
                 this.LimitCheckBox.AutoPostBack = true;
             }
 
-            this.rvLimit.MaximumValue = int.MaxValue.ToString(CultureInfo.InvariantCulture);
+            this.LimitRangeValidator.MaximumValue = int.MaxValue.ToString(CultureInfo.InvariantCulture);
 
             this.Load += this.Page_Load;
             this.UpdateButton.Click += this.UpdateButton_Click;
@@ -122,7 +122,7 @@ namespace Engage.Dnn.Employment
 
         private void SetLimitEnabled(bool enabled) 
         {
-            this.txtLimit.Enabled = this.LimitOptionRadioButtonList.Enabled = this.LimitRequiredFieldValidator.Enabled = this.rvLimit.Enabled = enabled;
+            this.txtLimit.Enabled = this.LimitOptionRadioButtonList.Enabled = this.LimitRequiredFieldValidator.Enabled = this.LimitRangeValidator.Enabled = enabled;
         }
 
         private void FillDisplayOptionList()

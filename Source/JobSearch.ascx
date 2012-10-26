@@ -38,7 +38,7 @@
 </asp:Panel>
 <br />
 <div class="job_search_table">
-<asp:Repeater ID="rpSearchResults" runat="server" EnableViewState="False">
+<asp:Repeater ID="SearchResultsRepeater" runat="server" EnableViewState="False">
     <HeaderTemplate>
         <table class="Normal">
         <tr>

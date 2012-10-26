@@ -5,10 +5,10 @@
 <div class="information"><asp:Label ResourceKey="lblJobGroupsHeader.Help" runat="server" /></div>
 
 <asp:MultiView ID="AuthorizationMultiview" runat="server">
-    <asp:View ID="vwUnauthorized" runat="server">
+    <asp:View ID="UnauthorizedView" runat="server">
         <asp:Label runat="server" CssClass="NormalRed" resourcekey="Unauthorized" />
     </asp:View>
-    <asp:View ID="vwJobGroups" runat="server">
+    <asp:View ID="JobGroupsView" runat="server">
         <table class="employmentTable">
             <tr><td>
                 <asp:Button ID="NewJobGroupButton" runat="server" resourcekey="btnNewJobGroup"  />
@@ -76,7 +76,7 @@
             </table>
         </asp:Panel>
     </asp:View>
-    <asp:View ID="vwAssignment" runat="server">
+    <asp:View ID="AssignmentView" runat="server">
         <%--<span class="Head"><dnn:Label ResourceKey="lblJobsJobGroupHeader" runat="server" /></span>--%>
         <table class="settingsTable">
             <tr><td>

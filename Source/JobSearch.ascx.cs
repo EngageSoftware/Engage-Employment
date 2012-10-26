@@ -212,8 +212,8 @@ namespace Engage.Dnn.Employment
                     {
                         JobSearchQuery q = JobSearchQuery.Load(searchId);
 
-                        this.rpSearchResults.DataSource = q.Execute();
-                        this.rpSearchResults.DataBind();
+                        this.SearchResultsRepeater.DataSource = q.Execute();
+                        this.SearchResultsRepeater.DataBind();
 
                         this.UpdateSearchFields(q);
                     }
@@ -257,8 +257,8 @@ namespace Engage.Dnn.Employment
 
                 if (dt.Rows.Count > 0)
                 {
-                    this.rpSearchResults.DataSource = dt;
-                    this.rpSearchResults.DataBind();
+                    this.SearchResultsRepeater.DataSource = dt;
+                    this.SearchResultsRepeater.DataBind();
                 }
                 else
                 {
