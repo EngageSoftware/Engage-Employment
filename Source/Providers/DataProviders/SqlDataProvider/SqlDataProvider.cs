@@ -1059,7 +1059,7 @@ namespace Engage.Dnn.Employment.Data
 
             var sql = new StringBuilder(255);
             sql.AppendFormat(CultureInfo.InvariantCulture, "select d.ResumeId from {0}Document d ", this.NamePrefix);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}ApplicationDocument ad ON (d.ResumeId = d.ResumeId) ", this.NamePrefix);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}ApplicationDocument ad ON (d.ResumeId = ad.ResumeId) ", this.NamePrefix);
             sql.Append(" where ad.ApplicationId = @applicationId ");
             sql.Append(" and d.DocumentTypeId = @documentTypeId ");
 
