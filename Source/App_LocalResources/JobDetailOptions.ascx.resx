@@ -240,4 +240,22 @@
   <data name="lblShowCloseDate.Text" xml:space="preserve">
     <value>Show Close Date</value>
   </data>
+  <data name="lblDisplayEmail.Help" xml:space="preserve">
+    <value>Choose whether you would like to display or require a field to allow applicants to specify their email address with their application.</value>
+  </data>
+  <data name="lblDisplayEmail.Text" xml:space="preserve">
+    <value>Display Email Field</value>
+  </data>
+  <data name="lblDisplayName.Help" xml:space="preserve">
+    <value>Choose whether you would like to display or require a field to allow applicants to specify their name with their application.</value>
+  </data>
+  <data name="lblDisplayName.Text" xml:space="preserve">
+    <value>Display Name Field</value>
+  </data>
+  <data name="lblDisplayPhone.Help" xml:space="preserve">
+    <value>Choose whether you would like to display or require a field to allow applicants to specify their phone number with their application.</value>
+  </data>
+  <data name="lblDisplayPhone.Text" xml:space="preserve">
+    <value>Display Phone Field</value>
+  </data>
 </root>

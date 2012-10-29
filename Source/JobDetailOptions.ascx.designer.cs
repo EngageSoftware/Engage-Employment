@@ -58,6 +58,33 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.CheckBox RequireRegistrationCheckBox;
         
         /// <summary>
+        /// DisplayNameRadioButtonList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplayNameRadioButtonList;
+        
+        /// <summary>
+        /// DisplayEmailRadioButtonList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplayEmailRadioButtonList;
+        
+        /// <summary>
+        /// DisplayPhoneRadioButtonList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplayPhoneRadioButtonList;
+        
+        /// <summary>
         /// DisplayMessageRadioButtonList control.
         /// </summary>
         /// <remarks>

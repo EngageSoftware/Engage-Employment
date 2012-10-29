@@ -437,13 +437,18 @@ namespace Engage.Dnn.Employment.Admin
         /// Gets the name of the user, formatted based on the "UserName" localization key.
         /// </summary>
         /// <param name="userId">The user id.</param>
-        /// <returns>A user name</returns>
-        protected string GetUserName(int? userId)
+        /// <param name="applicantName">The name that the applicant provided with the application</param>
+        /// <returns>A name</returns>
+        protected string GetUserName(int? userId, string applicantName)
         {
+            if (!string.IsNullOrEmpty(applicantName))
+            {
+                return applicantName;
+            }
+            
             if (userId.HasValue)
             {
-                UserInfo applicationUser = new UserController().GetUser(this.PortalId, userId.Value);
-
+                var applicationUser = new UserController().GetUser(this.PortalId, userId.Value);
                 if (applicationUser != null)
                 {
                     return string.Format(

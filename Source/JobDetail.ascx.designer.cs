@@ -67,6 +67,114 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl ApplicantInfoSection;
         
         /// <summary>
+        /// ApplicantNameRow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow ApplicantNameRow;
+        
+        /// <summary>
+        /// ApplicantNameRequiredLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ApplicantNameRequiredLabel;
+        
+        /// <summary>
+        /// ApplicantNameTextBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox ApplicantNameTextBox;
+        
+        /// <summary>
+        /// ApplicantNameRequiredValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ApplicantNameRequiredValidator;
+        
+        /// <summary>
+        /// ApplicantEmailRow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow ApplicantEmailRow;
+        
+        /// <summary>
+        /// ApplicantEmailRequiredLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ApplicantEmailRequiredLabel;
+        
+        /// <summary>
+        /// ApplicantEmailTextBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox ApplicantEmailTextBox;
+        
+        /// <summary>
+        /// ApplicantEmailRequiredValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ApplicantEmailRequiredValidator;
+        
+        /// <summary>
+        /// ApplicantPhoneRow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow ApplicantPhoneRow;
+        
+        /// <summary>
+        /// ApplicantPhoneRequiredLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ApplicantPhoneRequiredLabel;
+        
+        /// <summary>
+        /// ApplicantPhoneTextBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox ApplicantPhoneTextBox;
+        
+        /// <summary>
+        /// ApplicantPhoneRequiredValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ApplicantPhoneRequiredValidator;
+        
+        /// <summary>
         /// ApplicationMessageRow control.
         /// </summary>
         /// <remarks>
@@ -130,13 +238,13 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.TextBox SalaryTextBox;
         
         /// <summary>
-        /// SalaryRequiredTextBox control.
+        /// SalaryRequiredFieldValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator SalaryRequiredTextBox;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator SalaryRequiredFieldValidator;
         
         /// <summary>
         /// SalaryMessageRow control.

@@ -306,12 +306,15 @@ namespace Engage.Dnn.Employment.Data
         public override IDataReader GetApplication(int applicationId)
         {
             var sql = new StringBuilder(147);
-            sql.Append(" select ApplicationId, UserId, DisplayName, JobId, AppliedDate, SalaryRequirement, Message, StatusId ");
-            sql.AppendFormat(" from {0}vwApplications ", this.NamePrefix);
-            sql.Append(" where ApplicationId = @applicationId ");
+            sql.Append(" SELECT ApplicationId, UserId, DisplayName, JobId, AppliedDate, SalaryRequirement, Message, ApplicantName, ApplicantEmail, ApplicantPhone, StatusId ");
+            sql.AppendFormat(" FROM {0}vwApplications ", this.NamePrefix);
+            sql.Append(" WHERE ApplicationId = @applicationId ");
 
             return SqlHelper.ExecuteReader(
-                this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@applicationId", applicationId));
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId));
         }
 
         public override DataTable GetApplicationDocuments(int applicationId)
@@ -367,32 +370,29 @@ namespace Engage.Dnn.Employment.Data
         {
             var sql = new StringBuilder(512);
 
-            sql.Append(" select ");
-            sql.Append(
-                " a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, a.SalaryRequirement, a.Message ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications a ", this.NamePrefix);
+            sql.Append(" SELECT ");
+            sql.Append(" a.AppliedDate, a.DisplayName, a.JobId, a.JobTitle, a.LocationName, a.ApplicationId, a.UserId, ");
+            sql.Append(" a.SalaryRequirement, a.Message, a.ApplicantName, a.ApplicantEmail, a.ApplicantPhone ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " FROM {0}vwApplications a ", this.NamePrefix);
             if (jobGroupId.HasValue)
             {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (a.JobId = jlg.JobId) ", this.NamePrefix);
+                sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}JobJobGroup jlg on (a.JobId = jlg.JobId) ", this.NamePrefix);
             }
 
-            sql.Append(" where a.PortalId = @portalId ");
+            sql.Append(" WHERE a.PortalId = @portalId ");
             if (jobGroupId.HasValue)
             {
-                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
+                sql.Append(" AND jlg.jobGroupId = @jobGroupId ");
             }
 
-            sql.Append(" order by ");
-            sql.Append(" a.AppliedDate desc ");
+            sql.Append(" ORDER BY a.AppliedDate DESC ");
 
-            return
-                SqlHelper.ExecuteDataset(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
-                    Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
+            return SqlHelper.ExecuteDataset(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@jobGroupId", jobGroupId), 
+                Utility.CreateIntegerParam("@portalId", portalId)).Tables[0];
         }
 
         /// <summary>
@@ -808,26 +808,26 @@ namespace Engage.Dnn.Employment.Data
         {
             var sql = new StringBuilder(1024);
 
-            sql.Append(" select ");
+            sql.Append(" SELECT ");
             sql.Append(" a.JobId, JobTitle, LocationName, StateName, ");
             sql.Append(" RequiredQualifications, DesiredQualifications, CategoryName, DisplayName, StatusId, ");
-            sql.Append(" IsHot, PostedDate, AppliedDate, ApplicationId, SortOrder, UserId, SalaryRequirement, Message ");
-            sql.Append(" from ");
+            sql.Append(" IsHot, PostedDate, AppliedDate, ApplicationId, SortOrder, UserId, ");
+            sql.Append(" SalaryRequirement, Message, ApplicantName, ApplicantEmail, ApplicantPhone ");
+            sql.Append(" FROM ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications a ", this.NamePrefix);
             if (jobGroupId.HasValue)
             {
-                sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}JobJobGroup jlg on (a.JobId = jlg.JobId) ", this.NamePrefix);
+                sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}JobJobGroup jlg on (a.JobId = jlg.JobId) ", this.NamePrefix);
             }
 
-            sql.Append(" where (UserId = @userId OR (userId IS NULL AND @userId IS NULL)) ");
-            sql.Append(" and PortalId = @portalId ");
+            sql.Append(" WHERE (UserId = @userId OR (userId IS NULL AND @userId IS NULL)) ");
+            sql.Append(" AND PortalId = @portalId ");
             if (jobGroupId.HasValue)
             {
-                sql.Append(" and jlg.jobGroupId = @jobGroupId ");
+                sql.Append(" AND jlg.jobGroupId = @jobGroupId ");
             }
 
-            sql.Append(" order by ");
-            sql.Append(" AppliedDate desc ");
+            sql.Append(" ORDER BY AppliedDate DESC ");
 
             return SqlHelper.ExecuteReader(
                 this.ConnectionString, 
@@ -1251,15 +1251,12 @@ namespace Engage.Dnn.Employment.Data
         {
             var sql = new StringBuilder(512);
 
-            sql.Append(" select top 1 NULL ");
-            sql.Append(" from ");
-            sql.AppendFormat(CultureInfo.InvariantCulture, " {0}vwApplications ", this.NamePrefix);
-            sql.Append(" where ");
-            sql.Append(" JobId = @jobId ");
-            sql.Append(" and UserId = @userId");
+            sql.Append(" SELECT TOP 1 NULL ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " FROM {0}vwApplications ", this.NamePrefix);
+            sql.Append(" WHERE JobId = @jobId ");
+            sql.Append(" AND UserId = @userId");
 
-            using (
-                IDataReader dr = SqlHelper.ExecuteReader(
+            using (IDataReader dr = SqlHelper.ExecuteReader(
                     this.ConnectionString, 
                     CommandType.Text, 
                     sql.ToString(), 
@@ -1270,26 +1267,25 @@ namespace Engage.Dnn.Employment.Data
             }
         }
 
-        public override int InsertApplication(int jobId, int? userId, string salaryRequirement, string message)
+        public override int InsertApplication(int jobId, int? userId, string salaryRequirement, string message, string name, string email, string phone)
         {
             var sql = new StringBuilder(512);
-
-            sql.AppendFormat(CultureInfo.InvariantCulture, " insert {0}vwApplications ", this.NamePrefix);
-            sql.Append(" (UserId, JobId, AppliedDate, SalaryRequirement, Message) values ");
-            sql.Append(" (@userId, @jobId, getdate(), @salaryRequirement, @message) ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " INSERT {0}vwApplications ", this.NamePrefix);
+            sql.Append(" (UserId, JobId, AppliedDate, SalaryRequirement, Message, ApplicantName, ApplicantEmail, ApplicantPhone) ");
+            sql.Append(" VALUES (@userId, @jobId, getdate(), @salaryRequirement, @message, @applicantName, @applicantEmail, @applicantPhone) ");
             sql.Append(" SELECT SCOPE_IDENTITY() ");
 
-            return
-                (int)
-                (decimal)
-                SqlHelper.ExecuteScalar(
-                    this.ConnectionString, 
-                    CommandType.Text, 
-                    sql.ToString(), 
-                    Utility.CreateIntegerParam("@userId", userId), 
-                    Utility.CreateIntegerParam("@jobId", jobId),
-                    Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, DataProvider.VarcharLength),
-                    Utility.CreateVarcharParam("@message", message, DataProvider.VarcharLength));
+            return (int)(decimal)SqlHelper.ExecuteScalar(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@userId", userId), 
+                Utility.CreateIntegerParam("@jobId", jobId),
+                Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@message", message, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@applicantName", name, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@applicantEmail", email, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@applicantPhone", phone, DataProvider.VarcharLength));
         }
 
         public override void InsertApplicationProperty(int applicationId, int propertyId, string value)
@@ -1674,14 +1670,16 @@ namespace Engage.Dnn.Employment.Data
                 Utility.CreateIntegerParam("@revisingUserId", revisingUserId));
         }
 
-        public override void UpdateApplication(int applicationId, string salaryRequirement, string message)
+        public override void UpdateApplication(int applicationId, string salaryRequirement, string message, string name, string email, string phone)
         {
             var sql = new StringBuilder(512);
-
-            sql.AppendFormat(CultureInfo.InvariantCulture, " update {0}vwApplications ", this.NamePrefix);
-            sql.Append(" set SalaryRequirement = @salaryRequirement, ");
-            sql.Append(" Message = @message ");
-            sql.Append(" where ApplicationId = @applicationId ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, " UPDATE {0}vwApplications ", this.NamePrefix);
+            sql.Append(" SET SalaryRequirement = @salaryRequirement, ");
+            sql.Append(" Message = @message, ");
+            sql.Append(" ApplicantName = @applicantName, ");
+            sql.Append(" ApplicantEmail = @applicantEmail, ");
+            sql.Append(" ApplicantPhone = @applicantPhone ");
+            sql.Append(" WHERE ApplicationId = @applicationId ");
 
             SqlHelper.ExecuteNonQuery(
                 this.ConnectionString, 
@@ -1689,7 +1687,10 @@ namespace Engage.Dnn.Employment.Data
                 sql.ToString(), 
                 Utility.CreateIntegerParam("@applicationId", applicationId),
                 Utility.CreateVarcharParam("@salaryRequirement", salaryRequirement, DataProvider.VarcharLength),
-                Utility.CreateVarcharParam("@message", message, DataProvider.VarcharLength));
+                Utility.CreateVarcharParam("@message", message, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@applicantName", name, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@applicantEmail", email, DataProvider.VarcharLength),
+                Utility.CreateVarcharParam("@applicantPhone", phone, DataProvider.VarcharLength));
         }
 
         public override void UpdateApplicationProperty(int applicationId, int propertyId, string value)

@@ -358,4 +358,10 @@
   <data name="DateStartHeaderLabel.Text" xml:space="preserve">
     <value>Start Date</value>
   </data>
+  <data name="EmailHeaderLabel.Text" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="PhoneHeaderLabel.Text" xml:space="preserve">
+    <value>Phone</value>
+  </data>
 </root>

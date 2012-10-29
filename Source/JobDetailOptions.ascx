@@ -30,6 +30,30 @@
 	    </tr>
 	    <tr>
 	        <td class="SubHead labelColumn nowrap">
+	            <dnn:label ResourceKey="lblDisplayName" runat="server" />
+	        </td>
+	        <td class="contentColumn">
+	            <asp:RadioButtonList ID="DisplayNameRadioButtonList" runat="server" RepeatDirection="Horizontal" />
+	        </td>
+	    </tr>
+	    <tr>
+	        <td class="SubHead labelColumn nowrap">
+	            <dnn:label ResourceKey="lblDisplayEmail" runat="server" />
+	        </td>
+	        <td class="contentColumn">
+	            <asp:RadioButtonList ID="DisplayEmailRadioButtonList" runat="server" RepeatDirection="Horizontal" />
+	        </td>
+	    </tr>
+	    <tr>
+	        <td class="SubHead labelColumn nowrap">
+	            <dnn:label ResourceKey="lblDisplayPhone" runat="server" />
+	        </td>
+	        <td class="contentColumn">
+	            <asp:RadioButtonList ID="DisplayPhoneRadioButtonList" runat="server" RepeatDirection="Horizontal" />
+	        </td>
+	    </tr>
+	    <tr>
+	        <td class="SubHead labelColumn nowrap">
 	            <dnn:label ResourceKey="lblDisplayMessage" runat="server" />
 	        </td>
 	        <td class="contentColumn">

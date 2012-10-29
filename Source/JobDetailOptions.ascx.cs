@@ -25,6 +25,7 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Services.Localization;
 
     using Engage.Dnn.Employment.Data;
+    using Engage.Dnn.Framework;
 
     /// <summary>
     /// Allows a module editor to set the options for the details module
@@ -112,28 +113,14 @@ namespace Engage.Dnn.Employment
                     this.EnableDnnSearchCheckBox.Checked = ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(this).Value;
                     this.ShowCloseDateCheckBox.Checked = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
 
-                    this.DisplayLeadRadioButtonList.DataSource = Enum.GetValues(typeof(Visibility));
-                    this.DisplayLeadRadioButtonList.DataBind();
-
-                    var displayLead = ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this);
-                    this.DisplayLeadRadioButtonList.SelectedValue = displayLead.ToString();
-                    this.rowLeadItems.Visible = displayLead != Visibility.Hidden;
-                    Dnn.Utility.LocalizeListControl(this.DisplayLeadRadioButtonList, this.LocalResourceFile);
-
-                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
-                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
-                    this.DisplaySalaryRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Required.ToString()), Visibility.Required.ToString()));
-                    this.DisplaySalaryRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplaySalaryRequirement.GetValueAsEnumFor<Visibility>(this).ToString();
-
-                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
-                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
-                    this.DisplayCoverLetterRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Required.ToString()), Visibility.Required.ToString()));
-                    this.DisplayCoverLetterRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplayCoverLetter.GetValueAsEnumFor<Visibility>(this).ToString();
-
-                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
-                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
-                    this.DisplayMessageRadioButtonList.Items.Add(new ListItem(this.Localize(Visibility.Required.ToString()), Visibility.Required.ToString()));
-                    this.DisplayMessageRadioButtonList.SelectedValue = ModuleSettings.JobDetailDisplayMessage.GetValueAsEnumFor<Visibility>(this).ToString();
+                    this.SetupVisibilityList(this.DisplayNameRadioButtonList, ModuleSettings.JobDetailDisplayName);
+                    this.SetupVisibilityList(this.DisplayEmailRadioButtonList, ModuleSettings.JobDetailDisplayEmail);
+                    this.SetupVisibilityList(this.DisplayPhoneRadioButtonList, ModuleSettings.JobDetailDisplayPhone);
+                    this.SetupVisibilityList(this.DisplayMessageRadioButtonList, ModuleSettings.JobDetailDisplayMessage);
+                    this.SetupVisibilityList(this.DisplaySalaryRadioButtonList, ModuleSettings.JobDetailDisplaySalaryRequirement);
+                    this.SetupVisibilityList(this.DisplayCoverLetterRadioButtonList, ModuleSettings.JobDetailDisplayCoverLetter);
+                    this.SetupVisibilityList(this.DisplayLeadRadioButtonList, ModuleSettings.JobDetailDisplayLead);
+                    this.rowLeadItems.Visible = this.DisplayLeadRadioButtonList.SelectedValue != Visibility.Hidden.ToString();
 
                     Localization.LocalizeGridView(ref this.LeadItemsGridView, this.LocalResourceFile);
                     this.BindLeadItems();
@@ -143,6 +130,17 @@ namespace Engage.Dnn.Employment
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
+        }
+
+        /// <summary>Sets up a visibility radio button list.</summary>
+        /// <param name="list">The radio button list.</param>
+        /// <param name="visibilitySetting">The visibility setting.</param>
+        private void SetupVisibilityList(ListControl list, Setting<Visibility> visibilitySetting)
+        {
+            list.Items.Add(new ListItem(this.Localize(Visibility.Hidden.ToString()), Visibility.Hidden.ToString()));
+            list.Items.Add(new ListItem(this.Localize(Visibility.Optional.ToString()), Visibility.Optional.ToString()));
+            list.Items.Add(new ListItem(this.Localize(Visibility.Required.ToString()), Visibility.Required.ToString()));
+            list.SelectedValue = visibilitySetting.GetValueAsEnumFor<Visibility>(this).ToString();
         }
 
         /// <summary>
@@ -163,10 +161,13 @@ namespace Engage.Dnn.Employment
                 ModuleSettings.JobDetailApplicationEmailAddress.Set(this, this.txtApplicationEmailAddress.Text);
                 ModuleSettings.JobDetailFriendEmailAddress.Set(this, this.txtFriendEmailAddress.Text);
                 ModuleSettings.JobDetailRequireRegistration.Set(this, this.RequireRegistrationCheckBox.Checked);
-                ModuleSettings.JobDetailDisplayLead.Set(this, this.DisplayLeadRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayName.Set(this, this.DisplayNameRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayEmail.Set(this, this.DisplayEmailRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayPhone.Set(this, this.DisplayPhoneRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayMessage.Set(this, this.DisplayMessageRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailDisplaySalaryRequirement.Set(this, this.DisplaySalaryRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailDisplayCoverLetter.Set(this, this.DisplayCoverLetterRadioButtonList.SelectedValue);
-                ModuleSettings.JobDetailDisplayMessage.Set(this, this.DisplayMessageRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayLead.Set(this, this.DisplayLeadRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailEnableDnnSearch.Set(this, this.EnableDnnSearchCheckBox.Checked);
                 ModuleSettings.JobDetailShowCloseDate.Set(this, this.ShowCloseDateCheckBox.Checked);
 

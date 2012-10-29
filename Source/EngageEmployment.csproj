@@ -320,12 +320,13 @@
     <None Include="Migrated rules for EngageEmployment.ruleset" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.01.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.02.00.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.7.0.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.8.5.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.8.6.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.8.7.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.8.8.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.9.7.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.07.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.08.05.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.08.06.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.08.07.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.08.08.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.09.07.SqlDataProvider" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\01.11.00.SqlDataProvider" />
     <None Include="Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
@@ -426,8 +427,8 @@
     <None Include="Providers\DataProviders\SqlDataProvider\01.04.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.04.01.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.04.02.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.5.0.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\1.5.1.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.05.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.05.01.SqlDataProvider" />
     <Content Include="App_LocalResources\JobDetailSettings.ascx.resx">
       <SubType>Designer</SubType>
     </Content>

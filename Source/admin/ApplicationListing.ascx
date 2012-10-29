@@ -88,7 +88,7 @@
                     <Columns>
                         <telerik:GridTemplateColumn SortExpression="DisplayName" HeaderText="ApplicantHeaderLabel" ItemStyle-CssClass="applicantColumn">
                             <ItemTemplate>
-                                <%# HttpUtility.HtmlEncode(GetUserName(Eval("UserId") as int?)) %>
+                                <%# HttpUtility.HtmlEncode(this.GetUserName(this.Eval("UserId") as int?, (string)this.Eval("ApplicantName"))) %>
                                 <asp:DropDownList runat="server"
                                     CssClass="NormalTextBox" 
                                     Visible='<%# !this.IsExport && this.ShowUserStatuses(this.Eval("UserId") as int?) %>'
@@ -105,6 +105,8 @@
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                         <telerik:GridBoundColumn DataField="AppliedForDate" DataFormatString="{0:d}" HeaderText="DateAppliedHeaderLabel" ItemStyle-CssClass="dateAppliedColumn" />
+                        <telerik:GridBoundColumn DataField="ApplicantEmail" HeaderText="EmailHeaderLabel" ItemStyle-CssClass="emailColumn" />
+                        <telerik:GridBoundColumn DataField="ApplicantPhone" HeaderText="PhoneHeaderLabel" ItemStyle-CssClass="phoneColumn" />
                         <telerik:GridBoundColumn DataField="SalaryRequirement" HeaderText="SalaryHeaderLabel" ItemStyle-CssClass="salaryColumn" />
                         <telerik:GridTemplateColumn UniqueName="Properties" HeaderText="LeadHeaderLabel" ItemStyle-CssClass="leadColumn" />
                         <telerik:GridTemplateColumn UniqueName="Documents" HeaderText="ViewHeaderLabel" ItemStyle-CssClass="documentsColumn" />

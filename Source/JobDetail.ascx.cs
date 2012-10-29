@@ -176,19 +176,27 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Gets the setting for whether to display the cover letter field.
+        /// Gets the setting for whether to display the name field.
         /// </summary>
-        private Visibility DisplayCoverLetter
+        private Visibility DisplayName
         {
-            get { return ModuleSettings.JobDetailDisplayCoverLetter.GetValueAsEnumFor<Visibility>(this).Value; }
+            get { return ModuleSettings.JobDetailDisplayName.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
         /// <summary>
-        /// Gets the setting for whether to display the lead (How did you hear?) field.
+        /// Gets the setting for whether to display the email field.
         /// </summary>
-        private Visibility DisplayLead
+        private Visibility DisplayEmail
         {
-            get { return ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this).Value; }
+            get { return ModuleSettings.JobDetailDisplayEmail.GetValueAsEnumFor<Visibility>(this).Value; }
+        }
+
+        /// <summary>
+        /// Gets the setting for whether to display the phone field.
+        /// </summary>
+        private Visibility DisplayPhone
+        {
+            get { return ModuleSettings.JobDetailDisplayPhone.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
         /// <summary>
@@ -205,6 +213,22 @@ namespace Engage.Dnn.Employment
         private Visibility DisplaySalaryRequirement
         {
             get { return ModuleSettings.JobDetailDisplaySalaryRequirement.GetValueAsEnumFor<Visibility>(this).Value; }
+        }
+
+        /// <summary>
+        /// Gets the setting for whether to display the cover letter field.
+        /// </summary>
+        private Visibility DisplayCoverLetter
+        {
+            get { return ModuleSettings.JobDetailDisplayCoverLetter.GetValueAsEnumFor<Visibility>(this).Value; }
+        }
+
+        /// <summary>
+        /// Gets the setting for whether to display the lead (How did you hear?) field.
+        /// </summary>
+        private Visibility DisplayLead
+        {
+            get { return ModuleSettings.JobDetailDisplayLead.GetValueAsEnumFor<Visibility>(this).Value; }
         }
 
         /// <summary>
@@ -290,6 +314,25 @@ namespace Engage.Dnn.Employment
             return string.Format(CultureInfo.InvariantCulture, @".*\.(?:{0})$", fileExtensionsBuilder);
         }
 
+        /// <summary>Sets the field visibility.</summary>
+        /// <param name="fieldRow">The field row.</param>
+        /// <param name="requiredFieldValidator">The required field validator.</param>
+        /// <param name="requiredLabel">The required label.</param>
+        /// <param name="displayField">The display field.</param>
+        private static void SetFieldVisibility(Control fieldRow, WebControl requiredFieldValidator, Control requiredLabel, Visibility displayField)
+        {
+            fieldRow.Visible = displayField != Visibility.Hidden;
+            requiredFieldValidator.Enabled = requiredLabel.Visible = displayField == Visibility.Required;
+        }
+
+        /// <summary>Gets the <see cref="TextBox.Text"/> if the <paramref name="textBox"/> is <see cref="Control.Visible"/>.</summary>
+        /// <param name="textBox">The text box from which to get the text.</param>
+        /// <returns>The text, or <c>null</c>.</returns>
+        private static string GetTextIfVisible(TextBox textBox)
+        {
+            return textBox.Visible ? textBox.Text : null;
+        }
+
         /// <summary>
         /// Fills in the information about the application, if one is specified and it belongs to this user.
         /// </summary>
@@ -303,6 +346,9 @@ namespace Engage.Dnn.Employment
                 Dictionary<string, string> properties = jobApplication.GetApplicationProperties();
                 this.InitializeApplicantInfoSection();
 
+                this.ApplicantNameTextBox.Text = jobApplication.ApplicantName;
+                this.ApplicantEmailTextBox.Text = jobApplication.ApplicantEmail;
+                this.ApplicantPhoneTextBox.Text = jobApplication.ApplicantPhone;
                 this.ApplicationMessageTextBox.Text = jobApplication.Message;
                 this.SalaryTextBox.Text = jobApplication.SalaryRequirement;
 
@@ -392,9 +438,9 @@ namespace Engage.Dnn.Employment
             var messageText = !string.IsNullOrEmpty(this.ApplicationMessageTextBox.Text)
                                 ? this.ApplicationMessageTextBox.Text
                                 : this.Localize("EmailMessageBlank");
-            var displayNameText = !string.IsNullOrEmpty(this.UserInfo.DisplayName)
-                                    ? this.UserInfo.DisplayName
-                                    : this.Localize("DisplayNameBlank");
+            var displayNameText = this.GetTextWithFallback(this.ApplicantNameTextBox, this.UserInfo.DisplayName, "DisplayNameBlank");
+            var emailText = this.GetTextWithFallback(this.ApplicantEmailTextBox, this.UserInfo.Email, "EmailBlank");
+            var phoneText = this.GetTextWithFallback(this.ApplicantPhoneTextBox, this.UserInfo.Profile.Telephone, "PhoneBlank");
             var usernameText = !string.IsNullOrEmpty(this.UserInfo.Username)
                                     ? this.UserInfo.Username
                                     : this.Localize("UsernameBlank");
@@ -410,7 +456,23 @@ namespace Engage.Dnn.Employment
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 HttpUtility.HtmlEncode(messageText),
                 HttpUtility.HtmlEncode(displayNameText),
-                HttpUtility.HtmlEncode(usernameText));
+                HttpUtility.HtmlEncode(usernameText),
+                HttpUtility.HtmlEncode(emailText),
+                HttpUtility.HtmlEncode(phoneText));
+        }
+
+        /// <summary>Gets the text with a fallback to a user property.</summary>
+        /// <param name="textBox">The text box.</param>
+        /// <param name="fallbackValue">The fallback value.</param>
+        /// <param name="noValueResourceKey">The resource key for the localized text if no value is available.</param>
+        /// <returns>The text representing the value.</returns>
+        private string GetTextWithFallback(TextBox textBox, string fallbackValue, string noValueResourceKey = "")
+        {
+            // fallback to profile if the field isn't visible
+            var textValue = GetTextIfVisible(textBox) ?? fallbackValue;
+
+            // if they didn't provide a value, show "the applicant didn't provide a value" message
+            return !string.IsNullOrEmpty(textValue) ? textValue : this.Localize(noValueResourceKey);
         }
 
         /// <summary>
@@ -441,10 +503,9 @@ namespace Engage.Dnn.Employment
             this.Response.Redirect(Globals.NavigateURL(Utility.GetJobListingTabId(this.JobGroupId, this.PortalSettings) ?? this.TabId));
         }
 
-        /// <summary>
-        /// Initializes the ApplicantInfoSection control, and hides the EmailFriendSection control.
-        /// </summary>
-        private void InitializeApplicantInfoSection()
+        /// <summary>Initializes the ApplicantInfoSection control, and hides the EmailFriendSection control.</summary>
+        /// <param name="setInitialInfo">if set to <c>true</c> show user info in the user text boxes; otherwise, leave them alone.</param>
+        private void InitializeApplicantInfoSection(bool setInitialInfo = false)
         {
             this.ApplicantInfoSection.Visible = true;
             this.EmailFriendSection.Visible = false;
@@ -462,26 +523,20 @@ namespace Engage.Dnn.Employment
             this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexResumeFile.Text"), fileExtensionsList);
             this.CoverLetterFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexCoverLetterFile.Text"), fileExtensionsList);
 
-            this.ApplicationMessageRow.Visible = this.DisplayMessage != Visibility.Hidden;
-            this.ApplicationMessageRequiredValidator.Enabled = this.MessageRequiredLabel.Visible = this.DisplayMessage == Visibility.Required;
-
-            this.CoverLetterRow.Visible = this.DisplayCoverLetter != Visibility.Hidden;
-            this.CoverLetterFileRequiredValidator.Enabled = this.CoverLetterRequiredLabel.Visible = this.DisplayCoverLetter == Visibility.Required;
-
-            this.SalaryRow.Visible = this.DisplaySalaryRequirement != Visibility.Hidden;
+            SetFieldVisibility(this.ApplicantNameRow, this.ApplicantNameRequiredValidator, this.ApplicantNameRequiredLabel, this.DisplayName);
+            SetFieldVisibility(this.ApplicantEmailRow, this.ApplicantEmailRequiredValidator, this.ApplicantEmailRequiredLabel, this.DisplayEmail);
+            SetFieldVisibility(this.ApplicantPhoneRow, this.ApplicantPhoneRequiredValidator, this.ApplicantPhoneRequiredLabel, this.DisplayPhone);
+            SetFieldVisibility(this.ApplicationMessageRow, this.ApplicationMessageRequiredValidator, this.MessageRequiredLabel, this.DisplayMessage);
+            SetFieldVisibility(this.SalaryRow, this.SalaryRequiredFieldValidator, this.SalaryRequiredLabel, this.DisplaySalaryRequirement);
             this.SalaryMessageRow.Visible = this.DisplaySalaryRequirement == Visibility.Optional;
-            this.SalaryRequiredTextBox.Enabled = this.SalaryRequiredLabel.Visible = this.DisplaySalaryRequirement == Visibility.Required;
+            SetFieldVisibility(this.CoverLetterRow, this.CoverLetterFileRequiredValidator, this.CoverLetterRequiredLabel, this.DisplayCoverLetter);
 
-            var firstVisibleInputControl = this.ApplicationMessageTextBox.Visible
-                                               ? this.ApplicationMessageTextBox
-                                               : this.SalaryTextBox.Visible
-                                                     ? this.SalaryTextBox
-                                                     : this.LeadDropDownList.Visible
-                                                           ? this.LeadDropDownList
-                                                           : this.CoverLetterUpload.Visible 
-                                                                ? (Control)this.CoverLetterUpload 
-                                                                : this.ResumeUpload;
-            firstVisibleInputControl.Focus();
+            if (setInitialInfo)
+            {
+                this.ApplicantNameTextBox.Text = this.UserInfo.DisplayName;
+                this.ApplicantEmailTextBox.Text = this.UserInfo.Email;
+                this.ApplicantPhoneTextBox.Text = this.UserInfo.Profile.Telephone;
+            }
         }
 
         /// <summary>
@@ -516,15 +571,20 @@ namespace Engage.Dnn.Employment
             {
                 var fromAddress = this.DefaultNotificationEmailAddress;
                 var replyTo = replyToApplicant
-                                  ? Engage.Utility.HasValue(this.UserInfo.Email) ? this.UserInfo.Email : fromAddress
+                                  ? this.GetTextWithFallback(this.ApplicantEmailTextBox, this.UserInfo.Email) ?? fromAddress
                                   : this.DefaultNotificationEmailAddress;
 
-                var subjectResourceKey = isNewApplication ? Framework.ModuleBase.IsLoggedIn ? newSubjectResourceKey : newAnonymousSubjectResourceKey : updateSubjectResourceKey;
+                var subjectResourceKey = isNewApplication
+                                             ? Framework.ModuleBase.IsLoggedIn
+                                                   ? newSubjectResourceKey
+                                                   : newAnonymousSubjectResourceKey
+                                             : updateSubjectResourceKey;
                 var subject = string.Format(
                     CultureInfo.CurrentCulture,
                     this.Localize(subjectResourceKey),
-                    this.UserInfo.DisplayName,
-                    this.CurrentJob.Title);
+                    this.GetTextWithFallback(this.ApplicantNameTextBox, this.UserInfo.DisplayName, "DisplayNameBlank"),
+                    this.CurrentJob.Title,
+                    this.GetTextWithFallback(this.ApplicantEmailTextBox, this.UserInfo.Email, "EmailBlank"));
 
                 Mail.SendMail(
                         fromAddress, 
@@ -652,8 +712,11 @@ namespace Engage.Dnn.Employment
                                        coverLetterFile,
                                        coverLetterContentType,
                                        this.CoverLetterUpload.FileBytes,
-                                       this.SalaryTextBox.Text,
-                                       this.ApplicationMessageTextBox.Text,
+                                       GetTextIfVisible(this.SalaryTextBox),
+                                       GetTextIfVisible(this.ApplicationMessageTextBox),
+                                       GetTextIfVisible(this.ApplicantNameTextBox),
+                                       GetTextIfVisible(this.ApplicantEmailTextBox),
+                                       GetTextIfVisible(this.ApplicantPhoneTextBox),
                                        leadId)
                                    : JobApplication.UpdateApplication(
                                        this.ApplicationId.Value,
@@ -664,8 +727,11 @@ namespace Engage.Dnn.Employment
                                        coverLetterFile,
                                        coverLetterContentType,
                                        this.CoverLetterUpload.FileBytes,
-                                       this.SalaryTextBox.Text,
-                                       this.ApplicationMessageTextBox.Text,
+                                       GetTextIfVisible(this.SalaryTextBox),
+                                       GetTextIfVisible(this.ApplicationMessageTextBox), 
+                                       GetTextIfVisible(this.ApplicantNameTextBox), 
+                                       GetTextIfVisible(this.ApplicantEmailTextBox), 
+                                       GetTextIfVisible(this.ApplicantPhoneTextBox), 
                                        leadId);
 
                 Debug.Assert(this.CurrentJob != null, "this.CurrentJob must not be null when sending notification about a new application");
@@ -682,12 +748,13 @@ namespace Engage.Dnn.Employment
                     "ApplicationUpdateSubject",
                     "NotificationEmailBody.Format");
 
-                if (Framework.ModuleBase.IsLoggedIn)
+                var applicantEmail = this.GetTextWithFallback(this.ApplicantEmailTextBox, this.UserInfo.Email);
+                if (applicantEmail != null)
                 {
                     this.SendNotificationEmail(
                         resumeId,
                         isNewApplication,
-                        this.UserInfo.Email, 
+                        applicantEmail, 
                         false,
                         "ApplicationAutoRespondSubject",
                         "ApplicationUpdateAutoRespondSubject",
@@ -733,7 +800,7 @@ namespace Engage.Dnn.Employment
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void NextActionButtonApply_Click(object sender, EventArgs e)
         {
-            this.InitializeApplicantInfoSection();
+            this.InitializeApplicantInfoSection(true);
         }
 
         /// <summary>

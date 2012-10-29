@@ -140,6 +140,7 @@
   </data>
   <data name="ApplicationSubject.Text" xml:space="preserve">
     <value>A job application has been submitted for '{1}' by {0}</value>
+    <comment>{0} = Applicant name, {1} = Job title, {2} = Applicant email</comment>
   </data>
   <data name="Apply.Text" xml:space="preserve">
     <value>Apply for this Job</value>
@@ -182,9 +183,6 @@
   </data>
   <data name="lblApplicationCoverLetterHeader.Text" xml:space="preserve">
     <value>Upload Cover Letter</value>
-  </data>
-  <data name="lblApplicationEmailHeader.Text" xml:space="preserve">
-    <value>Your Email Address</value>
   </data>
   <data name="lblApplicationMessageHeader.Text" xml:space="preserve">
     <value>Message</value>
@@ -255,9 +253,6 @@
   <data name="Required.Text" xml:space="preserve">
     <value>*</value>
   </data>
-  <data name="rfvApplicationEmail.Text" xml:space="preserve">
-    <value>You must supply an email address</value>
-  </data>
   <data name="rfvCoverLetterFile.Text" xml:space="preserve">
     <value>You must supply a cover letter</value>
   </data>
@@ -295,6 +290,7 @@
   </data>
   <data name="ApplicationUpdateSubject.Text" xml:space="preserve">
     <value>A job application has been updated for '{1}' by {0}</value>
+    <comment>{0} = Applicant name, {1} = Job title, {2} = Applicant email</comment>
   </data>
   <data name="NotificationEmailBody.Format" xml:space="preserve">
     <value>&lt;table border="0"&gt;
@@ -308,7 +304,7 @@
 		&lt;td&gt;{6}{7}&lt;/td&gt;
 	&lt;/tr&gt;
 &lt;/table&gt;</value>
-    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text, {8} = Applicant name, {9} = Applicant username</comment>
+    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text, {8} = Applicant name, {9} = Applicant username, {10} = Applicant email, {11} = Applicant phone</comment>
   </data>
   <data name="EmailSalaryBlank.Text" xml:space="preserve">
     <value>[The applicant did not specify any salary requirement]</value>
@@ -339,7 +335,7 @@
 		&lt;td&gt;{6}{7}&lt;/td&gt;
 	&lt;/tr&gt;
 &lt;/table&gt;</value>
-    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text, {8} = Applicant name, {9} = Applicant username</comment>
+    <comment>{0} = Link to job details; {1} = Job details link text; {2} = Salary Requirements text; {3} = Salary requirement; {4} = resume link; {5} = resume text; {6} = Message label; {7} = Message text, {8} = Applicant name, {9} = Applicant username, {10} = Applicant email, {11} = Applicant phone</comment>
   </data>
   <data name="lblEmailFromAddressHeader.Text" xml:space="preserve">
     <value>Your Email Address</value>
@@ -361,11 +357,36 @@
   </data>
   <data name="AnonymousApplicationSubject.Text" xml:space="preserve">
     <value>A job application has been submitted for '{1}'</value>
+    <comment>{0} = Applicant name, {1} = Job title, {2} = Applicant email</comment>
   </data>
   <data name="DisplayNameBlank.Text" xml:space="preserve">
-    <value>[anonymous applicant]</value>
+    <value>[The applicant did not provide a name]</value>
   </data>
   <data name="UsernameBlank.Text" xml:space="preserve">
     <value>[anonymous applicant]</value>
+  </data>
+  <data name="lblApplicantEmailHeader.Text" xml:space="preserve">
+    <value>Email Address</value>
+  </data>
+  <data name="lblApplicantNameHeader.Text" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="lblApplicantPhoneHeader.Text" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="rfvApplicantEmail.Text" xml:space="preserve">
+    <value>Your must supply an email address</value>
+  </data>
+  <data name="rfvApplicantName.Text" xml:space="preserve">
+    <value>Your must supply a name</value>
+  </data>
+  <data name="rfvApplicantPhone.Text" xml:space="preserve">
+    <value>Your must supply a phone number</value>
+  </data>
+  <data name="EmailBlank.Text" xml:space="preserve">
+    <value>[The applicant did not provide an email address]</value>
+  </data>
+  <data name="PhoneBlank.Text" xml:space="preserve">
+    <value>[The applicant did not provide a phone number]</value>
   </data>
 </root>

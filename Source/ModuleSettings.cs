@@ -59,19 +59,28 @@ namespace Engage.Dnn.Employment
         
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
         public static readonly Setting<bool> JobDetailRequireRegistration = new Setting<bool>("RequireRegistration", SettingScope.TabModule, true);
-        
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
-        public static readonly Setting<Visibility> JobDetailDisplayLead = new Setting<Visibility>("DisplayLead", SettingScope.TabModule, Visibility.Hidden);
-        
+        public static readonly Setting<Visibility> JobDetailDisplayName = new Setting<Visibility>("DisplayName", SettingScope.TabModule, Visibility.Hidden);
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
-        public static readonly Setting<Visibility> JobDetailDisplaySalaryRequirement = new Setting<Visibility>("DisplaySalaryRequirement", SettingScope.TabModule, Visibility.Optional);
-        
+        public static readonly Setting<Visibility> JobDetailDisplayEmail = new Setting<Visibility>("DisplayEmail", SettingScope.TabModule, Visibility.Hidden);
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
-        public static readonly Setting<Visibility> JobDetailDisplayCoverLetter = new Setting<Visibility>("DisplayCoverLetter", SettingScope.TabModule, Visibility.Hidden);
-        
+        public static readonly Setting<Visibility> JobDetailDisplayPhone = new Setting<Visibility>("DisplayPhone", SettingScope.TabModule, Visibility.Hidden);
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
         public static readonly Setting<Visibility> JobDetailDisplayMessage = new Setting<Visibility>("DisplayMessage", SettingScope.TabModule, Visibility.Optional);
-        
+
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
+        public static readonly Setting<Visibility> JobDetailDisplaySalaryRequirement = new Setting<Visibility>("DisplaySalaryRequirement", SettingScope.TabModule, Visibility.Optional);
+
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
+        public static readonly Setting<Visibility> JobDetailDisplayCoverLetter = new Setting<Visibility>("DisplayCoverLetter", SettingScope.TabModule, Visibility.Hidden);
+
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
+        public static readonly Setting<Visibility> JobDetailDisplayLead = new Setting<Visibility>("DisplayLead", SettingScope.TabModule, Visibility.Hidden);
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
         public static readonly Setting<bool> JobDetailShowCloseDate = new Setting<bool>("ShowCloseDate", SettingScope.TabModule, false);
 

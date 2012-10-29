@@ -84,6 +84,33 @@
 <div><asp:Label ID="SuccessLabel" runat="server" CssClass="success-message NormalRed" EnableViewState="false" Visible="false"/></div>
 <div id="ApplicantInfoSection" runat="server" visible="false" class="job-application">
     <table>
+        <tr id="ApplicantNameRow" runat="server" class="ja-name">
+            <td class="SubHead em-label">
+                <asp:Label runat="server" resourcekey="lblApplicantNameHeader" EnableViewState="false" /><asp:Label ID="ApplicantNameRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
+            </td>
+            <td class="em-input">
+                <asp:TextBox ID="ApplicantNameTextBox" runat="server" MaxLength="255" EnableViewState="false"/>
+                <asp:RequiredFieldValidator ID="ApplicantNameRequiredValidator" runat="server" ControlToValidate="ApplicantNameTextBox" EnableViewState="false" Display="None" ValidationGroup="apply" resourcekey="rfvApplicantName" SetFocusOnError="true" />
+            </td>
+        </tr>
+        <tr id="ApplicantEmailRow" runat="server" class="ja-email">
+            <td class="SubHead em-label">
+                <asp:Label runat="server" resourcekey="lblApplicantEmailHeader" EnableViewState="false" /><asp:Label ID="ApplicantEmailRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
+            </td>
+            <td class="em-input">
+                <asp:TextBox ID="ApplicantEmailTextBox" runat="server" MaxLength="255" type="email" EnableViewState="false"/>
+                <asp:RequiredFieldValidator ID="ApplicantEmailRequiredValidator" runat="server" ControlToValidate="ApplicantEmailTextBox" EnableViewState="false" Display="None" ValidationGroup="apply" resourcekey="rfvApplicantEmail" SetFocusOnError="true" />
+            </td>
+        </tr>
+        <tr id="ApplicantPhoneRow" runat="server" class="ja-phone">
+            <td class="SubHead em-label">
+                <asp:Label runat="server" resourcekey="lblApplicantPhoneHeader" EnableViewState="false" /><asp:Label ID="ApplicantPhoneRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
+            </td>
+            <td class="em-input">
+                <asp:TextBox ID="ApplicantPhoneTextBox" runat="server" MaxLength="255" Type="tel" EnableViewState="false"/>
+                <asp:RequiredFieldValidator ID="ApplicantPhoneRequiredValidator" runat="server" ControlToValidate="ApplicantPhoneTextBox" EnableViewState="false" Display="None" ValidationGroup="apply" resourcekey="rfvApplicantPhone" SetFocusOnError="true" />
+            </td>
+        </tr>
         <tr id="ApplicationMessageRow" runat="server" class="ja-message">
             <td class="SubHead em-label">
                 <asp:Label runat="server" resourcekey="lblApplicationMessageHeader" EnableViewState="false" /><asp:Label ID="MessageRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
@@ -98,8 +125,8 @@
                 <asp:Label runat="server" resourcekey="lblApplicationSalaryHeader" EnableViewState="false" /><asp:Label ID="SalaryRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
             </td>
             <td class="em-input">
-                <asp:TextBox ID="SalaryTextBox" runat="server" MaxLength="255" Columns="35" EnableViewState="false"/>
-                <asp:RequiredFieldValidator ID="SalaryRequiredTextBox" runat="server" ControlToValidate="SalaryTextBox" EnableViewState="false" Display="None" ValidationGroup="apply" SetFocusOnError="true" resourcekey="rfvSalaryRequirements" />
+                <asp:TextBox ID="SalaryTextBox" runat="server" MaxLength="255" EnableViewState="false"/>
+                <asp:RequiredFieldValidator ID="SalaryRequiredFieldValidator" runat="server" ControlToValidate="SalaryTextBox" EnableViewState="false" Display="None" ValidationGroup="apply" SetFocusOnError="true" resourcekey="rfvSalaryRequirements" />
             </td>
         </tr>
         <tr id="SalaryMessageRow" runat="server" class="ja-salary-message"><td colspan="2">

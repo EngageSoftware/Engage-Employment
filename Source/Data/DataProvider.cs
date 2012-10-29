@@ -128,7 +128,7 @@ namespace Engage.Dnn.Employment.Data
 
         public abstract IDataReader GetApplication(int applicationId);
 
-        public abstract int InsertApplication(int jobId, int? userId, string salaryRequirement, string message);
+        public abstract int InsertApplication(int jobId, int? userId, string salaryRequirement, string message, string name, string email, string phone);
 
         /// <summary>
         /// Updates the <see cref="ApplicationStatus"/> of the given <see cref="JobApplication"/>.
@@ -138,7 +138,7 @@ namespace Engage.Dnn.Employment.Data
         /// <param name="revisingUserId">The ID of the user updating this application.</param>
         public abstract void UpdateApplication(int applicationId, int? statusId, int revisingUserId);
 
-        public abstract void UpdateApplication(int jobId, string salaryRequirement, string message);
+        public abstract void UpdateApplication(int jobId, string salaryRequirement, string message, string name, string email, string phone);
 
         public abstract DataTable GetApplications(int? jobGroupId, int portalId);
 

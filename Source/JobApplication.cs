@@ -74,6 +74,12 @@ namespace Engage.Dnn.Employment
 
         public int JobId { get; private set; }
 
+        public string ApplicantName { get; private set; }
+
+        public string ApplicantEmail { get; private set; }
+
+        public string ApplicantPhone { get; private set; }
+
         public string Message { get; private set; }
 
         public string SalaryRequirement { get; private set; }
@@ -87,21 +93,10 @@ namespace Engage.Dnn.Employment
         ////     return DataProvider.Instance().HasJobBeenAppliedFor(id);
         //// }
 
-        public static int Apply(
-            int jobId, 
-            int? userId, 
-            string resumeFileName, 
-            string resumeContentType, 
-            byte[] resumeData, 
-            string coverLetterFileName, 
-            string coverLetterContentType, 
-            byte[] coverLetterData, 
-            string salaryRequirement, 
-            string message, 
-            int? leadId)
+        public static int Apply(int jobId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, string name, string email, string phone, int? leadId)
         {
             // we need to insert the applicaiton before the documents in order to satisfy the foriegn key.  BD
-            int applicationId = DataProvider.Instance().InsertApplication(jobId, userId, salaryRequirement, message);
+            int applicationId = DataProvider.Instance().InsertApplication(jobId, userId, salaryRequirement, message, name, email, phone);
 
             // don't check for an empty resumé here, we'll check inside InsertResume, since resumés can carry over from previous applications. BD
             int resumeId = InsertResume(applicationId, userId, resumeFileName, resumeContentType, resumeData);
@@ -192,20 +187,9 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        public static int UpdateApplication(
-            int applicationId, 
-            int? userId, 
-            string resumeFileName, 
-            string resumeContentType, 
-            byte[] resumeData, 
-            string coverLetterFileName, 
-            string coverLetterContentType, 
-            byte[] coverLetterData, 
-            string salaryRequirement, 
-            string message, 
-            int? leadId)
+        public static int UpdateApplication(int applicationId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, string name, string email, string phone, int? leadId)
         {
-            DataProvider.Instance().UpdateApplication(applicationId, salaryRequirement, message);
+            DataProvider.Instance().UpdateApplication(applicationId, salaryRequirement, message, name, email, phone);
             int? resumeId = null;
             if (Engage.Utility.HasValue(resumeFileName) && resumeData != null && resumeData.Length > 0)
             {
@@ -273,7 +257,10 @@ namespace Engage.Dnn.Employment
                     JobId = (int)reader["JobId"], 
                     UserId = reader["UserId"] as int?, 
                     AppliedForDate = (DateTime)reader["AppliedDate"], 
-                    SalaryRequirement = reader["SalaryRequirement"] as string, 
+                    SalaryRequirement = reader["SalaryRequirement"] as string,
+                    ApplicantName = reader["ApplicantName"] as string,
+                    ApplicantEmail = reader["ApplicantEmail"] as string,
+                    ApplicantPhone = reader["ApplicantPhone"] as string, 
                     Message = reader["Message"] as string, 
                     StatusId = reader["StatusId"] as int?
                 };
@@ -290,6 +277,9 @@ namespace Engage.Dnn.Employment
                     UserId = applicationRow["UserId"] as int?,
                     AppliedForDate = (DateTime)applicationRow["AppliedDate"],
                     SalaryRequirement = applicationRow["SalaryRequirement"] as string,
+                    ApplicantName = applicationRow["ApplicantName"] as string,
+                    ApplicantEmail = applicationRow["ApplicantEmail"] as string,
+                    ApplicantPhone = applicationRow["ApplicantPhone"] as string,
                     Message = applicationRow["Message"] as string,
                     StatusId = applicationRow["StatusId"] as int?
                 };
