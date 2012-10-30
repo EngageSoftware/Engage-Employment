@@ -152,7 +152,7 @@ namespace Engage.Dnn.Employment
         private void WriteDocumentContent(IDataRecord documentRecord)
         {
             this.Response.ContentType = (string)documentRecord["ContentType"];
-            this.Response.AddHeader("content-disposition", "filename=" + (string)documentRecord["filename"] + ";");
+            this.Response.AddHeader("content-disposition", "filename=\"" + (string)documentRecord["filename"] + "\";");
             this.Response.BinaryWrite((byte[])documentRecord["ResumeData"]);
             this.Response.Flush();
         }
