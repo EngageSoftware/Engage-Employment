@@ -157,7 +157,7 @@
     <value>Edit</value>
   </data>
   <data name="lblDisplayCoverLetter.Help" xml:space="preserve">
-    <value>Choose whether you would like to display or require a field to allow the applicant to upload a cover letter (seperate from a resumé).</value>
+    <value>Choose whether you would like to display or require a field to allow the applicant to upload a cover letter.</value>
   </data>
   <data name="lblDisplayCoverLetter.Text" xml:space="preserve">
     <value>Display Cover Letter Field</value>
@@ -257,5 +257,11 @@
   </data>
   <data name="lblDisplayPhone.Text" xml:space="preserve">
     <value>Display Phone Field</value>
+  </data>
+  <data name="lblDisplayResume.Help" xml:space="preserve">
+    <value>Choose whether you would like to display or require a field to allow the applicant to upload a resumé.</value>
+  </data>
+  <data name="lblDisplayResume.Text" xml:space="preserve">
+    <value>Display Resumé Field</value>
   </data>
 </root>

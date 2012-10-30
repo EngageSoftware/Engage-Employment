@@ -153,12 +153,12 @@
                 <asp:RegularExpressionValidator ID="CoverLetterFileExtensionValidator" runat="server" ControlToValidate="CoverLetterUpload" EnableViewState="false" ValidationGroup="apply" SetFocusOnError="true" Display="None" />
             </td>
         </tr>
-        <tr class="ja-resume">
+        <tr  id="ResumeRow" runat="server" class="ja-resume">
             <td class="SubHead em-label">
                 <asp:Label runat="server" resourcekey="lblApplicationResumeHeader" EnableViewState="false" /><asp:Label ID="ResumeRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
             </td>
             <td class="em-input">
-                <asp:Panel ID="ResumeLinkPanel" runat="server" Visible="false"> <%-- This Panel needs to be the direct parent of this HyperLink for code in the codebehind --%>
+                <asp:Panel ID="ResumeLinkPanel" runat="server" Visible="false">
                     <asp:HyperLink ID="ResumeLink" runat="server" Target="_blank" /><br />
                 </asp:Panel>
                 <asp:FileUpload ID="ResumeUpload" runat="server" EnableViewState="false" />

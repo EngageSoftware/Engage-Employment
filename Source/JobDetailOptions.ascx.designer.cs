@@ -112,6 +112,15 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.RadioButtonList DisplayCoverLetterRadioButtonList;
         
         /// <summary>
+        /// DisplayResumeRadioButtonList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList DisplayResumeRadioButtonList;
+        
+        /// <summary>
         /// DisplayLeadRadioButtonList control.
         /// </summary>
         /// <remarks>

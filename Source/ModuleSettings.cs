@@ -79,6 +79,9 @@ namespace Engage.Dnn.Employment
         public static readonly Setting<Visibility> JobDetailDisplayCoverLetter = new Setting<Visibility>("DisplayCoverLetter", SettingScope.TabModule, Visibility.Hidden);
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
+        public static readonly Setting<Visibility> JobDetailDisplayResume = new Setting<Visibility>("DisplayResume", SettingScope.TabModule, Visibility.Required);
+
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
         public static readonly Setting<Visibility> JobDetailDisplayLead = new Setting<Visibility>("DisplayLead", SettingScope.TabModule, Visibility.Hidden);
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]

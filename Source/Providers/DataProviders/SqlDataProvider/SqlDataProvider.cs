@@ -562,10 +562,8 @@ namespace Engage.Dnn.Employment.Data
             return this.ExecuteReader("GetDocument", Utility.CreateIntegerParam("@documentId", documentId));
         }
 
-        public override int GetDocumentId(int documentTypeId, int userId)
+        public override int? GetDocumentId(int documentTypeId, int userId)
         {
-            int id = Null.NullInteger;
-
             var sql = new StringBuilder(255);
             sql.AppendFormat(CultureInfo.InvariantCulture, "select max(ResumeId) from {0}Document ", this.NamePrefix);
             sql.Append(" where UserId = @userId ");
@@ -580,10 +578,10 @@ namespace Engage.Dnn.Employment.Data
 
             if (resumeId is int)
             {
-                id = (int)resumeId;
+                return (int)resumeId;
             }
 
-            return id;
+            return null;
         }
 
         /// <summary>
@@ -1049,7 +1047,7 @@ namespace Engage.Dnn.Employment.Data
                 "GetPositions", Utility.CreateIntegerParam("@jobGroupId", jobGroupId), Utility.CreateIntegerParam("@portalId", portalId));
         }
 
-        public override int GetResumeId(int userId)
+        public override int? GetResumeId(int userId)
         {
             return this.GetDocumentId(DocumentType.Resume.GetId(), userId);
         }

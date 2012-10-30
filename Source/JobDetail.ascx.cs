@@ -247,6 +247,14 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
+        /// Gets the setting for whether to display the resume field.
+        /// </summary>
+        private Visibility DisplayResume
+        {
+            get { return ModuleSettings.JobDetailDisplayResume.GetValueAsEnumFor<Visibility>(this).Value; }
+        }
+
+        /// <summary>
         /// Gets the setting for whether to display the lead (How did you hear?) field.
         /// </summary>
         private Visibility DisplayLead
@@ -490,7 +498,7 @@ namespace Engage.Dnn.Employment
         /// <param name="resumeId">The resume id.</param>
         /// <param name="emailBodyResourceKey">The resource key of the email body.</param>
         /// <returns>A formatted email message body</returns>
-        private string GetMessageBody(int resumeId, string emailBodyResourceKey)
+        private string GetMessageBody(int? resumeId, string emailBodyResourceKey)
         {
             var jobUrl = Globals.NavigateURL(this.TabId, string.Empty, "jobId=" + this.JobId.Value.ToString(CultureInfo.InvariantCulture));
             var salaryText = !string.IsNullOrEmpty(this.SalaryTextBox.Text) 
@@ -512,7 +520,7 @@ namespace Engage.Dnn.Employment
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailSalaryLabel")),
                 HttpUtility.HtmlEncode(salaryText),
-                HttpUtility.HtmlEncode(Engage.Utility.MakeUrlAbsolute(this.Page, Utility.GetDocumentUrl(resumeId))),
+                resumeId.HasValue ? HttpUtility.HtmlEncode(Engage.Utility.MakeUrlAbsolute(this.Page, Utility.GetDocumentUrl(resumeId.Value))) : null,
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailResumeLink")),
                 HttpUtility.HtmlEncode(this.Localize("ApplicationEmailMessageLabel")),
                 HttpUtility.HtmlEncode(messageText),
@@ -575,10 +583,6 @@ namespace Engage.Dnn.Employment
 
             this.FillLeadDropDown();
 
-            var mostRecentResumeId = JobApplication.GetResumeId(this.UserId);
-            this.ResumeFileRequiredValidator.Enabled = this.ResumeRequiredLabel.Visible = this.UserId == -1 || mostRecentResumeId == -1;
-            this.ResumeMessageRow.Visible = this.UserId != -1 && mostRecentResumeId != -1;
-
             string fileExtensionsList = Host.FileExtensions ?? string.Empty;
             string fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
             this.ResumeFileExtensionValidator.ValidationExpression = this.CoverLetterFileExtensionValidator.ValidationExpression = fileExtensionValidationExpression;
@@ -595,6 +599,11 @@ namespace Engage.Dnn.Employment
             var alreadyHasCoverLetter = this.JobApplication != null && this.JobApplication.GetDocuments().Any(d => d.DocumentTypeId == DocumentType.CoverLetter.GetId());
             var coverLetterVisibility = this.DisplayCoverLetter == Visibility.Required && alreadyHasCoverLetter ? Visibility.Optional : this.DisplayCoverLetter;
             SetFieldVisibility(this.CoverLetterRow, this.CoverLetterFileRequiredValidator, this.CoverLetterRequiredLabel, coverLetterVisibility);
+
+            var alreadyHasResume = this.UserId != -1 && JobApplication.GetResumeId(this.UserId) != -1;
+            var resumeVisibility = this.DisplayResume == Visibility.Required && alreadyHasResume ? Visibility.Optional : this.DisplayResume;
+            SetFieldVisibility(this.ResumeRow, this.ResumeFileRequiredValidator, this.ResumeRequiredLabel, resumeVisibility);
+            this.ResumeMessageRow.Visible = alreadyHasResume;
 
             if (setInitialInfo)
             {
@@ -614,9 +623,9 @@ namespace Engage.Dnn.Employment
         /// <param name="newSubjectResourceKey">The resource key to use to retrieve the localized email subject for new applications.</param>
         /// <param name="updateSubjectResourceKey">The resource key to use to retrieve the localized email subject for updated applications.</param>
         /// <param name="messageResourceKey">The resource key to use to retrieve the localized email message (with format placeholders).</param>
-        private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
+        private void SendNotificationEmail(int? resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
-            this.SendNotificationEmail(new Document(resumeId, DocumentType.Resume, null, null, null), null, isNewApplication, toAddress, replyToApplicant, newSubjectResourceKey, newSubjectResourceKey, updateSubjectResourceKey, messageResourceKey);
+            this.SendNotificationEmail(resumeId != null ? new Document(resumeId.Value, DocumentType.Resume, null, null, null) : null, null, isNewApplication, toAddress, replyToApplicant, newSubjectResourceKey, newSubjectResourceKey, updateSubjectResourceKey, messageResourceKey);
         }
 
         /// <summary>Sends an notification email about a new application.</summary>
@@ -655,7 +664,7 @@ namespace Engage.Dnn.Employment
                 var attachments = new List<Attachment>(2);
                 try
                 {
-                    if (resume.FileData != null && resume.FileData.Length > 0)
+                    if (resume != null && resume.FileData != null && resume.FileData.Length > 0)
                     {
                         resumeStream = new MemoryStream(resume.FileData);
                         attachments.Add(new Attachment(resumeStream, resume.FileName, resume.ContentType));
@@ -677,7 +686,7 @@ namespace Engage.Dnn.Employment
                         subject,
                         MailFormat.Html, 
                         Encoding.UTF8,
-                        this.GetMessageBody(resume.DocumentId, messageResourceKey),
+                        this.GetMessageBody(resume != null ? resume.DocumentId : (int?)null, messageResourceKey),
                         attachments,
                         Host.SMTPServer,
                         Host.SMTPAuthentication, 

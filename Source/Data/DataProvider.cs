@@ -161,11 +161,11 @@ namespace Engage.Dnn.Employment.Data
         /// <returns>Information about the document with the given ID</returns>
         public abstract IDataReader GetDocument(int documentId);
 
-        public abstract int GetResumeId(int userId);
+        public abstract int? GetResumeId(int userId);
 
         public abstract int? GetDocumentIdForApplication(int applicationId, int documentTypeId);
 
-        public abstract int GetDocumentId(int documentTypeId, int userId);
+        public abstract int? GetDocumentId(int documentTypeId, int userId);
 
         public abstract int InsertResume(int applicationId, int? userId, string fileName, string resumeType, byte[] resume);
 

@@ -119,6 +119,7 @@ namespace Engage.Dnn.Employment
                     this.SetupVisibilityList(this.DisplayMessageRadioButtonList, ModuleSettings.JobDetailDisplayMessage);
                     this.SetupVisibilityList(this.DisplaySalaryRadioButtonList, ModuleSettings.JobDetailDisplaySalaryRequirement);
                     this.SetupVisibilityList(this.DisplayCoverLetterRadioButtonList, ModuleSettings.JobDetailDisplayCoverLetter);
+                    this.SetupVisibilityList(this.DisplayResumeRadioButtonList, ModuleSettings.JobDetailDisplayResume);
                     this.SetupVisibilityList(this.DisplayLeadRadioButtonList, ModuleSettings.JobDetailDisplayLead);
                     this.rowLeadItems.Visible = this.DisplayLeadRadioButtonList.SelectedValue != Visibility.Hidden.ToString();
 
@@ -167,6 +168,7 @@ namespace Engage.Dnn.Employment
                 ModuleSettings.JobDetailDisplayMessage.Set(this, this.DisplayMessageRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailDisplaySalaryRequirement.Set(this, this.DisplaySalaryRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailDisplayCoverLetter.Set(this, this.DisplayCoverLetterRadioButtonList.SelectedValue);
+                ModuleSettings.JobDetailDisplayResume.Set(this, this.DisplayResumeRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailDisplayLead.Set(this, this.DisplayLeadRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailEnableDnnSearch.Set(this, this.EnableDnnSearchCheckBox.Checked);
                 ModuleSettings.JobDetailShowCloseDate.Set(this, this.ShowCloseDateCheckBox.Checked);

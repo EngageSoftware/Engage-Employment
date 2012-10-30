@@ -78,6 +78,14 @@
 	    </tr>
 	    <tr>
 	        <td class="SubHead labelColumn nowrap">
+	            <dnn:label ResourceKey="lblDisplayResume" runat="server" />
+	        </td>
+	        <td class="contentColumn">
+	            <asp:RadioButtonList ID="DisplayResumeRadioButtonList" runat="server" RepeatDirection="Horizontal" />
+	        </td>
+	    </tr>
+	    <tr>
+	        <td class="SubHead labelColumn nowrap">
 	            <dnn:label ResourceKey="lblDisplayLead" runat="server" />
 	        </td>
 	        <td class="contentColumn">

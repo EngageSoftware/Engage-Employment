@@ -346,6 +346,15 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.RegularExpressionValidator CoverLetterFileExtensionValidator;
         
         /// <summary>
+        /// ResumeRow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow ResumeRow;
+        
+        /// <summary>
         /// ResumeRequiredLabel control.
         /// </summary>
         /// <remarks>
