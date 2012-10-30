@@ -328,9 +328,11 @@ namespace Engage.Dnn.Employment.Data
             sql.Append(" where ");
             sql.Append(" ApplicationId = @applicationId");
 
-            return
-                SqlHelper.ExecuteDataset(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@applicationId", applicationId)).Tables[0];
+            return SqlHelper.ExecuteDataset(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@applicationId", applicationId)).Tables[0];
         }
 
         public override DataTable GetApplicationProperties(int applicationId)
@@ -339,15 +341,14 @@ namespace Engage.Dnn.Employment.Data
             sql.Append("select ujp.[ApplicationId],ujp.[ApplicationPropertyId],ujp.[Visibility],ap.[PropertyName], ");
             sql.Append(" CASE WHEN ujp.[PropertyValue] IS NULL THEN ujp.[PropertyText] ELSE ujp.[PropertyValue] END AS PropertyValue ");
             sql.AppendFormat(CultureInfo.InvariantCulture, " from {0}UserJobProperty ujp ", this.NamePrefix);
-            sql.AppendFormat(
-                CultureInfo.InvariantCulture, 
-                " join {0}ApplicationProperty ap ON (ujp.ApplicationPropertyId = ap.ApplicationPropertyId) ", 
-                this.NamePrefix);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}ApplicationProperty ap ON (ujp.ApplicationPropertyId = ap.ApplicationPropertyId) ", this.NamePrefix);
             sql.Append(" where ApplicationId = @ApplicationId ");
 
-            return
-                SqlHelper.ExecuteDataset(
-                    this.ConnectionString, CommandType.Text, sql.ToString(), Utility.CreateIntegerParam("@ApplicationId", applicationId)).Tables[0];
+            return SqlHelper.ExecuteDataset(
+                this.ConnectionString, 
+                CommandType.Text, 
+                sql.ToString(), 
+                Utility.CreateIntegerParam("@ApplicationId", applicationId)).Tables[0];
         }
 
         public override IDataReader GetApplicationProperty(string name, int? portalId)
@@ -1053,29 +1054,27 @@ namespace Engage.Dnn.Employment.Data
             return this.GetDocumentId(DocumentType.Resume.GetId(), userId);
         }
 
-        public override int GetResumeIdForApplication(int applicationId)
+        public override int? GetDocumentIdForApplication(int applicationId, int documentTypeId)
         {
-            int id = Null.NullInteger;
-
             var sql = new StringBuilder(255);
-            sql.AppendFormat(CultureInfo.InvariantCulture, "select d.ResumeId from {0}Document d ", this.NamePrefix);
-            sql.AppendFormat(CultureInfo.InvariantCulture, " join {0}ApplicationDocument ad ON (d.ResumeId = ad.ResumeId) ", this.NamePrefix);
-            sql.Append(" where ad.ApplicationId = @applicationId ");
-            sql.Append(" and d.DocumentTypeId = @documentTypeId ");
+            sql.AppendFormat(CultureInfo.InvariantCulture, "SELECT d.ResumeId FROM {0}Document d ", this.NamePrefix);
+            sql.AppendFormat(CultureInfo.InvariantCulture, " JOIN {0}ApplicationDocument ad ON (d.ResumeId = ad.ResumeId) ", this.NamePrefix);
+            sql.Append(" WHERE ad.ApplicationId = @applicationId ");
+            sql.Append(" AND d.DocumentTypeId = @documentTypeId ");
 
-            object resumeId = SqlHelper.ExecuteScalar(
+            object documentId = SqlHelper.ExecuteScalar(
                 this.ConnectionString, 
                 CommandType.Text, 
                 sql.ToString(), 
                 Utility.CreateIntegerParam("@applicationId", applicationId), 
-                Utility.CreateIntegerParam("@documentTypeId", DocumentType.Resume.GetId()));
+                Utility.CreateIntegerParam("@documentTypeId", documentTypeId));
 
-            if (resumeId is int)
+            if (documentId is int)
             {
-                id = (int)resumeId;
+                return (int)documentId;
             }
 
-            return id;
+            return null;
         }
 
         public override IDataReader GetState(int stateId)

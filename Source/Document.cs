@@ -21,11 +21,28 @@ namespace Engage.Dnn.Employment
 
     internal class Document
     {
+        public Document(int documentId, DocumentType documentType, string fileName, string contentType, byte[] fileData)
+        {
+            this.DocumentId = documentId;
+            this.DocumentTypeId = documentType.GetId();
+            this.FileName = fileName;
+            this.ContentType = contentType;
+            this.FileData = fileData;
+        }
+
+        private Document()
+        {
+        }
+
         public int DocumentId { get; private set; }
 
         public int DocumentTypeId { get; private set; }
 
         public string FileName { get; private set; }
+
+        public string ContentType { get; private set; }
+
+        public byte[] FileData { get; private set; }
 
         /// <summary>
         /// Gets a list of IDs of the job groups that can view the document with the given ID.
@@ -57,7 +74,7 @@ namespace Engage.Dnn.Employment
 
         public static List<Document> FillDocuments(IEnumerable<DataRow> documentRows)
         {
-            return documentRows.Select(row => FillDocument(row)).ToList();
+            return documentRows.Select(FillDocument).ToList();
         }
 
         private static Document FillDocument(DataRow dr)

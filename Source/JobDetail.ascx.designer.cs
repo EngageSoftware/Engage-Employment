@@ -301,6 +301,15 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.Label CoverLetterRequiredLabel;
         
         /// <summary>
+        /// CoverLetterLinkPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel CoverLetterLinkPanel;
+        
+        /// <summary>
         /// CoverLetterLink control.
         /// </summary>
         /// <remarks>
@@ -344,6 +353,15 @@ namespace Engage.Dnn.Employment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ResumeRequiredLabel;
+        
+        /// <summary>
+        /// ResumeLinkPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel ResumeLinkPanel;
         
         /// <summary>
         /// ResumeLink control.

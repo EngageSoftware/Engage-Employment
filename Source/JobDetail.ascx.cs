@@ -16,6 +16,7 @@ namespace Engage.Dnn.Employment
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Net.Mail;
     using System.Text;
     using System.Web;
@@ -33,6 +34,8 @@ namespace Engage.Dnn.Employment
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Mail;
 
+    using Engage.Annotations;
+
     using MailPriority = DotNetNuke.Services.Mail.MailPriority;
 
     /// <summary>
@@ -44,6 +47,11 @@ namespace Engage.Dnn.Employment
         /// Backing field for <see cref="CurrentJob"/>
         /// </summary>
         private Job currentJob;
+
+        /// <summary>
+        /// Backing field for <see cref="JobApplication"/>
+        /// </summary>
+        private JobApplication jobApplication;
 
         /// <summary>
         /// Backing field for <see cref="JobId"/>
@@ -80,6 +88,25 @@ namespace Engage.Dnn.Employment
                 }
 
                 return actions;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether to display the job's close date.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the close date is shown; otherwise, <c>false</c>.
+        /// </value>
+        protected bool ShowCloseDate
+        {
+            get
+            {
+                if (!this.showCloseDate.HasValue)
+                {
+                    this.showCloseDate = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
+                }
+
+                return this.showCloseDate.Value;
             }
         }
 
@@ -128,22 +155,18 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether to display the job's close date.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the close date is shown; otherwise, <c>false</c>.
-        /// </value>
-        protected bool ShowCloseDate
+        /// <summary>Gets the job application being edited.</summary>
+        /// <value>The job application, or <c>null</c>.</value>
+        private JobApplication JobApplication
         {
             get
             {
-                if (!this.showCloseDate.HasValue)
+                if (this.jobApplication == null && this.ApplicationId != null)
                 {
-                    this.showCloseDate = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
+                    this.jobApplication = JobApplication.Load(this.ApplicationId.Value);
                 }
 
-                return this.showCloseDate.Value;
+                return this.jobApplication;
             }
         }
 
@@ -333,31 +356,77 @@ namespace Engage.Dnn.Employment
             return textBox.Visible ? textBox.Text : null;
         }
 
+        /// <summary>Gets the document.</summary>
+        /// <param name="documentId">The ID of the document, or <c>null</c>.</param>
+        /// <param name="documentType">Type of the document.</param>
+        /// <param name="documentFileName">File name of the document.</param>
+        /// <param name="documentContentType">Content type of the document.</param>
+        /// <param name="documentBytes">The document bytes.</param>
+        /// <returns>A <see cref="Document" /> instance, or <c>null</c>.</returns>
+        [CanBeNull]
+        private static Document GetDocument(int? documentId, DocumentType documentType, string documentFileName, string documentContentType, byte[] documentBytes)
+        {
+            if (documentId == null)
+            {
+                return null;
+            }
+
+            if (documentBytes.Length != 0)
+            {
+                return new Document(documentId.Value, documentType, documentFileName, documentContentType, documentBytes);
+            }
+
+            using (var documentReader = JobApplication.GetDocument(documentId.Value))
+            {
+                if (documentReader.Read())
+                {
+                    return new Document(
+                        documentId.Value,
+                        documentType,
+                        (string)documentReader["filename"],
+                        (string)documentReader["ContentType"],
+                        (byte[])documentReader["ResumeData"]);
+                }
+                
+                return new Document(documentId.Value, documentType, null, null, null);
+            }
+        }
+
+        /// <summary>Shows the document link.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="documentLinkWrap">The control around the <paramref name="documentLink"/>.</param>
+        /// <param name="documentLink">The document link.</param>
+        private static void ShowDocumentLink(Document document, Control documentLinkWrap, HyperLink documentLink)
+        {
+            documentLinkWrap.Visible = true;
+            documentLink.Text = document.FileName;
+            documentLink.NavigateUrl = Utility.GetDocumentUrl(document.DocumentId);
+        }
+
         /// <summary>
         /// Fills in the information about the application, if one is specified and it belongs to this user.
         /// </summary>
         /// <returns>Whether the specified application was filled in</returns>
         private bool FillApplication()
         {
-            var jobApplication = JobApplication.Load(this.ApplicationId.Value);
-            if (this.UserId == jobApplication.UserId && !Null.IsNull(this.UserId))
+            if (!Null.IsNull(this.UserId) && this.UserId == this.JobApplication.UserId)
             {
-                List<Document> documents = jobApplication.GetDocuments();
-                Dictionary<string, string> properties = jobApplication.GetApplicationProperties();
+                var documents = this.JobApplication.GetDocuments();
+                var properties = this.JobApplication.GetApplicationProperties();
                 this.InitializeApplicantInfoSection();
 
-                this.ApplicantNameTextBox.Text = jobApplication.ApplicantName;
-                this.ApplicantEmailTextBox.Text = jobApplication.ApplicantEmail;
-                this.ApplicantPhoneTextBox.Text = jobApplication.ApplicantPhone;
-                this.ApplicationMessageTextBox.Text = jobApplication.Message;
-                this.SalaryTextBox.Text = jobApplication.SalaryRequirement;
+                this.ApplicantNameTextBox.Text = this.JobApplication.ApplicantName;
+                this.ApplicantEmailTextBox.Text = this.JobApplication.ApplicantEmail;
+                this.ApplicantPhoneTextBox.Text = this.JobApplication.ApplicantPhone;
+                this.ApplicationMessageTextBox.Text = this.JobApplication.Message;
+                this.SalaryTextBox.Text = this.JobApplication.SalaryRequirement;
 
                 if (this.LeadDropDownList.Items.Count < 1)
                 {
                     this.FillLeadDropDown();
                 }
 
-                foreach (KeyValuePair<string, string> pair in properties)
+                foreach (var pair in properties)
                 {
                     if (pair.Key.Equals(ApplicationPropertyDefinition.Lead.GetName(), StringComparison.Ordinal))
                     {
@@ -366,23 +435,15 @@ namespace Engage.Dnn.Employment
                     }
                 }
 
-                foreach (Document document in documents)
+                foreach (var document in documents)
                 {
-                    HyperLink lnkDocument = null;
                     if (document.DocumentTypeId == DocumentType.Resume.GetId())
                     {
-                        lnkDocument = this.ResumeLink;
+                        ShowDocumentLink(document, this.ResumeLinkPanel, this.ResumeLink);
                     }
                     else if (document.DocumentTypeId == DocumentType.CoverLetter.GetId())
                     {
-                        lnkDocument = this.CoverLetterLink;
-                    }
-
-                    if (lnkDocument != null)
-                    {
-                        lnkDocument.Parent.Visible = true; // should be the panel around the link
-                        lnkDocument.Text = document.FileName;
-                        lnkDocument.NavigateUrl = Utility.GetDocumentUrl(document.DocumentId);
+                        ShowDocumentLink(document, this.CoverLetterLinkPanel, this.CoverLetterLink);
                     }
                 }
 
@@ -514,8 +575,9 @@ namespace Engage.Dnn.Employment
 
             this.FillLeadDropDown();
 
-            this.ResumeFileRequiredValidator.Enabled = this.ResumeRequiredLabel.Visible = this.UserId == -1 || JobApplication.GetResumeId(this.UserId) == -1;
-            this.ResumeMessageRow.Visible = this.UserId != -1 && JobApplication.GetResumeId(this.UserId) != -1;
+            var mostRecentResumeId = JobApplication.GetResumeId(this.UserId);
+            this.ResumeFileRequiredValidator.Enabled = this.ResumeRequiredLabel.Visible = this.UserId == -1 || mostRecentResumeId == -1;
+            this.ResumeMessageRow.Visible = this.UserId != -1 && mostRecentResumeId != -1;
 
             string fileExtensionsList = Host.FileExtensions ?? string.Empty;
             string fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
@@ -529,7 +591,10 @@ namespace Engage.Dnn.Employment
             SetFieldVisibility(this.ApplicationMessageRow, this.ApplicationMessageRequiredValidator, this.MessageRequiredLabel, this.DisplayMessage);
             SetFieldVisibility(this.SalaryRow, this.SalaryRequiredFieldValidator, this.SalaryRequiredLabel, this.DisplaySalaryRequirement);
             this.SalaryMessageRow.Visible = this.DisplaySalaryRequirement == Visibility.Optional;
-            SetFieldVisibility(this.CoverLetterRow, this.CoverLetterFileRequiredValidator, this.CoverLetterRequiredLabel, this.DisplayCoverLetter);
+            
+            var alreadyHasCoverLetter = this.JobApplication != null && this.JobApplication.GetDocuments().Any(d => d.DocumentTypeId == DocumentType.CoverLetter.GetId());
+            var coverLetterVisibility = this.DisplayCoverLetter == Visibility.Required && alreadyHasCoverLetter ? Visibility.Optional : this.DisplayCoverLetter;
+            SetFieldVisibility(this.CoverLetterRow, this.CoverLetterFileRequiredValidator, this.CoverLetterRequiredLabel, coverLetterVisibility);
 
             if (setInitialInfo)
             {
@@ -551,13 +616,12 @@ namespace Engage.Dnn.Employment
         /// <param name="messageResourceKey">The resource key to use to retrieve the localized email message (with format placeholders).</param>
         private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
-            this.SendNotificationEmail(resumeId, isNewApplication, toAddress, replyToApplicant, newSubjectResourceKey, newSubjectResourceKey, updateSubjectResourceKey, messageResourceKey);
+            this.SendNotificationEmail(new Document(resumeId, DocumentType.Resume, null, null, null), null, isNewApplication, toAddress, replyToApplicant, newSubjectResourceKey, newSubjectResourceKey, updateSubjectResourceKey, messageResourceKey);
         }
 
-        /// <summary>
-        /// Sends an notification email about a new application.
-        /// </summary>
-        /// <param name="resumeId">The ID of the resume.</param>
+        /// <summary>Sends an notification email about a new application.</summary>
+        /// <param name="resume">The resume document</param>
+        /// <param name="coverLetter">The cover letter document, or <c>null</c>.</param>
         /// <param name="isNewApplication">if set to <c>true</c> it's a new application, otherwise it's an application edit.</param>
         /// <param name="toAddress">The email address to which the notification should be sent.</param>
         /// <param name="replyToApplicant">if set to <c>true</c> sets the reply-to to the applicant's email address (if they're logged in), otherwise leaves it as the "from" address.</param>
@@ -565,7 +629,7 @@ namespace Engage.Dnn.Employment
         /// <param name="newAnonymousSubjectResourceKey">The resource key to use to retrieve the localized email subject for new applications from users who aren't logged in.</param>
         /// <param name="updateSubjectResourceKey">The resource key to use to retrieve the localized email subject for updated applications.</param>
         /// <param name="messageResourceKey">The resource key to use to retrieve the localized email message (with format placeholders).</param>
-        private void SendNotificationEmail(int resumeId, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string newAnonymousSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
+        private void SendNotificationEmail(Document resume, Document coverLetter, bool isNewApplication, string toAddress, bool replyToApplicant, string newSubjectResourceKey, string newAnonymousSubjectResourceKey, string updateSubjectResourceKey, string messageResourceKey)
         {
             try
             {
@@ -586,7 +650,24 @@ namespace Engage.Dnn.Employment
                     this.CurrentJob.Title,
                     this.GetTextWithFallback(this.ApplicantEmailTextBox, this.UserInfo.Email, "EmailBlank"));
 
-                Mail.SendMail(
+                MemoryStream resumeStream = null;
+                MemoryStream coverLetterStream = null;
+                var attachments = new List<Attachment>(2);
+                try
+                {
+                    if (resume.FileData != null && resume.FileData.Length > 0)
+                    {
+                        resumeStream = new MemoryStream(resume.FileData);
+                        attachments.Add(new Attachment(resumeStream, resume.FileName, resume.ContentType));
+                    }
+
+                    if (coverLetter != null && coverLetter.FileData != null && coverLetter.FileData.Length > 0)
+                    {
+                        coverLetterStream = new MemoryStream(coverLetter.FileData);
+                        attachments.Add(new Attachment(coverLetterStream, coverLetter.FileName, coverLetter.ContentType));
+                    }
+
+                    Mail.SendMail(
                         fromAddress, 
                         toAddress, 
                         string.Empty,
@@ -596,13 +677,26 @@ namespace Engage.Dnn.Employment
                         subject,
                         MailFormat.Html, 
                         Encoding.UTF8,
-                        this.GetMessageBody(resumeId, messageResourceKey),
-                        new string[0],
+                        this.GetMessageBody(resume.DocumentId, messageResourceKey),
+                        attachments,
                         Host.SMTPServer,
                         Host.SMTPAuthentication, 
                         Host.SMTPUsername, 
                         Host.SMTPPassword,
                         Host.EnableSMTPSSL);
+                }
+                finally
+                {
+                    if (resumeStream != null)
+                    {
+                        resumeStream.Dispose();
+                    }
+
+                    if (coverLetterStream != null)
+                    {
+                        coverLetterStream.Dispose();
+                    }
+                }
             }
             catch (SmtpException exc)
             {
@@ -669,28 +763,22 @@ namespace Engage.Dnn.Employment
                 return;
             }
 
-            JobApplication jobApplication = null;
-            if (this.ApplicationId.HasValue)
+            var isNewApplication = this.JobApplication == null;
+            if (this.JobId != null && (this.UserId == -1 || (!isNewApplication && this.JobApplication.UserId == this.UserId) || !JobApplication.HasAppliedForJob(this.JobId.Value, this.UserId)))
             {
-                jobApplication = JobApplication.Load(this.ApplicationId.Value);
-            }
-
-            bool isNewApplication = jobApplication == null;
-            if (this.JobId != null && (this.UserId == -1 || (!isNewApplication && jobApplication.UserId == this.UserId) || !JobApplication.HasAppliedForJob(this.JobId.Value, this.UserId)))
-            {
-                string resumeFile = string.Empty;
+                string resumeFileName = string.Empty;
                 string resumeContentType = string.Empty;
                 if (this.ResumeUpload.PostedFile != null)
                 {
-                    resumeFile = Path.GetFileName(this.ResumeUpload.PostedFile.FileName);
+                    resumeFileName = Path.GetFileName(this.ResumeUpload.PostedFile.FileName);
                     resumeContentType = this.ResumeUpload.PostedFile.ContentType;
                 }
 
-                string coverLetterFile = string.Empty;
+                string coverLetterFileName = string.Empty;
                 string coverLetterContentType = string.Empty;
                 if (this.CoverLetterUpload.PostedFile != null)
                 {
-                    coverLetterFile = Path.GetFileName(this.CoverLetterUpload.PostedFile.FileName);
+                    coverLetterFileName = Path.GetFileName(this.CoverLetterUpload.PostedFile.FileName);
                     coverLetterContentType = this.CoverLetterUpload.PostedFile.ContentType;
                 }
 
@@ -702,16 +790,18 @@ namespace Engage.Dnn.Employment
                 }
 
                 int? userId = (this.UserId == -1) ? (int?)null : this.UserId;
-                int resumeId = isNewApplication
+                var resumeBytes = this.ResumeUpload.FileBytes;
+                var coverLetterBytes = this.CoverLetterUpload.FileBytes;
+                var documentIds = isNewApplication
                                    ? JobApplication.Apply(
                                        this.JobId.Value,
                                        userId,
-                                       resumeFile,
+                                       resumeFileName,
                                        resumeContentType,
-                                       this.ResumeUpload.FileBytes,
-                                       coverLetterFile,
+                                       resumeBytes,
+                                       coverLetterFileName,
                                        coverLetterContentType,
-                                       this.CoverLetterUpload.FileBytes,
+                                       coverLetterBytes,
                                        GetTextIfVisible(this.SalaryTextBox),
                                        GetTextIfVisible(this.ApplicationMessageTextBox),
                                        GetTextIfVisible(this.ApplicantNameTextBox),
@@ -721,12 +811,12 @@ namespace Engage.Dnn.Employment
                                    : JobApplication.UpdateApplication(
                                        this.ApplicationId.Value,
                                        userId,
-                                       resumeFile,
+                                       resumeFileName,
                                        resumeContentType,
-                                       this.ResumeUpload.FileBytes,
-                                       coverLetterFile,
+                                       resumeBytes,
+                                       coverLetterFileName,
                                        coverLetterContentType,
-                                       this.CoverLetterUpload.FileBytes,
+                                       coverLetterBytes,
                                        GetTextIfVisible(this.SalaryTextBox),
                                        GetTextIfVisible(this.ApplicationMessageTextBox), 
                                        GetTextIfVisible(this.ApplicantNameTextBox), 
@@ -738,8 +828,10 @@ namespace Engage.Dnn.Employment
                 string notificationEmailAddress = Engage.Utility.HasValue(this.CurrentJob.NotificationEmailAddress)
                                                       ? this.CurrentJob.NotificationEmailAddress
                                                       : this.DefaultNotificationEmailAddress;
+
                 this.SendNotificationEmail(
-                    resumeId,
+                    GetDocument(documentIds.First, DocumentType.Resume, resumeFileName, resumeContentType, resumeBytes), 
+                    GetDocument(documentIds.Second, DocumentType.CoverLetter, coverLetterFileName, coverLetterContentType, coverLetterBytes),
                     isNewApplication,
                     notificationEmailAddress, 
                     true,
@@ -752,7 +844,7 @@ namespace Engage.Dnn.Employment
                 if (applicantEmail != null)
                 {
                     this.SendNotificationEmail(
-                        resumeId,
+                        documentIds.First,
                         isNewApplication,
                         applicantEmail, 
                         false,

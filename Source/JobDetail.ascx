@@ -145,7 +145,7 @@
                 <asp:Label runat="server" resourcekey="lblApplicationCoverLetterHeader" EnableViewState="false" /><asp:Label ID="CoverLetterRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
             </td>
             <td class="em-input">
-                <asp:Panel runat="server" Visible="false"> <%-- This Panel needs to be the direct parent of this HyperLink for code in the codebehind --%>
+                <asp:Panel ID="CoverLetterLinkPanel" runat="server" Visible="false"> <%-- This Panel needs to be the direct parent of this HyperLink for code in the codebehind --%>
                     <asp:HyperLink ID="CoverLetterLink" runat="server" Target="_blank" /><br />
                 </asp:Panel>
                 <asp:FileUpload ID="CoverLetterUpload" runat="server" EnableViewState="false" />
@@ -158,7 +158,7 @@
                 <asp:Label runat="server" resourcekey="lblApplicationResumeHeader" EnableViewState="false" /><asp:Label ID="ResumeRequiredLabel" runat="server" resourcekey="Required" CssClass="SubSubHead" />
             </td>
             <td class="em-input">
-                <asp:Panel runat="server" Visible="false"> <%-- This Panel needs to be the direct parent of this HyperLink for code in the codebehind --%>
+                <asp:Panel ID="ResumeLinkPanel" runat="server" Visible="false"> <%-- This Panel needs to be the direct parent of this HyperLink for code in the codebehind --%>
                     <asp:HyperLink ID="ResumeLink" runat="server" Target="_blank" /><br />
                 </asp:Panel>
                 <asp:FileUpload ID="ResumeUpload" runat="server" EnableViewState="false" />

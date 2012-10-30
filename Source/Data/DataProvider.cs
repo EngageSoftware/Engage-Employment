@@ -163,7 +163,7 @@ namespace Engage.Dnn.Employment.Data
 
         public abstract int GetResumeId(int userId);
 
-        public abstract int GetResumeIdForApplication(int applicationId);
+        public abstract int? GetDocumentIdForApplication(int applicationId, int documentTypeId);
 
         public abstract int GetDocumentId(int documentTypeId, int userId);
 

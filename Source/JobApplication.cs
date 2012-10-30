@@ -93,24 +93,30 @@ namespace Engage.Dnn.Employment
         ////     return DataProvider.Instance().HasJobBeenAppliedFor(id);
         //// }
 
-        public static int Apply(int jobId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, string name, string email, string phone, int? leadId)
+        public static Pair<int, int?> Apply(int jobId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, string name, string email, string phone, int? leadId)
         {
             // we need to insert the applicaiton before the documents in order to satisfy the foriegn key.  BD
             int applicationId = DataProvider.Instance().InsertApplication(jobId, userId, salaryRequirement, message, name, email, phone);
 
             // don't check for an empty resumé here, we'll check inside InsertResume, since resumés can carry over from previous applications. BD
             int resumeId = InsertResume(applicationId, userId, resumeFileName, resumeContentType, resumeData);
+            int? coverLetterId = null;
             if (Engage.Utility.HasValue(coverLetterFileName) && coverLetterData != null && coverLetterData.Length > 0)
             {
-                DataProvider.Instance().InsertDocument(
-                    applicationId, userId, coverLetterFileName, coverLetterContentType, coverLetterData, DocumentType.CoverLetter.GetId());
+                coverLetterId = DataProvider.Instance().InsertDocument(
+                    applicationId,
+                    userId,
+                    coverLetterFileName,
+                    coverLetterContentType,
+                    coverLetterData,
+                    DocumentType.CoverLetter.GetId());
             }
 
             DataProvider.Instance().InsertApplicationProperty(
                 applicationId, 
                 ApplicationPropertyDefinition.Lead.GetId(), 
                 leadId.HasValue ? leadId.Value.ToString(CultureInfo.InvariantCulture) : null);
-            return resumeId;
+            return new Pair<int, int?>(resumeId, coverLetterId);
         }
 
         public static ReadOnlyCollection<JobApplication> GetAppliedFor(int userId, int? jobGroupId, int portalId)
@@ -187,7 +193,7 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        public static int UpdateApplication(int applicationId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, string name, string email, string phone, int? leadId)
+        public static Pair<int, int?> UpdateApplication(int applicationId, int? userId, string resumeFileName, string resumeContentType, byte[] resumeData, string coverLetterFileName, string coverLetterContentType, byte[] coverLetterData, string salaryRequirement, string message, string name, string email, string phone, int? leadId)
         {
             DataProvider.Instance().UpdateApplication(applicationId, salaryRequirement, message, name, email, phone);
             int? resumeId = null;
@@ -197,10 +203,16 @@ namespace Engage.Dnn.Employment
                     applicationId, userId, resumeFileName, resumeContentType, resumeData, DocumentType.Resume.GetId());
             }
 
+            int? coverLetterId = null;
             if (Engage.Utility.HasValue(coverLetterFileName) && coverLetterData != null && coverLetterData.Length > 0)
             {
-                DataProvider.Instance().InsertDocument(
-                    applicationId, userId, coverLetterFileName, coverLetterContentType, coverLetterData, DocumentType.CoverLetter.GetId());
+                coverLetterId = DataProvider.Instance().InsertDocument(
+                    applicationId,
+                    userId,
+                    coverLetterFileName,
+                    coverLetterContentType,
+                    coverLetterData,
+                    DocumentType.CoverLetter.GetId());
             }
 
             DataProvider.Instance().UpdateApplicationProperty(
@@ -208,7 +220,9 @@ namespace Engage.Dnn.Employment
                 ApplicationPropertyDefinition.Lead.GetId(), 
                 leadId.HasValue ? leadId.Value.ToString(CultureInfo.InvariantCulture) : null);
 
-            return resumeId ?? DataProvider.Instance().GetResumeIdForApplication(applicationId);
+            return new Pair<int, int?>(
+                resumeId ?? DataProvider.Instance().GetDocumentIdForApplication(applicationId, DocumentType.Resume.GetId()).Value,
+                coverLetterId ?? DataProvider.Instance().GetDocumentIdForApplication(applicationId, DocumentType.CoverLetter.GetId()));
         }
 
         /// <summary>
