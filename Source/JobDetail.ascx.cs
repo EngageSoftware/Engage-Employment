@@ -600,7 +600,7 @@ namespace Engage.Dnn.Employment
             var coverLetterVisibility = this.DisplayCoverLetter == Visibility.Required && alreadyHasCoverLetter ? Visibility.Optional : this.DisplayCoverLetter;
             SetFieldVisibility(this.CoverLetterRow, this.CoverLetterFileRequiredValidator, this.CoverLetterRequiredLabel, coverLetterVisibility);
 
-            var alreadyHasResume = this.UserId != -1 && JobApplication.GetResumeId(this.UserId) != -1;
+            var alreadyHasResume = this.UserId != -1 && JobApplication.GetResumeId(this.UserId) != null;
             var resumeVisibility = this.DisplayResume == Visibility.Required && alreadyHasResume ? Visibility.Optional : this.DisplayResume;
             SetFieldVisibility(this.ResumeRow, this.ResumeFileRequiredValidator, this.ResumeRequiredLabel, resumeVisibility);
             this.ResumeMessageRow.Visible = alreadyHasResume;
