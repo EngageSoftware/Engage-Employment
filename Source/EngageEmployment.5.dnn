@@ -287,6 +287,7 @@
         Use this module to create job groups and assign jobs into them.  You can use job groups to control which jobs
         display in any particular instance of the Engage: Employment module.
       </description>
+      <iconFile>DesktopModules/EngageEmployment/images/employment-icon32.png</iconFile>
       <owner>
         <name>Engage Software</name>
         <organization>Engage Software</organization>
