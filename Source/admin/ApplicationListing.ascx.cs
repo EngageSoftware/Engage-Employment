@@ -558,8 +558,6 @@ namespace Engage.Dnn.Employment.Admin
 
             base.OnInit(e);
 
-            this.Load += this.Page_Load;
-
             this.JobsGrid.NeedDataSource += this.JobsGrid_NeedDataSource;
             this.JobsGrid.ItemCreated += this.JobsGrid_ItemCreated;
             this.JobsGrid.ItemCommand += this.JobsGrid_ItemCommand;
@@ -595,11 +593,9 @@ namespace Engage.Dnn.Employment.Admin
                                                    ? (int?)tempApplicationStatusId
                                                    : -1;
             this.ViewState["LeadId"] = int.TryParse(this.FilterByLeadDropDown.SelectedValue, out tempLeadId) ? (int?)tempLeadId : null;
-            this.ViewState["DateFrom"] = !string.IsNullOrEmpty(this.FilterByDateFromTextBox.Text)
-                                        ? (DateTime?)DateTime.Parse(this.FilterByDateFromTextBox.Text, CultureInfo.CurrentCulture)
-                                        : null;
-            this.ViewState["DateTo"] = !string.IsNullOrEmpty(this.FilterByDateToTextBox.Text)
-                                      ? (DateTime?)DateTime.Parse(this.FilterByDateToTextBox.Text, CultureInfo.CurrentCulture).AddDays(1).AddMilliseconds(-1)
+            this.ViewState["DateFrom"] = this.FilterByDateFromTextBox.SelectedDate;
+            this.ViewState["DateTo"] = this.FilterByDateToTextBox.SelectedDate.HasValue
+                                      ? (DateTime?)this.FilterByDateToTextBox.SelectedDate.Value.AddDays(1).AddMilliseconds(-1)
                                       : null;
             this.ViewState["JobTitle"] = !string.IsNullOrEmpty(this.FilterByJobTitleTextBox.Text) ? this.FilterByJobTitleTextBox.Text.Trim() : null;
             this.ViewState["LocationId"] = int.TryParse(this.FilterByLocationDropDown.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out tempLocationId) ? (int?)tempLocationId : null;
@@ -946,7 +942,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Sets the URL for the <see cref="BackLink"/> and <see cref="AllLink"/> controls.
+        /// Sets the URL for the <see cref="BackLink"/> and <c>AllLink</c> controls.
         /// </summary>
         private void SetLinks()
         {
@@ -1025,31 +1021,6 @@ namespace Engage.Dnn.Employment.Admin
             }
 
             this.JobsGrid.ExportSettings.FileName = fileName;
-        }
-
-        /// <summary>
-        /// Handles the Load event of the Page control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void Page_Load(object sender, EventArgs e)
-        {
-            if (!this.IsPostBack)
-            {
-                this.RegisterDatePickerBehavior();
-            }
-        }
-
-        /// <summary>
-        /// Registers the jQuery date picker plugin on the page.
-        /// </summary>
-        private void RegisterDatePickerBehavior()
-        {
-            this.AddJQueryReference();
-            this.Page.ClientScript.RegisterClientScriptResource(typeof(JobEdit), "Engage.Dnn.Employment.JavaScript.jquery-ui.js");
-
-            var datePickerOptions = new DatePickerOptions(CultureInfo.CurrentCulture, this.LocalSharedResourceFile);
-            this.Page.ClientScript.RegisterClientScriptBlock(typeof(JobEdit), "datepicker options", "var datePickerOpts = " + datePickerOptions.Serialize() + ";", true);        
         }
     }
 }

@@ -29,14 +29,12 @@
         </div>
         <div class="search_field">
             <asp:Label ID="FilterByDateFromLabel" runat="server" resourcekey="FilterByDateFromLabel" AssociatedControlID="FilterByDateFromTextBox"/>
-            <asp:TextBox ID="FilterByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="FilterByDateFromTextBox" Display="None" resourcekey="FilterByDateFromTypeValidator" ValidationGroup="SearchDate" />
+            <telerik:RadDatePicker ID="FilterByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Simple" />
             <asp:CompareValidator runat="server" Type="Date" Operator="LessThanEqual" ControlToValidate="FilterByDateFromTextBox" ControlToCompare="FilterByDateToTextBox" Display="None" resourcekey="FilterByDateFromCompareValidator" ValidationGroup="SearchDate" />
         </div>
         <div class="search_field">
             <asp:Label ID="FilterByDateToLabel" runat="server" resourcekey="FilterByDateToLabel" AssociatedControlID="FilterByDateToTextBox"/>
-            <asp:TextBox ID="FilterByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="FilterByDateToTextBox" Display="None" resourcekey="FilterByDateToTypeValidator" ValidationGroup="SearchDate" />
+            <telerik:RadDatePicker ID="FilterByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Simple" />
         </div>
         <div class="search_field">
             <asp:Label runat="server" resourcekey="FilterByLeadLabel" AssociatedControlID="FilterByLeadDropDown"/>
@@ -151,16 +149,3 @@
         <li><asp:HyperLink ID="BackLink" runat="server" CssClass="CommandButton" resourcekey="btnBack" /></li>
     </ul>
 </div>
-
-<script type="text/javascript">
-    jQuery(function () { jQuery('.DatePicker').datepicker(datePickerOpts); });
-
-    $(document).ready(function () {
-        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
-
-        function EndRequestHandler(sender, args) {
-            jQuery('.DatePicker').datepicker(datePickerOpts);
-        }
-
-    });
-</script>

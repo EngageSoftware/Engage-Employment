@@ -1,6 +1,7 @@
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.JobEdit" AutoEventWireup="false" Codebehind="JobEdit.ascx.cs" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/texteditor.ascx" %>
+<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <div class="information"><asp:Label ResourceKey="lblJobsHeader.Help" runat="server" /></div>
 <table>
     <tr>
@@ -61,9 +62,8 @@
             <dnn:label ResourceKey="lblStartDate" controlname="StartDateTextBox" runat="server" />
         </td>
         <td valign="top">
-            <asp:TextBox ID="StartDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateTypeValidator" ValidationGroup="JobEdit" />
-            <asp:RequiredFieldValidator runat="server" InitialValue="" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateRequiredValidator" ValidationGroup="JobEdit" />
+            <telerik:RadDatePicker ID="StartDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" Calendar-ShowRowHeaders="false" Skin="Simple" />
+            <asp:RequiredFieldValidator runat="server" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateRequiredValidator" ValidationGroup="JobEdit" />
             <asp:CompareValidator runat="server" Type="Date" Operator="LessThan" ControlToValidate="StartDateTextBox" ControlToCompare="ExpireDateTextBox" Display="None" resourcekey="StartExpireDateCompareValidator" ValidationGroup="JobEdit" />
         </td>
     </tr>
@@ -72,8 +72,7 @@
             <dnn:label ResourceKey="lblExpireDate" controlname="ExpireDateTextBox" runat="server" />
         </td>
         <td valign="top">
-            <asp:TextBox ID="ExpireDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" />
-            <asp:CompareValidator runat="server" Type="Date" Operator="DataTypeCheck" ControlToValidate="ExpireDateTextBox" Display="None" resourcekey="ExpireDateTypeValidator" ValidationGroup="JobEdit" />
+            <telerik:RadDatePicker ID="ExpireDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" Calendar-ShowRowHeaders="false" Skin="Simple" />
         </td>
     </tr>
     <tr>
@@ -121,7 +120,3 @@
         </td>
     </tr>
 </table>
-
-<script type="text/javascript">
-    jQuery(function() { jQuery('.DatePicker').datepicker(datePickerOpts); });
-</script>

@@ -181,8 +181,6 @@
     <Compile Include="Category.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="JavaScript\DatePickerOptions.cs" />
-    <Compile Include="JavaScript\DatePickerOptionsConverter.cs" />
     <Compile Include="JobApplication.cs" />
     <Compile Include="EmploymentAdminController.cs" />
     <Compile Include="EmploymentController.cs" />
@@ -280,6 +278,10 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Content Include="ReleaseNotes_01.11.02.htm" />
+    <Content Include="module.css">
+      <DependentUpon>module.scss</DependentUpon>
+    </Content>
     <Content Include="ReleaseNotes_01.11.01.htm" />
     <Content Include="ReleaseNotes_01.11.00.htm" />
     <Content Include="ReleaseNotes_01.10.00.htm" />
@@ -311,7 +313,7 @@
     <Content Include="Licenses\EULA-Standard.txt" />
     <Content Include="Licenses\EULA-Trial.htm" />
     <Content Include="Licenses\EULA-Trial.txt" />
-    <Content Include="module.css" />
+    <None Include="module.scss" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -457,24 +459,9 @@
   <ItemGroup>
     <Content Include="App_LocalResources\SharedResources.resx">
     </Content>
-    <EmbeddedResource Include="JavaScript\jquery-ui.js" />
     <Content Include="ReleaseNotes_01.06.00.htm" />
     <Content Include="images\info.png" />
     <Content Include="ReleaseNotes_01.05.01.htm" />
-    <Content Include="images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="images\ui-bg_glass_55_4F6B72_1x400.png" />
-    <Content Include="images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="images\ui-bg_highlight-soft_75_CAE8EA_1x100.png" />
-    <Content Include="images\ui-bg_inset-soft_95_fef1ec_1x100.png" />
-    <Content Include="images\ui-icons_222222_256x240.png" />
-    <Content Include="images\ui-icons_454545_256x240.png" />
-    <Content Include="images\ui-icons_4F6B72_256x240.png" />
-    <Content Include="images\ui-icons_888888_256x240.png" />
-    <Content Include="images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="images\ui-icons_ffffff_256x240.png" />
     <Content Include="References\System.Web.Extensions.dll" />
     <Content Include="ReleaseNotes_01.05.00.htm" />
   </ItemGroup>
