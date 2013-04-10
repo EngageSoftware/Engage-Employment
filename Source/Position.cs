@@ -1,6 +1,6 @@
 ﻿// <copyright file="Position.cs" company="Engage Software">
 // Engage: Employment
-// Copyright (c) 2004-2011
+// Copyright (c) 2004-2013
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
 
