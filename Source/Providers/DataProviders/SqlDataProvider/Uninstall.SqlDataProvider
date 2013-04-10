@@ -1,4 +1,4 @@
-﻿if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_Job]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_Job]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] DROP CONSTRAINT {objectQualifier}FK_EngageEmployment_UserJob_EngageEmployment_Job
 GO
 
@@ -266,3 +266,5 @@ GO
 UPDATE {objectQualifier}ProfilePropertyDefinition SET Deleted = 1 WHERE PropertyCategory = 'Engage: Employment'
 GO
 
+
+GO

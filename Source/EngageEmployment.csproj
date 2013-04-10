@@ -314,6 +314,8 @@
     <Content Include="Licenses\EULA-Trial.htm" />
     <Content Include="Licenses\EULA-Trial.txt" />
     <None Include="module.scss" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\Uninstall.SqlDataProvider" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\01.12.00.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -323,14 +325,12 @@
     <None Include="Migrated rules for EngageEmployment.ruleset" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.01.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.02.00.SqlDataProvider" />
-    <None Include="Providers\DataProviders\SqlDataProvider\01.07.00.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.08.05.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.08.06.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.08.07.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.08.08.SqlDataProvider" />
     <None Include="Providers\DataProviders\SqlDataProvider\01.09.07.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\01.11.00.SqlDataProvider" />
-    <None Include="Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\JobDetail.ascx.resx">

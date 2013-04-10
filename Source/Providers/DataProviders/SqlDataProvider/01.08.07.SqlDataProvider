@@ -1,4 +1,4 @@
-﻿IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]', N'U') IS NULL
+IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]', N'U') IS NULL
     CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus](
 	    [UserStatusId] [int] NOT NULL,
 	    [UserId] [int] NOT NULL,
@@ -12,6 +12,7 @@ GO
 IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus', N'P') IS NOT NULL
     DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus
 GO
+
 CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spUpdateUserStatus
 @portalId int,
 @userId int,
@@ -25,7 +26,7 @@ BEGIN TRAN
 	END
 	ELSE
 	BEGIN 
-		IF NOT EXISTS (SELECT NULL FROM {databaseOwner}{objectQualifier}EngageEmployment_UserStatus (HOLDLOCK) WHERE PortalId = @portalId AND UserId = @userId)
+		IF NOT EXISTS (SELECT NULL FROM {databaseOwner}{objectQualifier}EngageEmployment_UserStatus WITH (HOLDLOCK) WHERE PortalId = @portalId AND UserId = @userId)
 		BEGIN
 			INSERT INTO {databaseOwner}{objectQualifier}EngageEmployment_UserStatus(PortalId, UserId, UserStatusId)
 			VALUES(@portalId, @userId, @userStatusId)
@@ -41,39 +42,42 @@ BEGIN TRAN
 COMMIT
 GO
 
-IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData', N'P') IS NOT NULL
-    DROP PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData
+IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]', N'P') IS NOT NULL
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
 GO
-CREATE PROCEDURE {databaseOwner}{objectQualifier}EngageEmployment_spGetAdminData
-@JobGroupId int,
-@PortalId int
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
+    @JobGroupId int,
+    @PortalId int
 AS
+    DECLARE @jobsTable table (JobId int NOT NULL PRIMARY KEY);
+
+    INSERT INTO @jobsTable (JobId)
 	SELECT DISTINCT j.JobId
-	 INTO #jobs
-	 FROM {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j
-	 LEFT JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId)
-	 WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
+	FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs] j
+	LEFT JOIN {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup] jjg on (j.JobId = jjg.JobId)
+	WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
 	  AND PortalId = @PortalId
 	 
-	SELECT	JobId, PostedDate, SortOrder, LocationId, LocationName, 
-			StateId, StateName, StateAbbreviation, CategoryId, 
-			CategoryName, PositionId, JobTitle, JobDescription,
-			(SELECT count(*) FROM {databaseOwner}{objectQualifier}EngageEmployment_UserJob uj WHERE uj.JobId = j.JobId) AS ApplicationCount
-	 FROM {databaseOwner}{objectQualifier}EngageEmployment_vwJobs j
-	 WHERE JobId IN (SELECT JobId FROM #jobs)
-	 ORDER BY SortOrder, PostedDate
+	SELECT JobId, PostedDate, SortOrder, LocationId, LocationName, 
+		   StateId, StateName, StateAbbreviation, CategoryId, 
+		   CategoryName, PositionId, JobTitle, JobDescription,
+		   (SELECT count(*) FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] uj WHERE uj.JobId = j.JobId) AS ApplicationCount
+	FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs] j
+	WHERE JobId IN (SELECT JobId FROM @jobsTable)
+	ORDER BY SortOrder, PostedDate
 
     SELECT COUNT(*) AS Count, a.JobId, a.StatusId
-    FROM  {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
-    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+    FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwApplications] a
+    WHERE a.JobId IN (SELECT JobId FROM @jobsTable)
       AND a.StatusId IS NOT NULL
     GROUP BY a.JobId, a.StatusId
 
     SELECT a.JobId, COUNT(us.UserStatusId) AS Count, us.UserStatusId, l.Status
-    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
-    JOIN {databaseOwner}{objectQualifier}EngageEmployment_UserStatus us ON us.UserId = a.UserId
-    JOIN {databaseOwner}{objectQualifier}EngageEmployment_lkpUserStatus l ON l.UserStatusId = us.UserStatusId
-    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+    FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwApplications] a
+    JOIN {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] us ON us.UserId = a.UserId
+    JOIN {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] l ON l.UserStatusId = us.UserStatusId
+    WHERE a.JobId IN (SELECT JobId FROM @jobsTable)
       AND a.UserId IS NOT NULL
     GROUP BY a.JobId, us.UserStatusId, l.Status
     ORDER BY a.JobId

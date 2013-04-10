@@ -71,12 +71,9 @@ drop table {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]
 (
-[DocumentTypeId] [int] NOT NULL IDENTITY(1, 1),
+[DocumentTypeId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_DocumentType] PRIMARY KEY,
 [Description] [nvarchar] (255) NULL
-) ON [PRIMARY]
-GO
---Creating primary key [{objectQualifier}PK_EngageEmployment_DocumentType] on {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_DocumentType] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_DocumentType] PRIMARY KEY CLUSTERED  ([DocumentTypeId]) ON [PRIMARY]
+)
 GO
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_Document]'
 if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_Document]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
@@ -84,7 +81,7 @@ drop table {databaseOwner}[{objectQualifier}EngageEmployment_Document]
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Document]
 (
-[ResumeId] [int] NOT NULL IDENTITY(1, 1),
+[ResumeId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [PK_{objectQualifier}EngageEmployment_Document] PRIMARY KEY,
 [UserId] [int] NULL,
 [FileName] [nvarchar] (255) NOT NULL,
 [ContentType] [nvarchar] (255) NOT NULL,
@@ -92,11 +89,9 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Document]
 [ResumeData] [image] NOT NULL,
 [RevisionDate] [datetime] NOT NULL,
 [DocumentTypeId] [int] NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 GO
---Creating primary key [PK_{objectQualifier}EngageEmployment_Document] on {databaseOwner}[{objectQualifier}EngageEmployment_Document]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Document] ADD CONSTRAINT [PK_{objectQualifier}EngageEmployment_Document] PRIMARY KEY CLUSTERED  ([ResumeId]) ON [PRIMARY]
-GO
+
 --Fill {databaseOwner}[{objectQualifier}EngageEmployment_Document] with data from {databaseOwner}[{objectQualifier}EngageEmployment_UserResume]
 DECLARE @resumeDocumentTypeId int
 
@@ -126,7 +121,7 @@ GO
 --Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]'
 CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch]
 (
-[UserSearchId] [int] NOT NULL IDENTITY(1, 1),
+[UserSearchId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserSearch] PRIMARY KEY,
 [UserId] [int] NOT NULL,
 [JobGroupId] [int] NULL,
 [Description] [nvarchar] (255) NOT NULL,
@@ -136,31 +131,25 @@ CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob
 [CreationDate] [datetime] NOT NULL,
 [LocationId] [int] NULL,
 [SearchSql] [ntext] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch] ON
 INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch]([UserSearchId], [UserId], [Description], [JobPositionId], [StateId], [Keywords], [CreationDate], [LocationId], [SearchSql]) SELECT [UserSearchId], [UserId], [Description], [JobPositionId], [StateId], [Keywords], [CreationDate], [LocationId], [SearchSql] FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]
 SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch] OFF
 DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]
 EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJobSearch]', N'{objectQualifier}EngageEmployment_UserJobSearch'
 GO
---Creating primary key [{objectQualifier}PK_EngageEmployment_UserSearch] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserSearch] PRIMARY KEY CLUSTERED  ([UserSearchId]) ON [PRIMARY]
-GO
 --Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
 CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition]
 (
-[JobPositionId] [int] NOT NULL IDENTITY(1, 1),
+[JobPositionId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpPosition] PRIMARY KEY,
 [JobTitle] [nvarchar] (255) NOT NULL,
 [Description] [ntext] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition] ON
 INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition]([JobPositionId], [JobTitle], [Description]) SELECT [JobPositionId], [JobTitle], [Description] FROM {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]
 SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition] OFF
 DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]
 EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_lkpJobPosition]', N'{objectQualifier}EngageEmployment_lkpJobPosition'
-GO
---Creating primary key [{objectQualifier}PK_EngageEmployment_lkpPosition] on {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpPosition] PRIMARY KEY CLUSTERED  ([JobPositionId]) ON [PRIMARY]
 GO
 --Altering {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation]'
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ALTER COLUMN [Description] [nvarchar] (255) NOT NULL
@@ -171,7 +160,7 @@ DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]
 (
-[ApplicationPropertyId] [int] NOT NULL IDENTITY(1, 1),
+[ApplicationPropertyId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_ApplicationProperty] PRIMARY KEY,
 [Deleted] [bit] NOT NULL,
 [DataType] [int] NOT NULL,
 [DefaultValue] [ntext] NULL,
@@ -179,10 +168,7 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProper
 [Required] [bit] NOT NULL,
 [ViewOrder] [int] NOT NULL,
 [Visible] [bit] NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
---Creating primary key [{objectQualifier}PK_EngageEmployment_ApplicationProperty] on {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_ApplicationProperty] PRIMARY KEY CLUSTERED  ([ApplicationPropertyId]) ON [PRIMARY]
+)
 GO
 --Creating index [{objectQualifier}IX_EngageEmployment_ApplicationProperty_PropertyName] on {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]'
 CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_ApplicationProperty_PropertyName] ON {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty] ([PropertyName]) ON [PRIMARY]
@@ -193,12 +179,9 @@ DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
 (
-[ApplicationId] [int] NOT NULL,
+[ApplicationId] [int] NOT NULL CONSTRAINT [PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY,
 [ResumeId] [int] NOT NULL
-) ON [PRIMARY]
-GO
---Creating primary key [PK_{objectQualifier}EngageEmployment_ApplicationDocument] on {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] ADD CONSTRAINT [PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY CLUSTERED  ([ApplicationId], [ResumeId]) ON [PRIMARY]
+)
 GO
 
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition]'
@@ -282,7 +265,7 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]
 (
 [JobGroupId] [int] NOT NULL,
 [JobId] [int] NOT NULL
-) ON [PRIMARY]
+)
 GO
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]'
 IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
@@ -290,17 +273,15 @@ DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]
 (
-[JobGroupId] [int] NOT NULL IDENTITY(1, 1),
+[JobGroupId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_JobGroup] PRIMARY KEY,
 [Name] [nvarchar] (255) NOT NULL
-) ON [PRIMARY]
+)
 GO
---Creating primary key [{objectQualifier}PK_EngageEmployment_JobGroup] on {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_JobGroup] PRIMARY KEY CLUSTERED  ([JobGroupId]) ON [PRIMARY]
-GO
+
 --Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]'
 CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]
 (
-[ApplicationId] [int] NOT NULL IDENTITY(1, 1),
+[ApplicationId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserJob] PRIMARY KEY,
 [UserId] [int] NULL,
 [JobId] [int] NOT NULL,
 [AppliedDate] [datetime] NOT NULL,
@@ -311,9 +292,6 @@ CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob
 INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]([UserId], [JobId], [AppliedDate], [SalaryRequirement], [Message], [ResumeId]) SELECT [UserId], [JobId], [AppliedDate], [SalaryRequirement], [Message], [ResumeId] FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]
 DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]
 EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]', N'{objectQualifier}EngageEmployment_UserJob'
-GO
---Creating primary key [{objectQualifier}PK_EngageEmployment_UserJob] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserJob] PRIMARY KEY CLUSTERED  ([ApplicationId]) ON [PRIMARY]
 GO
 --Move UserResume information to the ApplicationDocument junction table
 IF EXISTS (SELECT * FROM dbo.syscolumns WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserJob]') AND name = 'ResumeId')
@@ -334,7 +312,7 @@ GO
 --Rebuilding {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
 CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job]
 (
-[JobId] [int] NOT NULL IDENTITY(1, 1),
+[JobId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_Job] PRIMARY KEY,
 [JobPositionId] [int] NOT NULL,
 [LocationId] [int] NOT NULL,
 [JobCategoryId] [int] NOT NULL,
@@ -346,34 +324,30 @@ CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job]
 [RevisingUser] [int] NOT NULL,
 [RevisionDate] [datetime] NOT NULL,
 [SortOrder] [int] NOT NULL CONSTRAINT [{objectQualifier}DF_EngageEmployment_Job_SortOrder] DEFAULT ((5))
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job] ON
 INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job]([JobId], [JobPositionId], [LocationId], [JobCategoryId], [PostedDate], [IsHot], [IsFilled], [RequiredQualifications], [DesiredQualifications], [RevisingUser], [RevisionDate]) SELECT [JobId], [JobPositionId], [LocationId], [JobCategoryId], [PostedDate], [IsHot], [IsFilled], [RequiredQualifications], [DesiredQualifications], [RevisingUser], [RevisionDate] FROM {databaseOwner}[{objectQualifier}EngageEmployment_Job]
 SET IDENTITY_INSERT {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job] OFF
 DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job]
 EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_Job]', N'{objectQualifier}EngageEmployment_Job'
 GO
- --Creating primary key [{objectQualifier}PK_EngageEmployment_Job] on {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_Job] PRIMARY KEY CLUSTERED  ([JobId]) ON [PRIMARY]
-GO
+
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
 IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]
 (
-[UserJobPropertyId] [int] NOT NULL IDENTITY(1, 1),
+[UserJobPropertyId] [int] NOT NULL IDENTITY(1, 1) CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserJobProperty] PRIMARY KEY,
 [ApplicationId] [int] NOT NULL,
 [ApplicationPropertyId] [int] NOT NULL,
 [PropertyValue] [nvarchar] (3750) NULL,
 [PropertyText] [ntext] NULL,
 [Visibility] [int] NOT NULL CONSTRAINT [{objectQualifier}DF_EngageEmployment_UserJobProperty_Visibility] DEFAULT ((0)),
 [LastUpdatedDate] [datetime] NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 GO
---Creating primary key [{objectQualifier}PK_EngageEmployment_UserJobProperty] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserJobProperty] PRIMARY KEY NONCLUSTERED  ([UserJobPropertyId]) ON [PRIMARY]
-GO
+
 --Creating index [{objectQualifier}IX_EngageEmployment_UserJobProperty] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
 CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_UserJobProperty] ON {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] ([ApplicationId]) ON [PRIMARY]
 GO

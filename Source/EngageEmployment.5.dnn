@@ -31,7 +31,7 @@
         </component>
         <component type="Script">
           <scripts>
-            <basePath>DesktopModules\EngageEmployment</basePath>
+            <basePath>DesktopModules\EngageEmployment\Providers\DataProviders\SqlDataProvider</basePath>
             <script type="Install">
               <name>01.00.00.SqlDataProvider</name>
               <version>01.00.00</version>
@@ -95,6 +95,10 @@
             <script type="Install">
               <name>01.11.00.SqlDataProvider</name>
               <version>01.11.00</version>
+            </script>
+            <script type="Install">
+              <name>01.12.00.SqlDataProvider</name>
+              <version>01.12.00</version>
             </script>
             <script type="UnInstall">
               <name>Uninstall.SqlDataProvider</name>

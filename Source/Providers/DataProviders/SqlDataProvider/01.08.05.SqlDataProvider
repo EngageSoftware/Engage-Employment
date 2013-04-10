@@ -1,4 +1,4 @@
-﻿IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_fnParseCsvString', N'TF') IS NOT NULL
+IF OBJECT_ID(N'{databaseOwner}{objectQualifier}EngageEmployment_fnParseCsvString', N'TF') IS NOT NULL
     DROP FUNCTION {databaseOwner}{objectQualifier}EngageEmployment_fnParseCsvString
 GO
 
@@ -137,34 +137,37 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]') AND OBJECTPROPERTY(id, N'IsPROCEDURE') = 1)
 DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
 GO
+
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
 @JobGroupId int,
 @PortalId int
 AS
+    DECLARE @jobsTable table (JobId int NOT NULL PRIMARY KEY);
+
+    INSERT INTO @jobsTable (JobId)
 	SELECT DISTINCT j.JobId
-	 INTO #jobs
-	 FROM {objectQualifier}EngageEmployment_vwJobs j
-	 LEFT JOIN {objectQualifier}EngageEmployment_JobJobGroup jjg on (j.JobId = jjg.JobId)
-	 WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
+    FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs] j
+	LEFT JOIN {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup] jjg on (j.JobId = jjg.JobId)
+	WHERE (@JobGroupId IS NULL OR JobGroupId = @JobGroupId)
 	  AND PortalId = @PortalId
 	 
-	SELECT	JobId, PostedDate, SortOrder, LocationId, LocationName, 
-			StateId, StateName, StateAbbreviation, CategoryId, 
-			CategoryName, PositionId, JobTitle, JobDescription,
-			(SELECT count(*) FROM {objectQualifier}EngageEmployment_UserJob uj WHERE uj.JobId = j.JobId) AS ApplicationCount
-	 FROM {objectQualifier}EngageEmployment_vwJobs j
-	 WHERE JobId IN (SELECT JobId FROM #jobs)
-	 ORDER BY SortOrder, PostedDate
+	SELECT JobId, PostedDate, SortOrder, LocationId, LocationName, 
+		   StateId, StateName, StateAbbreviation, CategoryId, 
+		   CategoryName, PositionId, JobTitle, JobDescription,
+		   (SELECT COUNT(*) FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] uj WHERE uj.JobId = j.JobId) AS ApplicationCount
+	FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs] j
+	WHERE JobId IN (SELECT JobId FROM @jobsTable)
+	ORDER BY SortOrder, PostedDate
 
     SELECT COUNT(*) AS Count, a.JobId, a.StatusId
-    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
-    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+    FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwApplications] a
+    WHERE a.JobId IN (SELECT JobId FROM @jobsTable)
       AND a.StatusId IS NOT NULL
     GROUP BY a.JobId, a.StatusId
 
     SELECT a.JobId, a.UserId
-    FROM {databaseOwner}{objectQualifier}EngageEmployment_vwApplications a
-    WHERE a.JobId IN (SELECT JobId FROM #jobs)
+    FROM {databaseOwner}[{objectQualifier}EngageEmployment_vwApplications] a
+    WHERE a.JobId IN (SELECT JobId FROM @jobsTable)
       AND a.UserId IS NOT NULL
     GROUP BY a.JobId, a.UserId
 GO

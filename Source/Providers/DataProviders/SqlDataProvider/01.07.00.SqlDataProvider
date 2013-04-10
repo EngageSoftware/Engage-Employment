@@ -1,3 +1,0 @@
-﻿ALTER TABLE {databaseOwner}{objectQualifier}EngageEmployment_Job 
-	ALTER COLUMN NotificationEmailAddress ntext NULL
-GO

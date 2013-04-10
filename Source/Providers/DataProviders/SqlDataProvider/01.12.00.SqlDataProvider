@@ -1,9 +1,43 @@
+﻿IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_spUpdateUserStatus]', N'P') IS NOT NULL
+BEGIN
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateUserStatus];
+END
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spUpdateUserStatus]
+    @portalId int,
+    @userId int,
+    @userStatusId int
+AS
+BEGIN TRAN
+	IF @userStatusId IS NULL
+	BEGIN
+		DELETE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]
+		WHERE PortalId = @portalId 
+          AND UserId = @userId	;
+	END
+	ELSE
+	BEGIN 
+		IF NOT EXISTS (SELECT NULL FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] WITH (HOLDLOCK) WHERE PortalId = @portalId AND UserId = @userId)
+		BEGIN
+			INSERT INTO {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus] (PortalId, UserId, UserStatusId)
+			VALUES (@portalId, @userId, @userStatusId);
+		END
+		ELSE
+		BEGIN
+			UPDATE {databaseOwner}[{objectQualifier}EngageEmployment_UserStatus]
+			SET [UserStatusId] = @userStatusId
+			WHERE PortalId = @portalId
+			  AND UserId = @userId;
+		END;
+	END;
+COMMIT;
+GO
+
 IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]', N'P') IS NOT NULL
 BEGIN
     DROP PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData];
 END;
 GO
-
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}EngageEmployment_spGetAdminData]
     @JobGroupId int,
     @PortalId int
