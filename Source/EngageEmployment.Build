@@ -126,12 +126,12 @@
         <patternset refid="trialProjectAssemblies" if="${buildTrial}"/>
         <include name="${referencesDirectory}/**/*.dll"/>
         <exclude name="${referencesDirectory}/DotNetNuke.dll"/>
-        <exclude name="${referencesDirectory}/DotNetNuke.WebUtility.dll"/>
+        <exclude name="${referencesDirectory}/DotNetNuke.*.dll"/>
         <exclude name="${referencesDirectory}/Microsoft.ApplicationBlocks.Data.dll"/>
         <exclude name="${referencesDirectory}/System.Web.Extensions.dll"/>
         <exclude name="${referencesDirectory}/*.Design.dll"/>
         <exclude name="${referencesDirectory}/Framework/Engage.Events.dll"/>
-        <exclude name="${referencesDirectory}/Framework/EvolutionjaryAlgorithms.dll"/>
+        <exclude name="${referencesDirectory}/Framework/EvolutionaryAlgorithms.dll"/>
         <!--<exclude name="${referencesDirectory}/Telerik.Web.UI.dll"/>-->
       </fileset>
     </copy>
