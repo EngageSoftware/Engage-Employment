@@ -12,7 +12,6 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Web.UI;
 
 [assembly: AssemblyTitle("EngageEmployment")]
 [assembly: AssemblyDescription("The DotNetNuke Job Search module by Engage Software (www.engagesoftware.com) used to manage job openings in your organization and allow for applicants to view jobs and submit applications.")]
@@ -27,5 +26,5 @@ using System.Web.UI;
 [assembly: Guid("3d5900ae-111a-45be-96b3-d9e4606ca793")]
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyVersion("1.11.2.*")]
-[assembly: AssemblyFileVersion("1.11.2.0")]
+[assembly: AssemblyVersion("1.12.0.*")]
+[assembly: AssemblyFileVersion("1.12.0.0")]
