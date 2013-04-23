@@ -1,0 +1,6 @@
+﻿IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = '{objectQualifier}PK_EngageEmployment_JobJobGroup')
+BEGIN
+    ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]
+    ADD CONSTRAINT [{objectQualifier}PK_EngageEmployment_JobJobGroup] PRIMARY KEY (JobGroupId, JobId);
+END;
+GO
