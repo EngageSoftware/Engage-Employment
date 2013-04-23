@@ -264,7 +264,8 @@ GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_JobJobGroup]
 (
 [JobGroupId] [int] NOT NULL,
-[JobId] [int] NOT NULL
+[JobId] [int] NOT NULL,
+CONSTRAINT [{objectQualifier}PK_EngageEmployment_JobJobGroup] PRIMARY KEY (JobGroupId, JobId)
 )
 GO
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_JobGroup]'
