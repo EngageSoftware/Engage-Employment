@@ -250,9 +250,9 @@ GO
 IF NOT EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty WHERE PropertyName = 'Lead')
 BEGIN
 DECLARE @ListDataType as int
-SELECT @ListDataType = (SELECT EntryID FROM {databaseOwner}{objectQualifier}Lists WHERE ListName = 'DataType' AND Value = 'List')
+SELECT @ListDataType = (SELECT COALESCE(EntryID, -1) FROM {databaseOwner}{objectQualifier}Lists WHERE ListName = 'DataType' AND Value = 'List')
 
-EXECUTE {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition] COALESCE(@ListDataType, -1), '', 'Lead', 0, 1, 1
+EXECUTE {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition] @ListDataType, '', 'Lead', 0, 1, 1
 END
 GO
 
