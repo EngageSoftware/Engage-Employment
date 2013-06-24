@@ -269,6 +269,7 @@
         </component>
         <component type="Assembly">
           <assemblies>
+            <basepath>bin</basepath>
             <assembly>
               <name>EngageEmployment.dll</name>
               <version latestVersion="latestVersion">1.9.0</version>
@@ -303,6 +304,7 @@
         <url>http://www.engagesoftware.com/</url>
         <email>support@engagemodules.com</email>
       </owner>
+      <azureCompatible>true</azureCompatible>
       <license src="Licenses/EULA-Standard.htm"/>
       <releaseNotes src="ReleaseNotes_1.9.0.htm" />
       <components>
