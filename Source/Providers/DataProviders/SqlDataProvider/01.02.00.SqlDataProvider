@@ -171,7 +171,7 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProper
 )
 GO
 --Creating index [{objectQualifier}IX_EngageEmployment_ApplicationProperty_PropertyName] on {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty]'
-CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_ApplicationProperty_PropertyName] ON {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty] ([PropertyName]) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_ApplicationProperty_PropertyName] ON {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationProperty] ([PropertyName])
 GO
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]'
 IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
@@ -249,9 +249,9 @@ GO
 --Add 'Lead' Application Property
 IF NOT EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_ApplicationProperty WHERE PropertyName = 'Lead')
 BEGIN
-DECLARE @ListDataType as int
+DECLARE @ListDataType int
 SELECT @ListDataType = (SELECT EntryID FROM {databaseOwner}{objectQualifier}Lists WHERE ListName = 'DataType' AND Value = 'List')
-SET @ListDataType = COALSCE(@ListDataType, -1)
+SET @ListDataType = COALESCE(@ListDataType, -1)
 
 EXECUTE {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition] @ListDataType, '', 'Lead', 0, 1, 1
 END
@@ -289,7 +289,7 @@ CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob
 [SalaryRequirement] [nvarchar] (255) NULL,
 [Message] [nvarchar] (255) NULL,
 [ResumeId] int NOT NULL
-) ON [PRIMARY]
+)
 INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]([UserId], [JobId], [AppliedDate], [SalaryRequirement], [Message], [ResumeId]) SELECT [UserId], [JobId], [AppliedDate], [SalaryRequirement], [Message], [ResumeId] FROM {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]
 DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob]
 EXEC sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_UserJob]', N'{objectQualifier}EngageEmployment_UserJob'
@@ -350,7 +350,7 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]
 GO
 
 --Creating index [{objectQualifier}IX_EngageEmployment_UserJobProperty] on {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
-CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_UserJobProperty] ON {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] ([ApplicationId]) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_UserJobProperty] ON {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] ([ApplicationId])
 GO
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]'
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}EngageEmployment_vwJobs]') AND OBJECTPROPERTY(id, N'IsView') = 1)
@@ -370,19 +370,19 @@ join {objectQualifier}EngageEmployment_lkpState s on (l.StateId = s.StateId)
 join {objectQualifier}EngageEmployment_lkpJobCategory jc on (j.JobCategoryId = jc.JobCategoryId)
 GO
 --Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_Job]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_Job_PositionId_LocationId] UNIQUE NONCLUSTERED  ([JobPositionId], [LocationId]) ON [PRIMARY]
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_Job_PositionId_LocationId] UNIQUE NONCLUSTERED  ([JobPositionId], [LocationId])
 GO
 --Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description] UNIQUE NONCLUSTERED  ([Description]) ON [PRIMARY]
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description] UNIQUE NONCLUSTERED  ([Description])
 GO
 --Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle] UNIQUE NONCLUSTERED  ([JobTitle]) ON [PRIMARY]
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle] UNIQUE NONCLUSTERED  ([JobTitle])
 GO
 --Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId] UNIQUE NONCLUSTERED  ([Description], [StateId]) ON [PRIMARY]
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId] UNIQUE NONCLUSTERED  ([Description], [StateId])
 GO
 --Adding constraints to {databaseOwner}[{objectQualifier}EngageEmployment_lkpState]'
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpState_Name] UNIQUE NONCLUSTERED  ([Name]) ON [PRIMARY]
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ADD CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpState_Name] UNIQUE NONCLUSTERED  ([Name])
 GO
 --Adding foreign keys to {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty]'
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobProperty] WITH NOCHECK ADD

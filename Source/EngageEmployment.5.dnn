@@ -269,20 +269,23 @@
         </component>
         <component type="Assembly">
           <assemblies>
-            <basepath>bin</basepath>
             <assembly>
+              <path>bin</path>
               <name>EngageEmployment.dll</name>
               <version latestVersion="latestVersion">1.9.0</version>
             </assembly>
             <assembly>
+              <path>bin</path>
               <name>Engage.Framework.dll</name>
               <version>3.1.2</version>
             </assembly>
             <assembly>
+              <path>bin</path>
               <name>Engage.Dnn.Framework.dll</name>
               <version>3.1.2</version>
             </assembly>
             <assembly>
+              <path>bin</path>
               <name>Telerik.Web.UI.dll</name>
               <version>2009.3.1103</version>
             </assembly>

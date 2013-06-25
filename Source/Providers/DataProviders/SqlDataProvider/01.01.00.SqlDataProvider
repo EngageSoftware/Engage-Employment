@@ -10,12 +10,11 @@ GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] (
 	[UserStatusId] [int] IDENTITY (1, 1) NOT NULL ,
 	[Status] [nvarchar] (255) NOT NULL 
-) ON [PRIMARY]
+)
 GO
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpUserStatus] WITH NOCHECK ADD 
 	CONSTRAINT [PK_{objectQualifier}EngageEmployment_lkpUserStatus] PRIMARY KEY  CLUSTERED 
 	(
 		[UserStatusId]
-	)  ON [PRIMARY] 
-GO
+	)
 

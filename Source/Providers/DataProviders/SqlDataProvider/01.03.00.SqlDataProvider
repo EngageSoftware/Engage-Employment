@@ -26,28 +26,28 @@ IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_Job WH
 BEGIN
     UPDATE {databaseOwner}{objectQualifier}EngageEmployment_Job
     SET PortalId = m.PortalId
-     FROM {objectQualifier}EngageEmployment_Job j
-      JOIN {objectQualifier}EngageEmployment_JobJobGroup jjg ON (j.JobId = jjg.JobId)
-      JOIN {objectQualifier}TabModuleSettings tms ON (CONVERT(nvarchar(50), jjg.JobGroupId) = tms.SettingValue)
-      JOIN {objectQualifier}TabModules tm ON (tms.TabModuleId = tm.TabModuleId)
-      JOIN {objectQualifier}Modules m ON (tm.ModuleId = m.ModuleId)
+     FROM {databaseOwner}{objectQualifier}EngageEmployment_Job j
+      JOIN {databaseOwner}{objectQualifier}EngageEmployment_JobJobGroup jjg ON (j.JobId = jjg.JobId)
+      JOIN {databaseOwner}{objectQualifier}TabModuleSettings tms ON (CONVERT(nvarchar(50), jjg.JobGroupId) = tms.SettingValue)
+      JOIN {databaseOwner}{objectQualifier}TabModules tm ON (tms.TabModuleId = tm.TabModuleId)
+      JOIN {databaseOwner}{objectQualifier}Modules m ON (tm.ModuleId = m.ModuleId)
      WHERE tms.SettingName = 'JobGroupId'
 
     IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_Job WHERE PortalId IS NULL)
     BEGIN
         UPDATE {databaseOwner}{objectQualifier}EngageEmployment_Job
          SET PortalId = up.PortalId
-         FROM {objectQualifier}EngageEmployment_Job j 
-          JOIN {objectQualifier}UserPortals up ON (j.RevisingUser = up.UserId)
+         FROM {databaseOwner}{objectQualifier}EngageEmployment_Job j 
+          JOIN {databaseOwner}{objectQualifier}UserPortals up ON (j.RevisingUser = up.UserId)
          WHERE j.PortalId IS NULL
 
         IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_Job WHERE PortalId IS NULL)
         BEGIN
             UPDATE {databaseOwner}{objectQualifier}EngageEmployment_Job
             SET PortalId = (SELECT TOP 1 m.PortalId
-		        FROM {objectQualifier}DesktopModules dm
-                 JOIN {objectQualifier}ModuleDefinitions md ON (dm.DesktopModuleId = md.DesktopModuleId)
-                 JOIN {objectQualifier}Modules m ON (m.ModuleDefId = md.ModuleDefId)
+		        FROM {databaseOwner}{objectQualifier}DesktopModules dm
+                 JOIN {databaseOwner}{objectQualifier}ModuleDefinitions md ON (dm.DesktopModuleId = md.DesktopModuleId)
+                 JOIN {databaseOwner}{objectQualifier}Modules m ON (m.ModuleDefId = md.ModuleDefId)
                 WHERE dm.FriendlyName = 'Engage: Employment')
             WHERE PortalId IS NULL
              
@@ -55,7 +55,7 @@ BEGIN
             BEGIN
                 UPDATE {databaseOwner}{objectQualifier}EngageEmployment_Job
                 SET PortalId = (SELECT TOP 1 p.PortalId
-		            FROM {objectQualifier}Portals p)
+		            FROM {databaseOwner}{objectQualifier}Portals p)
 		        WHERE PortalId IS NULL
             END
         END
@@ -148,7 +148,7 @@ BEGIN
          
         IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}EngageEmployment_lkpJobCategory WHERE PortalId IS NULL)
         BEGIN
-            UPDATE {databaseOwner}{databaseOwner}{objectQualifier}EngageEmployment_lkpJobCategory
+            UPDATE {databaseOwner}{objectQualifier}EngageEmployment_lkpJobCategory
             SET PortalId = (SELECT TOP 1 p.PortalId
 	            FROM {databaseOwner}{objectQualifier}Portals p)
 	        WHERE PortalId IS NULL
@@ -415,7 +415,7 @@ GO
 
 IF EXISTS (SELECT * FROM dbo.sysobjects where name = '{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId')
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] DROP 
-    {databaseOwner}[{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId]
+    [{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId]
 GO
 
 IF EXISTS (SELECT * FROM dbo.sysobjects where name = '{objectQualifier}IX_EngageEmployment_lkpState_Name')
@@ -424,36 +424,36 @@ ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] DROP
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] ADD 
-	CONSTRAINT {databaseOwner}[{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description] UNIQUE  NONCLUSTERED 
+	CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description] UNIQUE  NONCLUSTERED 
 	(
 		[Description],
 		[PortalId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ADD 
-	CONSTRAINT {databaseOwner}[{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle] UNIQUE  NONCLUSTERED 
+	CONSTRAINT [{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle] UNIQUE  NONCLUSTERED 
 	(
 		[JobTitle],
 		[PortalId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ADD 
-	CONSTRAINT {databaseOwner}[{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId] UNIQUE  NONCLUSTERED 
+	CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpLocation_Description_StateId] UNIQUE  NONCLUSTERED 
 	(
 		[Description],
 		[StateId],
 		[PortalId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ADD 
-	CONSTRAINT {databaseOwner}[{objectQualifier}IX_EngageEmployment_lkpState_Name] UNIQUE  NONCLUSTERED 
+	CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpState_Name] UNIQUE  NONCLUSTERED 
 	(
 		[Name],
 		[PortalId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 /*************************************/
@@ -481,7 +481,7 @@ j.JobId, p.JobTitle, p.JobPositionId, l.[Description] as LocationName, l.Locatio
 j.RequiredQualifications, j.DesiredQualifications, jc.[Description] as JobCategory, jc.JobCategoryId,
 j.IsHot, j.PostedDate, p.[Description] as PositionDescription, j.IsFilled, j.SortOrder, j.RevisingUser, j.PortalId
 from
-{objectQualifier}EngageEmployment_job j
+{databaseOwner}{objectQualifier}EngageEmployment_job j
 join {databaseOwner}{objectQualifier}EngageEmployment_lkpJobPosition p on (j.JobPositionId = p.JobPositionId)
 join {databaseOwner}{objectQualifier}EngageEmployment_lkpLocation l on (j.LocationId = l.LocationId)
 join {databaseOwner}{objectQualifier}EngageEmployment_lkpState s on (l.StateId = s.StateId)

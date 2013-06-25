@@ -82,7 +82,7 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] (
 	[DesiredQualifications] [varchar] (4000) NULL,
 	[RevisingUser] [int] NOT NULL,
 	[RevisionDate] [datetime] NOT NULL
-) ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] (
@@ -91,7 +91,7 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] (
 	[ResumeId] [int] NOT NULL ,
 	[AppliedDate] [datetime] NOT NULL ,
 	[SalaryRequirement] [varchar] (255) NULL 
-) ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] (
@@ -104,7 +104,7 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] (
 	[CreationDate] [datetime] NOT NULL ,
 	[LocationId] [int] NULL ,
 	[SearchSql] [text] NULL 
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserResume] (
@@ -115,48 +115,48 @@ CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserResume] (
 	[ContentLength] [int] NOT NULL ,
 	[ResumeData] [image] NOT NULL ,
 	[RevisionDate] [datetime] NOT NULL 
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] (
 	[JobCategoryId] [int] IDENTITY (1, 1) NOT NULL ,
 	[Description] [varchar] (255) NOT NULL 
-) ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] (
 	[JobPositionId] [int] IDENTITY (1, 1) NOT NULL ,
 	[JobTitle] [varchar] (255) NOT NULL ,
 	[Description] [text] NULL 
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] (
 	[LocationId] [int] IDENTITY (1, 1) NOT NULL ,
 	[Description] [varchar] (255) NOT NULL ,
 	[StateId] [int] NOT NULL 
-) ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] (
 	[StateId] [int] IDENTITY (1, 1) NOT NULL ,
 	[Name] [varchar] (255) NOT NULL ,
 	[Abbreviation] [varchar] (10) NULL 
-) ON [PRIMARY]
+)
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpCommonWords] (
 	[CommonWordID] [int] IDENTITY (1, 1) NOT NULL ,
 	[Word] [nvarchar] (255) NOT NULL ,
 	[Locale] [nvarchar] (10) NULL 
-) ON [PRIMARY]
+)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_Job] PRIMARY KEY  CLUSTERED 
 	(
 		[JobId]
-	)  ON [PRIMARY] 
+	) 
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] WITH NOCHECK ADD 
@@ -164,56 +164,56 @@ ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] WITH NOCH
 	(
 		[UserId],
 		[JobId]
-	)  ON [PRIMARY] 
+	) 
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserJobSearch] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserSearch] PRIMARY KEY  CLUSTERED 
 	(
 		[UserSearchId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_UserResume] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_UserResume] PRIMARY KEY  CLUSTERED 
 	(
 		[ResumeId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpPositionType] PRIMARY KEY  CLUSTERED 
 	(
 		[JobCategoryId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpPosition] PRIMARY KEY  CLUSTERED 
 	(
 		[JobPositionId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_Location] PRIMARY KEY  CLUSTERED 
 	(
 		[LocationId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpState] PRIMARY KEY  CLUSTERED 
 	(
 		[StateId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpCommonWords] WITH NOCHECK ADD 
 	CONSTRAINT [{objectQualifier}PK_EngageEmployment_lkpCommonWords] PRIMARY KEY  CLUSTERED 
 	(
 		[CommonWordID]
-	)  ON [PRIMARY] 
+	) 
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD 
@@ -221,21 +221,21 @@ ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD
 	(
 		[JobPositionId],
 		[LocationId]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobCategory] ADD 
 	CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpJobCategory_Description] UNIQUE  NONCLUSTERED 
 	(
 		[Description]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpJobPosition] ADD 
 	CONSTRAINT [{objectQualifier}IX_EngageEmployment_JobPosition_JobTitle] UNIQUE  NONCLUSTERED 
 	(
 		[JobTitle]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ADD 
@@ -243,21 +243,21 @@ ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpLocation] ADD
 	(
 		[Description],
 		[StateId]
-	)  ON [PRIMARY] 
+	) 
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpState] ADD 
 	CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpState_Name] UNIQUE  NONCLUSTERED 
 	(
 		[Name]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_lkpCommonWords] ADD 
 	CONSTRAINT [{objectQualifier}IX_EngageEmployment_lkpCommonWords_Word] UNIQUE  NONCLUSTERED 
 	(
 		[Word]
-	)  ON [PRIMARY] 
+	)
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_Job] ADD 
