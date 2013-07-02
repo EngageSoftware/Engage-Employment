@@ -16,8 +16,8 @@
 	            <dnn:label ResourceKey="lblFriendEmailAddress" runat="server" />
 	        </td>
 	        <td class="contentColumn">
-	            <asp:TextBox ID="txtFriendEmailAddress" runat="server" cssclass="NormalTextBox" Width="75%" />
-                <asp:RegularExpressionValidator ID="FriendEmailRegexValidator" runat="server" Display="None" ControlToValidate="txtFriendEmailAddress" resourcekey="FriendEmailPatternValidator" ValidationGroup="SaveSettings" />
+	            <asp:TextBox ID="txtFromEmailAddress" runat="server" cssclass="NormalTextBox" Width="75%" />
+                <asp:RegularExpressionValidator ID="FromEmailRegexValidator" runat="server" Display="None" ControlToValidate="txtFromEmailAddress" resourcekey="FriendEmailPatternValidator" ValidationGroup="SaveSettings" />
 	        </td>
 	    </tr>
 	    <tr>

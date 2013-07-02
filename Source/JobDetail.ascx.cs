@@ -191,11 +191,11 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Gets the default notification email address for this instance of the module.
+        /// Gets list of default email addresses to which notifications should be sent, when the job does not have any defined, for this instance of the module.
         /// </summary>
-        private string DefaultNotificationEmailAddress
+        private string DefaultNotificationEmailAddresses
         {
-            get { return ModuleSettings.JobDetailApplicationEmailAddress.GetValueAsStringFor(this) ?? PortalController.GetCurrentPortalSettings().Email; }
+            get { return ModuleSettings.JobDetailApplicationEmailAddresses.GetValueAsStringFor(this) ?? PortalController.GetCurrentPortalSettings().Email; }
         }
 
         /// <summary>
@@ -263,11 +263,11 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Gets the email address from which "send to a friend" email come.
+        /// Gets the email address from which "send to a friend" and notification emails come.
         /// </summary>
-        private string FriendEmailAddress
+        private string FromEmailAddress
         {
-            get { return ModuleSettings.JobDetailFriendEmailAddress.GetValueAsStringFor(this) ?? PortalSettings.Email; }
+            get { return ModuleSettings.JobDetailFromEmailAddress.GetValueAsStringFor(this) ?? PortalSettings.Email; }
         }
 
         /// <summary>
@@ -642,10 +642,10 @@ namespace Engage.Dnn.Employment
         {
             try
             {
-                var fromAddress = this.DefaultNotificationEmailAddress;
+                var fromAddress = this.FromEmailAddress;
                 var replyTo = replyToApplicant
                                   ? this.GetTextWithFallback(this.ApplicantEmailTextBox, this.UserInfo.Email) ?? fromAddress
-                                  : this.DefaultNotificationEmailAddress;
+                                  : fromAddress;
 
                 var subjectResourceKey = isNewApplication
                                              ? Framework.ModuleBase.IsLoggedIn
@@ -836,7 +836,7 @@ namespace Engage.Dnn.Employment
                 Debug.Assert(this.CurrentJob != null, "this.CurrentJob must not be null when sending notification about a new application");
                 string notificationEmailAddress = Engage.Utility.HasValue(this.CurrentJob.NotificationEmailAddress)
                                                       ? this.CurrentJob.NotificationEmailAddress
-                                                      : this.DefaultNotificationEmailAddress;
+                                                      : this.DefaultNotificationEmailAddresses;
 
                 this.SendNotificationEmail(
                     GetDocument(documentIds.First, DocumentType.Resume, resumeFileName, resumeContentType, resumeBytes), 
@@ -974,9 +974,9 @@ namespace Engage.Dnn.Employment
             {
                 // send email to list
                 var toAddress = this.SendToAddressTextBox.Text;
-                var fromAddress = !string.IsNullOrEmpty(this.FromAddressTextBox.Text) 
+                var replyTo = !string.IsNullOrEmpty(this.FromAddressTextBox.Text) 
                     ? this.FromAddressTextBox.Text 
-                    : this.FriendEmailAddress;
+                    : this.FromEmailAddress;
                 var subject = string.Format(
                     CultureInfo.CurrentCulture, 
                     this.Localize("FriendEmailSubject"), 
@@ -987,11 +987,11 @@ namespace Engage.Dnn.Employment
                 try
                 {
                     Mail.SendMail(
-                            this.FriendEmailAddress, 
+                            this.FromEmailAddress, 
                             toAddress, 
                             string.Empty,
                             string.Empty,
-                            fromAddress,
+                            replyTo,
                             MailPriority.Normal, 
                             subject, 
                             MailFormat.Html, 

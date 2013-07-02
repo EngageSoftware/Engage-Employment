@@ -52,10 +52,10 @@ namespace Engage.Dnn.Employment
         public static readonly Setting<bool> JobDetailEnableDnnSearch = new Setting<bool>("EnableDnnSearch", SettingScope.TabModule, true);
         
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
-        public static readonly Setting<string> JobDetailApplicationEmailAddress = new Setting<string>("ApplicationEmailAddress", SettingScope.TabModule, null);
+        public static readonly Setting<string> JobDetailApplicationEmailAddresses = new Setting<string>("ApplicationEmailAddress", SettingScope.TabModule, null);
         
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
-        public static readonly Setting<string> JobDetailFriendEmailAddress = new Setting<string>("FriendEmailAddress", SettingScope.TabModule, null);
+        public static readonly Setting<string> JobDetailFromEmailAddress = new Setting<string>("FriendEmailAddress", SettingScope.TabModule, null);
         
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Reference type is immutable.")]
         public static readonly Setting<bool> JobDetailRequireRegistration = new Setting<bool>("RequireRegistration", SettingScope.TabModule, true);

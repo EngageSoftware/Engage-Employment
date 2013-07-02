@@ -105,10 +105,10 @@ namespace Engage.Dnn.Employment
                 if (!this.IsPostBack)
                 {
                     this.ApplicationEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx; 
-                    this.FriendEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
+                    this.FromEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
 
-                    this.txtApplicationEmailAddress.Text = ModuleSettings.JobDetailApplicationEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
-                    this.txtFriendEmailAddress.Text = ModuleSettings.JobDetailFriendEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
+                    this.txtApplicationEmailAddress.Text = ModuleSettings.JobDetailApplicationEmailAddresses.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
+                    this.txtFromEmailAddress.Text = ModuleSettings.JobDetailFromEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
                     this.RequireRegistrationCheckBox.Checked = ModuleSettings.JobDetailRequireRegistration.GetValueAsBooleanFor(this).Value;
                     this.EnableDnnSearchCheckBox.Checked = ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(this).Value;
                     this.ShowCloseDateCheckBox.Checked = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
@@ -159,8 +159,8 @@ namespace Engage.Dnn.Employment
                     return;
                 }
 
-                ModuleSettings.JobDetailApplicationEmailAddress.Set(this, this.txtApplicationEmailAddress.Text);
-                ModuleSettings.JobDetailFriendEmailAddress.Set(this, this.txtFriendEmailAddress.Text);
+                ModuleSettings.JobDetailApplicationEmailAddresses.Set(this, this.txtApplicationEmailAddress.Text);
+                ModuleSettings.JobDetailFromEmailAddress.Set(this, this.txtFromEmailAddress.Text);
                 ModuleSettings.JobDetailRequireRegistration.Set(this, this.RequireRegistrationCheckBox.Checked);
                 ModuleSettings.JobDetailDisplayName.Set(this, this.DisplayNameRadioButtonList.SelectedValue);
                 ModuleSettings.JobDetailDisplayEmail.Set(this, this.DisplayEmailRadioButtonList.SelectedValue);

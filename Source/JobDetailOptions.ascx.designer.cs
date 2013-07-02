@@ -31,22 +31,22 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.RegularExpressionValidator ApplicationEmailRegexValidator;
         
         /// <summary>
-        /// txtFriendEmailAddress control.
+        /// txtFromEmailAddress control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFriendEmailAddress;
+        protected global::System.Web.UI.WebControls.TextBox txtFromEmailAddress;
         
         /// <summary>
-        /// FriendEmailRegexValidator control.
+        /// FromEmailRegexValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator FriendEmailRegexValidator;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator FromEmailRegexValidator;
         
         /// <summary>
         /// RequireRegistrationCheckBox control.

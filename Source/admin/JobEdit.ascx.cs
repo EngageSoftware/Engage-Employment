@@ -41,7 +41,7 @@ namespace Engage.Dnn.Employment.Admin
                 ModuleInfo jobDetailsModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobDetail, this.JobGroupId);
                 if (jobDetailsModule != null)
                 {
-                    return ModuleSettings.JobDetailApplicationEmailAddress.GetValueAsStringFor(this.DesktopModuleName, jobDetailsModule, PortalSettings.Email);
+                    return ModuleSettings.JobDetailApplicationEmailAddresses.GetValueAsStringFor(this.DesktopModuleName, jobDetailsModule, PortalSettings.Email);
                 }
 
                 return string.Empty;

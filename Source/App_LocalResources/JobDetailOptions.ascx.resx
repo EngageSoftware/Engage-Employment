@@ -127,10 +127,10 @@
     <value>Default Email Address to which to Send Applications:</value>
   </data>
   <data name="lblFriendEmailAddress.Help" xml:space="preserve">
-    <value>Specify the email address that emails send to a friend will come from</value>
+    <value>Specify the email address from which notification emails and "email a friend" emails will come</value>
   </data>
   <data name="lblFriendEmailAddress.Text" xml:space="preserve">
-    <value>Email Address from which to Email a Friend:</value>
+    <value>Email Address from which to Send Emails:</value>
   </data>
   <data name="btnUpdate.Text" xml:space="preserve">
     <value>Update</value>
@@ -232,10 +232,10 @@
     <value>Default Email Address to which to Send Applications is required</value>
   </data>
   <data name="FriendEmailPatternValidator.Text" xml:space="preserve">
-    <value>The Email Address from which to Email a Friend is not a valid email address, please validate the format of the email address.</value>
+    <value>The Email Address from which to Send Emails is not a valid email address, please validate the format of the email address.</value>
   </data>
   <data name="FriendEmailRequired.Text" xml:space="preserve">
-    <value>Email Address from which to Email a Friend is required</value>
+    <value>Email Address from which to Send Emails is required</value>
   </data>
   <data name="lblShowCloseDate.Text" xml:space="preserve">
     <value>Show Close Date</value>
