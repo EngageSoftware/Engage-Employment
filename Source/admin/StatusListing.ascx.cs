@@ -85,11 +85,11 @@ namespace Engage.Dnn.Employment.Admin
         /// <summary>Binds the <see cref="StatusesGridView"/> to the list of user statuses.</summary>
         private void BindData()
         {
-            var statuses = UserStatus.LoadStatuses(this.PortalId);
+            var statuses = UserStatus.LoadStatuses(this.PortalId).ToArray();
             this.StatusesGridView.DataSource = statuses;
             this.StatusesGridView.DataBind();
 
-            this.NewPanel.CssClass = statuses.Count() % 2 == 0
+            this.NewPanel.CssClass = statuses.Length % 2 == 0
                                          ? this.StatusesGridView.RowStyle.CssClass
                                          : this.StatusesGridView.AlternatingRowStyle.CssClass;
 
@@ -101,12 +101,12 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>An <see cref="int"/>, or <c>null</c>.</returns>
         private int? GetStatusId(int rowIndex)
         {
-            if (this.StatusesGridView != null && this.StatusesGridView.Rows.Count > rowIndex)
+            if (this.StatusesGridView == null || this.StatusesGridView.Rows.Count <= rowIndex)
             {
-                return GetStatusId(this.StatusesGridView.Rows[rowIndex]);
+                return null;
             }
 
-            return null;
+            return GetStatusId(this.StatusesGridView.Rows[rowIndex]);
         }
 
         /// <summary>Gets the name of the status in the row with the given index.</summary>
@@ -115,14 +115,14 @@ namespace Engage.Dnn.Employment.Admin
         [CanBeNull]
         private string GetStatusName(int rowIndex)
         {
-            if (this.StatusesGridView != null && this.StatusesGridView.Rows.Count > rowIndex)
+            if (this.StatusesGridView == null || this.StatusesGridView.Rows.Count <= rowIndex)
             {
-                GridViewRow row = this.StatusesGridView.Rows[rowIndex];
-                var txtStatus = (TextBox)row.FindControl("txtStatus");
-                return txtStatus.Text;
+                return null;
             }
 
-            return null;
+            var row = this.StatusesGridView.Rows[rowIndex];
+            var txtStatus = (TextBox)row.FindControl("txtStatus");
+            return txtStatus.Text;
         }
 
         /// <summary>Hides and clears the panel for adding a new status.</summary>
@@ -138,7 +138,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns><c>true</c> if the new status name is unique; otherwise, <c>false</c>.</returns>
         private bool IsStatusNameUnique(int? statusId, string newStatusName)
         {
-            int? newStatusId = UserStatus.GetStatusId(newStatusName, this.PortalId);
+            var newStatusId = UserStatus.GetStatusId(newStatusName, this.PortalId);
             return !newStatusId.HasValue || (statusId.HasValue && newStatusId.Value == statusId.Value);
         }
 
@@ -179,19 +179,20 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SaveNewButton_Click(object sender, EventArgs e)
         {
-            if (this.Page.IsValid)
+            if (!this.Page.IsValid)
             {
-                if (this.IsStatusNameUnique(null, this.txtNewStatus.Text))
-                {
-                    UserStatus.InsertStatus(this.txtNewStatus.Text, this.PortalId);
-                    this.HideAndClearNewStatusPanel();
-                    this.BindData();
-                }
-                else
-                {
-                    this.cvDuplicateUserStatus.IsValid = false;
-                }
+                return;
             }
+
+            if (!this.IsStatusNameUnique(null, this.txtNewStatus.Text))
+            {
+                this.cvDuplicateUserStatus.IsValid = false;
+                return;
+            }
+            
+            UserStatus.InsertStatus(this.txtNewStatus.Text, this.PortalId);
+            this.HideAndClearNewStatusPanel();
+            this.BindData();
         }
 
         /// <summary>Handles the <see cref="GridView.RowCancelingEdit"/> event of the <see cref="StatusesGridView"/> control.</summary>
@@ -208,31 +209,38 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="e">The <see cref="GridViewCommandEventArgs"/> instance containing the event data.</param>
         private void StatusesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
             {
-                if (this.Page.IsValid)
-                {
-                    int rowIndex;
-                    if (int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
-                    {
-                        int? statusId = GetStatusId(rowIndex);
-                        if (statusId.HasValue)
-                        {
-                            string newStatusName = this.GetStatusName(rowIndex);
-                            if (this.IsStatusNameUnique(statusId, newStatusName))
-                            {
-                                UserStatus.UpdateStatus(statusId.Value, newStatusName);
-                                this.StatusesGridView.EditIndex = -1;
-                                this.BindData();
-                            }
-                            else
-                            {
-                                this.cvDuplicateUserStatus.IsValid = false;
-                            }
-                        }
-                    }
-                }
+                return;
             }
+
+            if (!this.Page.IsValid)
+            {
+                return;
+            }
+
+            int rowIndex;
+            if (!int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
+            {
+                return;
+            }
+
+            var statusId = this.GetStatusId(rowIndex);
+            if (!statusId.HasValue)
+            {
+                return;
+            }
+
+            var newStatusName = this.GetStatusName(rowIndex);
+            if (!this.IsStatusNameUnique(statusId, newStatusName))
+            {
+                this.cvDuplicateUserStatus.IsValid = false;
+                return;
+            }
+            
+            UserStatus.UpdateStatus(statusId.Value, newStatusName);
+            this.StatusesGridView.EditIndex = -1;
+            this.BindData();
         }
 
         /// <summary>Handles the <see cref="GridView.RowDataBound"/> event of the <see cref="StatusesGridView"/> control.</summary>
@@ -240,29 +248,34 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="e">The <see cref="GridViewRowEventArgs"/> instance containing the event data.</param>
         private void StatusesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
+            if (e.Row.RowType != DataControlRowType.DataRow)
             {
-                GridViewRow row = e.Row;
-                if (row != null)
-                {
-                    var btnDelete = (Button)row.FindControl("btnDelete");
-                    if (btnDelete != null)
-                    {
-                        int? statusId = GetStatusId(row);
-                        if (statusId.HasValue && UserStatus.IsStatusUsed(statusId.Value))
-                        {
-                            btnDelete.Enabled = false;
-                        }
-                        else
-                        {
-                            btnDelete.OnClientClick = string.Format(
-                                    CultureInfo.CurrentCulture, 
-                                    "return confirm('{0}');", 
-                                    ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
-                        }
-                    }
-                }
+                return;
             }
+
+            var row = e.Row;
+            if (row == null)
+            {
+                return;
+            }
+
+            var btnDelete = (Button)row.FindControl("btnDelete");
+            if (btnDelete == null)
+            {
+                return;
+            }
+
+            var statusId = GetStatusId(row);
+            if (statusId.HasValue && UserStatus.IsStatusUsed(statusId.Value))
+            {
+                btnDelete.Enabled = false;
+                return;
+            }
+            
+            btnDelete.OnClientClick = string.Format(
+                CultureInfo.CurrentCulture, 
+                "return confirm('{0}');", 
+                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
         }
 
         /// <summary>Handles the <see cref="GridView.RowDeleting"/> event of the <see cref="StatusesGridView"/> control.</summary>
@@ -270,12 +283,14 @@ namespace Engage.Dnn.Employment.Admin
         /// <param name="e">The <see cref="GridViewDeleteEventArgs"/> instance containing the event data.</param>
         private void StatusesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int? statusId = GetStatusId(e.RowIndex);
-            if (statusId.HasValue)
+            var statusId = GetStatusId(e.RowIndex);
+            if (!statusId.HasValue)
             {
-                UserStatus.DeleteStatus(statusId.Value);
-                this.BindData();
+                return;
             }
+
+            UserStatus.DeleteStatus(statusId.Value);
+            this.BindData();
         }
 
         /// <summary>Handles the <see cref="GridView.RowEditing"/> event of the <see cref="StatusesGridView"/> control.</summary>
@@ -295,12 +310,14 @@ namespace Engage.Dnn.Employment.Admin
         {
             try
             {
-                if (!this.IsPostBack)
+                if (this.IsPostBack)
                 {
-                    Localization.LocalizeGridView(ref this.StatusesGridView, this.LocalResourceFile);
-                    this.SetupStatusLengthValidation();
-                    this.BindData();
+                    return;
                 }
+
+                Localization.LocalizeGridView(ref this.StatusesGridView, this.LocalResourceFile);
+                this.SetupStatusLengthValidation();
+                this.BindData();
             }
             catch (Exception exc)
             {
