@@ -3,7 +3,6 @@
 // Copyright (c) 2004-2013
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
-
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
 // TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
@@ -16,6 +15,7 @@ namespace Engage.Dnn.Employment
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
 
+    using Engage.Annotations;
     using Engage.Dnn.Employment.Data;
 
     internal class State
@@ -36,6 +36,7 @@ namespace Engage.Dnn.Employment
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Called in Eval statements from markup")]
         public string Abbreviation { get; set; }
 
+        [NotNull]
         public static List<State> LoadStates(int? jobGroupId, int portalId)
         {
             var states = new List<State>();

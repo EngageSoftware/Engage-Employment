@@ -1,6 +1,5 @@
 <%@ Import Namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.StateListing" AutoEventWireup="false" Codebehind="StateListing.ascx.cs" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <div class="information"><asp:Label ResourceKey="lblStatesHeader.Help" runat="server"/></div>
 
 <asp:Button ID="AddButton" runat="server" resourcekey="btnAdd" />
@@ -17,13 +16,13 @@
         <asp:TemplateField HeaderText="StateName">
             <ItemTemplate>
                 <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("StateName")) %></span>
-                <asp:HiddenField ID="hdnStateId" runat="server" Value='<%#((int)Eval("StateId")).ToString(CultureInfo.InvariantCulture) %>' />
+                <asp:HiddenField ID="StateIdHiddenField" runat="server" Value='<%#((int)Eval("StateId")).ToString(CultureInfo.InvariantCulture) %>' />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:TextBox ID="txtState" runat="server" Text='<%#Eval("StateName") %>' CssClass="NormalTextBox" />
-                <asp:HiddenField ID="hdnStateId" runat="server" Value='<%#((int)Eval("StateId")).ToString(CultureInfo.InvariantCulture) %>' />
-                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtState" Display="None" ValidationGroup="Edit" resourcekey="StateRequired" />
-                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtState" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxLengthValidationExpression %>" ErrorMessage="<%#MaxLengthValidationText %>" />
+                <asp:TextBox ID="StateTextBox" runat="server" Text='<%#Eval("StateName") %>' CssClass="NormalTextBox" />
+                <asp:HiddenField ID="StateIdHiddenField" runat="server" Value='<%#((int)Eval("StateId")).ToString(CultureInfo.InvariantCulture) %>' />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="StateTextBox" Display="None" ValidationGroup="Edit" resourcekey="StateRequired" />
+                <asp:RegularExpressionValidator runat="server" ControlToValidate="StateTextBox" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxLengthValidationExpression %>" ErrorMessage="<%#MaxLengthValidationText %>" />
             </EditItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Abbreviation">
@@ -35,22 +34,20 @@
                 <asp:RegularExpressionValidator runat="server" ControlToValidate="txtAbbreviation" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxAbbreviationLengthValidationExpression %>" ErrorMessage="<%#MaxAbbreviationLengthValidationText %>" />
             </EditItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField>
-            <ItemStyle CssClass="labelColumn" />
+        <asp:TemplateField ItemStyle-CssClass="labelColumn">
             <ItemTemplate>
-                <asp:Button ID="btnEdit" runat="server" resourcekey="Edit" CommandName="Edit" />
+                <asp:Button runat="server" resourcekey="Edit" CommandName="Edit" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnSave" runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
+                <asp:Button runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
             </EditItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField>
-            <ItemStyle CssClass="labelColumn" />
+        <asp:TemplateField ItemStyle-CssClass="labelColumn">
             <ItemTemplate>
-                <asp:Button ID="btnDelete" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
+                <asp:Button ID="DeleteButton" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnCancel" runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
+                <asp:Button runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
             </EditItemTemplate>
         </asp:TemplateField>
     </Columns>
