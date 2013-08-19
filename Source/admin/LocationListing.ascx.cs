@@ -3,7 +3,6 @@
 // Copyright (c) 2004-2013
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
-
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
 // TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
@@ -13,7 +12,6 @@
 namespace Engage.Dnn.Employment.Admin
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.Web.UI;
@@ -63,13 +61,15 @@ namespace Engage.Dnn.Employment.Admin
         {
             try
             {
-                if (!this.IsPostBack)
+                if (this.IsPostBack)
                 {
-                    Localization.LocalizeGridView(ref this.LocationsGridView, this.LocalResourceFile);
-                    this.SetupLengthValidation();
-                    this.BindStates(this.NewStateDropDownList);
-                    this.LoadLocations();
+                    return;
                 }
+
+                Localization.LocalizeGridView(ref this.LocationsGridView, this.LocalResourceFile);
+                this.SetupLengthValidation();
+                this.BindStates(this.NewStateDropDownList);
+                this.LoadLocations();
             }
             catch (Exception exc)
             {
@@ -79,15 +79,15 @@ namespace Engage.Dnn.Employment.Admin
 
         protected void BackButton_Click(object sender, EventArgs e)
         {
-            Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
+            this.Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
         }
 
         private static int? GetLocationId(Control row)
         {
-            var hdnLocationId = (HiddenField)row.FindControl("hdnLocationId");
+            var locationIdHiddenField = (HiddenField)row.FindControl("LocationIdHiddenField");
 
             int locationId;
-            if (hdnLocationId != null && int.TryParse(hdnLocationId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out locationId))
+            if (locationIdHiddenField != null && int.TryParse(locationIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out locationId))
             {
                 return locationId;
             }
@@ -103,21 +103,22 @@ namespace Engage.Dnn.Employment.Admin
 
         private void SaveNewButton_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
+            if (!this.Page.IsValid)
             {
-                int stateId;
-                if (int.TryParse(this.NewStateDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId)
-                    && this.IsLocationNameUnique(null, this.txtNewLocationName.Text, stateId))
-                {
-                    Location.InsertLocation(this.txtNewLocationName.Text, stateId, this.PortalId);
-                    this.HideAndClearNewStatusPanel();
-                    this.LoadLocations();
-                }
-                else
-                {
-                    this.cvDuplicateLocation.IsValid = false;
-                }
+                return;
             }
+
+            int stateId;
+            if (!int.TryParse(this.NewStateDropDownList.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId)
+                || !this.IsLocationNameUnique(null, this.txtNewLocationName.Text, stateId))
+            {
+                this.cvDuplicateLocation.IsValid = false;
+                return;
+            }
+
+            Location.InsertLocation(this.txtNewLocationName.Text, stateId, this.PortalId);
+            this.HideAndClearNewStatusPanel();
+            this.LoadLocations();
         }
 
         private void CancelNewButton_Click(object sender, EventArgs e)
@@ -133,44 +134,48 @@ namespace Engage.Dnn.Employment.Admin
 
         private void LocationsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
+            if (e.Row.RowType != DataControlRowType.DataRow)
             {
-                GridViewRow row = e.Row;
-                if (row != null)
-                {
-                    var location = (Location)e.Row.DataItem;
-                    if ((e.Row.RowState & DataControlRowState.Edit) == 0)
-                    {
-                        var btnDelete = (Button)row.FindControl("btnDelete");
-                        if (location.IsUsed())
-                        {
-                            btnDelete.Enabled = false;
-                        }
-                        else
-                        {
-                            btnDelete.OnClientClick = string.Format(
-                                CultureInfo.CurrentCulture,
-                                "return confirm('{0}');",
-                                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
-                        }
-                    }
-                    else if ((e.Row.RowState & DataControlRowState.Edit) != 0)
-                    {
-                        var ddlState = (DropDownList)row.FindControl("ddlState");
-                        this.BindStates(ddlState, location.StateId);
-                    }
-                }
+                return;
             }
+
+            var row = e.Row;
+            if (row == null)
+            {
+                return;
+            }
+
+            var location = (Location)e.Row.DataItem;
+            if ((e.Row.RowState & DataControlRowState.Edit) != 0)
+            {
+                var ddlState = (DropDownList)row.FindControl("ddlState");
+                this.BindStates(ddlState, location.StateId);
+                return;
+            }
+            
+            var deleteButton = (Button)row.FindControl("DeleteButton");
+            if (location.IsUsed())
+            {
+                deleteButton.Enabled = false;
+                return;
+            }
+            
+            deleteButton.OnClientClick = string.Format(
+                CultureInfo.CurrentCulture,
+                "return confirm('{0}');",
+                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
         }
 
         private void LocationsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int? locationId = GetLocationId(e.RowIndex);
-            if (locationId.HasValue)
+            var locationId = GetLocationId(e.RowIndex);
+            if (!locationId.HasValue)
             {
-                Location.DeleteLocation(locationId.Value);
-                this.LoadLocations();
+                return;
             }
+
+            Location.DeleteLocation(locationId.Value);
+            this.LoadLocations();
         }
 
         private void LocationsGridView_RowEditing(object sender, GridViewEditEventArgs e)
@@ -182,56 +187,58 @@ namespace Engage.Dnn.Employment.Admin
 
         private void LocationsGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
             {
-                if (Page.IsValid)
-                {
-                    int rowIndex;
-                    if (int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
-                    {
-                        int? locationId = GetLocationId(rowIndex);
-                        if (locationId.HasValue)
-                        {
-                            int? stateId = this.GetStateId(rowIndex);
-                            string newLocationName = this.GetLocationName(rowIndex);
-                            if (this.IsLocationNameUnique(locationId, newLocationName, stateId))
-                            {
-                                Location.UpdateLocation(locationId.Value, newLocationName, stateId.Value);
-                                this.LocationsGridView.EditIndex = -1;
-                                this.LoadLocations();
-                            }
-                            else
-                            {
-                                this.cvDuplicateLocation.IsValid = false;
-                            }
-                        }
-                    }
-                }
+                return;
             }
+
+            if (!this.Page.IsValid)
+            {
+                return;
+            }
+
+            int rowIndex;
+            if (!int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
+            {
+                return;
+            }
+
+            var locationId = this.GetLocationId(rowIndex);
+            if (!locationId.HasValue)
+            {
+                return;
+            }
+
+            var stateId = this.GetStateId(rowIndex);
+            var newLocationName = this.GetLocationName(rowIndex);
+            if (!this.IsLocationNameUnique(locationId, newLocationName, stateId))
+            {
+                this.cvDuplicateLocation.IsValid = false;
+                return;
+            }
+            
+            Location.UpdateLocation(locationId.Value, newLocationName, stateId.Value);
+            this.LocationsGridView.EditIndex = -1;
+            this.LoadLocations();
         }
 
         private bool IsLocationNameUnique(int? locationId, string newLocationName, int? stateId)
         {
-            int? newLocationId = Location.GetLocationId(newLocationName, stateId, PortalId);
+            var newLocationId = Location.GetLocationId(newLocationName, stateId, PortalId);
             return (!newLocationId.HasValue || (locationId.HasValue && newLocationId.Value == locationId.Value)) && stateId.HasValue;
         }
 
         private void LoadLocations()
         {
-            List<Location> locations = Location.LoadLocations(null, PortalId);
+            var locations = Location.LoadLocations(null, PortalId);
             this.LocationsGridView.DataSource = locations;
             this.LocationsGridView.DataBind();
 
-            if (locations == null || locations.Count % 2 == 0)
-            {
-                this.NewPanel.CssClass = this.LocationsGridView.RowStyle.CssClass;
-            }
-            else
-            {
-                this.NewPanel.CssClass = this.LocationsGridView.AlternatingRowStyle.CssClass;
-            }
+            this.NewPanel.CssClass = locations.Count % 2 == 0 
+                ? this.LocationsGridView.RowStyle.CssClass 
+                : this.LocationsGridView.AlternatingRowStyle.CssClass;
 
-            this.rowNewHeader.Visible = locations == null || locations.Count < 1;
+            this.rowNewHeader.Visible = locations.Count < 1;
         }
 
         private void BindStates(ListControl ddlState) 
@@ -267,31 +274,33 @@ namespace Engage.Dnn.Employment.Admin
 
         private string GetLocationName(int rowIndex)
         {
-            if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
+            if (this.LocationsGridView == null || this.LocationsGridView.Rows.Count <= rowIndex)
             {
-                GridViewRow row = this.LocationsGridView.Rows[rowIndex];
-                var txtLocationName = row.FindControl("txtLocationName") as TextBox;
-                
-                Debug.Assert(txtLocationName != null, "txtLocationName not found in row");
-                return txtLocationName.Text;
+                return null;
             }
 
-            return null;
+            var row = this.LocationsGridView.Rows[rowIndex];
+            var locationNameTextBox = row.FindControl("LocationNameTextBox") as TextBox;
+                
+            Debug.Assert(locationNameTextBox != null, "LocationNameTextBox not found in row");
+            return locationNameTextBox.Text;
         }
 
         private int? GetStateId(int rowIndex)
         {
-            if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
+            if (this.LocationsGridView == null || this.LocationsGridView.Rows.Count <= rowIndex)
             {
-                GridViewRow row = this.LocationsGridView.Rows[rowIndex];
-                var ddlState = row.FindControl("ddlState") as DropDownList;
-                Debug.Assert(ddlState != null, "dllState not found in row");
+                return null;
+            }
 
-                int stateId;
-                if (int.TryParse(ddlState.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId))
-                {
-                    return stateId;
-                }
+            var row = this.LocationsGridView.Rows[rowIndex];
+            var ddlState = row.FindControl("ddlState") as DropDownList;
+            Debug.Assert(ddlState != null, "dllState not found in row");
+
+            int stateId;
+            if (int.TryParse(ddlState.SelectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out stateId))
+            {
+                return stateId;
             }
 
             return null;
@@ -299,12 +308,12 @@ namespace Engage.Dnn.Employment.Admin
 
         private int? GetLocationId(int rowIndex)
         {
-            if (this.LocationsGridView != null && this.LocationsGridView.Rows.Count > rowIndex)
+            if (this.LocationsGridView == null || this.LocationsGridView.Rows.Count <= rowIndex)
             {
-                return GetLocationId(this.LocationsGridView.Rows[rowIndex]);
+                return null;
             }
 
-            return null;
+            return GetLocationId(this.LocationsGridView.Rows[rowIndex]);
         }
     }
 }

@@ -1,7 +1,5 @@
-<%@ Import Namespace="Engage.Dnn.Employment"%>
 <%@ Import Namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.LocationListing" AutoEventWireup="false" Codebehind="LocationListing.ascx.cs" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
 <div class="information"><asp:Label ResourceKey="lblLocationsHeader.Help" runat="server" /></div>
 
@@ -19,13 +17,13 @@
         <asp:TemplateField HeaderText="LocationName">
             <ItemTemplate>
                 <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("LocationName")) %></span>
-                <asp:HiddenField ID="hdnLocationId" runat="server" Value='<%#((int)Eval("LocationId")).ToString(CultureInfo.InvariantCulture) %>' />
+                <asp:HiddenField ID="LocationIdHiddenField" runat="server" Value='<%#((int)Eval("LocationId")).ToString(CultureInfo.InvariantCulture) %>' />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:TextBox ID="txtLocationName" runat="server" Text='<%#Eval("LocationName") %>' CssClass="NormalTextBox" MaxLength='<%#LocationMaxLength %>' />
-                <asp:HiddenField ID="hdnLocationId" runat="server" Value='<%#((int)Eval("LocationId")).ToString(CultureInfo.InvariantCulture) %>' />
-                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtLocationName" Display="None" ValidationGroup="Edit" resourcekey="LocationNameRequired" />
-                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtLocationName" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxLengthValidationExpression %>" ErrorMessage="<%#MaxLengthValidationText %>" />
+                <asp:TextBox ID="LocationNameTextBox" runat="server" Text='<%#Eval("LocationName") %>' CssClass="NormalTextBox" MaxLength='<%#LocationMaxLength %>' />
+                <asp:HiddenField ID="LocationIdHiddenField" runat="server" Value='<%#((int)Eval("LocationId")).ToString(CultureInfo.InvariantCulture) %>' />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="LocationNameTextBox" Display="None" ValidationGroup="Edit" resourcekey="LocationNameRequired" />
+                <asp:RegularExpressionValidator runat="server" ControlToValidate="LocationNameTextBox" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxLengthValidationExpression %>" ErrorMessage="<%#MaxLengthValidationText %>" />
             </EditItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="ParentState">
@@ -39,19 +37,19 @@
         <asp:TemplateField>
             <ItemStyle CssClass="labelColumn" />
             <ItemTemplate>
-                <asp:Button ID="btnEdit" runat="server" resourcekey="Edit" CommandName="Edit" />
+                <asp:Button runat="server" resourcekey="Edit" CommandName="Edit" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnSave" runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
+                <asp:Button runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
             </EditItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField>
             <ItemStyle CssClass="labelColumn" />
             <ItemTemplate>
-                <asp:Button ID="btnDelete" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
+                <asp:Button ID="DeleteButton" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnCancel" runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
+                <asp:Button runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
             </EditItemTemplate>
         </asp:TemplateField>
     </Columns>

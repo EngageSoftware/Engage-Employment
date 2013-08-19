@@ -17,6 +17,8 @@ namespace Engage.Dnn.Employment
 
     using Data;
 
+    using Engage.Annotations;
+
     internal class Location
     {
         private Location(int? locationId, string locationName, int stateId, string stateName, string stateAbbreviation)
@@ -38,6 +40,7 @@ namespace Engage.Dnn.Employment
 
         public string StateAbbreviation { get; private set; }
 
+        [NotNull]
         public static List<Location> LoadLocations(int? jobGroupId, int portalId)
         {
             var locations = new List<Location>();
@@ -67,24 +70,16 @@ namespace Engage.Dnn.Employment
             return DataProvider.Instance().GetLocationId(name, stateId, portalId);
         }
 
-        /// <summary>
-        /// Determines whether a location can be created in the portal with the specified ID.
-        /// </summary>
+        /// <summary>Determines whether a location can be created in the portal with the specified ID.</summary>
         /// <param name="portalId">The portal ID.</param>
-        /// <returns>
-        /// <c>true</c> if a location can be created in the portal with the specified ID; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if a location can be created in the portal with the specified ID; otherwise, <c>false</c>.</returns>
         public static bool CanCreateLocation(int portalId)
         {
             return State.LoadStates(null, portalId).Count > 0;
         }
 
-        /// <summary>
-        /// Determines whether this instance is used by any jobs.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if this instance is used by any jobs; otherwise, <c>false</c>.
-        /// </returns>
+        /// <summary>Determines whether this instance is used by any jobs.</summary>
+        /// <returns><c>true</c> if this instance is used by any jobs; otherwise, <c>false</c>.</returns>
         public bool IsUsed()
         {
             this.ValidateLocationId();
