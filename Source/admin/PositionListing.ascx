@@ -1,6 +1,5 @@
 <%@ Import Namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.PositionListing" AutoEventWireup="false" Codebehind="PositionListing.ascx.cs" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="TextEditor" Src="~/controls/texteditor.ascx" %>
 
 <div class="information"><asp:Label ResourceKey="lblPositionsHeader.Help" runat="server" /></div>
@@ -37,22 +36,20 @@
                 <asp:CustomValidator ID="JobDescriptionRequiredValidator" runat="server" Display="None" ValidationGroup="Edit" ValidateEmptyText="true" OnServerValidate="JobDescriptionRequiredValidator_ServerValidate" resourcekey="cvJobDescription" />
             </EditItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField>
-            <ItemStyle CssClass="labelColumn" />
+        <asp:TemplateField ItemStyle-CssClass="labelColumn">
             <ItemTemplate>
-                <asp:Button ID="btnEdit" runat="server" resourcekey="Edit" CommandName="Edit" />
+                <asp:Button runat="server" resourcekey="Edit" CommandName="Edit" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnSave" runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
+                <asp:Button runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
             </EditItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField>
-            <ItemStyle CssClass="labelColumn" />
+        <asp:TemplateField ItemStyle-CssClass="labelColumn">
             <ItemTemplate>
-                <asp:Button ID="btnDelete" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
+                <asp:Button ID="DeleteButton" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnCancel" runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
+                <asp:Button runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
             </EditItemTemplate>
         </asp:TemplateField>
     </Columns>

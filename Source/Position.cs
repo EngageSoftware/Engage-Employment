@@ -3,7 +3,6 @@
 // Copyright (c) 2004-2013
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
-
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
 // TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
@@ -12,15 +11,12 @@
 
 namespace Engage.Dnn.Employment
 {
-    #region
-
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
 
+    using Engage.Annotations;
     using Engage.Dnn.Employment.Data;
-
-    #endregion
 
     internal class Position
     {
@@ -50,6 +46,7 @@ namespace Engage.Dnn.Employment
             DataProvider.Instance().InsertPosition(jobTitle, description, portalId);
         }
 
+        [NotNull]
         public static List<Position> LoadPositions(int? jobGroupId, int portalId)
         {
             var positions = new List<Position>();
