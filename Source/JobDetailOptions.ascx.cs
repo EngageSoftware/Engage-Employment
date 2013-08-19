@@ -3,7 +3,6 @@
 // Copyright (c) 2004-2013
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
-
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
 // TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
@@ -27,14 +26,10 @@ namespace Engage.Dnn.Employment
     using Engage.Dnn.Employment.Data;
     using Engage.Dnn.Framework;
 
-    /// <summary>
-    /// Allows a module editor to set the options for the details module
-    /// </summary>
+    /// <summary>Allows a module editor to set the options for the details module</summary>
     public partial class JobDetailOptions : ModuleBase
     {
-        /// <summary>
-        /// Raises the <see cref="Control.Init"/> event.
-        /// </summary>
+        /// <summary>Raises the <see cref="Control.Init"/> event.</summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnInit(EventArgs e) 
         {
@@ -60,23 +55,22 @@ namespace Engage.Dnn.Employment
             base.OnInit(e);
         }
 
-        /// <summary>
-        /// Handles the <see cref="CustomValidator.ServerValidate"/> event of the <see cref="NewLeadUniqueValidator"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="CustomValidator.ServerValidate"/> event of the <see cref="NewLeadUniqueValidator"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="ServerValidateEventArgs"/> instance containing the event data.</param>
         private static void NewLeadUniqueValidator_ServerValidate(object sender, ServerValidateEventArgs e)
         {
             int leadId;
-            if (e != null && Engage.Utility.HasValue(e.Value) && int.TryParse(e.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out leadId))
+            if (e == null || !Engage.Utility.HasValue(e.Value)
+                || !int.TryParse(e.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out leadId))
             {
-                e.IsValid = !DataProvider.Instance().IsPropertyValueUsed(ApplicationPropertyDefinition.Lead.GetId(), leadId.ToString(CultureInfo.InvariantCulture));
+                return;
             }
+
+            e.IsValid = !DataProvider.Instance().IsPropertyValueUsed(ApplicationPropertyDefinition.Lead.GetId(), leadId.ToString(CultureInfo.InvariantCulture));
         }
 
-        /// <summary>
-        /// Gets the ID of the lead entry in the given row.
-        /// </summary>
+        /// <summary>Gets the ID of the lead entry in the given row.</summary>
         /// <param name="row">The row from which to get the lead ID.</param>
         /// <returns>THe ID of the lead in the given row, or <c>null</c> if there isn't a lead in that row</returns>
         private static int? GetLeadItemId(GridViewRow row)
@@ -92,9 +86,7 @@ namespace Engage.Dnn.Employment
             return null;
         }
 
-        /// <summary>
-        /// Handles the <see cref="Control.Load"/> event of this control.
-        /// </summary>
+        /// <summary>Handles the <see cref="Control.Load"/> event of this control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "DNN Error handling is ugly if not caught by the module")]
@@ -102,30 +94,32 @@ namespace Engage.Dnn.Employment
         {
             try
             {
-                if (!this.IsPostBack)
+                if (this.IsPostBack)
                 {
-                    this.ApplicationEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx; 
-                    this.FromEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
-
-                    this.txtApplicationEmailAddress.Text = ModuleSettings.JobDetailApplicationEmailAddresses.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
-                    this.txtFromEmailAddress.Text = ModuleSettings.JobDetailFromEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
-                    this.RequireRegistrationCheckBox.Checked = ModuleSettings.JobDetailRequireRegistration.GetValueAsBooleanFor(this).Value;
-                    this.EnableDnnSearchCheckBox.Checked = ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(this).Value;
-                    this.ShowCloseDateCheckBox.Checked = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
-
-                    this.SetupVisibilityList(this.DisplayNameRadioButtonList, ModuleSettings.JobDetailDisplayName);
-                    this.SetupVisibilityList(this.DisplayEmailRadioButtonList, ModuleSettings.JobDetailDisplayEmail);
-                    this.SetupVisibilityList(this.DisplayPhoneRadioButtonList, ModuleSettings.JobDetailDisplayPhone);
-                    this.SetupVisibilityList(this.DisplayMessageRadioButtonList, ModuleSettings.JobDetailDisplayMessage);
-                    this.SetupVisibilityList(this.DisplaySalaryRadioButtonList, ModuleSettings.JobDetailDisplaySalaryRequirement);
-                    this.SetupVisibilityList(this.DisplayCoverLetterRadioButtonList, ModuleSettings.JobDetailDisplayCoverLetter);
-                    this.SetupVisibilityList(this.DisplayResumeRadioButtonList, ModuleSettings.JobDetailDisplayResume);
-                    this.SetupVisibilityList(this.DisplayLeadRadioButtonList, ModuleSettings.JobDetailDisplayLead);
-                    this.rowLeadItems.Visible = this.DisplayLeadRadioButtonList.SelectedValue != Visibility.Hidden.ToString();
-
-                    Localization.LocalizeGridView(ref this.LeadItemsGridView, this.LocalResourceFile);
-                    this.BindLeadItems();
+                    return;
                 }
+
+                this.ApplicationEmailRegexValidator.ValidationExpression = Engage.Utility.EmailsRegEx; 
+                this.FromEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
+
+                this.txtApplicationEmailAddress.Text = ModuleSettings.JobDetailApplicationEmailAddresses.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
+                this.txtFromEmailAddress.Text = ModuleSettings.JobDetailFromEmailAddress.GetValueAsStringFor(this) ?? this.PortalSettings.Email;
+                this.RequireRegistrationCheckBox.Checked = ModuleSettings.JobDetailRequireRegistration.GetValueAsBooleanFor(this).Value;
+                this.EnableDnnSearchCheckBox.Checked = ModuleSettings.JobDetailEnableDnnSearch.GetValueAsBooleanFor(this).Value;
+                this.ShowCloseDateCheckBox.Checked = ModuleSettings.JobDetailShowCloseDate.GetValueAsBooleanFor(this).Value;
+
+                this.SetupVisibilityList(this.DisplayNameRadioButtonList, ModuleSettings.JobDetailDisplayName);
+                this.SetupVisibilityList(this.DisplayEmailRadioButtonList, ModuleSettings.JobDetailDisplayEmail);
+                this.SetupVisibilityList(this.DisplayPhoneRadioButtonList, ModuleSettings.JobDetailDisplayPhone);
+                this.SetupVisibilityList(this.DisplayMessageRadioButtonList, ModuleSettings.JobDetailDisplayMessage);
+                this.SetupVisibilityList(this.DisplaySalaryRadioButtonList, ModuleSettings.JobDetailDisplaySalaryRequirement);
+                this.SetupVisibilityList(this.DisplayCoverLetterRadioButtonList, ModuleSettings.JobDetailDisplayCoverLetter);
+                this.SetupVisibilityList(this.DisplayResumeRadioButtonList, ModuleSettings.JobDetailDisplayResume);
+                this.SetupVisibilityList(this.DisplayLeadRadioButtonList, ModuleSettings.JobDetailDisplayLead);
+                this.rowLeadItems.Visible = this.DisplayLeadRadioButtonList.SelectedValue != Visibility.Hidden.ToString();
+
+                Localization.LocalizeGridView(ref this.LeadItemsGridView, this.LocalResourceFile);
+                this.BindLeadItems();
             }
             catch (Exception exc)
             {
@@ -144,9 +138,7 @@ namespace Engage.Dnn.Employment
             list.SelectedValue = visibilitySetting.GetValueAsEnumFor<Visibility>(this).ToString();
         }
 
-        /// <summary>
-        /// Handles the <see cref="Button.Click"/> event of the <see cref="UpdateButton"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="Button.Click"/> event of the <see cref="UpdateButton"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "DNN Error handling is ugly if not caught by the module")]
@@ -181,20 +173,16 @@ namespace Engage.Dnn.Employment
             }
         }
 
-        /// <summary>
-        /// Handles the <see cref="Button.Click"/> event of the <see cref="CancelButton"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="Button.Click"/> event of the <see cref="CancelButton"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void CancelButton_Click(object sender, EventArgs e)
         {
             // return to the main page view 
-            Response.Redirect(Globals.NavigateURL(), false);
+            this.Response.Redirect(Globals.NavigateURL(), false);
         }
 
-        /// <summary>
-        /// Handles the <see cref="ListControl.SelectedIndexChanged"/> event of the <see cref="DisplayLeadRadioButtonList"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="ListControl.SelectedIndexChanged"/> event of the <see cref="DisplayLeadRadioButtonList"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void DisplayLeadRadioButtonList_SelectedIndexChanged(object sender, EventArgs e)
@@ -203,34 +191,34 @@ namespace Engage.Dnn.Employment
             this.rowLeadItems.Visible = leadVisibility != Visibility.Hidden;
         }
 
-        /// <summary>
-        /// Handles the <see cref="GridView.RowDataBound"/> event of the <see cref="LeadItemsGridView"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="GridView.RowDataBound"/> event of the <see cref="LeadItemsGridView"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewRowEventArgs"/> instance containing the event data.</param>
         private void LeadItemsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e != null && e.Row.RowType == DataControlRowType.DataRow)
+            if (e == null || e.Row.RowType != DataControlRowType.DataRow)
             {
-                var btnDelete = e.Row.FindControl("btnDelete") as Button;
-                if (btnDelete != null)
-                {
-                    int? leadId = GetLeadItemId(e.Row);
-                    if (leadId.HasValue && DataProvider.Instance().IsPropertyValueUsed(ApplicationPropertyDefinition.Lead.GetId(), leadId.Value.ToString(CultureInfo.InvariantCulture)))
-                    {
-                        btnDelete.Enabled = false;
-                    }
-                    else
-                    {
-                        btnDelete.OnClientClick = "return confirm('" + this.Localize("DeleteConfirm").Replace("'", "\'") + "');";
-                    }
-                }
+                return;
             }
+
+            var deleteButton = e.Row.FindControl("DeleteButton") as Button;
+            if (deleteButton == null)
+            {
+                return;
+            }
+
+            var leadId = GetLeadItemId(e.Row);
+            if (leadId.HasValue
+                && DataProvider.Instance().IsPropertyValueUsed(ApplicationPropertyDefinition.Lead.GetId(), leadId.Value.ToString(CultureInfo.InvariantCulture)))
+            {
+                deleteButton.Enabled = false;
+                return;
+            }
+
+            deleteButton.OnClientClick = "return confirm('" + this.Localize("DeleteConfirm").Replace("'", "\'") + "');";
         }
 
-        /// <summary>
-        /// Handles the <see cref="Button.Click"/> event of the <see cref="NewLeadItemButton"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="Button.Click"/> event of the <see cref="NewLeadItemButton"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void NewLeadItemButton_Click(object sender, EventArgs e)
@@ -239,9 +227,7 @@ namespace Engage.Dnn.Employment
             this.txtNewLeadText.Focus();
         }
 
-        /// <summary>
-        /// Handles the <see cref="Button.Click"/> event of the <see cref="SaveNewLeadButton"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="Button.Click"/> event of the <see cref="SaveNewLeadButton"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SaveNewLeadButton_Click(object sender, EventArgs e)
@@ -265,73 +251,76 @@ namespace Engage.Dnn.Employment
             this.BindLeadItems();
         }
 
-        /// <summary>
-        /// Handles the <see cref="CustomValidator.ServerValidate"/> event of the <see cref="SaveLeadRequirementValidator"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="CustomValidator.ServerValidate"/> event of the <see cref="SaveLeadRequirementValidator"/> control.</summary>
         /// <param name="source">The source of the event.</param>
         /// <param name="args">The <see cref="ServerValidateEventArgs"/> instance containing the event data.</param>
         private void SaveLeadRequirementValidator_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true) == Visibility.Hidden || (new ListController()).GetListEntryInfoCollection(Utility.LeadListName).Count > 0;
+            args.IsValid = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true) == Visibility.Hidden
+                           || (new ListController()).GetListEntryInfoCollection(Utility.LeadListName).Count > 0;
         }
 
-        /// <summary>
-        /// Handles the <see cref="GridView.RowCommand"/> event of the <see cref="LeadItemsGridView"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="GridView.RowCommand"/> event of the <see cref="LeadItemsGridView"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="CommandEventArgs"/> instance containing the event data.</param>
         private void LeadItemsGridView_RowCommand(object sender, CommandEventArgs e)
         {
-            if (Page.IsValid && e != null)
+            if (!this.Page.IsValid || e == null)
             {
-                int rowIndex;
-                if (int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
-                {
-                    if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        int? leadId = GetLeadItemId(rowIndex);
-                        if (leadId.HasValue)
-                        {
-                            var lists = new ListController();
-                            ListEntryInfo leadItem = lists.GetListEntryInfo(leadId.Value);
-                            string newLeadText = this.GetLeadItemText(rowIndex);
-                            string oldLeadText = leadItem.Text;
+                return;
+            }
 
-                            if (string.Equals(newLeadText, oldLeadText, StringComparison.CurrentCultureIgnoreCase) || lists.GetListEntryInfo(Utility.LeadListName, newLeadText) == null)
-                            {
-                                leadItem.Text = newLeadText;
-                                lists.UpdateListEntry(leadItem);
-                                this.LeadItemsGridView.EditIndex = -1;
-                                this.BindLeadItems();
-                            }
-                            else
-                            {
-                                this.cvLeadEdit.IsValid = false;
-                            }
-                        }
-                    }
-                }
+            int rowIndex;
+            if (!int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
+            {
+                return;
+            }
+
+            if (!string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var leadId = this.GetLeadItemId(rowIndex);
+            if (!leadId.HasValue)
+            {
+                return;
+            }
+
+            var lists = new ListController();
+            var leadItem = lists.GetListEntryInfo(leadId.Value);
+            var newLeadText = this.GetLeadItemText(rowIndex);
+            var oldLeadText = leadItem.Text;
+
+            if (string.Equals(newLeadText, oldLeadText, StringComparison.CurrentCultureIgnoreCase) || lists.GetListEntryInfo(Utility.LeadListName, newLeadText) == null)
+            {
+                leadItem.Text = newLeadText;
+                lists.UpdateListEntry(leadItem);
+                this.LeadItemsGridView.EditIndex = -1;
+                this.BindLeadItems();
+            }
+            else
+            {
+                this.cvLeadEdit.IsValid = false;
             }
         }
 
-        /// <summary>
-        /// Handles the <see cref="GridView.RowDeleting"/> event of the <see cref="LeadItemsGridView"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="GridView.RowDeleting"/> event of the <see cref="LeadItemsGridView"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewDeleteEventArgs"/> instance containing the event data.</param>
         private void LeadItemsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int? leadId = GetLeadItemId(e.RowIndex);
-            if (leadId.HasValue)
+            var leadId = GetLeadItemId(e.RowIndex);
+            if (!leadId.HasValue)
             {
-                (new ListController()).DeleteListEntryByID(leadId.Value, true);
-                this.BindLeadItems();
+                return;
             }
+
+            (new ListController()).DeleteListEntryByID(leadId.Value, true);
+            this.BindLeadItems();
         }
 
-        /// <summary>
-        /// Handles the <see cref="GridView.RowEditing"/> event of the <see cref="LeadItemsGridView"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="GridView.RowEditing"/> event of the <see cref="LeadItemsGridView"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewEditEventArgs"/> instance containing the event data.</param>
         private void LeadItemsGridView_RowEditing(object sender, GridViewEditEventArgs e)
@@ -340,9 +329,7 @@ namespace Engage.Dnn.Employment
             this.BindLeadItems();
         }
 
-        /// <summary>
-        /// Handles the <see cref="GridView.RowCancelingEdit"/> event of the <see cref="LeadItemsGridView"/> control.
-        /// </summary>
+        /// <summary>Handles the <see cref="GridView.RowCancelingEdit"/> event of the <see cref="LeadItemsGridView"/> control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridViewCancelEditEventArgs"/> instance containing the event data.</param>
         private void LeadItemsGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
@@ -351,12 +338,10 @@ namespace Engage.Dnn.Employment
             this.BindLeadItems();
         }
 
-        /// <summary>
-        /// Binds the list of leads to the <see cref="LeadItemsGridView"/>.
-        /// </summary>
+        /// <summary>Binds the list of leads to the <see cref="LeadItemsGridView"/>.</summary>
         private void BindLeadItems()
         {
-            ListEntryInfoCollection leadItems = (new ListController()).GetListEntryInfoCollection(Utility.LeadListName);
+            var leadItems = (new ListController()).GetListEntryInfoCollection(Utility.LeadListName);
 
             this.LeadItemsGridView.DataSource = leadItems;
             this.LeadItemsGridView.DataBind();
@@ -373,37 +358,33 @@ namespace Engage.Dnn.Employment
             this.rowNewLeadItemHeader.Visible = leadItems == null || leadItems.Count < 1;
         }
 
-        /// <summary>
-        /// Gets the text for lead in the given row.
-        /// </summary>
+        /// <summary>Gets the text for lead in the given row.</summary>
         /// <param name="rowIndex">Index of the row.</param>
         /// <returns>The name of the lead</returns>
         private string GetLeadItemText(int rowIndex)
         {
-            if (this.LeadItemsGridView != null && this.LeadItemsGridView.Rows.Count > rowIndex)
+            if (this.LeadItemsGridView == null || this.LeadItemsGridView.Rows.Count <= rowIndex)
             {
-                var row = this.LeadItemsGridView.Rows[rowIndex];
-                var txtLeadText = row.FindControl("txtLeadText") as TextBox;
-
-                return txtLeadText != null ? txtLeadText.Text : null;
+                return null;
             }
 
-            return null;
+            var row = this.LeadItemsGridView.Rows[rowIndex];
+            var txtLeadText = row.FindControl("txtLeadText") as TextBox;
+
+            return txtLeadText != null ? txtLeadText.Text : null;
         }
 
-        /// <summary>
-        /// Gets the ID of the lead item in the given row.
-        /// </summary>
+        /// <summary>Gets the ID of the lead item in the given row.</summary>
         /// <param name="rowIndex">Index of the row.</param>
         /// <returns>ID of the lead, or <c>null</c> if there's no lead in that row or the row doesn't exist</returns>
         private int? GetLeadItemId(int rowIndex)
         {
-            if (this.LeadItemsGridView != null && this.LeadItemsGridView.Rows.Count > rowIndex)
+            if (this.LeadItemsGridView == null || this.LeadItemsGridView.Rows.Count <= rowIndex)
             {
-                return GetLeadItemId(this.LeadItemsGridView.Rows[rowIndex]);
+                return null;
             }
 
-            return null;
+            return GetLeadItemId(this.LeadItemsGridView.Rows[rowIndex]);
         }
     }
 }

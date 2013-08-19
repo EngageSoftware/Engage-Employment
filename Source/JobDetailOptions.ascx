@@ -133,7 +133,7 @@
                         <asp:TemplateField>
                             <ItemStyle CssClass="labelColumn" />
                             <ItemTemplate>
-                                <asp:Button ID="btnDelete" runat="server" resourcekey="Delete" CommandName="Delete" />
+                                <asp:Button ID="DeleteButton" runat="server" resourcekey="Delete" CommandName="Delete" />
                             </ItemTemplate>
                             <EditItemTemplate>
                                 <asp:Button ID="btnCancel" runat="server" resourcekey="Cancel" CommandName="Cancel"/>
