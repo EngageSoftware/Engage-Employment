@@ -136,7 +136,7 @@ namespace Engage.Dnn.Employment
         }
 
         /// <summary>
-        /// Handles the <see cref="Button.Command"/> event of the <c>btnDelete</c> control in the <see cref="SavedSearchesRepeater"/> control.
+        /// Handles the <see cref="Button.Command"/> event of the <c>DeleteButton</c> control in the <see cref="SavedSearchesRepeater"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Web.UI.WebControls.CommandEventArgs"/> instance containing the event data.</param>

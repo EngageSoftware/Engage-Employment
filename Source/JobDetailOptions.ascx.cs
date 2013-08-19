@@ -215,7 +215,8 @@ namespace Engage.Dnn.Employment
                 return;
             }
 
-            deleteButton.OnClientClick = "return confirm('" + this.Localize("DeleteConfirm").Replace("'", "\'") + "');";
+            deleteButton.Attributes["data-confirm-click"] = this.Localize("DeleteConfirm");
+            Dnn.Utility.RequestEmbeddedScript(this.Page, "confirmClick.js");
         }
 
         /// <summary>Handles the <see cref="Button.Click"/> event of the <see cref="NewLeadItemButton"/> control.</summary>

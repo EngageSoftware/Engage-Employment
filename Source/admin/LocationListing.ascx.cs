@@ -159,11 +159,9 @@ namespace Engage.Dnn.Employment.Admin
                 deleteButton.Enabled = false;
                 return;
             }
-            
-            deleteButton.OnClientClick = string.Format(
-                CultureInfo.CurrentCulture,
-                "return confirm('{0}');",
-                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
+
+            deleteButton.Attributes["data-confirm-click"] = this.Localize("DeleteConfirm");
+            Dnn.Utility.RequestEmbeddedScript(this.Page, "confirmClick.js");
         }
 
         private void LocationsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)

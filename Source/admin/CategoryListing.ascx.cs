@@ -85,10 +85,10 @@ namespace Engage.Dnn.Employment.Admin
 
         private static int? GetCategoryId(Control row)
         {
-            var hdnCategoryId = (HiddenField)row.FindControl("hdnCategoryId");
+            var categoryIdHiddenField = (HiddenField)row.FindControl("CategoryIdHiddenField");
 
             int categoryId;
-            if (hdnCategoryId != null && int.TryParse(hdnCategoryId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out categoryId))
+            if (categoryIdHiddenField != null && int.TryParse(categoryIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out categoryId))
             {
                 return categoryId;
             }
@@ -143,8 +143,8 @@ namespace Engage.Dnn.Employment.Admin
                 return;
             }
 
-            var btnDelete = (Button)row.FindControl("btnDelete");
-            if (btnDelete == null)
+            var deleteButton = (Button)row.FindControl("DeleteButton");
+            if (deleteButton == null)
             {
                 return;
             }
@@ -152,14 +152,12 @@ namespace Engage.Dnn.Employment.Admin
             var categoryId = GetCategoryId(row);
             if (categoryId.HasValue && Category.IsCategoryUsed(categoryId.Value))
             {
-                btnDelete.Enabled = false;
+                deleteButton.Enabled = false;
                 return;
             }
 
-            btnDelete.OnClientClick = string.Format(
-                CultureInfo.CurrentCulture,
-                "return confirm('{0}');",
-                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
+            deleteButton.Attributes["data-confirm-click"] = this.Localize("DeleteConfirm");
+            Dnn.Utility.RequestEmbeddedScript(this.Page, "confirmClick.js");
         }
 
         private void CategoriesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -256,9 +254,9 @@ namespace Engage.Dnn.Employment.Admin
             }
 
             var row = this.CategoriesGridView.Rows[rowIndex];
-            var txtCategoryName = row.FindControl("txtCategoryName") as TextBox;
-            Debug.Assert(txtCategoryName != null, "txtCategoryName not found in row");
-            return txtCategoryName.Text;
+            var categoryNameTextBox = row.FindControl("CategoryNameTextBox") as TextBox;
+            Debug.Assert(categoryNameTextBox != null, "CategoryNameTextBox not found in row");
+            return categoryNameTextBox.Text;
         }
 
         private int? GetCategoryId(int rowIndex)

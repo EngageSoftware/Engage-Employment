@@ -208,10 +208,8 @@ namespace Engage.Dnn.Employment.Admin
                 return;
             }
 
-            deleteButton.OnClientClick = string.Format(
-                CultureInfo.CurrentCulture,
-                "return confirm('{0}');",
-                this.Localize("DeleteConfirm").Replace("'", "\'"));
+            deleteButton.Attributes["data-confirm-click"] = this.Localize("DeleteConfirm");
+            Dnn.Utility.RequestEmbeddedScript(this.Page, "confirmClick.js");
         }
 
         private void EditAssignmentsButton_Click(object sender, EventArgs e)

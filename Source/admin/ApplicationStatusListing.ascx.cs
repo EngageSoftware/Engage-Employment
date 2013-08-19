@@ -20,7 +20,6 @@ namespace Engage.Dnn.Employment.Admin
     using System.Web.UI.WebControls;
     using DotNetNuke.Services.Exceptions;
     using DotNetNuke.Services.Localization;
-    using DotNetNuke.UI.Utilities;
 
     using Engage.Annotations;
 
@@ -190,11 +189,9 @@ namespace Engage.Dnn.Employment.Admin
                 deleteButton.Enabled = false;
                 return;
             }
-            
-            deleteButton.OnClientClick = string.Format(
-                CultureInfo.CurrentCulture,
-                "return confirm('{0}');",
-                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
+
+            deleteButton.Attributes["data-confirm-click"] = this.Localize("DeleteConfirm");
+            Dnn.Utility.RequestEmbeddedScript(this.Page, "confirmClick.js");
         }
 
         /// <summary>Handles the <see cref="GridView.RowDeleting"/> event of the <see cref="StatusesGrid"/> control.</summary>
