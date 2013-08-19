@@ -298,7 +298,6 @@
     <Content Include="images\sortable-white.png" />
     <Content Include="images\sprite.gif" />
     <Content Include="References\Framework\Engage.Dnn.Framework.dll" />
-    <Content Include="References\Framework\Engage.Events.dll" />
     <Content Include="References\Framework\Engage.Framework.dll" />
     <Content Include="References\Telerik.Web.Design.dll" />
     <Content Include="References\Telerik.Web.UI.dll" />

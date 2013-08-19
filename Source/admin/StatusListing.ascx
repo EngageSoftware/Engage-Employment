@@ -1,6 +1,5 @@
 <%@ Import namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.StatusListing" AutoEventWireup="false" Codebehind="StatusListing.ascx.cs" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <div class="information"><asp:Label ResourceKey="lblStatusesHeader.Help" runat="server" /></div>
 
 <asp:Button ID="AddButton" runat="server" resourcekey="btnAdd" />
@@ -17,31 +16,29 @@
         <asp:TemplateField HeaderText="StatusName">
             <ItemTemplate>
                 <span class="Normal"><%#HttpUtility.HtmlEncode((string)Eval("Status")) %></span>
-                <asp:HiddenField ID="hdnStatusId" runat="server" Value='<%#((int)Eval("StatusId")).ToString(CultureInfo.InvariantCulture) %>' />
+                <asp:HiddenField ID="StatusIdHiddenField" runat="server" Value='<%#((int)Eval("StatusId")).ToString(CultureInfo.InvariantCulture) %>' />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:TextBox ID="txtStatus" runat="server" Text='<%#Eval("Status") %>' CssClass="NormalTextBox" />
-                <asp:HiddenField ID="hdnStatusId" runat="server" Value='<%#((int)Eval("StatusId")).ToString(CultureInfo.InvariantCulture) %>' />
-                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtStatus" Display="None" ValidationGroup="Edit" resourcekey="StatusRequired" />
-                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtStatus" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxLengthValidationExpression %>" ErrorMessage="<%#MaxLengthValidationText %>" />
+                <asp:TextBox ID="StatusTextBox" runat="server" Text='<%#Eval("Status") %>' CssClass="NormalTextBox" />
+                <asp:HiddenField ID="StatusIdHiddenField" runat="server" Value='<%#((int)Eval("StatusId")).ToString(CultureInfo.InvariantCulture) %>' />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="StatusTextBox" Display="None" ValidationGroup="Edit" resourcekey="StatusRequired" />
+                <asp:RegularExpressionValidator runat="server" ControlToValidate="StatusTextBox" Display="None" ValidationGroup="Edit" ValidationExpression="<%#MaxLengthValidationExpression %>" ErrorMessage="<%#MaxLengthValidationText %>" />
             </EditItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField>
-            <ItemStyle CssClass="labelColumn" />
+        <asp:TemplateField ItemStyle-CssClass="labelColumn">
             <ItemTemplate>
-                <asp:Button ID="btnEdit" runat="server" resourcekey="Edit" CommandName="Edit" />
+                <asp:Button runat="server" resourcekey="Edit" CommandName="Edit" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnSave" runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
+                <asp:Button runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex.ToString(CultureInfo.InvariantCulture) %>' ValidationGroup="Edit" />
             </EditItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField>
-            <ItemStyle CssClass="labelColumn" />
+        <asp:TemplateField ItemStyle-CssClass="labelColumn">
             <ItemTemplate>
-                <asp:Button ID="btnDelete" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
+                <asp:Button ID="DeleteButton" runat="server" resourcekey="Delete" CommandName="Delete" CausesValidation="false" />
             </ItemTemplate>
             <EditItemTemplate>
-                <asp:Button ID="btnCancel" runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false"/>
+                <asp:Button runat="server" resourcekey="Cancel" CommandName="Cancel" CausesValidation="false" />
             </EditItemTemplate>
         </asp:TemplateField>
     </Columns>

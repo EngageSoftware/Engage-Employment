@@ -71,10 +71,10 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>An <see cref="int" />, or <c>null</c>.</returns>
         private static int? GetStatusId(Control row)
         {
-            var hdnStatusId = (HiddenField)row.FindControl("hdnStatusId");
+            var statusIdHiddenField = (HiddenField)row.FindControl("StatusIdHiddenField");
 
             int statusId;
-            if (hdnStatusId != null && int.TryParse(hdnStatusId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
+            if (statusIdHiddenField != null && int.TryParse(statusIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out statusId))
             {
                 return statusId;
             }
@@ -121,8 +121,8 @@ namespace Engage.Dnn.Employment.Admin
             }
 
             var row = this.StatusesGridView.Rows[rowIndex];
-            var txtStatus = (TextBox)row.FindControl("txtStatus");
-            return txtStatus.Text;
+            var statusTextBox = (TextBox)row.FindControl("StatusTextBox");
+            return statusTextBox.Text;
         }
 
         /// <summary>Hides and clears the panel for adding a new status.</summary>
@@ -259,8 +259,8 @@ namespace Engage.Dnn.Employment.Admin
                 return;
             }
 
-            var btnDelete = (Button)row.FindControl("btnDelete");
-            if (btnDelete == null)
+            var deleteButton = (Button)row.FindControl("DeleteButton");
+            if (deleteButton == null)
             {
                 return;
             }
@@ -268,7 +268,7 @@ namespace Engage.Dnn.Employment.Admin
             var statusId = GetStatusId(row);
             if (statusId.HasValue && UserStatus.IsStatusUsed(statusId.Value))
             {
-                btnDelete.Enabled = false;
+                deleteButton.Enabled = false;
                 return;
             }
             
