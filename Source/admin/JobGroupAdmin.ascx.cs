@@ -57,12 +57,14 @@ namespace Engage.Dnn.Employment.Admin
             try
             {
                 this.AuthorizationMultiview.SetActiveView(this.IsEditable ? this.JobGroupsView : this.UnauthorizedView);
-                if (!Page.IsPostBack)
+                if (Page.IsPostBack)
                 {
-                    Localization.LocalizeGridView(ref this.JobGroupsGridView, this.LocalResourceFile);
-
-                    this.BindJobGroups();
+                    return;
                 }
+
+                Localization.LocalizeGridView(ref this.JobGroupsGridView, this.LocalResourceFile);
+
+                this.BindJobGroups();
             }
             catch (Exception exc) 
             {
@@ -72,10 +74,10 @@ namespace Engage.Dnn.Employment.Admin
 
         private static int? GetJobGroupId(Control row)
         {
-            var hdnJobGroupId = (HiddenField)row.FindControl("hdnJobGroupId");
+            var jobGroupIdHiddenField = (HiddenField)row.FindControl("JobGroupIdHiddenField");
 
             int jobGroupId;
-            if (hdnJobGroupId != null && int.TryParse(hdnJobGroupId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobGroupId))
+            if (jobGroupIdHiddenField != null && int.TryParse(jobGroupIdHiddenField.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobGroupId))
             {
                 return jobGroupId;
             }
@@ -105,38 +107,38 @@ namespace Engage.Dnn.Employment.Admin
 
         private void BindJobGroupAssignments()
         {
-            DataSet ds = DataProvider.Instance().GetAssignedJobGroups(PortalId);
+            var ds = DataProvider.Instance().GetAssignedJobGroups(PortalId);
             this.JobsRepeater.DataSource = ds.Tables["Jobs"];
             this.JobsRepeater.DataBind();
         }
 
-        #region AssignmentView Events
         private void JobsRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (e != null && (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem))
+            if (e == null || (e.Item.ItemType != ListItemType.Item && e.Item.ItemType != ListItemType.AlternatingItem))
             {
-                var listJobGroups = (ListControl)e.Item.FindControl("cblJobGroups");
-                var row = (DataRowView)e.Item.DataItem;
-                var jobGroupsTable = DataProvider.Instance().GetJobGroups(this.PortalId);
-                var jobGroupsList = new Dictionary<int, string>(jobGroupsTable.Rows.Count);
-                foreach (DataRow jobGroupRow in jobGroupsTable.Rows)
-                {
-                    jobGroupsList.Add((int)jobGroupRow["JobGroupId"], HttpUtility.HtmlEncode((string)jobGroupRow["Name"]));
-                }
+                return;
+            }
 
-                listJobGroups.DataSource = jobGroupsList;
-                listJobGroups.DataTextField = "Value";
-                listJobGroups.DataValueField = "Key";
-                listJobGroups.DataBind();
+            var listJobGroups = (ListControl)e.Item.FindControl("cblJobGroups");
+            var row = (DataRowView)e.Item.DataItem;
+            var jobGroupsTable = DataProvider.Instance().GetJobGroups(this.PortalId);
+            var jobGroupsList = new Dictionary<int, string>(jobGroupsTable.Rows.Count);
+            foreach (DataRow jobGroupRow in jobGroupsTable.Rows)
+            {
+                jobGroupsList.Add((int)jobGroupRow["JobGroupId"], HttpUtility.HtmlEncode((string)jobGroupRow["Name"]));
+            }
 
-                ListItem li;
-                foreach (DataRow listingRow in row.Row.GetChildRows(row.DataView.Table.ChildRelations["JobJobGroup"]))
+            listJobGroups.DataSource = jobGroupsList;
+            listJobGroups.DataTextField = "Value";
+            listJobGroups.DataValueField = "Key";
+            listJobGroups.DataBind();
+
+            foreach (var listingRow in row.Row.GetChildRows(row.DataView.Table.ChildRelations["JobJobGroup"]))
+            {
+                var li = listJobGroups.Items.FindByValue(listingRow["JobGroupId"].ToString());
+                if (li != null)
                 {
-                    li = listJobGroups.Items.FindByValue(listingRow["JobGroupId"].ToString());
-                    if (li != null)
-                    {
-                        li.Selected = true; 
-                    }
+                    li.Selected = true; 
                 }
             }
         }
@@ -147,24 +149,28 @@ namespace Engage.Dnn.Employment.Admin
             {
                 int jobId;
                 var hdnJobId = row.FindControl("hdnJobId") as HiddenField;
-                if (hdnJobId != null && int.TryParse(hdnJobId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
+                if (hdnJobId == null || !int.TryParse(hdnJobId.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobId))
                 {
-                    var listJobGroups = row.FindControl("cblJobGroups") as ListControl;
-                    if (listJobGroups != null)
-                    {
-                        var jobGroupIds = new List<int>();
-                        foreach (ListItem li in listJobGroups.Items)
-                        {
-                            int jobGroupId;
-                            if (li.Selected && int.TryParse(li.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobGroupId))
-                            {
-                                jobGroupIds.Add(jobGroupId);
-                            }
-                        }
+                    continue;
+                }
 
-                        DataProvider.Instance().AssignJobToJobGroups(jobId, jobGroupIds);
+                var listJobGroups = row.FindControl("cblJobGroups") as ListControl;
+                if (listJobGroups == null)
+                {
+                    continue;
+                }
+
+                var jobGroupIds = new List<int>();
+                foreach (ListItem li in listJobGroups.Items)
+                {
+                    int jobGroupId;
+                    if (li.Selected && int.TryParse(li.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out jobGroupId))
+                    {
+                        jobGroupIds.Add(jobGroupId);
                     }
                 }
+
+                DataProvider.Instance().AssignJobToJobGroups(jobId, jobGroupIds);
             }
 
             this.AuthorizationMultiview.SetActiveView(this.JobGroupsView);
@@ -175,31 +181,37 @@ namespace Engage.Dnn.Employment.Admin
         {
             this.AuthorizationMultiview.SetActiveView(this.JobGroupsView);
         }
-        #endregion
 
-        #region JobGroupsView Events
         private void JobGroupsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e != null && e.Row.RowType == DataControlRowType.DataRow)
+            if (e == null || e.Row.RowType != DataControlRowType.DataRow)
             {
-                GridViewRow row = e.Row;
-                if (row != null)
-                {
-                    var btnDelete = e.Row.FindControl("btnDelete") as Button;
-                    if (btnDelete != null)
-                    {
-                        int? jobGroupId = GetJobGroupId(e.Row);
-                        if (jobGroupId.HasValue && DataProvider.Instance().IsJobGroupUsed(jobGroupId.Value))
-                        {
-                            btnDelete.Enabled = false;
-                        }
-                        else
-                        {
-                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", this.Localize("DeleteConfirm").Replace("'", "\'"));
-                        }
-                    }
-                }
+                return;
             }
+            
+            var row = e.Row;
+            if (row == null)
+            {
+                return;
+            }
+
+            var deleteButton = e.Row.FindControl("DeleteButton") as Button;
+            if (deleteButton == null)
+            {
+                return;
+            }
+
+            var jobGroupId = GetJobGroupId(e.Row);
+            if (jobGroupId.HasValue && DataProvider.Instance().IsJobGroupUsed(jobGroupId.Value))
+            {
+                deleteButton.Enabled = false;
+                return;
+            }
+
+            deleteButton.OnClientClick = string.Format(
+                CultureInfo.CurrentCulture,
+                "return confirm('{0}');",
+                this.Localize("DeleteConfirm").Replace("'", "\'"));
         }
 
         private void EditAssignmentsButton_Click(object sender, EventArgs e)
@@ -216,77 +228,93 @@ namespace Engage.Dnn.Employment.Admin
 
         private void SaveNewJobGroupButton_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
+            if (!this.Page.IsValid)
             {
-                DataProvider.Instance().InsertJobGroup(this.txtNewJobGroupName.Text, this.PortalId);
-                this.NewJobGroupPanel.Visible = false;
-                this.txtNewJobGroupName.Text = string.Empty;
-                this.BindJobGroups();
+                return;
             }
+
+            DataProvider.Instance().InsertJobGroup(this.txtNewJobGroupName.Text, this.PortalId);
+            this.NewJobGroupPanel.Visible = false;
+            this.txtNewJobGroupName.Text = string.Empty;
+            this.BindJobGroups();
         }
 
         private void NewJobGroupValidator_ServerValidate(object sender, ServerValidateEventArgs e)
         {
-            if (e != null && Engage.Utility.HasValue(e.Value))
+            if (e == null || !Engage.Utility.HasValue(e.Value))
             {
-                e.IsValid = !DataProvider.Instance().IsJobGroupNameUsed(e.Value, this.PortalId);
+                return;
             }
+
+            e.IsValid = !DataProvider.Instance().IsJobGroupNameUsed(e.Value, this.PortalId);
         }
 
         private void JobGroupsGridView_RowCommand(object sender, CommandEventArgs e)
         {
-            if (Page.IsValid && e != null)
+            if (!this.Page.IsValid || e == null)
             {
-                int rowIndex;
-                if (int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
-                {
-                    if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        int? jobGroupId = GetJobGroupId(rowIndex);
-                        if (jobGroupId.HasValue)
-                        {
-                            var newJobGroupName = this.GetJobGroupName(rowIndex);
-                            var oldJobGroupName = string.Empty;
-                            var jobGroup = DataProvider.Instance().GetJobGroup(jobGroupId.Value);
-                            Debug.Assert(jobGroup.Rows.Count > 0, "Specified Job Group doesn't exist");
-                            if (jobGroup.Rows.Count > 0)
-                            {
-                                oldJobGroupName = jobGroup.Rows[0]["Name"] as string;
-                            }
-
-                            if (string.Equals(newJobGroupName, oldJobGroupName, StringComparison.CurrentCultureIgnoreCase) || !DataProvider.Instance().IsJobGroupNameUsed(newJobGroupName, this.PortalId))
-                            {
-                                DataProvider.Instance().UpdateJobGroup(jobGroupId.Value, newJobGroupName);
-                                this.JobGroupsGridView.EditIndex = -1;
-                                this.BindJobGroups();
-                            }
-                            else
-                            {
-                                this.cvJobGroupEdit.IsValid = false;
-                            }
-                        }
-                    }
-                }
+                return;
             }
+
+            int rowIndex;
+            if (!int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
+            {
+                return;
+            }
+
+            if (!string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var jobGroupId = this.GetJobGroupId(rowIndex);
+            if (!jobGroupId.HasValue)
+            {
+                return;
+            }
+
+            var newJobGroupName = this.GetJobGroupName(rowIndex);
+            var oldJobGroupName = string.Empty;
+            var jobGroup = DataProvider.Instance().GetJobGroup(jobGroupId.Value);
+            Debug.Assert(jobGroup.Rows.Count > 0, "Specified Job Group doesn't exist");
+            if (jobGroup.Rows.Count > 0)
+            {
+                oldJobGroupName = jobGroup.Rows[0]["Name"] as string;
+            }
+
+            if (!string.Equals(newJobGroupName, oldJobGroupName, StringComparison.CurrentCultureIgnoreCase)
+                && DataProvider.Instance().IsJobGroupNameUsed(newJobGroupName, this.PortalId))
+            {
+                this.cvJobGroupEdit.IsValid = false;
+                return;
+            }
+            
+            DataProvider.Instance().UpdateJobGroup(jobGroupId.Value, newJobGroupName);
+            this.JobGroupsGridView.EditIndex = -1;
+            this.BindJobGroups();
         }
 
         private void JobGroupsGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int? jobGroupId = GetJobGroupId(e.RowIndex);
-            if (jobGroupId.HasValue)
+            var jobGroupId = GetJobGroupId(e.RowIndex);
+            if (!jobGroupId.HasValue)
             {
-                DataProvider.Instance().DeleteJobGroup(jobGroupId.Value);
-                this.BindJobGroups();
+                return;
             }
+
+            DataProvider.Instance().DeleteJobGroup(jobGroupId.Value);
+            this.BindJobGroups();
         }
 
         private void JobGroupsGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            if (e != null)
+            if (e == null)
             {
-                this.JobGroupsGridView.EditIndex = e.NewEditIndex;
-                this.BindJobGroups();
+                return;
             }
+
+            this.JobGroupsGridView.EditIndex = e.NewEditIndex;
+            this.BindJobGroups();
         }
 
         private void JobGroupsGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
@@ -297,15 +325,15 @@ namespace Engage.Dnn.Employment.Admin
 
         private string GetJobGroupName(int rowIndex)
         {
-            if (this.JobGroupsGridView != null && this.JobGroupsGridView.Rows.Count > rowIndex)
+            if (this.JobGroupsGridView == null || this.JobGroupsGridView.Rows.Count <= rowIndex)
             {
-                var row = this.JobGroupsGridView.Rows[rowIndex];
-                var txtJobGroupName = row.FindControl("txtJobGroupName") as TextBox;
-
-                return txtJobGroupName != null ? txtJobGroupName.Text : null;
+                return null;
             }
 
-            return null;
+            var row = this.JobGroupsGridView.Rows[rowIndex];
+            var jobGroupNameTextBox = row.FindControl("JobGroupNameTextBox") as TextBox;
+
+            return jobGroupNameTextBox != null ? jobGroupNameTextBox.Text : null;
         }
 
         private int? GetJobGroupId(int rowIndex)
@@ -317,6 +345,5 @@ namespace Engage.Dnn.Employment.Admin
 
             return null;
         }
-        #endregion
     }
 }

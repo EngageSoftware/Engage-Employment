@@ -1,6 +1,5 @@
 <%@ Import namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.JobGroupAdmin" AutoEventWireup="true" Codebehind="JobGroupAdmin.ascx.cs" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
 <div class="information"><asp:Label ResourceKey="lblJobGroupsHeader.Help" runat="server" /></div>
 
@@ -29,30 +28,28 @@
                 <asp:TemplateField HeaderText="Name">
                     <ItemTemplate>
                         <span class="Normal"><%# HttpUtility.HtmlEncode((string)Eval("Name")) %></span>
-                        <asp:HiddenField id="hdnJobGroupId" runat="server" Value='<%#Eval("JobGroupId") %>'/>
+                        <asp:HiddenField id="JobGroupIdHiddenField" runat="server" Value='<%#Eval("JobGroupId") %>'/>
                     </ItemTemplate>
                     <EditItemTemplate>
-                        <asp:TextBox ID="txtJobGroupName" runat="server" Text='<%# Bind("Name") %>' CssClass="NormalTextBox" />
-                        <asp:HiddenField id="hdnJobGroupId" runat="server" Value='<%#Eval("JobGroupId") %>'/>
-                        <asp:RequiredFieldValidator ID="rfvJobGroupEdit" runat="server" ControlToValidate="txtJobGroupName" Display="None" CssClass="NormalRed" ValidationGroup="JobGroupEdit" resourcekey="rfvNewJobGroup" />
+                        <asp:TextBox ID="JobGroupNameTextBox" runat="server" Text='<%# Bind("Name") %>' CssClass="NormalTextBox" />
+                        <asp:HiddenField id="JobGroupIdHiddenField" runat="server" Value='<%#Eval("JobGroupId") %>'/>
+                        <asp:RequiredFieldValidator ID="rfvJobGroupEdit" runat="server" ControlToValidate="JobGroupNameTextBox" Display="None" CssClass="NormalRed" ValidationGroup="JobGroupEdit" resourcekey="rfvNewJobGroup" />
                     </EditItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField>
-                    <ItemStyle CssClass="labelColumn" />
+                <asp:TemplateField ItemStyle-CssClass="labelColumn">
                     <ItemTemplate>
-                        <asp:Button ID="btnEdit" runat="server" resourcekey="Edit" CommandName="Edit" />
+                        <asp:Button runat="server" resourcekey="Edit" CommandName="Edit" />
                     </ItemTemplate>
                     <EditItemTemplate>
-                        <asp:Button ID="btnSave" runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex %>' ValidationGroup="JobGroupEdit" />
+                        <asp:Button runat="server" resourcekey="Save" CommandName="Save" CommandArgument='<%# Container.DataItemIndex %>' ValidationGroup="JobGroupEdit" />
                     </EditItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField>
-                    <ItemStyle CssClass="labelColumn" />
+                <asp:TemplateField ItemStyle-CssClass="labelColumn">
                     <ItemTemplate>
-                        <asp:Button ID="btnDelete" runat="server" resourcekey="Delete" CommandName="Delete" />
+                        <asp:Button ID="DeleteButton" runat="server" resourcekey="Delete" CommandName="Delete" />
                     </ItemTemplate>
                     <EditItemTemplate>
-                        <asp:Button ID="btnCancel" runat="server" resourcekey="Cancel" CommandName="Cancel"/>
+                        <asp:Button runat="server" resourcekey="Cancel" CommandName="Cancel"/>
                     </EditItemTemplate>
                 </asp:TemplateField>
             </Columns>
