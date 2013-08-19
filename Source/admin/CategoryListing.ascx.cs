@@ -13,7 +13,6 @@
 namespace Engage.Dnn.Employment.Admin
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -64,12 +63,14 @@ namespace Engage.Dnn.Employment.Admin
         {
             try
             {
-                if (!this.IsPostBack)
+                if (this.IsPostBack)
                 {
-                    Localization.LocalizeGridView(ref this.CategoriesGridView, this.LocalResourceFile);
-                    this.SetupLengthValidation();
-                    this.LoadCategories();
+                    return;
                 }
+
+                Localization.LocalizeGridView(ref this.CategoriesGridView, this.LocalResourceFile);
+                this.SetupLengthValidation();
+                this.LoadCategories();
             }
             catch (Exception exc)
             {
@@ -79,7 +80,7 @@ namespace Engage.Dnn.Employment.Admin
 
         protected void BackButton_Click(object sender, EventArgs e)
         {
-            Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
+            this.Response.Redirect(this.EditUrl(ControlKey.Edit.ToString()));
         }
 
         private static int? GetCategoryId(Control row)
@@ -131,36 +132,46 @@ namespace Engage.Dnn.Employment.Admin
 
         private void CategoriesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
+            if (e.Row.RowType != DataControlRowType.DataRow)
             {
-                var row = e.Row;
-                if (row != null)
-                {
-                    var btnDelete = (Button)row.FindControl("btnDelete");
-                    if (btnDelete != null)
-                    {
-                        int? categoryId = GetCategoryId(row);
-                        if (categoryId.HasValue && Category.IsCategoryUsed(categoryId.Value))
-                        {
-                            btnDelete.Enabled = false;
-                        }
-                        else
-                        {
-                            btnDelete.OnClientClick = string.Format(CultureInfo.CurrentCulture, "return confirm('{0}');", ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
-                        }
-                    }
-                }
+                return;
             }
+
+            var row = e.Row;
+            if (row == null)
+            {
+                return;
+            }
+
+            var btnDelete = (Button)row.FindControl("btnDelete");
+            if (btnDelete == null)
+            {
+                return;
+            }
+
+            var categoryId = GetCategoryId(row);
+            if (categoryId.HasValue && Category.IsCategoryUsed(categoryId.Value))
+            {
+                btnDelete.Enabled = false;
+                return;
+            }
+
+            btnDelete.OnClientClick = string.Format(
+                CultureInfo.CurrentCulture,
+                "return confirm('{0}');",
+                ClientAPI.GetSafeJSString(this.Localize("DeleteConfirm")));
         }
 
         private void CategoriesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             var categoryId = GetCategoryId(e.RowIndex);
-            if (categoryId.HasValue)
+            if (!categoryId.HasValue)
             {
-                Category.DeleteCategory(categoryId.Value);
-                this.LoadCategories();
+                return;
             }
+
+            Category.DeleteCategory(categoryId.Value);
+            this.LoadCategories();
         }
 
         private void CategoriesGridView_RowEditing(object sender, GridViewEditEventArgs e)
@@ -172,54 +183,56 @@ namespace Engage.Dnn.Employment.Admin
 
         private void CategoriesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals("Save", e.CommandName, StringComparison.OrdinalIgnoreCase))
             {
-                if (Page.IsValid)
-                {
-                    int rowIndex;
-                    if (int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
-                    {
-                        int? categoryId = GetCategoryId(rowIndex);
-                        if (categoryId.HasValue)
-                        {
-                            var newCategoryName = this.GetCategoryName(rowIndex);
-                            if (this.IsCategoryNameUnique(categoryId, newCategoryName))
-                            {
-                                Category.UpdateCategory(categoryId.Value, newCategoryName);
-                                this.CategoriesGridView.EditIndex = -1;
-                                this.LoadCategories();
-                            }
-                            else
-                            {
-                                this.cvDuplicateCategory.IsValid = false;
-                            }
-                        }
-                    }
-                }
+                return;
             }
+
+            if (!this.Page.IsValid)
+            {
+                return;
+            }
+
+            int rowIndex;
+            if (!int.TryParse(e.CommandArgument.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out rowIndex))
+            {
+                return;
+            }
+
+            var categoryId = this.GetCategoryId(rowIndex);
+            if (!categoryId.HasValue)
+            {
+                return;
+            }
+
+            var newCategoryName = this.GetCategoryName(rowIndex);
+            if (!this.IsCategoryNameUnique(categoryId, newCategoryName))
+            {
+                this.cvDuplicateCategory.IsValid = false;
+                return;
+            }
+            
+            Category.UpdateCategory(categoryId.Value, newCategoryName);
+            this.CategoriesGridView.EditIndex = -1;
+            this.LoadCategories();
         }
 
         private void LoadCategories()
         {
-            List<Category> categories = Category.LoadCategories(null, PortalId);
+            var categories = Category.LoadCategories(null, PortalId);
             this.CategoriesGridView.DataSource = categories;
             this.CategoriesGridView.DataBind();
 
-            if (categories == null || categories.Count % 2 == 0)
-            {
-                this.PanelNew.CssClass = this.CategoriesGridView.RowStyle.CssClass;
-            }
-            else
-            {
-                this.PanelNew.CssClass = this.CategoriesGridView.AlternatingRowStyle.CssClass;
-            }
+            this.PanelNew.CssClass = categories.Count % 2 == 0 
+                ? this.CategoriesGridView.RowStyle.CssClass 
+                : this.CategoriesGridView.AlternatingRowStyle.CssClass;
 
-            this.rowNewHeader.Visible = categories == null || categories.Count < 1;
+            this.rowNewHeader.Visible = categories.Count < 1;
         }
 
         private bool IsCategoryNameUnique(int? categoryId, string newCategoryName)
         {
-            int? newCategoryId = Category.GetCategoryId(newCategoryName, PortalId);
+            var newCategoryId = Category.GetCategoryId(newCategoryName, PortalId);
             return !newCategoryId.HasValue || (categoryId.HasValue && newCategoryId.Value == categoryId.Value);
         }
 
@@ -237,25 +250,25 @@ namespace Engage.Dnn.Employment.Admin
 
         private string GetCategoryName(int rowIndex)
         {
-            if (this.CategoriesGridView != null && this.CategoriesGridView.Rows.Count > rowIndex)
+            if (this.CategoriesGridView == null || this.CategoriesGridView.Rows.Count <= rowIndex)
             {
-                GridViewRow row = this.CategoriesGridView.Rows[rowIndex];
-                var txtCategoryName = row.FindControl("txtCategoryName") as TextBox;
-                Debug.Assert(txtCategoryName != null, "txtCategoryName not found in row");
-                return txtCategoryName.Text;
+                return null;
             }
 
-            return null;
+            var row = this.CategoriesGridView.Rows[rowIndex];
+            var txtCategoryName = row.FindControl("txtCategoryName") as TextBox;
+            Debug.Assert(txtCategoryName != null, "txtCategoryName not found in row");
+            return txtCategoryName.Text;
         }
 
         private int? GetCategoryId(int rowIndex)
         {
-            if (this.CategoriesGridView != null && this.CategoriesGridView.Rows.Count > rowIndex)
+            if (this.CategoriesGridView == null || this.CategoriesGridView.Rows.Count <= rowIndex)
             {
-                return GetCategoryId(this.CategoriesGridView.Rows[rowIndex]);
+                return null;
             }
 
-            return null;
+            return GetCategoryId(this.CategoriesGridView.Rows[rowIndex]);
         }
     }
  }
