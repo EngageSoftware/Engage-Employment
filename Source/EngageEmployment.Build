@@ -15,7 +15,7 @@
     <include name="Engage.Dnn.Framework_Source.zip"/>
   </patternset>
   <property name="projectDllName" value="Engage${projectName}.dll" />
-  <property name="solutionFile" value="Engage${projectName}_VS2008.sln"/>
+  <property name="solutionFile" value="Engage${projectName}_VS2010.sln"/>
   <property name="binDirectory" value="..\..\bin" overwrite="false"/> <!-- binDirectory is readonly if set from the command line (i.e. during Team Build CI) -->
   <property name="trialBinDirectory" value="${binDirectory}\..\trialBin"/>
   <property name="currentBinDirectory" value="${binDirectory}"/>
@@ -31,7 +31,7 @@
   <property name="testBuild" value="true" overwrite="false"/> <!-- testBuild is true if building from Visual Studio, false from Team Build (CI) -->
   <property name="buildTrial" value="false"/>
   <property name="projectConfig" value="release"/>
-  <property name="projectConfig" value="Debug" if="${testBuild}"/>
+  <!--property name="projectConfig" value="Debug" if="${testBuild}"/-->
   <property name="zipLevel" value="9"/>
   <property name="zipLevel" value="1" if="${testBuild}"/>
   <property name="referencesDirectory" value="References"/>
