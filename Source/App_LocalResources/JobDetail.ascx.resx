@@ -389,4 +389,7 @@
   <data name="PhoneBlank.Text" xml:space="preserve">
     <value>[The applicant did not provide a phone number]</value>
   </data>
+  <data name="regexApplicantEmailValidation.Text" xml:space="preserve">
+    <value>You must supply a valid email address</value>
+  </data>
 </root>

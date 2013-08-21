@@ -595,7 +595,8 @@ namespace Engage.Dnn.Employment
             SetFieldVisibility(this.ApplicationMessageRow, this.ApplicationMessageRequiredValidator, this.MessageRequiredLabel, this.DisplayMessage);
             SetFieldVisibility(this.SalaryRow, this.SalaryRequiredFieldValidator, this.SalaryRequiredLabel, this.DisplaySalaryRequirement);
             this.SalaryMessageRow.Visible = this.DisplaySalaryRequirement == Visibility.Optional;
-            
+            this.ApplicantEmailRegexValidator.ValidationExpression = Engage.Utility.EmailRegEx;
+
             var alreadyHasCoverLetter = this.JobApplication != null && this.JobApplication.GetDocuments().Any(d => d.DocumentTypeId == DocumentType.CoverLetter.GetId());
             var coverLetterVisibility = this.DisplayCoverLetter == Visibility.Required && alreadyHasCoverLetter ? Visibility.Optional : this.DisplayCoverLetter;
             SetFieldVisibility(this.CoverLetterRow, this.CoverLetterFileRequiredValidator, this.CoverLetterRequiredLabel, coverLetterVisibility);

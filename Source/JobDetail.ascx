@@ -100,6 +100,7 @@
             <td class="em-input">
                 <asp:TextBox ID="ApplicantEmailTextBox" runat="server" MaxLength="255" type="email" EnableViewState="false"/>
                 <asp:RequiredFieldValidator ID="ApplicantEmailRequiredValidator" runat="server" ControlToValidate="ApplicantEmailTextBox" EnableViewState="false" Display="None" ValidationGroup="apply" resourcekey="rfvApplicantEmail" SetFocusOnError="true" />
+                <asp:RegularExpressionValidator ID="ApplicantEmailRegexValidator" runat="server" EnableViewState="false" ControlToValidate="ApplicantEmailTextBox" Display="None" ValidationGroup="apply" SetFocusOnError="true" resourcekey="regexApplicantEmailValidation" />
             </td>
         </tr>
         <tr id="ApplicantPhoneRow" runat="server" class="ja-phone">
@@ -201,7 +202,7 @@
                 <asp:Label runat="server" resourcekey="lblEmailFromAddressHeader" EnableViewState="false" />
             </td>
             <td class="em-input">
-                <asp:TextBox ID="FromAddressTextBox" runat="server" CssClass="NormalTextBox" EnableViewState="false" />
+                <asp:TextBox ID="FromAddressTextBox" runat="server" type="email" CssClass="NormalTextBox" EnableViewState="false" />
                 <asp:RegularExpressionValidator ID="FriendFromEmailRegexValidator" runat="server" EnableViewState="false" ControlToValidate="FromAddressTextBox" Display="None" ValidationGroup="email" SetFocusOnError="true" resourcekey="regexFriendFromEmailValidation" />
             </td>
         </tr>
@@ -210,7 +211,7 @@
                 <asp:Label runat="server" resourcekey="lblEmailToAddressHeader" EnableViewState="false" />
             </td>
             <td class="em-input">
-                <asp:TextBox ID="SendToAddressTextBox" runat="server" CssClass="NormalTextBox" EnableViewState="false" />
+                <asp:TextBox ID="SendToAddressTextBox" runat="server" type="email" CssClass="NormalTextBox" EnableViewState="false" />
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="SendToAddressTextBox" Display="None" EnableViewState="false" ValidationGroup="email" SetFocusOnError="True" resourcekey="rfvSendToAddress" />
                 <asp:RegularExpressionValidator ID="FriendEmailRegexValidator" runat="server" EnableViewState="false" ControlToValidate="SendToAddressTextBox" Display="None" ValidationGroup="email" SetFocusOnError="true" resourcekey="regexFriendEmailValidation" />
                 <br/>

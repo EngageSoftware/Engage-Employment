@@ -139,6 +139,15 @@ namespace Engage.Dnn.Employment {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator ApplicantEmailRequiredValidator;
         
         /// <summary>
+        /// ApplicantEmailRegexValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator ApplicantEmailRegexValidator;
+        
+        /// <summary>
         /// ApplicantPhoneRow control.
         /// </summary>
         /// <remarks>
