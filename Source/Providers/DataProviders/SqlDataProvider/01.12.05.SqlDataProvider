@@ -1,0 +1,5 @@
+﻿ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
+    DROP [PK_{objectQualifier}EngageEmployment_ApplicationDocument];
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
+    ADD CONSTRAINT [PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY (ApplicationId, ResumeId);
+GO

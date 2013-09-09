@@ -175,13 +175,14 @@ CREATE NONCLUSTERED INDEX [{objectQualifier}IX_EngageEmployment_ApplicationPrope
 GO
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]'
 IF EXISTS (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument];
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
 (
-[ApplicationId] [int] NOT NULL CONSTRAINT [PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY,
-[ResumeId] [int] NOT NULL
-)
+[ApplicationId] [int] NOT NULL,
+[ResumeId] [int] NOT NULL,
+CONSTRAINT [PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY (ApplicationId, ResumeId)
+);
 GO
 
 --Creating {databaseOwner}[{objectQualifier}EngageEmployment_spAddPropertyDefinition]'

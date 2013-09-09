@@ -251,7 +251,7 @@
       <DependentUpon>JobSearch.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JobSearch.ascx.designer.cs">
       <DependentUpon>JobSearch.ascx</DependentUpon>
     </Compile>
@@ -278,7 +278,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
-    <Content Include="ReleaseNotes_01.12.04.htm" />
+    <Content Include="ReleaseNotes_01.12.05.htm" />
     <Content Include="ReleaseNotes_01.12.01.htm" />
     <Content Include="ReleaseNotes_01.11.02.htm" />
     <Content Include="module.css">
@@ -318,6 +318,7 @@
     <Content Include="Providers\DataProviders\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\01.12.00.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\01.12.01.SqlDataProvider" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\01.12.05.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -467,9 +468,7 @@
     <Content Include="References\System.Web.Extensions.dll" />
     <Content Include="ReleaseNotes_01.05.00.htm" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
