@@ -16,6 +16,7 @@ namespace Engage.Dnn.Employment.Admin
     using System.Data;
     using System.Globalization;
     using System.Linq;
+    using System.Web;
     using System.Web.UI.WebControls;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Modules.Actions;
@@ -136,24 +137,21 @@ namespace Engage.Dnn.Employment.Admin
         protected string GetApplicationsLink(object row)
         {
             var jobRow = (DataRowView)row;
-
-            if (jobRow.DataView.Table.Columns.Contains("JobId"))
+            if (!jobRow.DataView.Table.Columns.Contains("JobId"))
             {
-                var jobId = (int)jobRow["JobId"];
-                var applicationCount = (int)jobRow["ApplicationCount"];
-                string applicationText = applicationCount != 1
-                                  ? this.Localize("Applications")
-                                  : this.Localize("Application");
-
-                return string.Format(
-                    CultureInfo.CurrentCulture,
-                    "<a href=\"{0}\">{1} {2}</a>",
-                    this.EditUrl("jobId", jobId.ToString(CultureInfo.InvariantCulture), ControlKey.ManageApplications.ToString()),
-                    applicationCount,
-                    applicationText);
+                return string.Empty;
             }
 
-            return string.Empty;
+            var jobId = (int)jobRow["JobId"];
+            var applicationCount = (int)jobRow["ApplicationCount"];
+            var applicationText = applicationCount != 1 ? this.Localize("Applications") : this.Localize("Application");
+
+            return string.Format(
+                CultureInfo.CurrentCulture,
+                "<a href=\"{0}\">{1} {2}</a>",
+                HttpUtility.HtmlAttributeEncode(this.EditUrl("jobId", jobId.ToString(CultureInfo.InvariantCulture), ControlKey.ManageApplications.ToString())),
+                applicationCount,
+                HttpUtility.HtmlEncode(applicationText));
         }
 
         /// <summary>Gets a sequence of objects with information about applications grouped by both application and user status.</summary>
