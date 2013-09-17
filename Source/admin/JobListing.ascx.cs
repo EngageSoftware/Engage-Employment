@@ -24,42 +24,25 @@ namespace Engage.Dnn.Employment.Admin
     using DotNetNuke.UI.Utilities;
     using Globals = DotNetNuke.Common.Globals;
 
-    /// <summary>
-    /// An administrative listing of jobs and job components
-    /// </summary>
+    /// <summary>An administrative listing of jobs and job components</summary>
     public partial class JobListing : ModuleBase, IActionable
     {
-        /// <summary>
-        /// JavaScript to redirect to a location which can be supplied in the 0 index of a <see cref="string.Format(IFormatProvider,string,object[])"/> call.
-        /// </summary>
+        /// <summary>JavaScript to redirect to a location which can be supplied in the 0 index of a <see cref="string.Format(IFormatProvider,string,object[])" /> call.</summary>
         private const string RedirectionJavaScript = "location.href='{0}';return false;";
 
-        /// <summary>
-        /// A table with the number of applications with each status for each job.
-        /// Has the columns Count, JobId, and StatusId
-        /// </summary>
+        /// <summary>A table with the number of applications with each status for each job.
+        /// Has the columns Count, JobId, and StatusId</summary>
         private DataTable applicationStatusTable;
 
-        /// <summary>
-        /// A table mapping users to jobs.  Used to calculate the number of applications with each user status for each job.
-        /// Has the columns JobId, UserId
-        /// </summary>
+        /// <summary>A table mapping users to jobs.  Used to calculate the number of applications with each user status for each job.
+        /// Has the columns JobId, UserId</summary>
         private DataTable userStatusTable;
 
-        /// <summary>
-        /// Maps from a status ID to an <see cref="ApplicationStatus"/>
-        /// </summary>
+        /// <summary>Maps from a status ID to an <see cref="ApplicationStatus" /></summary>
         private Dictionary<int, ApplicationStatus> applicationStatusMap;
 
-        /////// <summary>
-        /////// Maps from a status ID to a <see cref="UserStatus"/>
-        /////// </summary>
-        ////private Dictionary<int, UserStatus> userStatusMap;
-
-        /// <summary>
-        /// Gets the list of <see cref="ModuleAction"/>s to be displayed for this control.
-        /// </summary>
-        /// <value>The list of <see cref="ModuleAction"/>s to be displayed for this control.</value>
+        /// <summary>Gets the list of <see cref="ModuleAction" />s to be displayed for this control.</summary>
+        /// <value>The list of <see cref="ModuleAction" />s to be displayed for this control.</value>
         public ModuleActionCollection ModuleActions
         {
             get
@@ -130,9 +113,7 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        /// <summary>
-        /// Gets the name of the location, including the state name and/or abbreviation (depending on the "Location" resource key).
-        /// </summary>
+        /// <summary>Gets the name of the location, including the state name and/or abbreviation (depending on the "Location" resource key).</summary>
         /// <param name="locationId">The location ID.</param>
         /// <param name="locationName">Name of the location.</param>
         /// <param name="stateName">Name of the state.</param>
@@ -149,10 +130,8 @@ namespace Engage.Dnn.Employment.Admin
             return string.Format(CultureInfo.CurrentCulture, this.Localize("Location"), locationName, stateName, stateAbbreviation);
         }
 
-        /// <summary>
-        /// Gets a link to the applications of an opening represented by the given data row.
-        /// </summary>
-        /// <param name="row">A <see cref="DataRowView"/> representing a job opening.</param>
+        /// <summary>Gets a link to the applications of an opening represented by the given data row.</summary>
+        /// <param name="row">A <see cref="DataRowView" /> representing a job opening.</param>
         /// <returns>A link to the applications of the given job opening</returns>
         protected string GetApplicationsLink(object row)
         {
@@ -177,9 +156,7 @@ namespace Engage.Dnn.Employment.Admin
             return string.Empty;
         }
 
-        /// <summary>
-        /// Gets a sequence of objects with information about applications grouped by both application and user status.
-        /// </summary>
+        /// <summary>Gets a sequence of objects with information about applications grouped by both application and user status.</summary>
         /// <param name="jobId">The job ID.</param>
         /// <returns>A sequence of anonymous objects with four properties (<c>IsUserStatus</c>, <c>Url</c>, <c>Count</c>, and <c>Status</c>)</returns>
         protected IEnumerable<object> GetApplicationStatusLinks(int jobId)
@@ -231,10 +208,8 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        /// <summary>
-        /// Gets the URL to navigate to in order to edit the given job.
-        /// </summary>
-        /// <param name="row">A <see cref="DataRowView"/> representing a job opening.</param>
+        /// <summary>Gets the URL to navigate to in order to edit the given job.</summary>
+        /// <param name="row">A <see cref="DataRowView" /> representing a job opening.</param>
         /// <returns>The URL to navigate to in order to edit the given job</returns>
         protected string GetEditUrl(object row)
         {
@@ -247,10 +222,8 @@ namespace Engage.Dnn.Employment.Admin
             return string.Empty;
         }
 
-        /// <summary>
-        /// Raises the <see cref="E:System.Web.UI.Control.Init"/> event.
-        /// </summary>
-        /// <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
+        /// <summary>Raises the <see cref="E:System.Web.UI.Control.Init" /> event.</summary>
+        /// <param name="e">An <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnInit(EventArgs e)
         {
             if (!PermissionController.CanManageJobs(this))
@@ -264,21 +237,17 @@ namespace Engage.Dnn.Employment.Admin
             this.JobsGrid.RowDataBound += this.JobsGrid_RowDataBound;
         }
 
-        /// <summary>
-        /// Adds behavior to the given <paramref name="control"/> so that it redirects to the given <paramref name="url"/> when clicked
-        /// </summary>
+        /// <summary>Adds behavior to the given <paramref name="control" /> so that it redirects to the given <paramref name="url" /> when clicked</summary>
         /// <param name="control">The control to which the behavior should be added.</param>
-        /// <param name="url">The URL that the user should be redirected to after clicking on <see cref="control"/>.</param>
+        /// <param name="url">The URL that the user should be redirected to after clicking on <see cref="control" />.</param>
         private static void AddRedirectionBehavior(WebControl control, string url)
         {
             control.Attributes["onclick"] = string.Format(CultureInfo.InvariantCulture, RedirectionJavaScript, ClientAPI.GetSafeJSString(url));
         }
 
-        /// <summary>
-        /// Handles the Load event of the Page control.
-        /// </summary>
+        /// <summary>Handles the Load event of the Page control.</summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void Page_Load(object sender, EventArgs e)
         {
             try
@@ -297,11 +266,9 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        /// <summary>
-        /// Handles the RowDataBound event of the <see cref="JobsGrid"/> control.
-        /// </summary>
+        /// <summary>Handles the RowDataBound event of the <see cref="JobsGrid" /> control.</summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewRowEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewRowEventArgs" /> instance containing the event data.</param>
         private void JobsGrid_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.Header)
@@ -310,9 +277,7 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        /// <summary>
-        /// Binds the grids on this page with their data
-        /// </summary>
+        /// <summary>Binds the grids on this page with their data</summary>
         private void BindData()
         {
             var adminData = Job.GetAdminData(this.JobGroupId, this.PortalId);
@@ -340,54 +305,14 @@ namespace Engage.Dnn.Employment.Admin
             }
         }
 
-        /// <summary>
-        /// Creates the <see cref="applicationStatusMap"/> and <see cref="userStatusMap"/>.
-        /// </summary>
+        /// <summary>Creates the <see cref="applicationStatusMap" /> and <see cref="userStatusMap" />.</summary>
         private void InitializeStatusMaps()
         {
             this.applicationStatusMap = ApplicationStatus.GetStatuses(this.PortalId).ToDictionary(status => status.StatusId);
-
-            ////var statusMap = UserStatus.LoadStatuses(this.PortalId).ToDictionary(status => status.StatusId);
-            ////this.userStatusMap = UserStatus.GetUsersWithStatus(this.PortalSettings).ToDictionary(
-            ////    user => user.UserID,
-            ////    user =>
-            ////    {
-            ////        var status = user.Profile.GetPropertyValue(Utility.UserStatusPropertyName);
-            ////        int statusId;
-            ////        if (int.TryParse(status, out statusId))
-            ////        {
-            ////            UserStatus userStatus;
-            ////            if (statusMap.TryGetValue(statusId, out userStatus))
-            ////            {
-            ////                return userStatus;
-            ////            }
-            ////        }
-
-            ////        return null;
-            ////    });
-
-            ////this.userStatusMap = this.applicationUsersTable.Rows.Cast<DataRow>()
-            ////    .Select(row => (int)row["UserId"])
-            ////    .Distinct()
-            ////    .ToDictionary(
-            ////        userId => userId,
-            ////        userId =>
-            ////            {
-            ////                UserStatus status;
-            ////                var statusId = UserStatus.LoadUserStatus(this.PortalSettings, userId);
-            ////                if (statusId.HasValue && statusMap.TryGetValue(statusId.Value, out status))
-            ////                {
-            ////                    return status;
-            ////                }
-
-            ////                return null;
-            ////            });
         }
 
-        /// <summary>
-        /// Controls visibility of the AddJob button in the <see cref="JobsGrid"/>, and sets its redirection behavior
-        /// </summary>
-        /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewRowEventArgs"/> instance containing the event data.</param>
+        /// <summary>Controls visibility of the AddJob button in the <see cref="JobsGrid" />, and sets its redirection behavior</summary>
+        /// <param name="e">The <see cref="System.Web.UI.WebControls.GridViewRowEventArgs" /> instance containing the event data.</param>
         private void BindHeaderButtons(GridViewRowEventArgs e)
         {
             var addJobButton = (Button)e.Row.FindControl("AddJobButton");
@@ -395,19 +320,14 @@ namespace Engage.Dnn.Employment.Admin
             AddRedirectionBehavior(addJobButton, this.EditUrl(ControlKey.EditJob.ToString()));
         }
 
-        /// <summary>
-        /// Adds redirection behavior to the <see cref="BackButton"/>
-        /// </summary>
+        /// <summary>Adds redirection behavior to the <see cref="BackButton" /></summary>
         private void BindFooterButton()
         {
-            ModuleInfo jobListingModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
-
+            var jobListingModule = Utility.GetCurrentModuleByDefinition(this.PortalSettings, ModuleDefinition.JobListing, this.JobGroupId);
             AddRedirectionBehavior(this.BackButton, jobListingModule != null ? Globals.NavigateURL(jobListingModule.TabID) : Globals.NavigateURL());
         }
 
-        /// <summary>
-        /// Sets up the <see cref="AddJobButton"/> control to only display when the grid isn't displayed
-        /// </summary>
+        /// <summary>Sets up the <see cref="AddJobButton" /> control to only display when the grid isn't displayed</summary>
         private void SetupAddJobButton()
         {
             this.AddJobButton.Visible = this.JobsGrid.Rows.Count == 0 && Job.CanCreateJob(this.PortalId);
