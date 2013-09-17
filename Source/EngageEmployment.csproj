@@ -319,6 +319,7 @@
     <Content Include="Providers\DataProviders\SqlDataProvider\01.12.00.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\01.12.01.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\01.12.05.SqlDataProvider" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\01.12.06.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
