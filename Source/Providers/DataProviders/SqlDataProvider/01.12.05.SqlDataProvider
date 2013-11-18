@@ -1,5 +1,66 @@
-﻿ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
-    DROP [PK_{objectQualifier}EngageEmployment_ApplicationDocument];
-ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
-    ADD CONSTRAINT [PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY (ApplicationId, ResumeId);
+﻿PRINT N'Starting rebuilding table {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]...';
+
+
+GO
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+SET XACT_ABORT ON;
+
+CREATE TABLE {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_ApplicationDocument] (
+    [ApplicationId] INT NOT NULL,
+    [ResumeId]      INT NOT NULL,
+    CONSTRAINT [tmp_ms_xx_constraint_PK_{objectQualifier}EngageEmployment_ApplicationDocument] PRIMARY KEY CLUSTERED ([ApplicationId] ASC, [ResumeId] ASC)
+);
+
+IF EXISTS (SELECT TOP 1 1 
+           FROM   {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument])
+    BEGIN
+        INSERT INTO {databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_ApplicationDocument] ([ApplicationId], [ResumeId])
+        SELECT   [ApplicationId],
+                 [ResumeId]
+        FROM     {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument]
+        ORDER BY [ApplicationId] ASC, [ResumeId] ASC;
+    END
+
+DROP TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument];
+
+EXECUTE sp_rename N'{databaseOwner}[tmp_ms_xx_{objectQualifier}EngageEmployment_ApplicationDocument]', N'{objectQualifier}EngageEmployment_ApplicationDocument';
+
+EXECUTE sp_rename N'{databaseOwner}[tmp_ms_xx_constraint_PK_{objectQualifier}EngageEmployment_ApplicationDocument]', N'PK_{objectQualifier}EngageEmployment_ApplicationDocument', N'OBJECT';
+
+COMMIT TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+
+GO
+PRINT N'Creating FK_{objectQualifier}EngageEmployment_ApplicationDocument_EngageEmployment_UserJob...';
+
+
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] WITH NOCHECK
+    ADD CONSTRAINT [FK_{objectQualifier}EngageEmployment_ApplicationDocument_EngageEmployment_UserJob] FOREIGN KEY ([ApplicationId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_UserJob] ([ApplicationId]);
+
+
+GO
+PRINT N'Creating FK_{objectQualifier}EngageEmployment_ApplicationDocument_EngageEmployment_Document...';
+
+
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] WITH NOCHECK
+    ADD CONSTRAINT [FK_{objectQualifier}EngageEmployment_ApplicationDocument_EngageEmployment_Document] FOREIGN KEY ([ResumeId]) REFERENCES {databaseOwner}[{objectQualifier}EngageEmployment_Document] ([ResumeId]);
+
+
+GO
+PRINT N'Checking existing data against newly created constraints';
+
+
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] WITH CHECK CHECK CONSTRAINT [FK_{objectQualifier}EngageEmployment_ApplicationDocument_EngageEmployment_UserJob];
+
+ALTER TABLE {databaseOwner}[{objectQualifier}EngageEmployment_ApplicationDocument] WITH CHECK CHECK CONSTRAINT [FK_{objectQualifier}EngageEmployment_ApplicationDocument_EngageEmployment_Document];
+
+
 GO
