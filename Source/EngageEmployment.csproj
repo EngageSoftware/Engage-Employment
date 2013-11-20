@@ -293,9 +293,7 @@
     <Content Include="JobDetail.ascx" />
     <Content Include="JobListing.ascx" />
     <Content Include="JobSearch.ascx" />
-    <Content Include="Licenses\EULA-Enterprise.txt" />
-    <Content Include="Licenses\EULA-Professional.txt" />
-    <Content Include="Licenses\EULA-Standard.txt" />
+    <Content Include="Licenses\EULA-Free.txt" />
     <None Include="module.scss" />
     <Content Include="Providers\DataProviders\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="Providers\DataProviders\SqlDataProvider\01.12.00.SqlDataProvider" />
@@ -376,9 +374,7 @@
     <Content Include="App_LocalResources\JobDetailOptions.ascx.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Licenses\EULA-Enterprise.htm" />
-    <Content Include="Licenses\EULA-Professional.htm" />
-    <Content Include="Licenses\EULA-Standard.htm" />
+    <Content Include="Licenses\EULA-Free.htm" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="admin\App_LocalResources\StatusListing.ascx.resx">
