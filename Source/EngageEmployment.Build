@@ -4,14 +4,9 @@
   <property name="versions" value="5,5.2+"/>
   <property name="licenses" value="Free"/>
   <property name="packageFileNameTemplate" value="${projectName}_${projectVersion}_${packageType}_DNN${dnnVersion}" dynamic="true"/>
-  <property name="dependencySourcePackageFileNameTemplate" value="${projectName}_${projectVersion}_DependencySource" dynamic="true"/>
   <property name="createSourcePackage" value="true"/>
   <property name="sourcePackageLicenseName" value="Free"/>
   <property name="combineSourceWithInstallPackage" value="false"/>
-  <patternset id="dependencySourcePackages">
-    <include name="Engage.Framework_Source.zip"/>
-    <include name="Engage.Dnn.Framework_Source.zip"/>
-  </patternset>
   <property name="projectDllName" value="Engage${projectName}.dll" />
   <property name="solutionFile" value="Engage${projectName}.sln"/>
   <property name="binDirectory" value="..\..\bin" overwrite="false"/> <!-- binDirectory is readonly if set from the command line (i.e. during Team Build CI) -->
@@ -53,8 +48,6 @@
       <call target="add-sources-to-resource-zip"/>
       <call target="create-packages"/>
 
-      <call target="get-dependency-source"/>
-
       <if test="${combineSourceWithInstallPackage}">
         <foreach item="String" in="${versions}" delim="," property="dnnVersion">
           <call target="combine-source"/>
@@ -62,7 +55,6 @@
       </if>
     </if>
     
-    <call target="project-specific-tasks"/>
     <call target="cleanup"/>
   </target>
   <target name="set-assemblyVersion" description="Sets the assemblyVersion property to the first three numbers from the version of the assembly specified by the assemblyFile property">
@@ -206,30 +198,6 @@
       </fileset>
     </zip>
   </target>
-  <target name="get-dependency-source" description="Gets the latest source packages for the Engage Framework dependencies for this module">
-    <property name="buildDirectory" value="_0.0"/>
-    <property name="buildPath" value="\\etg19\qa\Engage\Engage 3.0\Builds\"/>
-    <foreach item="Folder" in="${buildPath}" property="foldername" failonerror="false">
-      <property name="buildDirectory" value="${foldername}" if="${build-directory::is-greater-than(foldername, buildDirectory) and file::exists(path::combine(foldername, 'Release\Engage.Framework_Source.zip'))}"/>
-    </foreach>
-
-    <if test="${buildDirectory != '_0.0'}">
-      <property name="dependencyPackageDirectory" value="${packageDirectory}/temp/dependencies"/>
-      <copy todir="${dependencyPackageDirectory}">
-        <fileset basedir="${path::combine(buildDirectory, 'Release\')}">
-          <patternset refid="dependencySourcePackages"/>
-        </fileset>
-      </copy>
-
-      <call target="get-project-specific-dependencies"/>
-
-      <zip zipfile="${packageDirectory}/${dependencySourcePackageFileNameTemplate}.zip" ziplevel="${zipLevel}">
-        <fileset basedir="${packageDirectory}/temp/dependencies">
-          <include name="**/*"/>
-        </fileset>
-      </zip>
-    </if>
-  </target>
   <target name="combine-source" description="Combines the Install and Source packages with the same license into one .zip file">
     <property name="packageType" value="Install"/>
     <property name="installPackageFileName" value="${packageFileNameTemplate}"/>
@@ -239,19 +207,13 @@
       <fileset basedir="${packageDirectory}">
         <include name="${installPackageFileName}.zip"/>
         <include name="${sourcePackageFileName}.zip"/>
-        <include name="${dependencySourcePackageFileNameTemplate}.zip"/>
       </fileset>
     </zip>
 
     <delete file="${packageDirectory}/${installPackageFileName}.zip" failonerror="false"/>
     <delete file="${packageDirectory}/${sourcePackageFileName}.zip" failonerror="false"/>
   </target>
-  <target name="get-project-specific-dependencies" description="Puts source packages for any dependencies that can't be retrieved through the normal get-dependency-source target in dependencyPackageDirectory">
-  </target>
-  <target name="project-specific-tasks" description="Place tasks specific to the current project in this task">
-  </target>
   <target name="cleanup" description="Deletes temporary files">
-    <delete file="${packageDirectory}\${projectName}_${projectVersion}_DependencySource.zip" failonerror="false"/>
     <delete file="${packageDirectory}\${packageName}" failonerror="false"/>
     <delete dir="${packageDirectory}\temp" failonerror="false"/>
   </target>
@@ -324,104 +286,6 @@
                   }
               }
       ]]>
-    </code>
-  </script>
-  <script language="C#" prefix="build-directory" >
-    <references>
-      <include name="System.dll" />
-    </references>
-    <imports>
-      <import namespace="System"/>
-      <import namespace="System.Globalization"/>
-      <import namespace="System.Text.RegularExpressions"/>
-    </imports>
-    <code>
-      <![CDATA[
-              [Function("is-greater-than")]
-              public static bool IsGreaterThan(string lhs, string rhs) {
-                  
-                  return new BuildDirectory(lhs) > new BuildDirectory(rhs);
-              }
-              
-              private struct BuildDirectory
-              {
-                  private static readonly Regex buildDirectoryRegex = new Regex(@".*_(\d+\.\d+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-                  private Version buildNumber;
-
-                  public BuildDirectory(string directoryName)
-                  {
-                      Match match = buildDirectoryRegex.Match(directoryName);
-					            if (match.Success)
-                      {
-					                this.buildNumber = new Version(match.Groups[1].Value);
-					            }
-                      else 
-                      {
-                          this.buildNumber = new Version(0,0);
-                      }
-                  }
-
-			            public Version BuildNumber
-			            {
-				              get { return this.buildNumber; }
-			            }
-
-			            public static bool operator ==(BuildDirectory left, BuildDirectory right)
-			            {
-				              return left.Equals(right);
-			            }
-
-			            public static bool operator !=(BuildDirectory left, BuildDirectory right)
-			            {
-				              return !left.Equals(right);
-			            }
-
-			            public static bool operator <(BuildDirectory left, BuildDirectory right)
-			            {
-				              return left.buildNumber < right.buildNumber;
-			            }
-
-			            public static bool operator <=(BuildDirectory left, BuildDirectory right)
-			            {
-				              return left < right || left.Equals(right);
-			            }
-
-			            public static bool operator >(BuildDirectory left, BuildDirectory right)
-			            {
-				              return !(left <= right);
-			            }
-
-			            public static bool operator >=(BuildDirectory left, BuildDirectory right)
-			            {
-				              return !(left < right);
-			            }
-
-			            public bool Equals(BuildDirectory other)
-			            {
-				              return other.buildNumber == this.buildNumber;
-			            }
-
-			            public override bool Equals(object obj)
-			            {
-				              if (ReferenceEquals(null, obj))
-				              {
-					                return false;
-				              }
-
-				              if (obj.GetType() != typeof(BuildDirectory))
-				              {
-					                return false;
-				              }
-
-				              return this.Equals((BuildDirectory)obj);
-			            }
-
-			            public override int GetHashCode()
-			            {
-					            return this.buildNumber.GetHashCode();
-			            }
-	            }
-            ]]>
     </code>
   </script>
   <script language="C#" prefix="format" >
