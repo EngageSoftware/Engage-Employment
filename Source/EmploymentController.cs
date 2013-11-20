@@ -42,13 +42,6 @@ namespace Engage.Dnn.Employment
         /// </summary>
         private const string LocalResourceFile = Utility.DesktopModuleRelativePath + "App_LocalResources/EmploymentController.resx";
 
-#if TRIAL
-        /// <summary>
-        /// The license key for this module
-        /// </summary>
-        public static readonly Guid ModuleLicenseKey = new Guid("FF8492A1-C02B-4A8F-979C-7CCB9EAAC31A");
-#endif
-
         #region ISearchable Members
 
         /// <summary>

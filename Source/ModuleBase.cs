@@ -13,13 +13,6 @@ namespace Engage.Dnn.Employment
 {
     using DotNetNuke.Common;
     using DotNetNuke.Security;
-
-#if TRIAL
-    using System;
-    using System.Web.UI;
-
-    using Engage.Licensing;
-#endif
     
     /// <summary>
     /// Base class for all controls in this module
@@ -46,19 +39,6 @@ namespace Engage.Dnn.Employment
                 return ModuleSettings.JobGroupId.GetValueAsInt32For(this);
             }
         }
-
-#if TRIAL
-        /// <summary>
-        /// Raises the <see cref="Control.Init"/> event.
-        /// </summary>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        protected override void OnInit(EventArgs e)
-        {
-            this.LicenseProvider = new TrialLicenseProvider(EmploymentController.ModuleLicenseKey);
-
-            base.OnInit(e);
-        }
-#endif
 
         /// <summary>
         /// Denies access to this control.
