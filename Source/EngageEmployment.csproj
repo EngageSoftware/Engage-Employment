@@ -266,6 +266,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Content Include="References\DotNetNuke.Web.dll" />
     <Content Include="ReleaseNotes_01.12.05.htm" />
     <Content Include="ReleaseNotes_01.12.01.htm" />
     <Content Include="ReleaseNotes_01.11.02.htm" />
@@ -287,9 +288,7 @@
     <Content Include="images\sprite.gif" />
     <Content Include="References\Framework\Engage.Dnn.Framework.dll" />
     <Content Include="References\Framework\Engage.Framework.dll" />
-    <Content Include="References\Telerik.Web.Design.dll" />
     <Content Include="References\Telerik.Web.UI.dll" />
-    <Content Include="References\Telerik.Web.UI.xml" />
     <Content Include="ReleaseNotes_01.08.01.htm" />
     <Content Include="ReleaseNotes_01.08.00.htm" />
     <Content Include="ReleaseNotes_01.07.00.htm" />
