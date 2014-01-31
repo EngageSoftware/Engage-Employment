@@ -100,7 +100,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl RequiredQualificationsTextEditor;
+        protected global::DotNetNuke.UI.UserControls.TextEditor RequiredQualificationsTextEditor;
         
         /// <summary>
         /// DesiredQualificationsTextEditor control.
@@ -109,7 +109,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl DesiredQualificationsTextEditor;
+        protected global::DotNetNuke.UI.UserControls.TextEditor DesiredQualificationsTextEditor;
         
         /// <summary>
         /// EmailAddressTextBox control.
