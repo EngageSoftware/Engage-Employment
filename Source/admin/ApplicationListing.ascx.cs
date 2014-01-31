@@ -986,7 +986,7 @@ namespace Engage.Dnn.Employment.Admin
             tableView.CommandItemSettings.ExportToExcelText = this.Localize("Export To Excel.ToolTip");
             tableView.CommandItemSettings.ExportToCsvText = this.Localize("Export To CSV.ToolTip");
 
-            foreach (DnnGridColumn column in tableView.Columns)
+            foreach (GridColumn column in tableView.Columns)
             {
                 column.HeaderText = this.Localize(column.HeaderText);
             }

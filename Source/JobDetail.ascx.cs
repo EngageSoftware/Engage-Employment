@@ -583,8 +583,8 @@ namespace Engage.Dnn.Employment
 
             this.FillLeadDropDown();
 
-            string fileExtensionsList = Host.FileExtensions ?? string.Empty;
-            string fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
+            var fileExtensionsList = Host.AllowedExtensionWhitelist.ToStorageString();
+            var fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
             this.ResumeFileExtensionValidator.ValidationExpression = this.CoverLetterFileExtensionValidator.ValidationExpression = fileExtensionValidationExpression;
             this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexResumeFile.Text"), fileExtensionsList);
             this.CoverLetterFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexCoverLetterFile.Text"), fileExtensionsList);
