@@ -406,7 +406,7 @@
     <Content Include="JobDetailSettings.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EngageEmployment.5.dnn">
+    <None Include="EngageEmployment.dnn">
       <SubType>Designer</SubType>
     </None>
     <None Include="Providers\DataProviders\SqlDataProvider\01.00.00.SqlDataProvider" />
