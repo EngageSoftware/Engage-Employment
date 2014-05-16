@@ -324,6 +324,8 @@
     <exclude name="_ReSharper.*/**"/>
     <exclude name="**/obj/**"/>
     <exclude name="${referencesDirectory}/**"/>
+    <exclude name="CustomDictionary.xml"/>
+    <exclude name="**/bin/**"/>
   </patternset>
   <patternset id="source.fileset">
     <include name="**/*.js"/>
@@ -345,6 +347,7 @@
     <include name="??.??.??.txt" />
     <include name="MSBuild/*.dll"/>
     <include name="MSBuild/*.targets"/>
+    <include name="CustomDictionary.xml"/>
     <exclude name="**/obj/**"/>
     <exclude name="Release.txt"/>
   </patternset>
