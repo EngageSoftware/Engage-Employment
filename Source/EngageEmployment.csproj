@@ -53,6 +53,10 @@
       <HintPath>..\..\..\..\..\..\Assemblies\DNN 4.5.1\DotNetNuke.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>References\DotNetNuke.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
@@ -262,6 +266,7 @@
     <Content Include="admin\PositionListing.ascx" />
     <Content Include="admin\StateListing.ascx" />
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Content Include="References\DotNetNuke.Web.dll" />
     <Content Include="ReleaseNotes_01.12.05.htm" />
     <Content Include="ReleaseNotes_01.12.01.htm" />
     <Content Include="ReleaseNotes_01.11.02.htm" />
@@ -283,9 +288,7 @@
     <Content Include="images\sprite.gif" />
     <Content Include="References\Framework\Engage.Dnn.Framework.dll" />
     <Content Include="References\Framework\Engage.Framework.dll" />
-    <Content Include="References\Telerik.Web.Design.dll" />
     <Content Include="References\Telerik.Web.UI.dll" />
-    <Content Include="References\Telerik.Web.UI.xml" />
     <Content Include="ReleaseNotes_01.08.01.htm" />
     <Content Include="ReleaseNotes_01.08.00.htm" />
     <Content Include="ReleaseNotes_01.07.00.htm" />
@@ -403,7 +406,7 @@
     <Content Include="JobDetailSettings.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EngageEmployment.5.dnn">
+    <None Include="EngageEmployment.dnn">
       <SubType>Designer</SubType>
     </None>
     <None Include="Providers\DataProviders\SqlDataProvider\01.00.00.SqlDataProvider" />

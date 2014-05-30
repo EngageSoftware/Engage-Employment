@@ -1,6 +1,6 @@
 <%@ Import namespace="System.Globalization"%>
 <%@ Control language="C#" Inherits="Engage.Dnn.Employment.Admin.ApplicationListing" Codebehind="ApplicationListing.ascx.cs" AutoEventWireup="false" %>
-<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.UI.WebControls" Assembly="DotNetNuke.Web" %>
 
 <fieldset class="applicationFilter">
     <fieldset ID="FilterByJobsGroup" runat="server">
@@ -29,12 +29,12 @@
         </div>
         <div class="search_field">
             <asp:Label ID="FilterByDateFromLabel" runat="server" resourcekey="FilterByDateFromLabel" AssociatedControlID="FilterByDateFromTextBox"/>
-            <telerik:RadDatePicker ID="FilterByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Simple" />
+            <dnn:DnnDatePicker ID="FilterByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Simple" />
             <asp:CompareValidator runat="server" Type="Date" Operator="LessThanEqual" ControlToValidate="FilterByDateFromTextBox" ControlToCompare="FilterByDateToTextBox" Display="None" resourcekey="FilterByDateFromCompareValidator" ValidationGroup="SearchDate" />
         </div>
         <div class="search_field">
             <asp:Label ID="FilterByDateToLabel" runat="server" resourcekey="FilterByDateToLabel" AssociatedControlID="FilterByDateToTextBox"/>
-            <telerik:RadDatePicker ID="FilterByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Simple" />
+            <dnn:DnnDatePicker ID="FilterByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Simple" />
         </div>
         <div class="search_field">
             <asp:Label runat="server" resourcekey="FilterByLeadLabel" AssociatedControlID="FilterByLeadDropDown"/>
@@ -54,7 +54,7 @@
 
 <div class="manageApplications">
 
-    <telerik:RadGrid ID="JobsGrid" runat="server" 
+    <dnn:DnnGrid ID="JobsGrid" runat="server" 
         AllowPaging="true" AllowCustomPaging="true" PageSize="10" 
         AutoGenerateColumns="false" 
         CssClass="Normal Engage_RadGrid" Skin="Simple"
@@ -62,29 +62,29 @@
         <MasterTableView DataKeyNames="JobId" CommandItemDisplay="Top">
             <CommandItemSettings ShowExportToExcelButton="true" ShowExportToCsvButton="true" />
             <Columns>
-                <telerik:GridTemplateColumn DataField="Title" HeaderText="JobTitleHeaderLabel" UniqueName="Title" ItemStyle-CssClass="jobTitleColumn">
+                <dnn:DnnGridTemplateColumn DataField="Title" HeaderText="JobTitleHeaderLabel" UniqueName="Title" ItemStyle-CssClass="jobTitleColumn">
                     <ItemTemplate>
                         <a href='<%#GetJobDetailUrl(Eval("JobId"))%>' id='job-<%#((int)Eval("JobId")).ToString(CultureInfo.InvariantCulture)%>'>
                             <%# HttpUtility.HtmlEncode((string)Eval("Title")) %>
                         </a>
                     </ItemTemplate>
-                </telerik:GridTemplateColumn>
-                <telerik:GridBoundColumn HeaderText="JobTitleHeaderLabel" UniqueName="Export-Title" DataField="Title" Visible="false" />
-                <telerik:GridTemplateColumn DataField="LocationName" UniqueName="Location" HeaderText="LocationHeaderLabel" ItemStyle-CssClass="jobLocationColumn">
+                </dnn:DnnGridTemplateColumn>
+                <dnn:DnnGridBoundColumn HeaderText="JobTitleHeaderLabel" UniqueName="Export-Title" DataField="Title" Visible="false" />
+                <dnn:DnnGridTemplateColumn DataField="LocationName" UniqueName="Location" HeaderText="LocationHeaderLabel" ItemStyle-CssClass="jobLocationColumn">
                     <ItemTemplate>
                         <%# HttpUtility.HtmlEncode(string.Format(CultureInfo.CurrentCulture, this.Localize("Location", this.LocalResourceFile), Eval("LocationName"), Eval("StateName"), Eval("StateAbbreviation"))) %>
                     </ItemTemplate>
-                </telerik:GridTemplateColumn>
-                <telerik:GridBoundColumn DataField="PostedDate" UniqueName="PostedDate" HeaderText="PostedDateHeaderLabel" DataFormatString="{0:d}" ItemStyle-CssClass="postedDateColumn" />
-                <telerik:GridBoundColumn DataField="StartDate" UniqueName="StartDate" HeaderText="DateStartHeaderLabel" DataFormatString="{0:d}" ItemStyle-CssClass="startDateColumn" />
+                </dnn:DnnGridTemplateColumn>
+                <dnn:DnnGridBoundColumn DataField="PostedDate" UniqueName="PostedDate" HeaderText="PostedDateHeaderLabel" DataFormatString="{0:d}" ItemStyle-CssClass="postedDateColumn" />
+                <dnn:DnnGridBoundColumn DataField="StartDate" UniqueName="StartDate" HeaderText="DateStartHeaderLabel" DataFormatString="{0:d}" ItemStyle-CssClass="startDateColumn" />
             </Columns>
             <DetailTables>
-                <telerik:GridTableView runat="server" 
+                <dnn:DnnGridTableView runat="server" 
                     DataKeyNames="UserId,ApplicationId"
                     HierarchyDefaultExpanded="true"
                     CommandItemDisplay="Top" CommandItemSettings-ShowExportToCsvButton="true" CommandItemSettings-ShowExportToExcelButton="true">
                     <Columns>
-                        <telerik:GridTemplateColumn SortExpression="DisplayName" HeaderText="ApplicantHeaderLabel" ItemStyle-CssClass="applicantColumn">
+                        <dnn:DnnGridTemplateColumn SortExpression="DisplayName" HeaderText="ApplicantHeaderLabel" ItemStyle-CssClass="applicantColumn">
                             <ItemTemplate>
                                 <%# HttpUtility.HtmlEncode(this.GetUserName(this.Eval("UserId") as int?, (string)this.Eval("ApplicantName"))) %>
                                 <asp:DropDownList runat="server"
@@ -96,19 +96,19 @@
                                     DataValueField="Value"
                                     SelectedValue='<%# this.GetUserStatus(Eval("UserId") as int?) %>' />
                             </ItemTemplate>
-                        </telerik:GridTemplateColumn>
-                        <telerik:GridTemplateColumn HeaderText="ApplicantStatusLabel-Export" UniqueName="Export-UserStatus" DataField="Status" Visible="false">
+                        </dnn:DnnGridTemplateColumn>
+                        <dnn:DnnGridTemplateColumn HeaderText="ApplicantStatusLabel-Export" UniqueName="Export-UserStatus" DataField="Status" Visible="false">
                             <ItemTemplate>
                                 <%# HttpUtility.HtmlEncode(GetUserStatusName(Eval("UserId") as int?)) %>
                             </ItemTemplate>
-                        </telerik:GridTemplateColumn>
-                        <telerik:GridBoundColumn DataField="AppliedForDate" DataFormatString="{0:d}" HeaderText="DateAppliedHeaderLabel" ItemStyle-CssClass="dateAppliedColumn" />
-                        <telerik:GridBoundColumn DataField="ApplicantEmail" HeaderText="EmailHeaderLabel" ItemStyle-CssClass="emailColumn" />
-                        <telerik:GridBoundColumn DataField="ApplicantPhone" HeaderText="PhoneHeaderLabel" ItemStyle-CssClass="phoneColumn" />
-                        <telerik:GridBoundColumn DataField="SalaryRequirement" HeaderText="SalaryHeaderLabel" ItemStyle-CssClass="salaryColumn" />
-                        <telerik:GridTemplateColumn UniqueName="Properties" HeaderText="LeadHeaderLabel" ItemStyle-CssClass="leadColumn" />
-                        <telerik:GridTemplateColumn UniqueName="Documents" HeaderText="ViewHeaderLabel" ItemStyle-CssClass="documentsColumn" />
-                        <telerik:GridTemplateColumn UniqueName="ApplicationStatus" HeaderText="StatusHeaderLabel" ItemStyle-CssClass="statusColumn">
+                        </dnn:DnnGridTemplateColumn>
+                        <dnn:DnnGridBoundColumn DataField="AppliedForDate" DataFormatString="{0:d}" HeaderText="DateAppliedHeaderLabel" ItemStyle-CssClass="dateAppliedColumn" />
+                        <dnn:DnnGridBoundColumn DataField="ApplicantEmail" HeaderText="EmailHeaderLabel" ItemStyle-CssClass="emailColumn" />
+                        <dnn:DnnGridBoundColumn DataField="ApplicantPhone" HeaderText="PhoneHeaderLabel" ItemStyle-CssClass="phoneColumn" />
+                        <dnn:DnnGridBoundColumn DataField="SalaryRequirement" HeaderText="SalaryHeaderLabel" ItemStyle-CssClass="salaryColumn" />
+                        <dnn:DnnGridTemplateColumn UniqueName="Properties" HeaderText="LeadHeaderLabel" ItemStyle-CssClass="leadColumn" />
+                        <dnn:DnnGridTemplateColumn UniqueName="Documents" HeaderText="ViewHeaderLabel" ItemStyle-CssClass="documentsColumn" />
+                        <dnn:DnnGridTemplateColumn UniqueName="ApplicationStatus" HeaderText="StatusHeaderLabel" ItemStyle-CssClass="statusColumn">
                             <ItemTemplate>
                                 <asp:DropDownList runat="server"
                                     CssClass="NormalTextBox" 
@@ -119,13 +119,13 @@
                                     DataValueField="Value"
                                     SelectedValue='<%# Eval("StatusId") ?? string.Empty %>' />
                             </ItemTemplate>
-                        </telerik:GridTemplateColumn>
-                        <telerik:GridTemplateColumn HeaderText="StatusHeaderLabel" UniqueName="Export-ApplicationStatus" Visible="false">
+                        </dnn:DnnGridTemplateColumn>
+                        <dnn:DnnGridTemplateColumn HeaderText="StatusHeaderLabel" UniqueName="Export-ApplicationStatus" Visible="false">
                             <ItemTemplate>
                                 <%# HttpUtility.HtmlEncode(GetApplicationStatusName(Eval("StatusId") as int?)) %>
                             </ItemTemplate>
-                        </telerik:GridTemplateColumn>
-                        <telerik:GridBoundColumn HeaderText="MessageHeaderLabel" UniqueName="Export-Message" DataField="Message" Visible="false" />
+                        </dnn:DnnGridTemplateColumn>
+                        <dnn:DnnGridBoundColumn HeaderText="MessageHeaderLabel" UniqueName="Export-Message" DataField="Message" Visible="false" />
                     </Columns>
                     <NestedViewTemplate>
                         <asp:Panel runat="server" CssClass="applicationMessage" Visible="<%# !IsExport %>">
@@ -136,13 +136,13 @@
                     <NoRecordsTemplate>
                             <%= AreApplicationsFiltered ? Localize("No Applications After Filter.Text") : Localize("No Applications.Text") %>
                     </NoRecordsTemplate>
-                </telerik:GridTableView>
+                </dnn:DnnGridTableView>
             </DetailTables>
             <NoRecordsTemplate>
                 <%= AreJobsFiltered ? Localize("No Jobs After Filter.Text") : Localize("No Jobs.Text") %>
             </NoRecordsTemplate>
         </MasterTableView>
-    </telerik:RadGrid>
+    </dnn:DnnGrid>
 
     <ul class="eng-action-btns">
         <li id="AllLinkWrapperBottom" runat="server" Visible="false"><asp:HyperLink ID="AllLinkBottom" runat="server" CssClass="CommandButton" resourcekey="btnAll" /></li>

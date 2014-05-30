@@ -328,7 +328,7 @@ namespace Engage.Dnn.Employment
                 userLanguage = defaultLanguage;
             }
 
-            Locale userLocale = Localization.GetLocale(userLanguage);
+            var userLocale = LocaleController.Instance.GetLocale(userLanguage);
             if (userLocale != null && Engage.Utility.HasValue(userLocale.Fallback))
             {
                 fallbackLanguage = userLocale.Fallback.ToUpperInvariant();

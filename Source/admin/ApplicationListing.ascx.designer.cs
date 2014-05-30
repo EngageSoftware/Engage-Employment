@@ -109,7 +109,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker FilterByDateFromTextBox;
+        protected global::DotNetNuke.Web.UI.WebControls.DnnDatePicker FilterByDateFromTextBox;
         
         /// <summary>
         /// FilterByDateToLabel control.
@@ -127,7 +127,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker FilterByDateToTextBox;
+        protected global::DotNetNuke.Web.UI.WebControls.DnnDatePicker FilterByDateToTextBox;
         
         /// <summary>
         /// FilterByLeadDropDown control.
@@ -190,7 +190,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadGrid JobsGrid;
+        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid JobsGrid;
         
         /// <summary>
         /// AllLinkWrapperBottom control.
