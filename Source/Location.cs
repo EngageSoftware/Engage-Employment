@@ -1,6 +1,6 @@
 ﻿// <copyright file="Location.cs" company="Engage Software">
 // Engage: Employment - http://www.engagesoftware.com
-// Copyright (c) 2004-2013
+// Copyright (c) 2004-2014
 // by Engage Software ( http://www.engagesoftware.com )
 // </copyright>
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
