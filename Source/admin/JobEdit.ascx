@@ -63,7 +63,7 @@
             <dnn:label ResourceKey="lblStartDate" controlname="StartDateTextBox" runat="server" />
         </td>
         <td valign="top">
-            <dnn:DnnDatePicker ID="StartDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" Calendar-ShowRowHeaders="false" Skin="Simple" />
+            <dnn:DnnDatePicker ID="StartDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" Calendar-ShowRowHeaders="false" />
             <asp:RequiredFieldValidator runat="server" ControlToValidate="StartDateTextBox" Display="None" resourcekey="StartDateRequiredValidator" ValidationGroup="JobEdit" />
             <asp:CompareValidator runat="server" Type="Date" Operator="LessThan" ControlToValidate="StartDateTextBox" ControlToCompare="ExpireDateTextBox" Display="None" resourcekey="StartExpireDateCompareValidator" ValidationGroup="JobEdit" />
         </td>
@@ -73,7 +73,7 @@
             <dnn:label ResourceKey="lblExpireDate" controlname="ExpireDateTextBox" runat="server" />
         </td>
         <td valign="top">
-            <dnn:DnnDatePicker ID="ExpireDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" Calendar-ShowRowHeaders="false" Skin="Simple" />
+            <dnn:DnnDatePicker ID="ExpireDateTextBox" runat="server" CssClass="NormalTextBox DatePicker" Calendar-ShowRowHeaders="false" />
         </td>
     </tr>
     <tr>
