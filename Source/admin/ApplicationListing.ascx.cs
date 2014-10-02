@@ -30,6 +30,7 @@ namespace Engage.Dnn.Employment.Admin
     using DotNetNuke.Framework;
     using DotNetNuke.Security;
     using DotNetNuke.Services.Exceptions;
+    using DotNetNuke.Web.UI.WebControls;
 
     using Telerik.Web.UI;
 
@@ -76,7 +77,7 @@ namespace Engage.Dnn.Employment.Admin
         private int? userStatusId;
 
         /// <summary>
-        /// The type of export (one of <see cref="RadGrid.ExportToCsvCommandName"/> or <see cref="RadGrid.ExportToExcelCommandName"/>), 
+        /// The type of export (one of <see cref="DnnGrid.ExportToCsvCommandName"/> or <see cref="DnnGrid.ExportToExcelCommandName"/>), 
         /// or <c>null</c> if no export is occurring
         /// </summary>
         private string exportType;
@@ -612,7 +613,7 @@ namespace Engage.Dnn.Employment.Admin
         protected void ApplicationStatusDropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var applicationStatusDropDownList = (DropDownList)sender;
-            var applicationId = (int)Utility.FindParentControl<GridDataItem>(applicationStatusDropDownList).GetDataKeyValue("ApplicationId");
+            var applicationId = (int)Utility.FindParentControl<DnnGridDataItem>(applicationStatusDropDownList).GetDataKeyValue("ApplicationId");
             
             var application = JobApplication.Load(applicationId);
 
@@ -643,7 +644,7 @@ namespace Engage.Dnn.Employment.Admin
         protected void UserStatusDropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var userStatusDropDownList = (DropDownList)sender;
-            var applicationRow = Utility.FindParentControl<GridDataItem>(userStatusDropDownList);
+            var applicationRow = Utility.FindParentControl<DnnGridDataItem>(userStatusDropDownList);
             var userId = (int)applicationRow.GetDataKeyValue("UserId");
 
             int statusId;
@@ -660,7 +661,7 @@ namespace Engage.Dnn.Employment.Admin
             UserStatusInfo.UpdateUserStatus(this.PortalSettings, userId, statusIdValue);
 
             // collapse all other application grids, so that the user's status isn't out of sync
-            foreach (GridDataItem item in this.JobsGrid.MasterTableView.Items.Cast<GridDataItem>()
+            foreach (DnnGridDataItem item in this.JobsGrid.MasterTableView.Items.Cast<DnnGridDataItem>()
                                             .Where(item => item.Expanded && item != applicationRow.OwnerTableView.ParentItem))
             {
                 item.Expanded = false;
@@ -705,7 +706,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="RadGrid.NeedDataSource"/> event of the <see cref="JobsGrid"/> control.
+        /// Handles the <see cref="DnnGrid.NeedDataSource"/> event of the <see cref="JobsGrid"/> control.
         /// </summary>
         /// <param name="source">The source of the event.</param>
         /// <param name="e">The <see cref="GridNeedDataSourceEventArgs"/> instance containing the event data.</param>
@@ -738,7 +739,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="RadGrid.ItemCreated"/> event of the <see cref="JobsGrid"/> control.
+        /// Handles the <see cref="DnnGrid.ItemCreated"/> event of the <see cref="JobsGrid"/> control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="GridItemEventArgs"/> instance containing the event data.</param>
@@ -788,7 +789,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (dataItem.OwnerTableView != this.JobsGrid.MasterTableView)
                 {
-                    var isHtmlFormat = this.exportType != RadGrid.ExportToCsvCommandName;
+                    var isHtmlFormat = this.exportType != DnnGrid.ExportToCsvCommandName;
                     var application = (JobApplication)e.Item.DataItem;
 
                     dataItem["Documents"].Text = this.RenderDocumentsCell(isHtmlFormat, application.GetDocuments());
@@ -798,19 +799,19 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="RadGrid.ItemCommand"/> event of the <see cref="JobsGrid"/> control.
+        /// Handles the <see cref="DnnGrid.ItemCommand"/> event of the <see cref="JobsGrid"/> control.
         /// </summary>
         /// <param name="source">The source of the event.</param>
         /// <param name="e">The <see cref="GridCommandEventArgs"/> instance containing the event data.</param>
         private void JobsGrid_ItemCommand(object source, GridCommandEventArgs e)
         {
-            if (e.CommandName != RadGrid.ExportToCsvCommandName && e.CommandName != RadGrid.ExportToExcelCommandName)
+            if (e.CommandName != DnnGrid.ExportToCsvCommandName && e.CommandName != DnnGrid.ExportToExcelCommandName)
             {
                 return;
             }
 
             this.exportType = e.CommandName;
-            this.JobsGrid.ExportSettings.ExportOnlyData = e.CommandName == RadGrid.ExportToExcelCommandName;
+            this.JobsGrid.ExportSettings.ExportOnlyData = e.CommandName == DnnGrid.ExportToExcelCommandName;
 
             var exportingTable = e.Item.OwnerTableView;
             if (exportingTable == this.JobsGrid.MasterTableView)
@@ -843,7 +844,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Handles the <see cref="RadGrid.DetailTableDataBind"/> event of the <see cref="JobsGrid"/> control.
+        /// Handles the <see cref="DnnGrid.DetailTableDataBind"/> event of the <see cref="JobsGrid"/> control.
         /// </summary>
         /// <param name="source">The source of the event.</param>
         /// <param name="e">The <see cref="GridDetailTableDataBindEventArgs"/> instance containing the event data.</param>
@@ -968,7 +969,7 @@ namespace Engage.Dnn.Employment.Admin
         }
 
         /// <summary>
-        /// Localizes the given <see cref="GridTableView"/> within the <see cref="JobsGrid"/>.
+        /// Localizes the given <see cref="DnnGridTableView"/> within the <see cref="JobsGrid"/>.
         /// </summary>
         /// <param name="tableView">The table view.</param>
         private void LocalizeGridTable(GridTableView tableView)

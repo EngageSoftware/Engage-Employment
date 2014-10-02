@@ -82,7 +82,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker StartDateTextBox;
+        protected global::DotNetNuke.Web.UI.WebControls.DnnDatePicker StartDateTextBox;
         
         /// <summary>
         /// ExpireDateTextBox control.
@@ -91,7 +91,7 @@ namespace Engage.Dnn.Employment.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker ExpireDateTextBox;
+        protected global::DotNetNuke.Web.UI.WebControls.DnnDatePicker ExpireDateTextBox;
         
         /// <summary>
         /// RequiredQualificationsTextEditor control.

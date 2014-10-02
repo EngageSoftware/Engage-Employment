@@ -16,8 +16,7 @@ produce a `package` folder, with the packages inside.
 License
 -------
 
-This code is released under the [MIT license](Source/Licenses/EULA-Free.txt).  However,
-it does include Telerik components, which require a license to develop against.
+This code is released under the [MIT license](Source/Licenses/EULA-Free.txt).
 
 <a href="https://teamcity.engagesoftware.com/">
   <img src="https://teamcity.engagesoftware.com/app/rest/builds/buildType:%28id:EngageEmployment_Ci%29/statusIcon" alt="build status" />
