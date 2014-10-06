@@ -29,12 +29,12 @@
         </div>
         <div class="search_field">
             <asp:Label ID="FilterByDateFromLabel" runat="server" resourcekey="FilterByDateFromLabel" AssociatedControlID="FilterByDateFromTextBox"/>
-            <dnn:DnnDatePicker ID="FilterByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" />
+            <dnn:DnnDatePicker ID="FilterByDateFromTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Metro" />
             <asp:CompareValidator runat="server" Type="Date" Operator="LessThanEqual" ControlToValidate="FilterByDateFromTextBox" ControlToCompare="FilterByDateToTextBox" Display="None" resourcekey="FilterByDateFromCompareValidator" ValidationGroup="SearchDate" />
         </div>
         <div class="search_field">
             <asp:Label ID="FilterByDateToLabel" runat="server" resourcekey="FilterByDateToLabel" AssociatedControlID="FilterByDateToTextBox"/>
-            <dnn:DnnDatePicker ID="FilterByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" />
+            <dnn:DnnDatePicker ID="FilterByDateToTextBox" runat="server" CssClass="DateTextBox DatePicker NormalTextBox" Calendar-ShowRowHeaders="false" Skin="Metro" />
         </div>
         <div class="search_field">
             <asp:Label runat="server" resourcekey="FilterByLeadLabel" AssociatedControlID="FilterByLeadDropDown"/>
@@ -57,7 +57,7 @@
     <dnn:DnnGrid ID="JobsGrid" runat="server" 
         AllowPaging="true" AllowCustomPaging="true" PageSize="10" 
         AutoGenerateColumns="false" 
-        CssClass="Normal Engage_RadGrid" 
+        CssClass="Normal Engage_RadGrid" Skin="Metro"
         ExportSettings-IgnorePaging="true" ExportSettings-HideStructureColumns="true" ExportSettings-OpenInNewWindow="true">
         <MasterTableView DataKeyNames="JobId" CommandItemDisplay="Top">
             <CommandItemSettings ShowExportToExcelButton="true" ShowExportToCsvButton="true" />
