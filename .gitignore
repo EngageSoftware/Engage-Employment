@@ -1,0 +1,3 @@
+packages/
+*.GhostDoc.xml
+StyleCop.Cache
