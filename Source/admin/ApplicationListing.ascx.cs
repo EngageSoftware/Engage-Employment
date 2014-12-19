@@ -293,7 +293,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (this.ViewState["ApplicationStatusId"] != null)
                 {
-                    this.applicationStatusId = (int?)ViewState["ApplicationStatusId"] >= 0 ? (int?)ViewState["ApplicationStatusId"] : null;
+                    this.applicationStatusId = (int?)this.ViewState["ApplicationStatusId"] >= 0 ? (int?)this.ViewState["ApplicationStatusId"] : null;
                 }
                 else if (!this.applicationStatusId.HasValue)
                 {
@@ -319,7 +319,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 if (this.ViewState["UserStatusId"] != null)
                 {
-                    this.userStatusId = ((int?)ViewState["UserStatusId"] >= 0) ? ((int?)ViewState["UserStatusId"]) : null;
+                    this.userStatusId = ((int?)this.ViewState["UserStatusId"] >= 0) ? ((int?)this.ViewState["UserStatusId"]) : null;
                 }
                 else if (!this.userStatusId.HasValue)
                 {
@@ -393,8 +393,9 @@ namespace Engage.Dnn.Employment.Admin
         /// <returns>A URL pointing to the document with the given <paramref name="documentId"/></returns>
         protected string GetDocumentUrl(int documentId)
         {
-            string url = Page.ResolveUrl(Employment.Utility.GetDocumentUrl(documentId));
-            return Globals.AddHTTP(HttpContext.Current.Request.Url.Host) + url;
+            // ensure that this is an absolute URL, so that it works when exported
+            var url = this.ResolveUrl(Employment.Utility.GetDocumentUrl(documentId));
+            return Globals.AddHTTP(this.Request.Url.Host) + url;
         }
 
         /// <summary>
@@ -727,8 +728,8 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobsGrid.DataSource = Job.LoadAll(
                     this.JobGroupId,
                     this.PortalId,
-                    (string)ViewState["JobTitle"],
-                    (int?)ViewState["LocationId"],
+                    (string)this.ViewState["JobTitle"],
+                    (int?)this.ViewState["LocationId"],
                     this.JobsGrid.CurrentPageIndex,
                     this.IsExport ? (int?)null : this.JobsGrid.MasterTableView.PageSize,
                     out totalJobCount);
@@ -754,15 +755,9 @@ namespace Engage.Dnn.Employment.Admin
                 commandItem.FindControl("RefreshButton").Visible = false;
                 commandItem.FindControl("RebindGridButton").Visible = false;
 
-                string tableHeaderResourceKey;
-                if (commandItem.OwnerTableView == this.JobsGrid.MasterTableView)
-                {
-                    tableHeaderResourceKey = "JobsTableHeader";
-                }
-                else
-                {
-                    tableHeaderResourceKey = "ApplicationsTableHeader";
-                }
+                var tableHeaderResourceKey = commandItem.OwnerTableView == this.JobsGrid.MasterTableView
+                    ? "JobsTableHeader"
+                    : "ApplicationsTableHeader";
 
                 var leftColumn = commandItem.FindControl("AddNewRecordButton").Parent;
                 leftColumn.Controls.Add(new LiteralControl(this.Localize(tableHeaderResourceKey)));
@@ -866,9 +861,9 @@ namespace Engage.Dnn.Employment.Admin
                 this.JobGroupId,
                 this.ApplicationStatusId,
                 this.UserStatusId,
-                (int?)ViewState["LeadId"],
-                (DateTime?)ViewState["DateFrom"],
-                (DateTime?)ViewState["DateTo"],
+                (int?)this.ViewState["LeadId"],
+                (DateTime?)this.ViewState["DateFrom"],
+                (DateTime?)this.ViewState["DateTo"],
                 e.DetailTableView.CurrentPageIndex,
                 this.IsExport ? (int?)null : e.DetailTableView.PageSize,
                 out unpagedApplicationCount,
@@ -893,7 +888,7 @@ namespace Engage.Dnn.Employment.Admin
             foreach (var document in documents)
             {
                 var documentType = this.GetDocumentTypeText(document.DocumentTypeId);
-                var documentUrl = GetDocumentUrl(document.DocumentId);
+                var documentUrl = this.GetDocumentUrl(document.DocumentId);
                 documentsTextBuilder.AppendFormat(
                     CultureInfo.CurrentCulture,
                     isHtmlFormat ? "<li><a href=\"{1}\" target=\"_blank\">{0}</a></li>" : "{0}: {1}{2}",
