@@ -167,7 +167,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <value>This portal's application statuses.</value>
         protected IEnumerable<ListItem> ApplicationStatuses
         {
-            get 
+            get
             {
                 yield return new ListItem(this.Localize("NoApplicationStatus"), string.Empty);
 
@@ -225,7 +225,7 @@ namespace Engage.Dnn.Employment.Admin
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets the list of user statuses to display to the user.
         /// </summary>
@@ -260,14 +260,14 @@ namespace Engage.Dnn.Employment.Admin
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets the ID of the job for which to display applications (or <c>null</c> to display all jobs).
         /// </summary>
         /// <value>The Id of the job to display.</value>
         private int? JobId
         {
-            get 
+            get
             {
                 if (!this.jobId.HasValue)
                 {
@@ -289,7 +289,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <value>The ID of the status by which to filter applications.</value>
         private int? ApplicationStatusId
         {
-            get 
+            get
             {
                 if (this.ViewState["ApplicationStatusId"] != null)
                 {
@@ -315,7 +315,7 @@ namespace Engage.Dnn.Employment.Admin
         /// <value>The ID of the user status by which to filter applications.</value>
         private int? UserStatusId
         {
-            get 
+            get
             {
                 if (this.ViewState["UserStatusId"] != null)
                 {
@@ -391,9 +391,10 @@ namespace Engage.Dnn.Employment.Admin
         /// </summary>
         /// <param name="documentId">The ID of the document.</param>
         /// <returns>A URL pointing to the document with the given <paramref name="documentId"/></returns>
-        protected static string GetDocumentUrl(int documentId)
+        protected string GetDocumentUrl(int documentId)
         {
-            return Employment.Utility.GetDocumentUrl(documentId);
+            string url = Page.ResolveUrl(Employment.Utility.GetDocumentUrl(documentId));
+            return Globals.AddHTTP(HttpContext.Current.Request.Url.Host) + url;
         }
 
         /// <summary>
@@ -445,7 +446,7 @@ namespace Engage.Dnn.Employment.Admin
             {
                 return applicantName;
             }
-            
+
             if (userId.HasValue)
             {
                 var applicationUser = new UserController().GetUser(this.PortalId, userId.Value);
@@ -613,7 +614,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             var applicationStatusDropDownList = (DropDownList)sender;
             var applicationId = (int)Utility.FindParentControl<GridDataItem>(applicationStatusDropDownList).GetDataKeyValue("ApplicationId");
-            
+
             var application = JobApplication.Load(applicationId);
 
             int statusId;
@@ -868,8 +869,8 @@ namespace Engage.Dnn.Employment.Admin
                 (int?)ViewState["LeadId"],
                 (DateTime?)ViewState["DateFrom"],
                 (DateTime?)ViewState["DateTo"],
-                e.DetailTableView.CurrentPageIndex, 
-                this.IsExport ? (int?)null : e.DetailTableView.PageSize, 
+                e.DetailTableView.CurrentPageIndex,
+                this.IsExport ? (int?)null : e.DetailTableView.PageSize,
                 out unpagedApplicationCount,
                 true);
             e.DetailTableView.VirtualItemCount = unpagedApplicationCount;
