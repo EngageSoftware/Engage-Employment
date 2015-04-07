@@ -56,10 +56,9 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of all of the application statuses for this portal</returns>
         public static IEnumerable<ApplicationStatus> GetStatuses(int portalId)
         {
-            var statusList = (new ListController()).GetListEntryInfoCollection(Utility.ApplicationStatusListName);
+            var statusList = (new ListController()).GetListEntryInfoCollection(Utility.ApplicationStatusListName, Null.NullString, portalId);
 
             return from ListEntryInfo entry in statusList
-                   where entry.PortalID == portalId
                    select new ApplicationStatus(entry.EntryID, entry.Text);
         }
 
@@ -113,10 +112,10 @@ namespace Engage.Dnn.Employment
             var listItem = new ListEntryInfo 
             {
                 Text = statusName,
+                Value = statusName,
                 DefinitionID = Null.NullInteger,
                 PortalID = portalId,
                 ListName = Utility.ApplicationStatusListName,
-                Value = string.Empty
             };
 
             new ListController().AddListEntry(listItem);
@@ -138,7 +137,8 @@ namespace Engage.Dnn.Employment
         /// <param name="statusName">Name of the status.</param>
         public static void UpdateStatus(int statusId, string statusName)
         {
-            ListEntryInfo leadItem = new ListController().GetListEntryInfo(statusId);
+            var leadItem = new ListController().GetListEntryInfo(statusId);
+            leadItem.Value = statusName;
             leadItem.Text = statusName;
             new ListController().UpdateListEntry(leadItem);
         }

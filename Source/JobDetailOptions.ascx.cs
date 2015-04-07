@@ -241,10 +241,10 @@ namespace Engage.Dnn.Employment
             (new ListController()).AddListEntry(new ListEntryInfo 
                 {
                     Text = this.txtNewLeadText.Text,
+                    Value = this.txtNewLeadText.Text,
                     DefinitionID = Null.NullInteger,
                     PortalID = this.PortalId,
                     ListName = Utility.LeadListName,
-                    Value = string.Empty
                 });
 
             this.NewLeadItemPanel.Visible = false;
@@ -258,7 +258,7 @@ namespace Engage.Dnn.Employment
         private void SaveLeadRequirementValidator_ServerValidate(object source, ServerValidateEventArgs args)
         {
             args.IsValid = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true) == Visibility.Hidden
-                           || (new ListController()).GetListEntryInfoCollection(Utility.LeadListName).Count > 0;
+                           || (new ListController()).GetListEntryInfoCollection(Utility.LeadListName, Null.NullString, this.PortalId).Count > 0;
         }
 
         /// <summary>Handles the <see cref="GridView.RowCommand"/> event of the <see cref="LeadItemsGridView"/> control.</summary>
@@ -295,6 +295,7 @@ namespace Engage.Dnn.Employment
 
             if (string.Equals(newLeadText, oldLeadText, StringComparison.CurrentCultureIgnoreCase) || lists.GetListEntryInfo(Utility.LeadListName, newLeadText) == null)
             {
+                leadItem.Value = newLeadText;
                 leadItem.Text = newLeadText;
                 lists.UpdateListEntry(leadItem);
                 this.LeadItemsGridView.EditIndex = -1;
@@ -342,7 +343,7 @@ namespace Engage.Dnn.Employment
         /// <summary>Binds the list of leads to the <see cref="LeadItemsGridView"/>.</summary>
         private void BindLeadItems()
         {
-            var leadItems = (new ListController()).GetListEntryInfoCollection(Utility.LeadListName);
+            var leadItems = (new ListController()).GetListEntryInfoCollection(Utility.LeadListName, Null.NullString, this.PortalId);
 
             this.LeadItemsGridView.DataSource = leadItems;
             this.LeadItemsGridView.DataBind();

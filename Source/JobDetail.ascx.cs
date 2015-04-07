@@ -469,26 +469,27 @@ namespace Engage.Dnn.Employment
             this.LeadRow.Visible = this.DisplayLead != Visibility.Hidden;
             this.LeadRequiredLabel.Visible = this.DisplayLead == Visibility.Required;
 
-            if (this.LeadRow.Visible && this.LeadDropDownList.Items.Count < 1)
+            if (!this.LeadRow.Visible || this.LeadDropDownList.Items.Count >= 1)
             {
-                ListEntryInfoCollection leadList = new ListController().GetListEntryInfoCollection(Utility.LeadListName);
+                return;
+            }
 
-                if (leadList.Count > 0)
-                {
-                    this.LeadDropDownList.DataSource = leadList;
-                    this.LeadDropDownList.DataTextField = "Text";
-                    this.LeadDropDownList.DataValueField = "EntryID";
-                    this.LeadDropDownList.DataBind();
+            var leadList = new ListController().GetListEntryInfoCollection(Utility.LeadListName, Null.NullString, this.PortalId);
+            if (leadList.Count > 0)
+            {
+                this.LeadDropDownList.DataSource = leadList;
+                this.LeadDropDownList.DataTextField = "Text";
+                this.LeadDropDownList.DataValueField = "EntryID";
+                this.LeadDropDownList.DataBind();
 
-                    if (this.DisplayLead == Visibility.Optional)
-                    {
-                        this.LeadDropDownList.Items.Insert(0, new ListItem(this.Localize("ChooseLead"), string.Empty));
-                    }
-                }
-                else
+                if (this.DisplayLead == Visibility.Optional)
                 {
-                    this.LeadRow.Visible = false;
+                    this.LeadDropDownList.Items.Insert(0, new ListItem(this.Localize("ChooseLead"), string.Empty));
                 }
+            }
+            else
+            {
+                this.LeadRow.Visible = false;
             }
         }
 

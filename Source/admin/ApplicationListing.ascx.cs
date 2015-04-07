@@ -24,6 +24,7 @@ namespace Engage.Dnn.Employment.Admin
     using Data;
     using DotNetNuke.Common;
     using DotNetNuke.Common.Lists;
+    using DotNetNuke.Common.Utilities;
     using DotNetNuke.Entities.Modules;
     using DotNetNuke.Entities.Modules.Actions;
     using DotNetNuke.Entities.Users;
@@ -88,7 +89,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             this.userStatuses = UserStatus.LoadStatuses(this.PortalId);
             this.applicationStatuses = ApplicationStatus.GetStatuses(this.PortalId);
-            this.leadsList = (new ListController()).GetListEntryInfoCollection(Employment.Utility.LeadListName).Cast<ListEntryInfo>().ToDictionary(entry => entry.EntryID);
+            this.leadsList = (new ListController()).GetListEntryInfoCollection(Employment.Utility.LeadListName, Null.NullString, this.PortalId).Cast<ListEntryInfo>().ToDictionary(entry => entry.EntryID);
             this.locations = Location.LoadLocations(null, this.PortalId);
         }
 
