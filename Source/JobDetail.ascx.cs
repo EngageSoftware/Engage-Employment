@@ -195,7 +195,7 @@ namespace Engage.Dnn.Employment
         /// </summary>
         private string DefaultNotificationEmailAddresses
         {
-            get { return ModuleSettings.JobDetailApplicationEmailAddresses.GetValueAsStringFor(this) ?? PortalController.GetCurrentPortalSettings().Email; }
+            get { return ModuleSettings.JobDetailApplicationEmailAddresses.GetValueAsStringFor(this) ?? PortalController.Instance.GetCurrentPortalSettings().Email; }
         }
 
         /// <summary>
@@ -327,22 +327,19 @@ namespace Engage.Dnn.Employment
         /// </remarks>
         /// <param name="fileExtensionsList">The comma-delimited list of acceptable file extensions.</param>
         /// <returns>A regular expression which only matches filenames with a file extension in the given list</returns>
-        private static string BuildFileExtensionValidationExpression(string fileExtensionsList)
+        private static string BuildFileExtensionValidationExpression(FileExtensionWhitelist fileExtensionsList)
         {
-            var fileExtensionsBuilder = new StringBuilder(fileExtensionsList.Length);
-            foreach (char c in fileExtensionsList)
-            {
-                if (c != ',')
-                {
-                    fileExtensionsBuilder.AppendFormat(CultureInfo.InvariantCulture, "[{0}{1}]", char.ToUpperInvariant(c), char.ToLowerInvariant(c));
-                }
-                else
-                {
-                    fileExtensionsBuilder.Append('|');
-                }
-            }
-
-            return string.Format(CultureInfo.InvariantCulture, @".*\.(?:{0})$", fileExtensionsBuilder);
+            var caseInsensitiveExtensionRegularExpressions = fileExtensionsList.AllowedExtensions.Select(
+                ext => ext.Select(
+                    ch => string.Format(
+                        CultureInfo.InvariantCulture,
+                        "[{0}{1}]",
+                        char.ToUpperInvariant(ch),
+                        char.ToLowerInvariant(ch))));
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                @".*\.(?:{0})$",
+                string.Join("|", caseInsensitiveExtensionRegularExpressions));
         }
 
         /// <summary>Sets the field visibility.</summary>
@@ -474,7 +471,7 @@ namespace Engage.Dnn.Employment
                 return;
             }
 
-            var leadList = new ListController().GetListEntryInfoCollection(Utility.LeadListName, Null.NullString, this.PortalId);
+            var leadList = new ListController().GetListEntryInfoItems(Utility.LeadListName, Null.NullString, this.PortalId).ToList();
             if (leadList.Count > 0)
             {
                 this.LeadDropDownList.DataSource = leadList;
@@ -584,11 +581,11 @@ namespace Engage.Dnn.Employment
 
             this.FillLeadDropDown();
 
-            string fileExtensionsList = Host.FileExtensions ?? string.Empty;
-            string fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
+            var fileExtensionsList = Host.AllowedExtensionWhitelist;
+            var fileExtensionValidationExpression = BuildFileExtensionValidationExpression(fileExtensionsList);
             this.ResumeFileExtensionValidator.ValidationExpression = this.CoverLetterFileExtensionValidator.ValidationExpression = fileExtensionValidationExpression;
-            this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexResumeFile.Text"), fileExtensionsList);
-            this.CoverLetterFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexCoverLetterFile.Text"), fileExtensionsList);
+            this.ResumeFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexResumeFile.Text"), fileExtensionsList.ToDisplayString());
+            this.CoverLetterFileExtensionValidator.ErrorMessage = string.Format(CultureInfo.CurrentCulture, this.Localize("regexCoverLetterFile.Text"), fileExtensionsList.ToDisplayString());
 
             SetFieldVisibility(this.ApplicantNameRow, this.ApplicantNameRequiredValidator, this.ApplicantNameRequiredLabel, this.DisplayName);
             SetFieldVisibility(this.ApplicantEmailRow, this.ApplicantEmailRequiredValidator, this.ApplicantEmailRequiredLabel, this.DisplayEmail);

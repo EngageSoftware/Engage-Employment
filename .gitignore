@@ -1,3 +1,4 @@
 packages/
 *.GhostDoc.xml
 StyleCop.Cache
+.vs/

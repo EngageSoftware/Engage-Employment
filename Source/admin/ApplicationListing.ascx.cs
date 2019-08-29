@@ -89,7 +89,7 @@ namespace Engage.Dnn.Employment.Admin
         {
             this.userStatuses = UserStatus.LoadStatuses(this.PortalId);
             this.applicationStatuses = ApplicationStatus.GetStatuses(this.PortalId);
-            this.leadsList = (new ListController()).GetListEntryInfoCollection(Employment.Utility.LeadListName, Null.NullString, this.PortalId).Cast<ListEntryInfo>().ToDictionary(entry => entry.EntryID);
+            this.leadsList = new ListController().GetListEntryInfoItems(Employment.Utility.LeadListName, Null.NullString, this.PortalId).ToDictionary(entry => entry.EntryID);
             this.locations = Location.LoadLocations(null, this.PortalId);
         }
 

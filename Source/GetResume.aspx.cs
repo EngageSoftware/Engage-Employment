@@ -41,7 +41,7 @@ namespace Engage.Dnn.Employment
         /// </summary>
         private static UserInfo UserInfo
         {
-            get { return UserController.GetCurrentUserInfo(); }
+            get { return UserController.Instance.GetCurrentUserInfo(); }
         }
 
         /// <summary>

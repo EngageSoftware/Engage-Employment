@@ -14,6 +14,7 @@ namespace Engage.Dnn.Employment
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Web.UI;
     using System.Web.UI.WebControls;
 
@@ -258,7 +259,7 @@ namespace Engage.Dnn.Employment
         private void SaveLeadRequirementValidator_ServerValidate(object source, ServerValidateEventArgs args)
         {
             args.IsValid = (Visibility)Enum.Parse(typeof(Visibility), this.DisplayLeadRadioButtonList.SelectedValue, true) == Visibility.Hidden
-                           || (new ListController()).GetListEntryInfoCollection(Utility.LeadListName, Null.NullString, this.PortalId).Count > 0;
+                           || new ListController().GetListEntryInfoItems(Utility.LeadListName, Null.NullString, this.PortalId).Any();
         }
 
         /// <summary>Handles the <see cref="GridView.RowCommand"/> event of the <see cref="LeadItemsGridView"/> control.</summary>
@@ -343,21 +344,14 @@ namespace Engage.Dnn.Employment
         /// <summary>Binds the list of leads to the <see cref="LeadItemsGridView"/>.</summary>
         private void BindLeadItems()
         {
-            var leadItems = (new ListController()).GetListEntryInfoCollection(Utility.LeadListName, Null.NullString, this.PortalId);
+            var leadItems = (new ListController()).GetListEntryInfoItems(Utility.LeadListName, Null.NullString, this.PortalId).ToList();
 
             this.LeadItemsGridView.DataSource = leadItems;
             this.LeadItemsGridView.DataBind();
 
-            if (leadItems == null || leadItems.Count % 2 == 0)
-            {
-                this.NewLeadItemPanel.CssClass = this.LeadItemsGridView.RowStyle.CssClass;
-            }
-            else
-            {
-                this.NewLeadItemPanel.CssClass = this.LeadItemsGridView.AlternatingRowStyle.CssClass;
-            }
+            this.NewLeadItemPanel.CssClass = leadItems.Count % 2 == 0 ? this.LeadItemsGridView.RowStyle.CssClass : this.LeadItemsGridView.AlternatingRowStyle.CssClass;
 
-            this.rowNewLeadItemHeader.Visible = leadItems == null || leadItems.Count < 1;
+            this.rowNewLeadItemHeader.Visible = leadItems.Count < 1;
         }
 
         /// <summary>Gets the text for lead in the given row.</summary>

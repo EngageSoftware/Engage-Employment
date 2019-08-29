@@ -56,9 +56,9 @@ namespace Engage.Dnn.Employment
         /// <returns>A list of all of the application statuses for this portal</returns>
         public static IEnumerable<ApplicationStatus> GetStatuses(int portalId)
         {
-            var statusList = (new ListController()).GetListEntryInfoCollection(Utility.ApplicationStatusListName, Null.NullString, portalId);
+            var statusList = new ListController().GetListEntryInfoItems(Utility.ApplicationStatusListName, Null.NullString, portalId);
 
-            return from ListEntryInfo entry in statusList
+            return from entry in statusList
                    select new ApplicationStatus(entry.EntryID, entry.Text);
         }
 

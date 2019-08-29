@@ -175,7 +175,7 @@ namespace Engage.Dnn.Employment
         {
             get
             {
-                return PortalController.GetCurrentPortalSettings().PortalId;
+                return PortalController.Instance.GetCurrentPortalSettings().PortalId;
             }
         }
 
