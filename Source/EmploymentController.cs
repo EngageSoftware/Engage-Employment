@@ -87,7 +87,7 @@ namespace Engage.Dnn.Employment
                     var revisionDate = (DateTime)jobs["RevisionDate"];
                     var searchDocument = new SearchDocument
                                              {
-                                                 UniqueKey = $"Employment_Job_{jobId}",
+                                                 UniqueKey = "Employment_Job_" + jobId,
                                                  ModifiedTimeUtc = revisionDate.ToUniversalTime(),
                                                  ModuleId = moduleInfo.ModuleID,
                                                  PortalId = moduleInfo.PortalID,
